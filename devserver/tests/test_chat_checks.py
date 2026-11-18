@@ -403,7 +403,10 @@ def test_a_card_in_the_models_words_goes_out_as_written(app_ctx, gate, no_result
     plays(monkeypatch,
           ([], answer("", call("remember", kind="Notiz", content="Die Gruppe mag Klang."))),
           (["Notiert."], answer("Notiert.")))
-    evs = turn({"message": "merk dir das"})
+    # Cards are laid only by a turn with a board, which is Together's
+    # (2026-11-15); remember is Together's tool.
+    evs = turn({"message": "merk dir das",
+                "context": {"resona_mode": True, "language": "de", "device_id": "t"}})
     assert "entity" in [e["type"] for e in evs]
     assert evs[-1]["type"] == "done"
 

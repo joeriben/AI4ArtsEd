@@ -1,0 +1,2010 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 8.3% of 2371 words, ceiling 20%, longest run 22 words; not counted: 7 words from the source's lists; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 22,
+     "text": "harry saini yam levi dominik lorenz axel sauer frederic boesel dustin podell tim dockhorn zion english kyle lacey alex goodwin yannik marek"
+    },
+    {
+     "words": 14,
+     "text": "fid 2 41 1 56 1 06 psnr 25 12 26 40 28 62"
+    },
+    {
+     "words": 10,
+     "text": "position 6 50 18 00 counting 33 44 41 56"
+    },
+    {
+     "words": 9,
+     "text": "implies a log snr shift of log n m"
+    },
+    {
+     "words": 9,
+     "text": "e g rf lognorm 0 50 0 60 is"
+    }
+   ],
+   "value": 0.0827,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "9 of 9 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 5,
+     "expected_items": 2,
+     "first_item": "Both ϵ -and v -prediction loss with linear ( eps/linear , v/linear ) and cosine ",
+     "output_lists": [
+      4,
+      3,
+      3,
+      5,
+      5,
+      6
+     ]
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "expected_items": 4,
+     "first_item": "RF loss with π ln ( t ; m,s ) ( rf/lognorm(m, s) ) with 30 values for ( m,s ) in",
+     "output_lists": [
+      4,
+      3,
+      3,
+      5,
+      5,
+      6
+     ],
+     "unanswered_items": [
+      {
+       "item": 2,
+       "source": "RF loss with π CosMap ( t ) ( rf/cosmap ).",
+       "output": "**EDM** (Karras et al., 2022): forward process with b_t = exp(F⁻¹_N(t|P_m, P²_s)"
+      }
+     ]
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "table_cells": 71,
+     "missing_cells": [
+      "rank averaged over",
+      "rank averaged over",
+      "rank averaged over",
+      "1.25",
+      "rf/lognorm(1.00, 0.60)",
+      "2.08",
+      "rf/mode(1.29)",
+      "2.75",
+      "3.25",
+      "3.00",
+      "rf/lognorm(0.50, 1.00)",
+      "2.83",
+      "2.50",
+      "2.88",
+      "4.25",
+      "2.75",
+      "rf/mode(1.75)",
+      "3.33",
+      "2.75",
+      "2.75"
+     ]
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "table_cells": 59,
+     "missing_cells": [
+      "0.247",
+      "49.70",
+      "0.217",
+      "94.90",
+      "0.236",
+      "63.12",
+      "0.200",
+      "116.60",
+      "0.245",
+      "48.42",
+      "90.34",
+      "0.244",
+      "50.74",
+      "0.209",
+      "97.87",
+      "0.246",
+      "51.68",
+      "0.217",
+      "100.76",
+      "0.256"
+     ]
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 7,
+     "table_cells": 20,
+     "missing_cells": [
+      "4 chn",
+      "Perceptual Similarity ( ↓ )",
+      "0.68",
+      "0.45",
+      "SSIM ( ↑ )",
+      "0.79",
+      "0.86"
+     ]
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 7,
+     "table_cells": 23,
+     "missing_cells": [
+      "Original Captions success rate [%]",
+      "50/50 Mix success rate [%]",
+      "71.54",
+      "68.09",
+      "95.00",
+      "93.75"
+     ]
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "table_cells": 131,
+     "missing_cells": [
+      "minDALL-E",
+      "0.73",
+      "0.11",
+      "0.37",
+      "0.02",
+      "SD v1.5",
+      "0.43",
+      "0.97",
+      "0.35",
+      "0.76",
+      "0.04",
+      "PixArt-alpha",
+      "0.44",
+      "0.08",
+      "0.07",
+      "SD v2.1",
+      "0.44",
+      "0.07",
+      "0.17",
+      "DALL-E 2"
+     ]
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "table_cells": 23,
+     "missing_cells": [
+      "relative CLIP score decrease [%]",
+      "relative CLIP score decrease [%]",
+      "relative CLIP score decrease [%]",
+      "relative CLIP score decrease [%]",
+      "10/50 steps",
+      "20/50 steps",
+      "0.86",
+      "3.59",
+      "187.96",
+      "0.08"
+     ]
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 24,
+     "table_cells": 25,
+     "missing_cells": [
+      "Mem [GB]",
+      "FP [ms]",
+      "Storage [kB]",
+      "Delta [%]",
+      "VAE (Enc)",
+      "2.45",
+      "65.5",
+      "13.8",
+      "0.49",
+      "0.45",
+      "121.3",
+      "2.78",
+      "2.77",
+      "17.46",
+      "630.7"
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "166 of 274 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 2,
+     "number": "2018"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 5,
+     "number": "5.1"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 5,
+     "number": "5.1.1"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "1.25"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "1.50"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "100.76"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "11.04"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "11.25"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "114.26"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "116.60"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "12.25"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "120.84"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "13.00"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "13.04"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "13.25"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "14.25"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "147.69"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "15.00"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "15.25"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "15.58"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "2.00"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "2.08"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "2.50"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "2.75"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "2.83"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "2.88"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "20.25"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "209"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "217"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "218"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "219"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "222"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "224"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "233"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "234"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "236"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "244"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "245"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "246"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "247"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "248"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "250"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "253"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "254"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "3.00"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "3.25"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "3.33"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "3.50"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "3.75"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "4.00"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "4.13"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "4.25"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "44.39"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "45.64"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "45.78"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "48.42"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "49.70"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "5.2"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "5.3"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "5.63"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "5.67"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "5.75"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "50.74"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "51.68"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "6.83"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "63.12"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "7.75"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "8.50"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "8.75"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "80.41"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "89.70"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "89.91"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "9.00"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "9.17"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "90.34"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "94.06"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "94.90"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "number": "97.87"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 7,
+     "number": "0.45"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 7,
+     "number": "0.68"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 7,
+     "number": "0.79"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 7,
+     "number": "0.86"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 7,
+     "number": "5.2.2"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 7,
+     "number": "5.2.3"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 7,
+     "number": "68.09"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 7,
+     "number": "71.54"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 7,
+     "number": "93.75"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 7,
+     "number": "95.00"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 9,
+     "number": "5.3.1"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.01"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.02"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.04"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.06"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.07"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.08"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.10"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.11"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.12"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.13"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.14"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.15"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.16"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.17"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.19"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.21"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.23"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.24"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.34"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.35"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.36"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.37"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.38"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.39"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.40"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.43"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.44"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.47"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.48"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.49"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.51"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.52"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.55"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.58"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.61"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.62"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.63"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.64"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.66"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.70"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.71"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.73"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.76"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.77"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.78"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.80"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.83"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.87"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.96"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "0.97"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "187.96"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "2.1"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "3.59"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "4.7"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "number": "5.3.3"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 19,
+     "number": "1970"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 20,
+     "number": "2048"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 20,
+     "number": "26"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 20,
+     "number": "29"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 20,
+     "number": "35"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 20,
+     "number": "36"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 21,
+     "number": "154"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 21,
+     "number": "77"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 21,
+     "number": "99"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 24,
+     "number": "121.3"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 24,
+     "number": "13.8"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 24,
+     "number": "15.6"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 24,
+     "number": "17.46"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 24,
+     "number": "2.45"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 24,
+     "number": "2.6"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 24,
+     "number": "2.77"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 24,
+     "number": "2.78"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 24,
+     "number": "202.2"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 24,
+     "number": "568"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 24,
+     "number": "630.7"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 24,
+     "number": "65.5"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 26,
+     "number": "350000"
+    }
+   ],
+   "value": 166.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "31 of 35 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 1,
+     "heading": "Abstract"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 2,
+     "heading": "1. Introduction"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 4,
+     "heading": "3.1. Tailored SNR Samplers for RF models"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 5,
+     "heading": "5.1. Improving Rectified Flows"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 5,
+     "heading": "5.1.1. RESULTS"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 6,
+     "heading": "5.2. Improving Modality Specific Representations"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 7,
+     "heading": "5.2.1. IMPROVED AUTOENCODERS"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 7,
+     "heading": "5.2.2. IMPROVED CAPTIONS"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 7,
+     "heading": "5.2.3. IMPROVED TEXT-TO-IMAGE BACKBONES"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 9,
+     "heading": "5.3. Training at Scale"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 9,
+     "heading": "5.3.1. DATA PREPROCESSING"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 9,
+     "heading": "5.3.2. FINETUNING ON HIGH RESOLUTIONS"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 11,
+     "heading": "5.3.3. RESULTS"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 12,
+     "heading": "6. Conclusion"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 13,
+     "heading": "Broader Impact"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 17,
+     "heading": "A. Background"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 17,
+     "heading": "Supplementary"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 20,
+     "heading": "B. On Flow Matching"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 20,
+     "heading": "B.1. Details on Simulation-Free Training of Flows"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 20,
+     "heading": "B.2. Details on Image and Text Representations"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 21,
+     "heading": "B.3. Preliminaries for the Experiments in Section 5.1."
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 21,
+     "heading": "B.4. Improving SNR Samplers for Rectified Flow Models"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 23,
+     "heading": "C. Direct Preference Optimization"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 23,
+     "heading": "D. Finetuning for instruction-based image editing"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 24,
+     "heading": "E. Data Preprocessing for Large-Scale Text-to-Image Training"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 24,
+     "heading": "E.1. Precomputing Image and Text Embeddings"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 24,
+     "heading": "E.2. Preventing Image Memorization"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 26,
+     "heading": "E.3. Assessing the Efficacy of our Deduplication Efforts"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 26,
+     "heading": "Algorithm 1 Finding Duplicate Items in a Cluster"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 27,
+     "heading": "Algorithm 2 Detecting Memorization in Generated Images"
+    },
+    {
+     "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+     "page": 27,
+     "heading": "Ensure: Detection of memorized images in generated samples"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "33 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "33 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "65 quoted texts in 16 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Fig. 1",
+     "page": 1,
+     "image": "fig-001-p1.png",
+     "quotes": [
+      "\"Go with the flow.\"",
+      "\"Achievement unlocked: Diffusion models can spell now!\"",
+      "\"they left me here to rust and rot away like all the others.\"",
+      "\"Astronaut & Piggy: Buddies for Life\""
+     ]
+    },
+    {
+     "figure": "Fig. 2",
+     "page": 5,
+     "image": "fig-002-p5.png",
+     "quotes": [
+      "“Q K V Attention”"
+     ]
+    },
+    {
+     "figure": "Fig. 4",
+     "page": 9,
+     "image": "fig-006-p9.png",
+     "quotes": [
+      "“train step”",
+      "“validation loss (average over levels 1-7)”",
+      "“MMDiT (2 sets)”",
+      "“MMDiT (3 sets)”",
+      "“FID score”"
+     ]
+    },
+    {
+     "figure": "Fig. 5",
+     "page": 9,
+     "image": "fig-007-p9.png",
+     "quotes": [
+      "“Max Attention Logit”",
+      "“Training Steps”",
+      "“w/ QK-norm”",
+      "“w/o QK-norm”",
+      "“NaN”",
+      "“Training Steps”",
+      "“w/ QK-norm”",
+      "“w/o QK-norm”",
+      "“NaN”",
+      "“w/ QK-norm”",
+      "“w/o QK-norm.”"
+     ]
+    },
+    {
+     "figure": "Fig. 6",
+     "page": 10,
+     "image": "fig-008-p10.png",
+     "quotes": [
+      "“Preference across shifted sampling,”",
+      "“Elo Score,”"
+     ]
+    },
+    {
+     "figure": "Fig. 7",
+     "page": 10,
+     "image": "fig-009-p10.png",
+     "quotes": [
+      "\"Winrate [%]\""
+     ]
+    },
+    {
+     "figure": "Fig. 8",
+     "page": 12,
+     "image": "fig-010-p12.png",
+     "quotes": [
+      "“depth=15,”",
+      "“depth=18,”",
+      "“depth=21,”",
+      "“depth=30,”",
+      "“depth=18,”",
+      "“depth=24,”",
+      "“depth=30”",
+      "“GenEval (overall),”",
+      "“Human Preference [ELO],”",
+      "“T2I-CompBench Average Score,”",
+      "“Human Preference [ELO],”",
+      "“r = -0.920,”",
+      "“r = -0.982,”",
+      "“r = -0.898,”",
+      "“r = -0.908”"
+     ]
+    },
+    {
+     "figure": "Fig. 9",
+     "page": 12,
+     "image": "fig-011-p12.png",
+     "quotes": [
+      "\"SCALING TRANSFORMER MODELS IS AWESOME!\""
+     ]
+    },
+    {
+     "figure": "Image 22",
+     "page": 18,
+     "image": "fig-022-p18.png",
+     "quotes": [
+      "“PAPER.”"
+     ]
+    },
+    {
+     "figure": "Image 24",
+     "page": 19,
+     "image": "fig-024-p19.png",
+     "quotes": [
+      "\"I can't bear it\""
+     ]
+    },
+    {
+     "figure": "Fig. 10",
+     "page": 21,
+     "image": "fig-025-p21.png",
+     "quotes": [
+      "\"FID score\"",
+      "\"model depth\"",
+      "\"SDXL VAE [ch=4]\"",
+      "\"VAE [ch=8]\"",
+      "\"VAE [ch=16]\""
+     ]
+    },
+    {
+     "figure": "Fig. 13",
+     "page": 23,
+     "image": "fig-028-p23.png",
+     "quotes": [
+      "“DON'T PANIC!”",
+      "“NT PAN”"
+     ]
+    },
+    {
+     "figure": "Fig. 15",
+     "page": 25,
+     "image": "fig-030-p25.png",
+     "quotes": [
+      "“GO SMALL GO HOME.”",
+      "“GO BIG OR go HOME”",
+      "“MMDIT RULES.”"
+     ]
+    },
+    {
+     "figure": "Image 31",
+     "page": 27,
+     "image": "fig-031-p27.png",
+     "quotes": [
+      "\"Percentage of Data Removed by Similarity Threshold\"",
+      "\"Percentage of Data Removed (%)\"",
+      "\"SSCD_85\"",
+      "\"SSCD_75\"",
+      "\"SSCD_65\"",
+      "\"SSCD_50\""
+     ]
+    },
+    {
+     "figure": "Image 32",
+     "page": 27,
+     "image": "fig-032-p27.png",
+     "quotes": [
+      "\"SSCD: Analysis of % removed images 1000 randomly selected clusters\"",
+      "\"% filtered data\""
+     ]
+    },
+    {
+     "figure": "Fig. 17",
+     "page": 28,
+     "image": "fig-033-p28.png",
+     "quotes": [
+      "“Number of cliques.”",
+      "“Baseline,”",
+      "“SSCD50.”",
+      "“Baseline: 540”",
+      "“SSCD50: 95.”"
+     ]
+    }
+   ],
+   "value": 65.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "50 page references valid (printed-folio pages 1–28)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "28 pages checked, 2 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "1 passages out of order break a sentence (1 of 2 not repairable; listed, not gated)",
+   "findings": [
+    {
+     "page": 18,
+     "words": 8,
+     "text": "A crab made of cheese on a plate",
+     "blocks": [
+      "#/pictures/16/caption",
+      "#/pictures/21/caption",
+      "#/pictures/22/caption"
+     ],
+     "problem": "blocks of kind caption are involved",
+     "fails": true,
+     "breaks": [
+      "sentence cut: 'heat death of the universe, line art' | 'Film still of a long-legged cute big-eye'"
+     ],
+     "section": ""
+    }
+   ],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "esser-et-al-2024-scaling-rectified-flow-transformers-for-high-resolution-image-synthesis",
+ "doc_type": "scholarly_article",
+ "analyzed_at": "2026-11-15T10:45:38.222294+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 28,
+   "chars": 74378,
+   "blocks": 219,
+   "inner_headings": 35,
+   "figures": 33
+  }
+ ],
+ "skipped": [
+  "References (p. 13)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 28,
+  "gaps": [
+   {
+    "page": 19,
+    "text": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis detailed pen and ink drawing of a massive complex alien space ship above a farm in the middle of photo of a bear wearing a suit and tophat in a river in the middle of a forest holding a sign that says ”I nowhere. cant bear it”. tilt shift aerial photo of a cute city made of sushi on a wooden Table in the evening. dark high contrast render of a psychedelic tree of life illuminating Dustin a mystical cave. an anthropomorphic fractal person behind the counter at a fractal themed restaurant. beautiful oil painting of a steamboat in a river in the afternoon. On the side of the river is a large brick Building with a sign on top that says S̈D3.̈ an anthopomorphic pink donut with a mustache and cowboy hat standing by a log cabin in a forest fox sitting in front of a Computer in a messy room at night. On the screen is a 3d modeling program with an old 1970s orange truck in the driveway with a line render of a zebra. 19",
+    "words": 188,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/768"
+   },
+   {
+    "page": 22,
+    "text": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis Figure 11. The Mode (left) and Logit-Normal (right) distributions that we explore for biasing the sampling of training timesteps. “A raccoon wearing formal clothes, wearing a tophat and holding a cane. The raccoon is “A bowl of soup that looks like a monster made “Two cups of coffee, one with latte art of a cowboy hat, a kilt and a bowtie. The sloth is holding a garbage bag. Oil painting in the style out of plasticine” heart. The other has latte art of stars.” of Abstract cubism.” Figure 12. qualitative effects of Scaling. displayed are examples demonstrating the impact of Scaling training steps (left to right: 50k, 200k, 350k, 500k) and model sizes (top to Bottom: depth=15, 30, 38) on parti-prompts, highlighting the influence of training duration and model complexity. 22 “A smiling sloth is wearing a leather jacket, a holding a quarterstaff and a big book. The sloth is standing on grass a few feet in front of a shiny VW van with flowers painted on it. wide-angle lens from below.”",
+    "words": 180,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/839"
+   }
+  ],
+  "gaps_dismissed": [
+   {
+    "page": 1,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "* Equal contribution . <first.last>@stability.ai."
+   },
+   {
+    "page": 2,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "2 High-Resolution Image Synthesis"
+   },
+   {
+    "page": 2,
+    "words": 15,
+    "reason": "duplicate",
+    "text": "zt = at x0 + bt ϵ where ϵ ∼ N (0, I) . (2)"
+   },
+   {
+    "page": 3,
+    "words": 16,
+    "reason": "debris",
+    "text": "ψt (·|ϵ) : x0 7→ at x0 + bt ϵ ut (z|ϵ) := ψt′ (ψt−1 (z|ϵ)|ϵ)"
+   },
+   {
+    "page": 3,
+    "words": 11,
+    "reason": "debris",
+    "text": "pt (z|ϵ) ut (z) = Eϵ∼N (0,I) ut (z|ϵ) pt (z)"
+   },
+   {
+    "page": 3,
+    "words": 12,
+    "reason": "debris",
+    "text": "LF M = Et,pt (z) ||vΘ (z, t) − ut (z)||22 ."
+   },
+   {
+    "page": 3,
+    "words": 12,
+    "reason": "debris",
+    "text": "LCF M = Et,pt (z|ϵ),p(ϵ) ||vΘ (z, t) − ut (z|ϵ)||22 ,"
+   },
+   {
+    "page": 3,
+    "words": 30,
+    "reason": "debris",
+    "text": "ψt−1 (z|ϵ) = z−b at tϵ into (5) a′t a′ b′ zt′ = ut (zt |ϵ) = zt − ϵbt ( t − t ) . at at bt a2"
+   },
+   {
+    "page": 3,
+    "words": 11,
+    "reason": "debris",
+    "text": "b2t . with t a′t b′t λ′t = 2( at −"
+   },
+   {
+    "page": 3,
+    "words": 13,
+    "reason": "debris",
+    "text": "a′t bt ′ ut (zt |ϵ) = zt − λϵ at 2 t"
+   },
+   {
+    "page": 3,
+    "words": 35,
+    "reason": "debris",
+    "text": "a′ bt LCF M = Et,pt (z|ϵ),p(ϵ) ||vΘ (z, t) − t z + λ′t ϵ||22 (11) at 2 \u00132 \u0012 bt = Et,pt (z|ϵ),p(ϵ) − λ′t ||ϵΘ (z, t) − ϵ||22 (12) 2 a′"
+   },
+   {
+    "page": 3,
+    "words": 28,
+    "reason": "debris",
+    "text": "1 Lw (x0 ) = − Et∼U (t),ϵ∼N (0,I) wt λ′t ∥ϵΘ (zt , t) − ϵ∥2 , \u0002 \u0003 (4) 2 (5) where wt = − 21"
+   },
+   {
+    "page": 3,
+    "words": 8,
+    "reason": "debris",
+    "text": "FN (t|Pm , Ps2 ) −1 with FN"
+   },
+   {
+    "page": 3,
+    "words": 17,
+    "reason": "debris",
+    "text": "(9) results in λt ∼ N (−2Pm , (2Ps )2 ) for t ∼ U(0, 1) (15)"
+   },
+   {
+    "page": 3,
+    "words": 17,
+    "reason": "debris",
+    "text": "LwtEDM with wtEDM = N (λt | − 2Pm , (2Ps )2 )(e−λt + 0.52 ) (16)"
+   },
+   {
+    "page": 3,
+    "words": 17,
+    "reason": "duplicate",
+    "text": "π \u0001 π \u0001 zt = cost x0 + sin t ϵ . (17) 2 2"
+   },
+   {
+    "page": 4,
+    "words": 8,
+    "reason": "debris",
+    "text": "Lwtπ with t wtπ = π(t) (18) 1−t"
+   },
+   {
+    "page": 4,
+    "words": 29,
+    "reason": "debris",
+    "text": "1 1 \u0010 (logit(t) − m)2 \u0011 πln (t; m, s) = √ exp − , s 2π t(1 − t) 2s2 (19) where logit(t) = log 1−tt ,"
+   },
+   {
+    "page": 4,
+    "words": 29,
+    "reason": "debris",
+    "text": "\u0010 π \u0001 \u0011 fmode (u; s) = 1 − u − s · cos2 u − 1 + u . (20) 2 2 For −1 ≤ s ≤"
+   },
+   {
+    "page": 4,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "4 High-Resolution Image Synthesis"
+   },
+   {
+    "page": 4,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "cos( π u) schedule: 2log"
+   },
+   {
+    "page": 4,
+    "words": 17,
+    "reason": "debris",
+    "text": "d −1 2 πCosMap (t) = f (t) = . (22) dt π − 2πt + 2πt2"
+   },
+   {
+    "page": 5,
+    "words": 45,
+    "reason": "duplicate",
+    "text": "caption CLIP-G/14 CLIP-L/14 T5-XXL 77 + 77 tokens noised latent pooled 4096 patching channel linear positional MLP linear + embedding + y c x MLP MM-DiT-Block 1 Sinusoidal encoding MM-DiT-Block 2 time"
+   },
+   {
+    "page": 5,
+    "words": 84,
+    "reason": "duplicate",
+    "text": "y SiLU SiLU linear linear c x Layernorm Layernorm αc αx Mod: αc · • + βc Mod: αx · • + βx βc βx linear linear Opt. Opt. Opt. Opt. RMS-RMS- RMS-RMS- Norm Norm Norm Norm ⊙ ⊙ ⊙ Q K V attention linear lin"
+   },
+   {
+    "page": 7,
+    "words": 19,
+    "reason": "duplicate",
+    "text": "140 edm(-1.20, 1.20) eps/linear 1.20 rf/lognorm(0.00, 1.00) rf 1.00 v/cos FID v/linear 80 60 10 20 30 40 50"
+   },
+   {
+    "page": 7,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "7 original CAPTIONS"
+   },
+   {
+    "page": 8,
+    "words": 109,
+    "reason": "duplicate",
+    "text": "a space elevator, A cheeseburger with juicy a hole in the floor of M.-Y a small office made out of car this dreamlike digital art human life depicted entirely an origami pig on fire cinematic scifi ar"
+   },
+   {
+    "page": 10,
+    "words": 7,
+    "reason": "debris",
+    "text": "− t)c1 + tϵ, where both 1"
+   },
+   {
+    "page": 10,
+    "words": 8,
+    "reason": "debris",
+    "text": "sam- 1 Pn ple estimate ĉ = 1−t"
+   },
+   {
+    "page": 10,
+    "words": 13,
+    "reason": "debris",
+    "text": "pm n tn tm = pm (23) 1 + ( n − 1)tn"
+   },
+   {
+    "page": 10,
+    "words": 27,
+    "reason": "debris",
+    "text": "1 − tn λtm = 2log p m (24) n tn m = λtn − 2log α = λtn − log . (25) n 10"
+   },
+   {
+    "page": 11,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "11 High-Resolution Image Synthesis"
+   },
+   {
+    "page": 12,
+    "words": 5,
+    "reason": "duplicate",
+    "text": ". All text-encoders w/o T5"
+   },
+   {
+    "page": 12,
+    "words": 17,
+    "reason": "duplicate",
+    "text": "“A burger patty, with the Bottom bun and lettuce and tomatoes. ”coffee” written on it in mustard”"
+   },
+   {
+    "page": 12,
+    "words": 11,
+    "reason": "duplicate",
+    "text": "“A monkey holding a sign reading ”Scaling transformer models is awesome!”"
+   },
+   {
+    "page": 12,
+    "words": 33,
+    "reason": "duplicate",
+    "text": "“A mischievous ferret with a playful grin squeezes itself into a large glass jar, surrounded by colorful candy. The jar sits on a wooden Table in a cozy kitchen, and warm sunlight filters"
+   },
+   {
+    "page": 12,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "Through a nearby window”"
+   },
+   {
+    "page": 18,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "passionately singing silly walmart on sale. songs."
+   },
+   {
+    "page": 20,
+    "words": 21,
+    "reason": "debris",
+    "text": "d pt (x) + ∇ · [pt (x)vt (x)] = 0 ↔ vt generates probability density path pt . (26) dt"
+   },
+   {
+    "page": 20,
+    "words": 42,
+    "reason": "debris",
+    "text": "pt (z|ϵ) −∇ · [ut (z)pt (z)] = −∇ · [Eϵ∼N (0,I) ut (z|ϵ) pt (z)] (27) pt (z) = Eϵ∼N (0,I) − ∇ · [ut (z|ϵ)pt (z|ϵ)] (28) d d = Eϵ∼N (0,I) pt (z|ϵ) = pt (z), (29) dt dt"
+   },
+   {
+    "page": 20,
+    "words": 67,
+    "reason": "debris",
+    "text": "| LF M (Θ) = Et,pt (z) ||vΘ (z, t) − ut (z)||22 | (30) |\n| = Et,pt (z) ||vΘ (z, t)||22 − 2Et,pt (z) ⟨vΘ (z, t) | ut (z)⟩ + c | (31) |\n| = Et,pt (z) ||vΘ (z, t)||22 − 2Et,pt (z|ϵ),p(ϵ) ⟨vΘ (z, t) | ut "
+   },
+   {
+    "page": 20,
+    "words": 55,
+    "reason": "debris",
+    "text": "Z Z Ept (z|ϵ),p(ϵ) ⟨vΘ (z, t) | ut (z|ϵ)⟩ = dz dϵpt (z|ϵ)p(ϵ)⟨vΘ (z, t) | ut (z|ϵ)⟩ (34) Z Z pt (z|ϵ) = dzpt (z)⟨vΘ (z, t) | dϵ p(ϵ)ut (z|ϵ)⟩ (35) pt (z) Z = dzpt (z)⟨vΘ (z, t) | ut (z)⟩ = Ept (z) ⟨vΘ"
+   },
+   {
+    "page": 23,
+    "words": 29,
+    "reason": "duplicate",
+    "text": "“a peaceful lakeside landscape with “a book with the words ‘Don’t Panic¡, migrating herd of sauropods” written on it” 2B base 2B w/DPO 8b base 8b w/DPO"
+   },
+   {
+    "page": 24,
+    "words": 26,
+    "reason": "duplicate",
+    "text": "depth=24 (2B) depth=38 (8B) base base human preference [ % ] 60 w/DPO w/DPO 50 40 30 20 1.00 prompt quality prompt quality"
+   },
+   {
+    "page": 25,
+    "words": 32,
+    "reason": "duplicate",
+    "text": "input output 1 output 2 write ”go small go home” instead GO BIG OR GO U-Net is written on the blackboard change the word to UNOT make the sign say MM-DiT rules"
+   },
+   {
+    "page": 27,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "G 10: end if 11: end for 12:"
+   }
+  ],
+  "captions_reclassified": [
+   {
+    "page": 8,
+    "figure": "#/pictures/3",
+    "text": "smiling cartoon dog sits at a table, coffee mug on hand, as a room goes up in flames. 'This is fine,' the dog assures hi"
+   },
+   {
+    "page": 8,
+    "figure": "#/pictures/4",
+    "text": "A whimsical and creative image depicting a hybrid creature that is a mix of a waffle and a hippopotamus. This imaginativ"
+   },
+   {
+    "page": 18,
+    "figure": "#/pictures/13",
+    "text": "A kangaroo holding a beer, wearing ski goggles and passionately singing silly songs."
+   },
+   {
+    "page": 18,
+    "figure": "#/pictures/14",
+    "text": "An entire universe inside a bottle sitting on the shelf at walmart on sale."
+   },
+   {
+    "page": 18,
+    "figure": "#/pictures/15",
+    "text": "A cheesburger surfing the vibe wave at night"
+   },
+   {
+    "page": 18,
+    "figure": "#/pictures/16",
+    "text": "A crab made of cheese on a plate"
+   },
+   {
+    "page": 18,
+    "figure": "#/pictures/18",
+    "text": "A swamp ogre with a pearl earring by Johannes Vermeer"
+   },
+   {
+    "page": 18,
+    "figure": "#/pictures/20",
+    "text": "A car made out of vegetables."
+   },
+   {
+    "page": 18,
+    "figure": "#/pictures/21",
+    "text": "heat death of the universe, line art"
+   },
+   {
+    "page": 18,
+    "figure": "#/pictures/22",
+    "text": "Film still of a long-legged cute big-eye anthropomorphic cheeseburger wearing sneakers relaxing on the couch in a sparse"
+   }
+  ],
+  "captions_reassigned": [
+   {
+    "page": 22,
+    "caption": "fig 11",
+    "from": "#/pictures/26",
+    "to": "#/pictures/25"
+   }
+  ],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [],
+  "superseded": [],
+  "replaced_pages": [
+   19,
+   22
+  ],
+  "noise_dropped": 1,
+  "hyphens_restored": [
+   {
+    "page": 15,
+    "ref": "#/texts/703",
+    "word": "Vanden-Eijnden"
+   }
+  ],
+  "order": [
+   {
+    "page": 1,
+    "text": "compared to established Diffusion formulations",
+    "words": 5,
+    "refs": [
+     "#/texts/18"
+    ],
+    "repaired": true,
+    "note": "1 blocks replaced by the text layer's passage",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 18,
+    "text": "A crab made of cheese on a plate",
+    "words": 8,
+    "refs": [
+     "#/pictures/16/caption",
+     "#/pictures/21/caption",
+     "#/pictures/22/caption"
+    ],
+    "repaired": false,
+    "note": "blocks of kind caption are involved",
+    "breaks": [
+     "sentence cut: 'heat death of the universe, line art' | 'Film still of a long-legged cute big-eye'"
+    ],
+    "section": ""
+   }
+  ],
+  "order_pages_checked": 25,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 1,
+  "order_breaking": 1,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 4 minor; distortions: 0 material, 4 minor; additions: 0 material, 1 minor; order: 0 material, 0 minor",
+  "at": "2026-11-15T10:58:03+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 4
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 4
+   },
+   "additions": {
+    "material": 0,
+    "minor": 1
+   },
+   "order": {
+    "material": 0,
+    "minor": 0
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (p. 1–28)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "although this method can generally help to stabilize the training of large models, it is not a universal recipe and may need to be adapted depending on the exact training setup.",
+      "severity": "minor",
+      "page": 9
+     },
+     {
+      "source": "As synthetic captions may cause a text-to-image model to forget about certain concepts not present in the VLM's knowledge corpus, we use a ratio of 50 % original and 50 % synthetic captions.",
+      "severity": "minor",
+      "page": 7
+     },
+     {
+      "source": "While some recent works explore diffusion transformer backbones (Peebles & Xie, 2023; Chen et al., 2023; Ma et al., 2024), scaling laws for text-to-image diffusion models remain unexplored.",
+      "severity": "minor",
+      "page": 17
+     },
+     {
+      "source": "Note that our reported FLOPs for video training in Figure 8 are only FLOPs from video training and do not include the FLOPs from image pretraining.",
+      "severity": "minor",
+      "page": 11
+     }
+    ],
+    "distortions": [
+     {
+      "source": "Our MM-DiT variant significantly outperforms the cross-attention and vanilla variants.",
+      "summary": "MM-DiT significantly outperforms all",
+      "severity": "minor",
+      "page": 9
+     },
+     {
+      "source": "we find that, when moving to high resolutions, mixed precision training can become unstable and the loss diverges",
+      "summary": "when finetuning at high resolutions, mixed-precision training becomes unstable",
+      "severity": "minor",
+      "page": 9
+     },
+     {
+      "source": "feeding them into a machine that runs on steam and is as large as a skyscraper. Written on the side of the machine: ”SD3 Paper”",
+      "summary": "A long line of dark brown railroad tanker cars runs along the right side, with the nearest car lettered “SD3” above “PAPER.”",
+      "severity": "minor",
+      "page": 18
+     },
+     {
+      "source": "A kangaroo holding a beer, wearing ski goggles and passionately singing silly songs.",
+      "summary": "This is a photograph of a kangaroo wearing blue sunglasses and holding a glass mug of beer with a foamy head.",
+      "severity": "minor",
+      "page": 18
+     }
+    ],
+    "additions": [
+     {
+      "summary": "the 8B model outperforms proprietary (DALL-E 3, Ideogram) and open (SDXL-Turbo, Playground, PixArt-α, Würstchen) models",
+      "severity": "minor"
+     }
+    ],
+    "order": []
+   }
+  ]
+ },
+ "source": {
+  "source": "esser-et-al-2024-scaling-rectified-flow-transformers-for-high-resolution-image-synthesis.pdf",
+  "bytes": 33973124,
+  "sha256": "7ba352b6ded12859cda4d47df203d5fe38ee884c45f3b67ff227549d82db1487",
+  "extracted_at": "2026-11-13T01:53:04+01:00"
+ }
+}

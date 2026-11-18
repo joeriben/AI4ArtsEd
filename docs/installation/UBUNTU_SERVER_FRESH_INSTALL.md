@@ -791,17 +791,19 @@ Recommended baseline for an educational deployment with DSGVO/GDPR concerns: con
 Mistral (and optionally Mammouth + IONOS) only. US-region providers can be added later
 through the Settings UI if a workshop has explicit consent.
 
-**7.A.3 Admin password for the Settings UI**
+**7.A.3 Admin account and settings password**
 
-A separate file `devserver/settings_password.key` stores the **hash** of the admin
-password used to unlock the Settings UI. It is **not** a third-party API key. The file
-is created automatically when the admin sets a password through the UI for the first
-time. No manual creation is required.
+No password is built into the code. A new installation has an admin account without a
+password and no settings password. Both are set after the first start of the backend,
+in step 8.4.
 
 ### Path B — Migration (configuration was rsync'd in Phase 4)
 
 `user_settings.json`, all `*.key` files and `settings_password.key` were copied in
-Phase 4 step 6. Verify:
+Phase 4 step 6. The lab database (`devserver/var/lab.db`) was not: the new backend
+creates an admin account without a password at its first start, set in step 8.4. A
+copied `settings_password.key` may still hold one of the passwords that earlier versions
+built into the code; the backend refuses those, and step 8.4 sets a new one. Verify:
 
 ```bash
 ls -la ~/ai/ai4artsed_development/devserver/*.key
@@ -941,6 +943,22 @@ sudo systemctl start cloudflared
 sudo systemctl status ai4artsed-gpu ai4artsed-backend cloudflared
 ```
 
+### 8.4 Set the admin account and the settings password
+
+The backend has created the lab database with an admin account without a password.
+Run from the repository root, as the user the backend runs as:
+
+```bash
+cd ~/ai/ai4artsed_development
+./venv/bin/python devserver/scripts/set_admin_account.py
+```
+
+It sets the user name, the email address and the password of the admin account, and on
+request the settings password to the same password. The settings password is stored as
+a hash in `devserver/settings_password.key`; it is **not** a third-party API key. It
+prints the path of the lab database it changes; where the service sets
+`AI4ARTSED_DB_PATH`, run it with the same value. The same command changes both later.
+
 ---
 
 ## Phase 9 — Smoke Tests (Headless)
@@ -963,7 +981,8 @@ curl http://localhost:17804/system_stats
 ### 9.2 Remote (Browser on workstation)
 
 **Option A — via the public cloudflared hostname** (preferred):
-- Open the production URL in a browser
+- Open the production URL in a browser and sign in on the tab "Course leader" with the
+  admin account of step 8.4
 - Run a simple text pipeline (kids safety level, trivial prompt) → verify Stages 1–3
 - Run an image pipeline using `sd35_large` config → verify Stage 4 + VLM safety
 - Run a music pipeline (HeartMuLa) → verify GPU service heavy-load

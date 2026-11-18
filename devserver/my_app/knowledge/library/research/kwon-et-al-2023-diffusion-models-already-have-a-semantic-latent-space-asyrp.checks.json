@@ -1,0 +1,1707 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 8.0% of 2289 words, ceiling 20%, longest run 15 words; not counted: 8 words from the source's lists; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 15,
+     "text": "is the first attempt to discover the semantic latent space in frozen pretrained diffusion models"
+    },
+    {
+     "words": 13,
+     "text": "quantifiable measures editing strength of an interval and quality deficiency at a timestep"
+    },
+    {
+     "words": 13,
+     "text": "quantifiable measures editing strength of an interval and quality deficiency at a timestep"
+    },
+    {
+     "words": 12,
+     "text": "consistency of h space decreases at the end of the generative process"
+    },
+    {
+     "words": 11,
+     "text": "η 0 the process becomes deterministic and guarantees nearly perfect inversion"
+    }
+   ],
+   "value": 0.0799,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "6 of 7 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 4,
+     "expected_items": 5,
+     "first_item": "The same ∆ h leads to the same effect on different samples.",
+     "output_lists": [
+      3,
+      4,
+      10
+     ]
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 8,
+     "table_cells": 42,
+     "missing_cells": [
+      "CelebA-HQ unseen-domain",
+      "CelebA-HQ unseen-domain",
+      "CelebA-HQ unseen-domain",
+      "71.56 %",
+      "59.84 %",
+      "63.13 %",
+      "73.19 %",
+      "71.81 %",
+      "87.50 %",
+      "28.44%",
+      "40.16%",
+      "36.88%",
+      "26.81%",
+      "28.19%",
+      "12.50%"
+     ]
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "table_cells": 190,
+     "missing_cells": [
+      "src txt",
+      "trg txt",
+      "Young person",
+      "0.905",
+      "515",
+      "Sad face",
+      "0.894",
+      "Angry face",
+      "0.892",
+      "Tanned face",
+      "0.886",
+      "Disgusted face",
+      "0.880",
+      "511",
+      "Person with makeup",
+      "0.875",
+      "509",
+      "0.868",
+      "506",
+      "Person with bald head"
+     ]
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 27,
+     "table_cells": 161,
+     "missing_cells": [
+      "src txt",
+      "trg txt",
+      "from random noise",
+      "Young person",
+      "0.905*3",
+      "0.899*3",
+      "Sad face",
+      "0.894*3",
+      "Angry face",
+      "0.892*3",
+      "Tanned face",
+      "0.886*3",
+      "Disgusted face",
+      "0.880*3",
+      "Person with makeup",
+      "0.875*3",
+      "Person with curly hair",
+      "0.835*3",
+      "Self-portrait by Frida Kahlo",
+      "0.4433"
+     ]
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 27,
+     "table_cells": 52,
+     "missing_cells": [
+      "CelebA-HQ-unseen-domain",
+      "CelebA-HQ-unseen-domain",
+      "CelebA-HQ-unseen-domain",
+      "CelebA-HQ-unseen-domain",
+      "Tanned",
+      "Tanned",
+      "0.921",
+      "89.02%",
+      "0.964",
+      "88.90%",
+      "0.991",
+      "85.71%",
+      "0.956",
+      "76.51%",
+      "0.805",
+      "79.03",
+      "0.813",
+      "91.41%",
+      "0.760",
+      "89.93%"
+     ]
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 28,
+     "table_cells": 32,
+     "missing_cells": [
+      "0.778",
+      "57.62%",
+      "0.943",
+      "62.65%",
+      "0.989",
+      "65.83%",
+      "0.661",
+      "54.50%",
+      "0.907",
+      "64.82%",
+      "0.964",
+      "65.02%"
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "120 of 185 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 2,
+     "number": "2.1"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 2,
+     "number": "5.3"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 3,
+     "number": "2.2"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 3,
+     "number": "2.3"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 3,
+     "number": "3.1"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 3,
+     "number": "3.2"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 4,
+     "number": "3.3"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 5,
+     "number": "0.6"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 5,
+     "number": "4.1"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 6,
+     "number": "4.2"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 6,
+     "number": "4.3"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 6,
+     "number": "5.1"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 6,
+     "number": "5.2"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 8,
+     "number": "12.50"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 8,
+     "number": "26.81"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 8,
+     "number": "28.19"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 8,
+     "number": "28.44"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 8,
+     "number": "36.88"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 8,
+     "number": "40.16"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 8,
+     "number": "59.84"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 8,
+     "number": "63.13"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 8,
+     "number": "71.56"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 8,
+     "number": "71.81"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 8,
+     "number": "73.19"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 8,
+     "number": "87.50"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 14,
+     "number": "2015"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 14,
+     "number": "2019"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 14,
+     "number": "2020"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 14,
+     "number": "2021"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "180"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "221"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "291"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "302"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "320"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "321"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "326"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "330"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "333"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "349"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "367"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "370"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "371"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "403"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "412"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "419"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "422"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "430"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "443"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "446"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "461"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "489"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "490"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "499"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "505"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "506"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "509"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "511"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "515"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "565"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "667"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "690"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "710"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "774"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "784"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "793"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "797"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "802"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "835"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "841"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "850"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "860"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "861"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "866"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "868"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "875"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "879"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "880"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "883"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "886"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "892"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "894"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "898"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "905"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "908"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "912"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "917"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 21,
+     "number": "921"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 25,
+     "number": "2017"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 25,
+     "number": "2018"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 27,
+     "number": "0.4433"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 27,
+     "number": "1.7"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 27,
+     "number": "661"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 27,
+     "number": "76.51"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 27,
+     "number": "760"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 27,
+     "number": "79.03"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 27,
+     "number": "805"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 27,
+     "number": "81.23"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 27,
+     "number": "811"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 27,
+     "number": "813"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 27,
+     "number": "85.71"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 27,
+     "number": "88.90"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 27,
+     "number": "888"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 27,
+     "number": "89.02"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 27,
+     "number": "89.91"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 27,
+     "number": "89.93"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 27,
+     "number": "91.41"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 27,
+     "number": "92.85"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 27,
+     "number": "956"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 27,
+     "number": "964"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 27,
+     "number": "991"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 28,
+     "number": "54.50"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 28,
+     "number": "57.62"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 28,
+     "number": "62.65"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 28,
+     "number": "64.82"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 28,
+     "number": "65.02"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 28,
+     "number": "65.83"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 28,
+     "number": "778"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 28,
+     "number": "907"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 28,
+     "number": "943"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 28,
+     "number": "989"
+    }
+   ],
+   "value": 120.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "51 of 52 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 1,
+     "heading": "ABSTRACT"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 1,
+     "heading": "1 INTRODUCTION"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 2,
+     "heading": "2.1 DENOISING DIFFUSION PROBABILITY MODEL (DDPM)"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 3,
+     "heading": "2.2 DENOISING DIFFUSION IMPLICIT MODEL (DDIM)"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 3,
+     "heading": "2.3 IMAGE MANIPULATION WITH CLIP"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 3,
+     "heading": "3 DISCOVERING SEMANTIC LATENT SPACE IN DIFFUSION MODELS"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 3,
+     "heading": "3.1 PROBLEM"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 3,
+     "heading": "3.2 ASYMMETRIC REVERSE PROCESS"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 4,
+     "heading": "3.3 h-space"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 4,
+     "heading": "3.4 IMPLICIT NEURAL DIRECTIONS"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 5,
+     "heading": "4 GENERATIVE PROCESS DESIGN"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 5,
+     "heading": "4.1 EDITING PROCESS WITH ASYRP"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 6,
+     "heading": "4.2 QUALITY BOOSTING WITH STOCHASTIC NOISE INJECTION"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 6,
+     "heading": "4.3 OVERALL PROCESS OF IMAGE EDITING"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 6,
+     "heading": "5 EXPERIMENTS"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 6,
+     "heading": "5.1 VERSATILITY OF h-space WITH ASYRP"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 8,
+     "heading": "5.2 QUANTITATIVE COMPARISON"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 8,
+     "heading": "5.3 ANALYSIS ON h-space"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 9,
+     "heading": "6 CONCLUSION"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 13,
+     "heading": "Appendix"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 14,
+     "heading": "A RELATED WORK"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 15,
+     "heading": "B MORE DISCUSSION"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 15,
+     "heading": "C PROOF OF THEOREM 1"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 17,
+     "heading": "D ADDITIONAL SUPPORTS FOR h-space WITH ASYRP"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 17,
+     "heading": "D.1 RANDOM PERTURBATION ON ϵ -space WITHOUT ASYRP"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 17,
+     "heading": "D.2 ROBUSTNESS AND SEMANTICS IN h-space AND ϵ -space WITH ASYRP"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 17,
+     "heading": "D.3 CHOICE OF h-space IN U-NET"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 17,
+     "heading": "E IMPLICIT NEURAL DIRECTIONS"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 18,
+     "heading": "F QUALITY IMPROVEMENTS BY NON-ACCELERATED SAMPLING WITH SCALED ∆ h t"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 18,
+     "heading": "G EDITING STRENGTH AND EDITING FLEXIBILITY"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 18,
+     "heading": "G.1 EDITING STRENGTH AND t edit"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 18,
+     "heading": "G.2 EDITING FLEXIBILITY AND t boost"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 19,
+     "heading": "H QUALITY BOOSTING"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 22,
+     "heading": "Smiling"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 23,
+     "heading": "I ALGORITHM"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 23,
+     "heading": "J TRAINING DETAILS"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 23,
+     "heading": "J.1 LOSS COEFFICIENTS"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 24,
+     "heading": "J.2 TRAINING WITH RANDOM SAMPLING INSTEAD OF THE TRAINING DATASETS"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 24,
+     "heading": "K EVALUATION"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 24,
+     "heading": "K.1 USER STUDY"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 25,
+     "heading": "Algorithm 1: Editing(Inference)"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 25,
+     "heading": "K.2 SEGMENTATION CONSISTENCY AND DIRECTIONAL CLIP SIMILARITY"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 26,
+     "heading": "Algorithm 2: Training Neural implicit function f t"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 26,
+     "heading": "L DIRECTIONS"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 26,
+     "heading": "L.1 GLOBAL DIRECTION"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 29,
+     "heading": "L.2 COMPARE THREE METHODS"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 30,
+     "heading": "M RANDOM SAMPLING"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 32,
+     "heading": "N MORE SAMPLES"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 32,
+     "heading": "N.1 IMAGENET"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 32,
+     "heading": "N.2 MULTI-INTERPOLATION"
+    },
+    {
+     "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+     "page": 32,
+     "heading": "N.3 MORE RESULTS ON ALL DATASETS"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "42 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "42 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "54 quoted texts in 11 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Fig. 1",
+     "page": 2,
+     "image": "fig-001-p2.png",
+     "quotes": [
+      "“+Δh,”",
+      "“+½Δh,”",
+      "“−Δh”",
+      "“+Δh,”",
+      "“+½Δh,”",
+      "“−Δh.”"
+     ]
+    },
+    {
+     "figure": "Image 3",
+     "page": 5,
+     "image": "fig-003-p5.png",
+     "quotes": [
+      "“LPIPS(x_t, ·)”",
+      "“(x_T) 1000”",
+      "“0 (x_0)”",
+      "“AFHQ P_t”",
+      "“AFHQ x_t”",
+      "“CelebA P_t”",
+      "“CelebA x_t”",
+      "“LPIPS(x,·) = 1.2”",
+      "“LPIPS(x_t) = 0.33”",
+      "“t_boost”"
+     ]
+    },
+    {
+     "figure": "Fig. 6",
+     "page": 8,
+     "image": "fig-006-p8.png",
+     "quotes": [
+      "\"Δh_t,\"",
+      "\"Δε_t.\""
+     ]
+    },
+    {
+     "figure": "Fig. 10",
+     "page": 9,
+     "image": "fig-014-p9.png",
+     "quotes": [
+      "“Δh_t,”",
+      "“Δh_t^mean,”",
+      "“Δh^global”"
+     ]
+    },
+    {
+     "figure": "Fig. 13",
+     "page": 17,
+     "image": "fig-017-p17.png",
+     "quotes": [
+      "“x”",
+      "“x_0”",
+      "“x̃_0”",
+      "“x_0 where”",
+      "“σ² = 0.03”",
+      "“σ² = 0.4”",
+      "“L1 distance between x and x_0”",
+      "“L1 distance”",
+      "“Variance of z (σ²)”"
+     ]
+    },
+    {
+     "figure": "Fig. 14",
+     "page": 18,
+     "image": "fig-018-p18.png",
+     "quotes": [
+      "“256^2×128”",
+      "“128^2×128”",
+      "“8^2×512”",
+      "“x_t”",
+      "“256^2×3”",
+      "“ε_θ(x_t, t)”",
+      "“256^2×3”"
+     ]
+    },
+    {
+     "figure": "Fig. 16",
+     "page": 19,
+     "image": "fig-020-p19.png",
+     "quotes": [
+      "“4 × 4 × 512”",
+      "“f_t(h_t)”",
+      "“4 × 4 × 512”",
+      "“Δh_t”"
+     ]
+    },
+    {
+     "figure": "Fig. 19",
+     "page": 21,
+     "image": "fig-023-p21.png",
+     "quotes": [
+      "\"METFACES\"",
+      "\"P_t\"",
+      "\"x_t\"",
+      "\"LPIPS(x,·) = 1.2\"",
+      "\"LPIPS(x,·) = 0.33\""
+     ]
+    },
+    {
+     "figure": "Fig. 24",
+     "page": 24,
+     "image": "fig-028-p24.png",
+     "quotes": [
+      "\"attr Smiling\"",
+      "\"Adding Δh\""
+     ]
+    },
+    {
+     "figure": "Image 38",
+     "page": 31,
+     "image": "fig-038-p31.png",
+     "quotes": [
+      "\"Δh_t\"",
+      "\"Δh_t^mean\"",
+      "\"Δh_t^global\""
+     ]
+    },
+    {
+     "figure": "Image 39",
+     "page": 31,
+     "image": "fig-039-p31.png",
+     "quotes": [
+      "\"Δh_t\"",
+      "\"Δh_t^mean\"",
+      "\"Δh^global\""
+     ]
+    }
+   ],
+   "value": 54.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "50 page references valid (printed-folio pages 1–35)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "35 pages checked, 4 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "30 pages checked, 0 passages put back in order",
+   "findings": [],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "kwon-et-al-2023-diffusion-models-already-have-a-semantic-latent-space-asyrp",
+ "doc_type": "scholarly_article",
+ "analyzed_at": "2026-11-15T11:11:59.342236+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "Diffusion Models Already Have a Semantic Latent Space",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 35,
+   "chars": 59861,
+   "blocks": 243,
+   "inner_headings": 52,
+   "figures": 42
+  }
+ ],
+ "skipped": [
+  "ACKNOWLEDGMENTS (p. 9)",
+  "REFERENCES (p. 10)",
+  "Table of Contents (p. 13)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 35,
+  "gaps": [
+   {
+    "page": 5,
+    "text": "1.6 quality editing deficiency 1.4 strength 1.2 1.0 0.8 0.6 0.4 AFHQ AFHQ 0.2 CelebA CelebA 0.0 1000 800 600 400 200 0 t",
+    "words": 24,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "before #/texts/135"
+   },
+   {
+    "page": 9,
+    "text": "| real image | real image |\n| Young | pixar |",
+    "words": 6,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/pictures/12"
+   },
+   {
+    "page": 34,
+    "text": "Published as a Conference paper at ICLR 2023 Man↔ real image smiling Sad Angry Young curly hair Nicolas pixar Modigliani Neanderthal Frida Woman Man↔ real image smiling Sad Angry Young curly hair Nicolas pixar Modigliani Neanderthal Frida Woman Figure 34: Weprovide more results on CelebA-HQ dataset. 34",
+    "words": 48,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/777"
+   },
+   {
+    "page": 35,
+    "text": "Published as a Conference paper at ICLR 2023 real image Department factory Gothic Red brick temple Wooden real image Department factory Gothic Red brick temple Wooden Figure 35: Weprovide more results on LSUN-church dataset. real image Sleepy Happy Wolf Yorkshire real image Hotel Princess real image smiling Disgusted Figure 36: Weprovide more results on AFHQ, LSUNbedroom and M ET faces datasets respectively. 35",
+    "words": 66,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/806"
+   }
+  ],
+  "gaps_dismissed": [
+   {
+    "page": 2,
+    "words": 17,
+    "reason": "duplicate",
+    "text": "image manifold Happy Happy Happy ? original (a) image guidance (b) Classifier guidance (c) DiffusionCLIP (d) ours"
+   },
+   {
+    "page": 2,
+    "words": 37,
+    "reason": "debris",
+    "text": "\u0012r \u0012 \u0013 \u0013 \u0010 p \u0011 αt αt q (xt | xt−1 ) = N xt ; 1 − βt xt−1 , βt I = N xt−1 , 1 − I , (1) αt−1 αt−1 Qt"
+   },
+   {
+    "page": 2,
+    "words": 27,
+    "reason": "debris",
+    "text": "\u000fθt : \u0012 \u0013 1 βt θ xt−1 = √ xt − √ \u000f (xt ) + σt zt , (2) 1 − βt 1 − αt"
+   },
+   {
+    "page": 3,
+    "words": 42,
+    "reason": "debris",
+    "text": "√ xt − 1 − αt \u000fθt (xt ) \u0012 \u0013 q √ xt−1 = αt−1 √ + 1 − αt−1 − σt2 · \u000fθt (xt ) + σt zt , (3) αt | {z } |{z} | {z } random noise"
+   },
+   {
+    "page": 3,
+    "words": 23,
+    "reason": "debris",
+    "text": "2021): ∆I · ∆T Ldirection xedit , y target ; xsource , y source := 1 − \u0001 , (4) k∆Ikk∆T k \u0001"
+   },
+   {
+    "page": 3,
+    "words": 20,
+    "reason": "debris",
+    "text": "√ xt−1 = αt−1 Pt (\u000fθt (xt )) + Dt (\u000fθt (xt )) + σt zt , (5) where Pt"
+   },
+   {
+    "page": 3,
+    "words": 16,
+    "reason": "debris",
+    "text": "√ xt−1 = αt−1 Pt (˜ \u000fθt (xt )) + Dt (\u000fθt (xt )), (6) 3"
+   },
+   {
+    "page": 4,
+    "words": 16,
+    "reason": "duplicate",
+    "text": "DDIM reverse process … … real image DDIM Asyrp smiling … … … ASYMMETRIC reverse process"
+   },
+   {
+    "page": 4,
+    "words": 42,
+    "reason": "debris",
+    "text": "source (t) the original Pt . We find ∆\u000f = arg min∆\u000f Et L where L = λCLIP Ldirection Pedit (t) , y ref ; Psource , y source + λrecon Pedit − Psource \u0001 t t t t (7) Although ∆\u000f"
+   },
+   {
+    "page": 4,
+    "words": 20,
+    "reason": "debris",
+    "text": "√ xt−1 = αt−1 Pt (\u000fθt (xt |∆ht )) + Dt (\u000fθt (xt )) + σt zt , (8) where"
+   },
+   {
+    "page": 5,
+    "words": 9,
+    "reason": "debris",
+    "text": "ξt = LPIPS(x, PT ) − LPIPS(x, Pt )"
+   },
+   {
+    "page": 6,
+    "words": 80,
+    "reason": "debris",
+    "text": "√ \u0001 αt−1 Pt (\u000fθt (xt |ft )) + Dt , σt2 I , η = 0 if T ≥ t ≥ tedit  N (t) √ \u0001 pθ (xt−1 | xt ) = N αt−1 Pt (\u000fθt (xt )) + Dt , σt2 I , η = 0 if tedit > t ≥ tboost (9) √ θ 2 \u0001 N  αt−1 Pt (\u000ft (xt )) + D"
+   },
+   {
+    "page": 7,
+    "words": 32,
+    "reason": "duplicate",
+    "text": "real image recon. smiling Sad Angry Man↔Woman Young curly hair real image recon. Department factory Gothic Red bricks temple Wooden real image smiling Disgusted real image Sleepy Happy real image Hote"
+   },
+   {
+    "page": 7,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "real image Nicolas Cage pixar Modigliani Neanderthal Frida"
+   },
+   {
+    "page": 8,
+    "words": 17,
+    "reason": "duplicate",
+    "text": "real image real image real image (a) result of Optimization (b) result of adaptation to other images"
+   },
+   {
+    "page": 8,
+    "words": 8,
+    "reason": "debris",
+    "text": "real image -smiling (untrained) + smiling (trained)"
+   },
+   {
+    "page": 9,
+    "words": 9,
+    "reason": "debris",
+    "text": "real image Young Sad Neanderthal N+S N+Y Y+S Y+S+N"
+   },
+   {
+    "page": 14,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "real images smiling"
+   },
+   {
+    "page": 16,
+    "words": 202,
+    "reason": "debris",
+    "text": "√ x̃t−1 = \u000fθt (xt )) + Dt (˜ αt−1 Pt (˜ \u000fθt (xt )) (10) √ \u0001! √ xt − 1 − αt \u000fθt (xt ) + ∆\u000ft p \u0010 (θ) \u0011 = αt−1 √ + 1 − αt−1 · \u000ft (xt ) + ∆\u000ft (11) αt √ √ √ αt−1 1 − αt αt−1 Pt (\u000fθt (xt )) + Dt (\u000fθt (xt ))"
+   },
+   {
+    "page": 18,
+    "words": 64,
+    "reason": "duplicate",
+    "text": "1 2 14 15 3 13 4 12 5 11 6 9 10 7 8 𝑥! 𝜖\" (𝑥! , 𝑡) 256! ×3 16! ×512 8! ×512 8! ×512 8! ×512 16! ×512 256! ×3 32! ×256 32! ×256 64! ×256 64! ×256 128! ×128 128! ×128 256! ×128 256! ×128 𝑡 Sinusoidal Re"
+   },
+   {
+    "page": 19,
+    "words": 24,
+    "reason": "duplicate",
+    "text": "original layer 1~6 layer 7 layer 8 (h-space) layer 9 layer 10 layer 11 layer 12 layer 13 layer 14 layer 15 layer 16"
+   },
+   {
+    "page": 19,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "1x1 group 1x1 swish conv norm conv Linear"
+   },
+   {
+    "page": 22,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "real image w/o quality boosting w/ quality boosting"
+   },
+   {
+    "page": 22,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "w/o quality boosting w/ quality boosting"
+   },
+   {
+    "page": 23,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "real image 0.1 0.2 0.3 0.33 0.36 0.4 0.5 pixar Young smiling"
+   },
+   {
+    "page": 23,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "real image 0.5 0.8 1.0 1.2 1.3 1.35 1.38 pixar Young smiling"
+   },
+   {
+    "page": 24,
+    "words": 18,
+    "reason": "duplicate",
+    "text": "real image … … … smiling frozen U-Net SEMANTIC encoder adding (a) editing (b) denoising (c) quality boosting"
+   },
+   {
+    "page": 25,
+    "words": 10,
+    "reason": "duplicate",
+    "text": "\u000f // step 2: manipulation Sgen 6 define {τ̃ s"
+   },
+   {
+    "page": 25,
+    "words": 33,
+    "reason": "debris",
+    "text": "from \u000fθ (x̃τ̃ s ) Sf or PM 11 ∆hτ̃ s = Sgen ( i=1 ci fτ̃i s (hτ̃ s )) 12 \u000f˜ = \u000fθ (x̃τ̃ s |∆hτ̃ s ) 13 \u000f ="
+   },
+   {
+    "page": 25,
+    "words": 32,
+    "reason": "debris",
+    "text": "1) √ √ x̃τ̃ − 1−ατ̃ \u000f˜ q 22 x̃τ̃ s−1 = ατ̃ s−1 ( s √ατ̃ s ) + 1 − ατ̃ s−1 − στ̃2s \u000f + στ̃ s z s"
+   },
+   {
+    "page": 26,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "input: \u000fθ (pretrained model), {x0"
+   },
+   {
+    "page": 26,
+    "words": 53,
+    "reason": "debris",
+    "text": ") √ √ x̃(i) τs − 1−ατs \u000fθ (x̃(i) τs |∆hτs ) x(i) τs − 1−ατs \u000fθ (x(i) τs ) 14 P = √ ατs ; Psrc = √ ατs (i) √ p (i) 15 x̃τs−1 = ατs−1 P + 1 − ατs−1 \u000fθ (x̃τs ) (i) √ p (i) 16 xτs−1 ="
+   },
+   {
+    "page": 26,
+    "words": 17,
+    "reason": "debris",
+    "text": "h∆I, ∆T i Sdir (xgen , ytar ; xref , yref ) := , (17) k∆Ikk∆T k"
+   },
+   {
+    "page": 27,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "CelebA-HQ-in-domain CelebA-HQunseen-domain smiling Sad Tanned pixar"
+   },
+   {
+    "page": 29,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "Department store Wooden"
+   },
+   {
+    "page": 29,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "Red brick ancient"
+   },
+   {
+    "page": 30,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "CelebA-HQ smiling CelebA-HQ pixar LSUN-church Department store original"
+   },
+   {
+    "page": 31,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "real image real image smiling pixar Angry Modigliani Neanderthal"
+   },
+   {
+    "page": 31,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "real image real image Department store Gothic temple"
+   },
+   {
+    "page": 31,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "Young pixar smiling Frida"
+   },
+   {
+    "page": 32,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "real image Apple Burger real image School bus House"
+   }
+  ],
+  "captions_reclassified": [
+   {
+    "page": 29,
+    "figure": "#/pictures/34",
+    "text": "Real image Asyrp (ours) DiffusionCLIP"
+   }
+  ],
+  "captions_reassigned": [
+   {
+    "page": 8,
+    "caption": "fig 6",
+    "from": "#/pictures/6",
+    "to": "#/pictures/5"
+   },
+   {
+    "page": 9,
+    "caption": "fig 9",
+    "from": "#/pictures/13",
+    "to": "#/pictures/12"
+   }
+  ],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [
+   {
+    "page": 9,
+    "image": "fig-009-p9.png",
+    "w": 94,
+    "h": 94,
+    "reason": "small",
+    "figure": "#/pictures/12"
+   },
+   {
+    "page": 9,
+    "image": "fig-010-p9.png",
+    "w": 91,
+    "h": 94,
+    "reason": "small",
+    "figure": "#/pictures/12"
+   },
+   {
+    "page": 9,
+    "image": "fig-011-p9.png",
+    "w": 92,
+    "h": 94,
+    "reason": "small",
+    "figure": "#/pictures/12"
+   }
+  ],
+  "superseded": [],
+  "replaced_pages": [
+   34,
+   35
+  ],
+  "noise_dropped": 16,
+  "hyphens_restored": [
+   {
+    "page": 31,
+    "ref": "#/texts/731",
+    "word": "CelebA-HQ"
+   }
+  ],
+  "order": [],
+  "order_pages_checked": 30,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 0,
+  "order_breaking": 0,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 4 minor; distortions: 0 material, 3 minor; additions: 0 material, 1 minor; order: 0 material, 0 minor",
+  "at": "2026-11-15T11:14:02+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 4
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 3
+   },
+   "additions": {
+    "material": 0,
+    "minor": 1
+   },
+   "order": {
+    "material": 0,
+    "minor": 0
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "Diffusion Models Already Have a Semantic Latent Space (p. 1–35)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "Preechakul et al. (2022) introduces an additional input to the reverse diffusion process: a latent vector from an original image embedded by an extra encoder... However, it requires training from scratch and does not match with pretrained diffusion models.",
+      "severity": "minor",
+      "page": 2
+     },
+     {
+      "source": "Spoiler alert: our semantic latent space is different from the intermediate latent variables in the diffusion process.",
+      "severity": "minor",
+      "page": 2
+     },
+     {
+      "source": "The code is available at https://github.com/kwonminki/Asyrp official",
+      "severity": "minor",
+      "page": 6
+     },
+     {
+      "source": "h-space in the latent diffusion models such as stable diffusion, is another interesting research direction.",
+      "severity": "minor",
+      "page": 15
+     }
+    ],
+    "distortions": [
+     {
+      "source": "(b) Adding random noise with magnitude of ∆ϵ smiling t and random direction in ϵ -space leads to severely distorted images. (c) Adding random noises with tripled magnitude produce diverse visual changes in realistic images.",
+      "summary": "The image contains three color photographs arranged side by side, each showing a headshot of a woman with long dark hair. In the left photo she has a neutral expression... in the right photo she has a neutral expression with closed lips and the facial features appear less sharp",
+      "severity": "minor",
+      "page": 9
+     },
+     {
+      "source": "Figure 3 illustrates LPIPS( x , · ) for P t and x t ... We empirically find that t edit with LPIPS( x , P t edit ) = 0 . 33 builds the shortest editing interval",
+      "summary": "the vertical axis labeled “LPIPS(x_t, ·)” ... with horizontal reference lines marked “LPIPS(x,·) = 1.2” and “LPIPS(x_t) = 0.33”",
+      "severity": "minor",
+      "page": 5
+     },
+     {
+      "source": "we conjecture that the consistency of h-space decreases at the end of the generative process.",
+      "summary": "Consistency of h-space decreases at the end of the generative process.",
+      "severity": "minor",
+      "page": 28
+     }
+    ],
+    "additions": [
+     {
+      "summary": "argues that frozen, pretrained diffusion models already contain a semantic latent space, contrary to the common belief that they lack one",
+      "severity": "minor"
+     }
+    ],
+    "order": []
+   }
+  ]
+ },
+ "source": {
+  "source": "kwon-et-al-2023-diffusion-models-already-have-a-semantic-latent-space-asyrp.pdf",
+  "bytes": 16141581,
+  "sha256": "12d541ed0079868a38858dd0f42928c93b58a5b1a057049fef2279f719d26276",
+  "extracted_at": "2026-11-13T01:58:23+01:00"
+ }
+}

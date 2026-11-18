@@ -547,6 +547,11 @@ def test_a_refusal_over_http_carries_its_token(app):
 
 def test_the_stats_and_the_advice_answer(app):
     c = app.test_client()
+    # The settings session: the settings password, or a sign-in as an admin.
+    # The machine the server runs on is no admin since 2026-11-15
+    # (routes/settings_routes.py, `_settings_admitted`).
+    with c.session_transaction() as s:
+        s["settings_authenticated"] = True
     stats = c.get("/api/gate/stats").get_json()
     assert set(stats) == {"models", "trusted_samples", "spread_limit"}
     advice = c.get("/api/gate/prefetch-advice").get_json()

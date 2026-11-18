@@ -1,0 +1,2027 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 15.7% of 2157 words, ceiling 20%, longest run 38 words; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 38,
+     "text": "0 91 ours w sd1 4 6 68 156 77 0 94 0 92 ours w sd2 1 7 80 151 48 0 94 0 92 ours w pixart α 6 29 148 48 0 94 0 92"
+    },
+    {
+     "words": 22,
+     "text": "0 824 ours w sd1 4 0 163 17 514 0 842 ours w sd2 1 0 158 17 801 0 848"
+    },
+    {
+     "words": 22,
+     "text": "that when fine tuning a diffusion model with additional conditioning using cfg the unconditional noise does not need to be learned jointly"
+    },
+    {
+     "words": 17,
+     "text": "a pretrained unconditional diffusion model is available the need to jointly learn both unconditional and conditional noise"
+    },
+    {
+     "words": 14,
+     "text": "0 518 ours w pixart α 0 915 0 297 0 185 0 363"
+    }
+   ],
+   "value": 0.1567,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "9 of 13 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 4,
+     "expected_items": 4,
+     "first_item": "1: x T ∼ N ( 0 , I )",
+     "output_lists": [
+      2,
+      4,
+      4,
+      1,
+      4,
+      5
+     ],
+     "unanswered_items": [
+      {
+       "item": 2,
+       "source": "2: for t = T, . . . , 1 do",
+       "output": "Ours w/ SD1.4: 0.163 / 17.514 / 0.842"
+      },
+      {
+       "item": 3,
+       "source": "3: ϵ ( γ ) θ ( x t , c ) = ϵ θ ( x t , ∅ ) + γ ( ϵ θ ( x t , c ) -ϵ θ ( x t , ∅ ",
+       "output": "Ours w/ SD2.1: 0.158 / 17.801 / 0.848 (best)"
+      }
+     ]
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 4,
+     "expected_items": 2,
+     "first_item": "6: end for",
+     "output_lists": [
+      2,
+      4,
+      4,
+      1,
+      4,
+      5
+     ],
+     "unanswered_items": [
+      {
+       "item": 1,
+       "source": "6: end for",
+       "output": "**Guidance limitations**: Kynkäänniemi et al. showed CFG's application timesteps"
+      },
+      {
+       "item": 2,
+       "source": "7: return x 0",
+       "output": "**Merging diffusion models**: Diffusion Soup (weight merging), Mix-of-Show (LoRA"
+      }
+     ]
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 5,
+     "table_cells": 25,
+     "missing_cells": [
+      "VD [64]"
+     ]
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 6,
+     "table_cells": 10,
+     "missing_cells": [
+      "Fine-tuned DiT-XL/2 Ours"
+     ]
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 8,
+     "table_cells": 20,
+     "missing_cells": [
+      "Temporal Flickering",
+      "Motion Smoothness",
+      "I2V Subject",
+      "I2V Background",
+      "DynamiCrafter [62] Ours",
+      "95.21 95.34",
+      "96.67 96.86",
+      "92.77 93.49",
+      "94.56 94.72"
+     ]
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 8,
+     "table_cells": 30,
+     "missing_cells": [
+      "IP2P [7]"
+     ]
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "table_cells": 35,
+     "missing_cells": [
+      "0.192",
+      "0.170",
+      "0.179",
+      "0.178",
+      "0.178",
+      "0.170",
+      "0.165",
+      "0.161",
+      "0.161",
+      "0.165",
+      "0.161",
+      "0.159",
+      "0.160",
+      "0.173",
+      "0.171",
+      "0.168",
+      "0.171",
+      "0.170"
+     ]
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "table_cells": 30,
+     "missing_cells": [
+      "37.96",
+      "40.19",
+      "42.07",
+      "42.33",
+      "44.80",
+      "35.67",
+      "35.24",
+      "35.45",
+      "35.60",
+      "36.07",
+      "38.29",
+      "37.44",
+      "37.83",
+      "38.44",
+      "37.71",
+      "37.55",
+      "39.03",
+      "39.62",
+      "40.24",
+      "40.89"
+     ]
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "table_cells": 34,
+     "missing_cells": [
+      "Memory (GB)",
+      "Memory (GB)",
+      "Speed (seconds/sample)",
+      "Speed (seconds/sample)",
+      "5.68",
+      "10.80",
+      "7.20",
+      "5.65",
+      "4.24",
+      "4.96",
+      "5.13",
+      "10.14",
+      "19.45",
+      "21.43"
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "114 of 232 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 1,
+     "number": "10517"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 1,
+     "number": "27"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 1,
+     "number": "701"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 2,
+     "number": "13"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 2,
+     "number": "23"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 2,
+     "number": "29"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 2,
+     "number": "30"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 2,
+     "number": "31"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 2,
+     "number": "33"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 2,
+     "number": "38"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 2,
+     "number": "39"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 2,
+     "number": "41"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 2,
+     "number": "44"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 2,
+     "number": "53"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 2,
+     "number": "56"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 2,
+     "number": "59"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 2,
+     "number": "66"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 2,
+     "number": "67"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 2,
+     "number": "70"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 3,
+     "number": "0"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 3,
+     "number": "19"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 3,
+     "number": "21"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 3,
+     "number": "22"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 3,
+     "number": "25"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 3,
+     "number": "3.1"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 3,
+     "number": "3.2"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 3,
+     "number": "47"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 3,
+     "number": "48"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 3,
+     "number": "57"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 3,
+     "number": "58"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 3,
+     "number": "65"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 3,
+     "number": "68"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 4,
+     "number": "36"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 4,
+     "number": "4.1"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 4,
+     "number": "4.2"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 4,
+     "number": "45"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 4,
+     "number": "55"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 5,
+     "number": "5.1"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 5,
+     "number": "69"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 6,
+     "number": "26"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 6,
+     "number": "43"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 6,
+     "number": "49"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 7,
+     "number": "34"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 7,
+     "number": "35"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 7,
+     "number": "5.2"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 8,
+     "number": "40"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 8,
+     "number": "42"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 8,
+     "number": "63"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 8,
+     "number": "92.77"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 8,
+     "number": "93.49"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 8,
+     "number": "94.56"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 8,
+     "number": "94.72"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 8,
+     "number": "95.21"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 8,
+     "number": "95.34"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 8,
+     "number": "96.67"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 8,
+     "number": "96.86"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 12,
+     "number": "101000"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 12,
+     "number": "108754"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 12,
+     "number": "200"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 12,
+     "number": "250"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 12,
+     "number": "256"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 12,
+     "number": "300"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 12,
+     "number": "37"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 12,
+     "number": "54"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 12,
+     "number": "750"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 12,
+     "number": "800"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 12,
+     "number": "9145"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "10.14"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "10.80"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "150"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "159"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "160"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "161"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "165"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "168"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "170"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "171"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "173"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "178"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "179"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "19.45"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "192"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "21.43"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "3.11"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "35.24"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "35.45"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "35.60"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "35.67"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "36.07"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "37.44"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "37.55"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "37.71"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "37.83"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "37.96"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "38.29"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "38.44"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "39.03"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "39.62"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "4.0"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "4.24"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "4.96"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "40.19"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "40.24"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "40.89"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "42.07"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "42.33"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "44.80"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "5.13"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "5.65"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "5.68"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "6.0"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "7.0"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "7.20"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "number": "8.17"
+    }
+   ],
+   "value": 114.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "29 of 29 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 1,
+     "heading": "Improving Conditional Generation of Fine-Tuned Diffusion Models"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 1,
+     "heading": "Prin Phunyaphibarn Phillip Y. Lee Jaihoon Kim Minhyuk Sung KAIST"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 1,
+     "heading": "Abstract"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 2,
+     "heading": "1. Introduction"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 2,
+     "heading": "2. Related Works"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 3,
+     "heading": "3. Background"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 3,
+     "heading": "3.1. Diffusion Models"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 3,
+     "heading": "3.2. Classifier-Free Guidance (CFG) [28]"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 4,
+     "heading": "Algorithm 1 DDIM Sampling with CFG"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 4,
+     "heading": "4. Unconditional Priors Matter"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 4,
+     "heading": "4.1. Poor Unconditional Priors Affect Conditional Generation"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 4,
+     "heading": "4.2. Finding Richer Unconditional Priors"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 5,
+     "heading": "5. Experiments"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 5,
+     "heading": "5.1. Single-Condition CFG Formulation"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 7,
+     "heading": "5.2. Dual-Condition CFG Formulation"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 8,
+     "heading": "6. Conclusion"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 12,
+     "heading": "Unconditional Priors Matter!"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 12,
+     "heading": "Improving Conditional Generation of Fine-Tuned Diffusion Models"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 12,
+     "heading": "Supplementary Material"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 12,
+     "heading": "A. Quantitative Evaluation of Unconditional Samples"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 12,
+     "heading": "B. Experiment Details"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 12,
+     "heading": "B.1. Zero-1-to-3 [46]"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 12,
+     "heading": "B.2. Versatile Diffusion [64]"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 12,
+     "heading": "B.3. DiT [50]"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "heading": "B.4. DynamiCrafter [62]"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "heading": "B.5. InstructPix2Pix [7]"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "heading": "C. Choice of CFG Scale"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "heading": "D. Memory and Inference Speed"
+    },
+    {
+     "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+     "page": 13,
+     "heading": "E. Additional Qualitative Results"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "11 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "11 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "8 quoted texts in 2 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Image 5",
+     "page": 8,
+     "image": "fig-005-p8.png",
+     "quotes": [
+      "\"a group of people riding bikes down a street,\"",
+      "\"A man in a black suit and a sombrero, shouting loudly.\"",
+      "\"DynamicCrafter\"",
+      "\"w/ VideoCrafter1 (Ours).\""
+     ]
+    },
+    {
+     "figure": "Fig. 10",
+     "page": 17,
+     "image": "fig-010-p17.png",
+     "quotes": [
+      "“w/ VideoCrafter1 (Ours)”",
+      "“a couple of horses are running in the dirt.”",
+      "“a train traveling down tracks through the woods with leaves on the ground”",
+      "“two women eating pizza at a restaurant.”"
+     ]
+    }
+   ],
+   "value": 8.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "21 page references valid (printed-folio pages 1–18)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "18 pages checked, 1 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "7 passages out of order break a sentence (25 of 27 not repairable; listed, not gated)",
+   "findings": [
+    {
+     "page": 4,
+     "words": 10,
+     "text": "vantage of CFG is the joint modeling of the Unconditional",
+     "blocks": [
+      "#/texts/97",
+      "#/texts/105"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "sentence start detached: 'Algorithm 1 DDIM Sampling with CFG' | 'and the unconditional score ∇ x t log p '"
+     ],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 9,
+     "text": "In This section, we provide experimental results on diffu-",
+     "blocks": [
+      "#/texts/169",
+      "#/texts/172"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 7,
+     "text": "sion Models which use the Dual-Condition CFG",
+     "blocks": [
+      "#/texts/169",
+      "#/texts/172"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 9,
+     "text": "Diffusion Models in This category are conditioned on two",
+     "blocks": [
+      "#/texts/169",
+      "#/texts/172"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 8,
+     "text": "conditions and sample using the modified CFG noise",
+     "blocks": [
+      "#/texts/169",
+      "#/texts/172"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'DynamiCrafter [62] We apply our method t'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 8,
+     "text": "notably, the Dual-Condition CFG formulation has two un-",
+     "blocks": [
+      "#/texts/171",
+      "#/texts/172"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 7,
+     "text": "Conditional terms trained using CFG condition dropout:",
+     "blocks": [
+      "#/texts/171",
+      "#/texts/172"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'DynamiCrafter [62] We apply our method t'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 19,
+     "text": "(xt , ∅, ∅) and ϵθ (xt , c1 , ∅). We replace ϵθ (xt , ∅, ∅) with",
+     "blocks": [
+      "#/texts/171",
+      "#/texts/172"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 8,
+     "text": "the base model Unconditional noise prediction ϵψ (xt",
+     "blocks": [
+      "#/texts/171",
+      "#/texts/172"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 8,
+     "text": "However, since the other Unconditional term ϵθ (xt",
+     "blocks": [
+      "#/texts/171",
+      "#/texts/172"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 10,
+     "text": "is not replaced, Weobserve less improvements in This case",
+     "blocks": [
+      "#/texts/171",
+      "#/texts/172",
+      "#/texts/173"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 9,
+     "text": "than in the Single-Condition CFG formulation. This is to",
+     "blocks": [
+      "#/texts/171",
+      "#/texts/173"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'InstructPix2Pix [7] InstructPix2Pix (IP2'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 9,
+     "text": "be expected as the quality degradation stems from training",
+     "blocks": [
+      "#/texts/171",
+      "#/texts/173"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'InstructPix2Pix [7] InstructPix2Pix (IP2'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 11,
+     "text": "using a low dropout rate for the condition which is applied",
+     "blocks": [
+      "#/texts/171",
+      "#/texts/173"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'InstructPix2Pix [7] InstructPix2Pix (IP2'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 19,
+     "text": "to both ϵθ (xt , ∅, ∅) and ϵθ (xt , c1 , ∅), only one of which is",
+     "blocks": [
+      "#/texts/171",
+      "#/texts/173"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 8,
+     "text": "replaced by the better base model Unconditional prior.",
+     "blocks": [
+      "#/texts/171",
+      "#/texts/173"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'InstructPix2Pix [7] InstructPix2Pix (IP2'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 11,
+     "words": 8,
+     "text": "Qinsheng Zhang, Jiaming Song, Xun Huang, Yongxin Chen,",
+     "blocks": [
+      "#/texts/291",
+      "#/texts/305"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 11,
+     "words": 8,
+     "text": "and Ming-Yu Liu. Diffcollage: Parallel Generation of large",
+     "blocks": [
+      "#/texts/291",
+      "#/texts/292",
+      "#/texts/305"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 11,
+     "words": 5,
+     "text": "content with Diffusion Models. In",
+     "blocks": [
+      "#/texts/292",
+      "#/texts/305"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 11,
+     "words": 9,
+     "text": "Richard Zhang, Phillip Isola, Alexei A Efros, Eli Shechtman,",
+     "blocks": [
+      "#/texts/292",
+      "#/texts/306"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [
+      "passage cut out of 'Ruoxi Shi, Hansheng Chen, Zhuoyang Zhang'"
+     ],
+     "section": "bibliography"
+    },
+    {
+     "page": 11,
+     "words": 8,
+     "text": "and Oliver Wang. The unreasonable effectiveness of Deep",
+     "blocks": [
+      "#/texts/292",
+      "#/texts/306"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 11,
+     "words": 10,
+     "text": "features as a Perceptual metric. In CVPR, 2018. 5.13",
+     "blocks": [
+      "#/texts/292",
+      "#/texts/293",
+      "#/texts/306"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 11,
+     "words": 7,
+     "text": "Jincheng Zhong, XiangCheng Zhang, Jianmin Wang, and",
+     "blocks": [
+      "#/texts/292",
+      "#/texts/293",
+      "#/texts/307"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 11,
+     "words": 8,
+     "text": "Mingsheng long. Domain Guidance: A simple transfer ap-",
+     "blocks": [
+      "#/texts/293",
+      "#/texts/307"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 11,
+     "words": 9,
+     "text": "proach for a pretrained Diffusion model. In The Thirteenth",
+     "blocks": [
+      "#/texts/293",
+      "#/texts/307"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    }
+   ],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "phunyaphibarn-et-al-2026-unconditional-priors-matter-improving-conditional-generation",
+ "doc_type": "scholarly_article",
+ "analyzed_at": "2026-11-15T11:14:49.837429+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "Improving Conditional Generation of Fine-Tuned Diffusion Models",
+   "derived_heading": "",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 18,
+   "chars": 41784,
+   "blocks": 124,
+   "inner_headings": 28,
+   "figures": 11
+  }
+ ],
+ "skipped": [
+  "Acknowledgements. (p. 9)",
+  "References (p. 9)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 18,
+  "gaps": [
+   {
+    "page": 13,
+    "text": "affected by our method.",
+    "words": 5,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/340"
+   }
+  ],
+  "gaps_dismissed": [
+   {
+    "page": 1,
+    "words": 74,
+    "reason": "duplicate",
+    "text": "Zero-1-to-3: novel view synthesis Versatile Diffusion: image Variations input input input input 120° 120° + + Zero-1-to-3 + Ours Zero-1-to-3 + Ours Versatile Diffusion + Ours Versatile Diffusion + Our"
+   },
+   {
+    "page": 3,
+    "words": 15,
+    "reason": "debris",
+    "text": "pθ (xt−1 |xt ) = N (xt−1 ; µθ (xt , t), σt2 I) (2)"
+   },
+   {
+    "page": 3,
+    "words": 33,
+    "reason": "debris",
+    "text": "√ \u0012 \u0013 1 µθ (xt , t) = µ̃t xt , √ (xt − 1 − ᾱt ϵθ (xt )) (3) ᾱt =: µ̃ (xt , g(xt , ϵθ (xt ))) (4)"
+   },
+   {
+    "page": 3,
+    "words": 18,
+    "reason": "debris",
+    "text": "√ p xt−1 = ᾱt−1 g(xt , ϵθ (xt )) + 1 − ᾱt−1 ϵθ (xt ). (5)"
+   },
+   {
+    "page": 3,
+    "words": 16,
+    "reason": "duplicate",
+    "text": "(x ) and g(x , ϵ (x )) for brevity. θ t t θ t 3"
+   },
+   {
+    "page": 4,
+    "words": 25,
+    "reason": "debris",
+    "text": ", ∅)) (γ) 4: x0|t = g(xt , ϵθ (xt , c)) √ √ (γ) 5: xt−1 = ᾱt−1 x0|t + 1 − ᾱt−1 ϵθ"
+   },
+   {
+    "page": 4,
+    "words": 18,
+    "reason": "debris",
+    "text": "\u0012 \u0013γ p(xt , c) pγ (xt |c) = p(xt ) ∝ p(xt )p(c|xt )γ . p(c)p(xt )"
+   },
+   {
+    "page": 4,
+    "words": 21,
+    "reason": "debris",
+    "text": "(γ) ϵθ,ψ (xt , c) = ϵψ (xt , ∅) + γ(ϵθ (xt , c) − ϵψ (xt , ∅)), (7)"
+   },
+   {
+    "page": 4,
+    "words": 21,
+    "reason": "debris",
+    "text": "√ (γ) p (γ) xt−1 = ᾱt−1 g(xt , ϵθ,ψ (xt , c)) + 1 − ᾱt−1 ϵθ,ψ (xt , c)"
+   },
+   {
+    "page": 5,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "Stable Diffusion v1.4 [52] Versatile Diffusion [64]"
+   },
+   {
+    "page": 5,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "5 Zero-1-to-3 [46] InstructPix2Pix [7]"
+   },
+   {
+    "page": 6,
+    "words": 15,
+    "reason": "duplicate",
+    "text": "| input | ground | Zero-1-to-3 | w/ SD1.4 | w/ SD2.1 | w/ PixArtα |\n| image | truth | (baseline) | (Ours) | (Ours) | (Ours) |"
+   },
+   {
+    "page": 6,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "Fine-Tuned DiT-XL/2 17.12 18.31 24.05"
+   },
+   {
+    "page": 6,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "Ours 14.51 17.67 24.15"
+   },
+   {
+    "page": 7,
+    "words": 13,
+    "reason": "duplicate",
+    "text": "VD w/ SD1.4 w/ SD2.1 w/ PixArtα input image (baseline) (Ours) (Ours) (Ours)"
+   },
+   {
+    "page": 7,
+    "words": 17,
+    "reason": "debris",
+    "text": "+ γ2 (ϵθ (xt , c1 , c2 ) − ϵθ (xt , c1 , ∅)). (8)"
+   },
+   {
+    "page": 8,
+    "words": 16,
+    "reason": "duplicate",
+    "text": "method Subject Background temporal consistency consistency Flickering DynamiCrafter [62] 90.80 96.73 95.21 Ours 91.49 97.03 95.34"
+   },
+   {
+    "page": 8,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "input generated Frames"
+   },
+   {
+    "page": 8,
+    "words": 56,
+    "reason": "duplicate",
+    "text": "Motion Dynamic aesthetic Imaging I2V I2V Smoothness Degree quality quality Subject Background 96.67 59.59 57.06 64.10 92.77 94.56 96.86 57.32 57.51 63.15 93.49 94.72 input IP2P w/ SD1.5 w/ SD2.1 w/ Pi"
+   },
+   {
+    "page": 13,
+    "words": 44,
+    "reason": "debris",
+    "text": "ϵθ (xt , cI , cT ) = ϵθ (xt , ∅, ∅) + γI (ϵθ (xt , cI , ∅) − ϵθ (xt , ∅, ∅)) + γT (ϵθ (xt , cI , cT ) − ϵθ (xt , cI , ∅)) (9)"
+   },
+   {
+    "page": 14,
+    "words": 15,
+    "reason": "duplicate",
+    "text": "| input | ground | Zero-1-to-3 | w/ SD1.4 | w/ SD2.1 | w/ PixArtα |\n| image | truth | (baseline) | (Ours) | (Ours) | (Ours) |"
+   },
+   {
+    "page": 15,
+    "words": 13,
+    "reason": "duplicate",
+    "text": "VD w/ SD1.4 w/ SD2.1 w/ PixArtα input image (baseline) (Ours) (Ours) (Ours)"
+   },
+   {
+    "page": 18,
+    "words": 48,
+    "reason": "duplicate",
+    "text": "input IP2P w/ SD1.5 w/ SD2.1 w/ PixArtα image (baseline) (Ours) (Ours) (Ours) ‘‘Change the horses to unicorns ’’ ‘‘replace the spaceship with an eagle ’’ ‘‘Change the weather to sunny ’’ ‘‘Change the "
+   }
+  ],
+  "captions_reclassified": [],
+  "captions_reassigned": [],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [],
+  "superseded": [],
+  "replaced_pages": [],
+  "noise_dropped": 0,
+  "hyphens_restored": [
+   {
+    "page": 3,
+    "ref": "#/texts/68",
+    "word": "Max-Fusion"
+   },
+   {
+    "page": 9,
+    "ref": "#/texts/253",
+    "word": "Fiotto-Kaufman"
+   },
+   {
+    "page": 10,
+    "ref": "#/texts/266",
+    "word": "Allen-Zhu"
+   }
+  ],
+  "order": [
+   {
+    "page": 1,
+    "text": "Classifier-Free Guidance (CFG) is a fundamental technique in training Conditional Diffusion Models. The common practice for CFG-Based training is to use a single network to learn both Conditional and",
+    "words": 29,
+    "refs": [
+     "#/texts/55"
+    ],
+    "repaired": true,
+    "note": "1 blocks replaced by the text layer's passage",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 4,
+    "text": "vantage of CFG is the joint modeling of the Unconditional",
+    "words": 10,
+    "refs": [
+     "#/texts/97",
+     "#/texts/105"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "sentence start detached: 'Algorithm 1 DDIM Sampling with CFG' | 'and the unconditional score ∇ x t log p '"
+    ],
+    "section": ""
+   },
+   {
+    "page": 6,
+    "text": "DiT[50] Although the experiments so far have been conducted using Diffusion Models with the UNet architecture, we show that our method holds for Fine-Tuned DiTs [50] as well. since there are no publicly available Fine-Tuned DiT Models, we fine-tune DiT-XL/2 on the standard downstream tasks SUN397 [61],",
+    "words": 48,
+    "refs": [
+     "#/texts/151"
+    ],
+    "repaired": true,
+    "note": "1 blocks replaced by the text layer's passage",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "In This section, we provide experimental results on diffu-",
+    "words": 9,
+    "refs": [
+     "#/texts/169",
+     "#/texts/172"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "sion Models which use the Dual-Condition CFG",
+    "words": 7,
+    "refs": [
+     "#/texts/169",
+     "#/texts/172"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "Diffusion Models in This category are conditioned on two",
+    "words": 9,
+    "refs": [
+     "#/texts/169",
+     "#/texts/172"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "conditions and sample using the modified CFG noise",
+    "words": 8,
+    "refs": [
+     "#/texts/169",
+     "#/texts/172"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [
+     "passage cut out of 'DynamiCrafter [62] We apply our method t'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "notably, the Dual-Condition CFG formulation has two un-",
+    "words": 8,
+    "refs": [
+     "#/texts/171",
+     "#/texts/172"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "Conditional terms trained using CFG condition dropout:",
+    "words": 7,
+    "refs": [
+     "#/texts/171",
+     "#/texts/172"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [
+     "passage cut out of 'DynamiCrafter [62] We apply our method t'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "(xt , ∅, ∅) and ϵθ (xt , c1 , ∅). We replace ϵθ (xt , ∅, ∅) with",
+    "words": 19,
+    "refs": [
+     "#/texts/171",
+     "#/texts/172"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "the base model Unconditional noise prediction ϵψ (xt",
+    "words": 8,
+    "refs": [
+     "#/texts/171",
+     "#/texts/172"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "However, since the other Unconditional term ϵθ (xt",
+    "words": 8,
+    "refs": [
+     "#/texts/171",
+     "#/texts/172"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "is not replaced, Weobserve less improvements in This case",
+    "words": 10,
+    "refs": [
+     "#/texts/171",
+     "#/texts/172",
+     "#/texts/173"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "than in the Single-Condition CFG formulation. This is to",
+    "words": 9,
+    "refs": [
+     "#/texts/171",
+     "#/texts/173"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [
+     "passage cut out of 'InstructPix2Pix [7] InstructPix2Pix (IP2'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "be expected as the quality degradation stems from training",
+    "words": 9,
+    "refs": [
+     "#/texts/171",
+     "#/texts/173"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [
+     "passage cut out of 'InstructPix2Pix [7] InstructPix2Pix (IP2'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "using a low dropout rate for the condition which is applied",
+    "words": 11,
+    "refs": [
+     "#/texts/171",
+     "#/texts/173"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [
+     "passage cut out of 'InstructPix2Pix [7] InstructPix2Pix (IP2'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "to both ϵθ (xt , ∅, ∅) and ϵθ (xt , c1 , ∅), only one of which is",
+    "words": 19,
+    "refs": [
+     "#/texts/171",
+     "#/texts/173"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "replaced by the better base model Unconditional prior.",
+    "words": 8,
+    "refs": [
+     "#/texts/171",
+     "#/texts/173"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [
+     "passage cut out of 'InstructPix2Pix [7] InstructPix2Pix (IP2'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 11,
+    "text": "Qinsheng Zhang, Jiaming Song, Xun Huang, Yongxin Chen,",
+    "words": 8,
+    "refs": [
+     "#/texts/291",
+     "#/texts/305"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 11,
+    "text": "and Ming-Yu Liu. Diffcollage: Parallel Generation of large",
+    "words": 8,
+    "refs": [
+     "#/texts/291",
+     "#/texts/292",
+     "#/texts/305"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 11,
+    "text": "content with Diffusion Models. In",
+    "words": 5,
+    "refs": [
+     "#/texts/292",
+     "#/texts/305"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 11,
+    "text": "Richard Zhang, Phillip Isola, Alexei A Efros, Eli Shechtman,",
+    "words": 9,
+    "refs": [
+     "#/texts/292",
+     "#/texts/306"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [
+     "passage cut out of 'Ruoxi Shi, Hansheng Chen, Zhuoyang Zhang'"
+    ],
+    "section": "bibliography"
+   },
+   {
+    "page": 11,
+    "text": "and Oliver Wang. The unreasonable effectiveness of Deep",
+    "words": 8,
+    "refs": [
+     "#/texts/292",
+     "#/texts/306"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 11,
+    "text": "features as a Perceptual metric. In CVPR, 2018. 5.13",
+    "words": 10,
+    "refs": [
+     "#/texts/292",
+     "#/texts/293",
+     "#/texts/306"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 11,
+    "text": "Jincheng Zhong, XiangCheng Zhang, Jianmin Wang, and",
+    "words": 7,
+    "refs": [
+     "#/texts/292",
+     "#/texts/293",
+     "#/texts/307"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 11,
+    "text": "Mingsheng long. Domain Guidance: A simple transfer ap-",
+    "words": 8,
+    "refs": [
+     "#/texts/293",
+     "#/texts/307"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 11,
+    "text": "proach for a pretrained Diffusion model. In The Thirteenth",
+    "words": 9,
+    "refs": [
+     "#/texts/293",
+     "#/texts/307"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   }
+  ],
+  "order_pages_checked": 14,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 25,
+  "order_breaking": 7,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 4 minor; distortions: 0 material, 1 minor; additions: 0 material, 0 minor; order: 0 material, 1 minor",
+  "at": "2026-11-15T11:18:17+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 4
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 1
+   },
+   "additions": {
+    "material": 0,
+    "minor": 0
+   },
+   "order": {
+    "material": 0,
+    "minor": 1
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "Improving Conditional Generation of Fine-Tuned Diffusion Models (p. 1–18)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "Due to the multiple fine-tuning stages, we opted to use SD1.4 as the base model.",
+      "severity": "minor",
+      "page": 5
+     },
+     {
+      "source": "For our method, we replace the DynamiCrafter unconditional noise with the VideoCrafterT2V unconditional noise.",
+      "severity": "minor",
+      "page": 7
+     },
+     {
+      "source": "The reported PS are compared against IP2P.",
+      "severity": "minor",
+      "page": 8
+     },
+     {
+      "source": "The base model used is DiT-XL/2 trained on ImageNet 256 × 256 [14].",
+      "severity": "minor",
+      "page": 12
+     }
+    ],
+    "distortions": [
+     {
+      "source": "Ours w/ SD1.5 | 0.911 | 0.291 | 0.186 | -0.460 | 0.514 — SD1.5 attains the best C-D (0.186), so the PixArt-α row is not best on every metric",
+      "summary": "Ours w/ PixArt-α: 0.915 / 0.297 / 0.185 / −0.363 / PS 0.532 (best)",
+      "severity": "minor",
+      "page": 8
+     }
+    ],
+    "additions": [],
+    "order": [
+     {
+      "source": "To assess identity preservation, we compute the CLIP image w/VideoCrafter1 … similarity (C-I) [26] between the edited and input images",
+      "summary": "",
+      "layer": "To assess identity preservation, we compute the CLIP image",
+      "severity": "minor",
+      "page": 7
+     }
+    ]
+   }
+  ]
+ },
+ "source": {
+  "source": "phunyaphibarn-et-al-2026-unconditional-priors-matter-improving-conditional-generation.pdf",
+  "bytes": 17111168,
+  "sha256": "468139469889e782d81c5a0a115961ddcda29e23f137c2cd39468522129199d3",
+  "extracted_at": "2026-11-13T03:00:42+01:00"
+ }
+}

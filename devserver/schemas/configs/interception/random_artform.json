@@ -1,0 +1,260 @@
+{
+  "pipeline": "text_transformation",
+  "instruction_type": "artistic_transformation",
+  "name": {
+    "en": "Random Art Form",
+    "de": "Zufällige Kunstform"
+  },
+  "description": {
+    "en": "Each pick draws at random the stance of one of 51 art forms and cultural practices as the perspective. Its wording can be read and changed like that of any other perspective.",
+    "de": "Jede Wahl zieht zufällig die Haltung einer von 51 Kunstformen und kulturellen Praktiken als Perspektive. Ihr Wortlaut lässt sich lesen und ändern wie der jeder anderen Perspektive."
+  },
+  "category": {
+    "de": "Kreative Verwandlungen",
+    "en": "Creative Transformations",
+    "he": "טרנספורמציות יצירתיות",
+    "ar": "التحولات الإبداعية",
+    "bg": "Креативни трансформации",
+    "zh-hant": "創意轉化",
+    "tr": "Yaratıcı Dönüşümler",
+    "ko": "창의적 변환",
+    "uk": "Творчі перетворення",
+    "fr": "Transformations créatives",
+    "es": "Transformaciones creativas"
+  },
+  "properties": [
+    "freestyle"
+  ],
+  "context": [
+    {
+      "en": "You take the stance of Noh theatre: the scene of the prompt is seen from the time after it happened, when a figure returns to the place where it took place. Movement is reduced and slowed; a mask holds the face still, so that posture and the angle of the head carry the feeling. The stage is bare apart from a painted pine, and chorus, flute and drums speak for what the figure feels.",
+      "de": "Du nimmst die Haltung des Nō-Theaters ein: Die Szene des Prompts wird aus der Zeit danach gesehen, wenn eine Gestalt an den Ort zurückkehrt, an dem sie geschah. Die Bewegung ist reduziert und verlangsamt; eine Maske hält das Gesicht still, sodass Körperhaltung und Neigung des Kopfes das Gefühl tragen. Die Bühne ist leer bis auf eine gemalte Kiefer, und Chor, Flöte und Trommeln sprechen für das, was die Gestalt fühlt."
+    },
+    {
+      "en": "You take the stance of a singer of Yoruba oríkì: to praise a being is to call it by its names, by its deeds, its qualities, its lineage and its places. Address every entity of the prompt directly and heap up its attributes, so that the scene is built from this naming. Strong, rhythmic, spoken to someone.",
+      "de": "Du nimmst die Haltung einer Sängerin der Yoruba-Oríkì ein: Ein Wesen preisen heißt, es bei seinen Namen zu rufen, bei seinen Taten, seinen Eigenschaften, seiner Abstammung und seinen Orten. Sprich jede Entität des Prompts direkt an und häufe ihre Beinamen, sodass die Szene aus diesem Benennen entsteht. Kraftvoll, rhythmisch, an jemanden gerichtet."
+    },
+    {
+      "en": "You take the stance of a spoken-word poet at an open mic: you speak about the scene of the prompt from your own experience, in the first person, to a room full of people listening. Voice, breath, pause and emphasis give what you say its form, and every entity is part of your life.",
+      "de": "Du nimmst die Haltung einer Spoken-Word-Poetin am offenen Mikrofon ein: Du sprichst über die Szene des Prompts aus Deiner eigenen Erfahrung, in der ersten Person, vor einem Raum voller Zuhörender. Stimme, Atem, Pause und Betonung geben dem Gesagten seine Form, und jede Entität ist Teil Deines Lebens."
+    },
+    {
+      "en": "You take the stance of a set designer of German Expressionist cinema of the 1920s: the inner state of the figures is built into the world around them. Streets lean, windows are skewed, shadows are painted onto the walls, light comes from below. Build the scene of the prompt so that its architecture and its light show what its figures feel.",
+      "de": "Du nimmst die Haltung eines Filmarchitekten des deutschen expressionistischen Kinos der 1920er Jahre ein: Das Innere der Figuren ist in die Welt um sie herum gebaut. Straßen neigen sich, Fenster sind schief, Schatten sind auf die Wände gemalt, das Licht kommt von unten. Baue die Szene des Prompts so, dass ihre Architektur und ihr Licht zeigen, was ihre Figuren fühlen."
+    },
+    {
+      "en": "You take the stance of the Cubist painters around 1910: an object is known from several sides at once. Show each entity of the prompt from the front, the side and above at the same time, broken into interlocking planes, in a restrained palette of browns, greys and ochres. The scene is assembled from these views on one surface.",
+      "de": "Du nimmst die Haltung der kubistischen Maler um 1910 ein: Einen Gegenstand kennt man von mehreren Seiten zugleich. Zeige jede Entität des Prompts gleichzeitig von vorn, von der Seite und von oben, zerlegt in ineinandergreifende Flächen, in einer zurückhaltenden Palette aus Braun, Grau und Ocker. Die Szene setzt sich aus diesen Ansichten auf einer Fläche zusammen."
+    },
+    {
+      "en": "You take the stance of the sutradhara, the narrator of classical Sanskrit theatre who opens the play, introduces the figures and speaks to the audience: the scene of the prompt becomes an episode from a great epic, with families, heroes and gods in conflict over duty. You frame the episode, name the figures and show the moment of decision.",
+      "de": "Du nimmst die Haltung des Sutradhara ein, des Erzählers im klassischen Sanskrit-Theater, der das Stück eröffnet, die Figuren vorstellt und zum Publikum spricht: Die Szene des Prompts wird zu einer Episode aus einem großen Epos, mit Familien, Helden und Göttern im Konflikt um die Pflicht. Du rahmst die Episode, nennst die Figuren und zeigst den Moment der Entscheidung."
+    },
+    {
+      "en": "You take the stance of a Māori waiata that recites whakapapa, the genealogy that links people, land, sea and ancestors: everything exists through what it descends from and what it is related to. Introduce every entity of the prompt through its origin, its place, its water and its people, so that the scene becomes a web of descent and belonging.",
+      "de": "Du nimmst die Haltung einer Māori-Waiata ein, die Whakapapa vorträgt, die Genealogie, die Menschen, Land, Meer und Vorfahren verbindet: Alles besteht durch das, wovon es abstammt und womit es verwandt ist. Führe jede Entität des Prompts über ihre Herkunft, ihren Ort, ihr Gewässer und ihre Leute ein, sodass die Szene zu einem Gewebe aus Abstammung und Zugehörigkeit wird."
+    },
+    {
+      "en": "You take the stance of the Surrealists around André Breton in 1924: reality is wider than reason admits, and dream, chance and desire belong to it. Find in the scene of the prompt the encounter of two things that do not belong together, build the scene around it, and state it as a matter of fact.",
+      "de": "Du nimmst die Haltung der Surrealisten um André Breton im Jahr 1924 ein: Die Wirklichkeit ist weiter, als die Vernunft zulässt, und Traum, Zufall und Begehren gehören zu ihr. Finde in der Szene des Prompts die Begegnung zweier Dinge, die nicht zusammengehören, baue die Szene um sie herum und stelle sie als Tatsache hin."
+    },
+    {
+      "en": "You take the stance of a South Korean television melodrama: everything turns on family ties, differences of class and feelings that cannot be spoken. Show the scene of the prompt at its most charged moment, a glance held too long, rain, a meeting at the wrong time, with close-ups of faces and hands.",
+      "de": "Du nimmst die Haltung eines südkoreanischen Fernsehmelodrams ein: Alles dreht sich um Familienbande, Klassenunterschiede und Gefühle, die sich nicht aussprechen lassen. Zeige die Szene des Prompts in ihrem aufgeladensten Moment, ein zu lang gehaltener Blick, Regen, eine Begegnung zur falschen Zeit, mit Großaufnahmen von Gesichtern und Händen."
+    },
+    {
+      "en": "You take the stance of Afrofuturism, as in the work of Sun Ra, Octavia E. Butler or Nnedi Okorafor: Black histories and African knowledge are carried into futures of technology and space travel. Set the scene of the prompt in such a future, with ancestry and advanced technology side by side, figures who build their own future, and materials and patterns that connect the two.",
+      "de": "Du nimmst die Haltung des Afrofuturismus ein, wie im Werk von Sun Ra, Octavia E. Butler oder Nnedi Okorafor: Schwarze Geschichte und afrikanisches Wissen werden in Zukünfte der Technik und der Raumfahrt getragen. Versetze die Szene des Prompts in eine solche Zukunft, mit Herkunft und fortgeschrittener Technik nebeneinander, mit Figuren, die ihre eigene Zukunft bauen, und mit Materialien und Mustern, die beides verbinden."
+    },
+    {
+      "en": "You take the stance of the roda of Brazilian capoeira: two players move in a circle of musicians and singers, the berimbau sets the pace, and the song comments on the game. Show the scene of the prompt as such a circle: who is in the centre, who answers whom, how attack and evasion turn into play.",
+      "de": "Du nimmst die Haltung der Roda der brasilianischen Capoeira ein: Zwei Spielende bewegen sich in einem Kreis aus Musizierenden und Singenden, der Berimbau gibt das Tempo vor, und das Lied kommentiert das Spiel. Zeige die Szene des Prompts als einen solchen Kreis: wer in der Mitte ist, wer wem antwortet, wie Angriff und Ausweichen zum Spiel werden."
+    },
+    {
+      "en": "You take the stance of a Bauhaus teacher writing a design manual: each entity of the prompt is a task, what it is for, which material it is made from, how it can be made in series. Describe the scene as a set of instructions for producing it in the workshop, with basic forms, primary colours and industrial materials.",
+      "de": "Du nimmst die Haltung eines Bauhaus-Lehrers ein, der ein Gestaltungshandbuch schreibt: Jede Entität des Prompts ist eine Aufgabe, wozu sie dient, aus welchem Material sie ist, wie sie sich in Serie herstellen lässt. Beschreibe die Szene als Anleitung, sie in der Werkstatt herzustellen, mit Grundformen, Grundfarben und industriellen Materialien."
+    },
+    {
+      "en": "You take the stance of Inuit oral storytelling: an elder tells the story to listeners in the same room, names places precisely, follows the weather and the animals, and passes on knowledge for living on the land and the ice. Tell the scene of the prompt in this way, with exact places, seasons, animals, and what one learns from it.",
+      "de": "Du nimmst die Haltung des mündlichen Erzählens der Inuit ein: Eine Älteste erzählt die Geschichte Zuhörenden im selben Raum, benennt Orte genau, folgt dem Wetter und den Tieren und gibt Wissen für das Leben auf dem Land und auf dem Eis weiter. Erzähle die Szene des Prompts auf diese Weise, mit genauen Orten, Jahreszeiten, Tieren und dem, was man daraus lernt."
+    },
+    {
+      "en": "You take the stance of Frida Kahlo: the painter looks at her own body and her own life, with its injuries, its loves and its Mexican roots, and paints them directly. Bring the scene of the prompt into a person's body and life story, what it does to them, where it hurts, what grows from it, with the plants and animals that live with them, in the small format of a votive painting.",
+      "de": "Du nimmst die Haltung von Frida Kahlo ein: Die Malerin betrachtet ihren eigenen Körper und ihr eigenes Leben, mit seinen Verletzungen, seinen Lieben und seinen mexikanischen Wurzeln, und malt sie unmittelbar. Hole die Szene des Prompts in den Körper und die Lebensgeschichte eines Menschen, was sie mit ihm macht, wo sie schmerzt, was aus ihr wächst, mit den Pflanzen und Tieren, die mit ihm leben, im kleinen Format eines Votivbildes."
+    },
+    {
+      "en": "You take the stance of a Chinese literati painter working in ink: the painting gives the life-movement of a thing, and the empty paper is part of the picture. Reduce the scene of the prompt to what the brush can carry in a few strokes of black ink in many tones, leave much of the surface empty, and write a poem into the picture.",
+      "de": "Du nimmst die Haltung eines chinesischen Literatenmalers ein, der mit Tusche arbeitet: Das Bild gibt die Lebensbewegung eines Dinges wieder, und das leere Papier ist Teil des Bildes. Reduziere die Szene des Prompts auf das, was der Pinsel in wenigen Strichen schwarzer Tusche in vielen Abstufungen tragen kann, lass viel von der Fläche leer und schreibe ein Gedicht ins Bild."
+    },
+    {
+      "en": "You take the stance of a tango singer in Buenos Aires: the song looks back at a neighbourhood, a love or a time that has passed, from a café table at night. Tell the scene of the prompt in this way, with the barrio, the street corner, the person who left and the bandoneón, in the first person, bitter and tender.",
+      "de": "Du nimmst die Haltung eines Tangosängers in Buenos Aires ein: Das Lied blickt nachts von einem Cafétisch auf ein Viertel, eine Liebe oder eine Zeit zurück, die vergangen ist. Erzähle die Szene des Prompts auf diese Weise, mit dem Barrio, der Straßenecke, dem Menschen, der gegangen ist, und dem Bandoneon, in der ersten Person, bitter und zärtlich."
+    },
+    {
+      "en": "You take the stance of a person turning a prayer wheel in Tibetan Buddhism: each turn sends the words written inside it out for the good of all beings, and the wheel is turned again and again. Look at every entity of the prompt with this wish for its well-being, and describe the scene as one that is gone through again and again, each time the same and each time with care.",
+      "de": "Du nimmst die Haltung eines Menschen ein, der im tibetischen Buddhismus eine Gebetsmühle dreht: Jede Drehung schickt die darin geschriebenen Worte zum Wohl aller Wesen hinaus, und die Mühle wird wieder und wieder gedreht. Betrachte jede Entität des Prompts mit diesem Wunsch für ihr Wohlergehen und beschreibe die Szene als eine, die immer wieder durchlaufen wird, jedes Mal gleich und jedes Mal mit Sorgfalt."
+    },
+    {
+      "en": "You take the stance of a Quechua storyteller in the Andes: the mountains, the apus, are living beings, Pachamama is the earth that gives and receives, and people stand with them in reciprocity, ayni. Tell the scene of the prompt so that every entity gives something and receives something, and the mountains and the earth take part in it.",
+      "de": "Du nimmst die Haltung einer Quechua-Erzählerin in den Anden ein: Die Berge, die Apus, sind lebendige Wesen, Pachamama ist die Erde, die gibt und empfängt, und die Menschen stehen mit ihnen in Gegenseitigkeit, Ayni. Erzähle die Szene des Prompts so, dass jede Entität etwas gibt und etwas empfängt und die Berge und die Erde daran teilhaben."
+    },
+    {
+      "en": "You take the stance of Scandinavian crime fiction: a sober, precise look at a calm society in which something has gone wrong beneath the surface. Show the scene of the prompt in winter light, with the details an investigator would write down, a car, a kitchen, an object that has been moved, and the social order behind them.",
+      "de": "Du nimmst die Haltung des skandinavischen Kriminalromans ein: ein nüchterner, genauer Blick auf eine ruhige Gesellschaft, in der unter der Oberfläche etwas aus dem Lot geraten ist. Zeige die Szene des Prompts im Winterlicht, mit den Einzelheiten, die eine Ermittlerin notieren würde, ein Auto, eine Küche, ein verschobener Gegenstand, und mit der gesellschaftlichen Ordnung dahinter."
+    },
+    {
+      "en": "You take the stance of a family building an ofrenda for the Day of the Dead in Mexico: the altar welcomes the people who have died with what they loved, food, drink, photographs, marigolds, candles and papel picado. Arrange the scene of the prompt as such an altar; every entity becomes an offering that remembers someone.",
+      "de": "Du nimmst die Haltung einer Familie ein, die zum Tag der Toten in Mexiko eine Ofrenda aufbaut: Der Altar empfängt die Verstorbenen mit dem, was sie liebten, mit Speisen, Getränken, Fotografien, Studentenblumen, Kerzen und Papel picado. Ordne die Szene des Prompts als einen solchen Altar an; jede Entität wird zu einer Gabe, die an jemanden erinnert."
+    },
+    {
+      "en": "You take the stance of a Nollywood film from Lagos: a story of family, money, faith and ambition, shot quickly, with direct emotion and sharp turns of plot. Show the scene of the prompt at its turning point, with the people, the rooms and the city around them.",
+      "de": "Du nimmst die Haltung eines Nollywood-Films aus Lagos ein: eine Geschichte über Familie, Geld, Glauben und Ehrgeiz, schnell gedreht, mit unmittelbaren Gefühlen und scharfen Wendungen. Zeige die Szene des Prompts an ihrem Wendepunkt, mit den Menschen, den Räumen und der Stadt um sie herum."
+    },
+    {
+      "en": "You take the stance of a jeli, a griot of the Mande: the keeper of the histories of families, who speaks and sings them to the kora and links every person to their ancestors and their deeds. Tell the scene of the prompt in this way: who descends from whom, what their forebears did, and why this moment belongs to that history.",
+      "de": "Du nimmst die Haltung eines Jeli ein, eines Griots der Mande: der Hüter der Familiengeschichten, der sie zur Kora spricht und singt und jeden Menschen mit seinen Vorfahren und deren Taten verbindet. Erzähle die Szene des Prompts auf diese Weise: wer von wem abstammt, was die Vorfahren getan haben und warum dieser Moment zu dieser Geschichte gehört."
+    },
+    {
+      "en": "You take the stance of an Egyptian scribe of the pharaonic period writing an inscription for a tomb or temple wall: what is written and depicted there is meant to last and to make it so. Order the scene of the prompt in registers, with figures in profile and eyes seen from the front, sizes according to rank, and the names written beside them.",
+      "de": "Du nimmst die Haltung eines ägyptischen Schreibers der Pharaonenzeit ein, der eine Inschrift für eine Grab- oder Tempelwand verfasst: Was dort geschrieben und abgebildet ist, soll dauern und es so werden lassen. Ordne die Szene des Prompts in Registern, mit Figuren im Profil und Augen in Vorderansicht, mit Größen nach Rang und den Namen daneben."
+    },
+    {
+      "en": "You take the stance of the Western Desert painting movement that began at Papunya in 1971: the land is shown from above, as a map of places, waterholes, tracks and the journeys between them, built from dots and concentric circles. Show the scene of the prompt in this way: every entity is a place or a track, every relation a journey.",
+      "de": "Du nimmst die Haltung der Malerei der Western Desert ein, die 1971 in Papunya begann: Das Land wird von oben gezeigt, als Karte aus Orten, Wasserstellen, Spuren und den Wegen dazwischen, aufgebaut aus Punkten und konzentrischen Kreisen. Zeige die Szene des Prompts auf diese Weise: Jede Entität ist ein Ort oder eine Spur, jede Beziehung ein Weg."
+    },
+    {
+      "en": "You take the stance of a painter of Persian manuscript miniatures: the picture illustrates a passage of a written story and stands beside the text. Several moments and spaces appear at once, seen from a raised viewpoint, in flat, bright mineral colours, with gardens, tiled pavilions, and figures equally clear in front and behind.",
+      "de": "Du nimmst die Haltung eines Malers persischer Buchminiaturen ein: Das Bild illustriert eine Stelle einer geschriebenen Geschichte und steht neben dem Text. Mehrere Momente und Räume erscheinen zugleich, von einem erhöhten Standpunkt gesehen, in flächigen, leuchtenden Mineralfarben, mit Gärten, gekachelten Pavillons und Figuren, die vorn wie hinten gleich deutlich sind."
+    },
+    {
+      "en": "You take the stance of a glitch artist: the errors of the digital medium are the material, compression blocks, shifted colour channels, torn scan lines, repeated pixels. Show the scene of the prompt as a file that has been damaged on purpose, so that the medium becomes visible in it.",
+      "de": "Du nimmst die Haltung einer Glitch-Künstlerin ein: Die Fehler des digitalen Mediums sind das Material, Kompressionsblöcke, verschobene Farbkanäle, zerrissene Bildzeilen, wiederholte Pixel. Zeige die Szene des Prompts als Datei, die absichtlich beschädigt wurde, sodass das Medium in ihr sichtbar wird."
+    },
+    {
+      "en": "You take the stance of a jazz musician improvising: there is a theme, and the players vary it, answer one another and take turns stepping forward. Treat the entities of the prompt as the players and the scene as a session: the theme stated, then varied, one solo, and the return of the theme.",
+      "de": "Du nimmst die Haltung eines Jazzmusikers beim Improvisieren ein: Es gibt ein Thema, und die Spielenden variieren es, antworten einander und treten abwechselnd nach vorn. Behandle die Entitäten des Prompts als die Spielenden und die Szene als Session: das Thema vorgestellt, dann variiert, ein Solo und die Rückkehr des Themas."
+    },
+    {
+      "en": "You take the stance of Italian neorealist cinema after 1945: filming on the street with people who are not actors, following everyday work and need, in natural light. Show the scene of the prompt in a real place, with ordinary people, their work and the city around them.",
+      "de": "Du nimmst die Haltung des italienischen Neorealismus nach 1945 ein: auf der Straße drehen, mit Menschen, die keine Schauspieler sind, der alltäglichen Arbeit und Not folgen, im natürlichen Licht. Zeige die Szene des Prompts an einem wirklichen Ort, mit gewöhnlichen Menschen, ihrer Arbeit und der Stadt um sie herum."
+    },
+    {
+      "en": "You take the stance of a performance artist of the 1960s and 1970s writing a score: the work is an action carried out by bodies in a space for a set time, often with the audience involved. Write the scene of the prompt as such an action: who does what, with which object, for how long, and where the audience stands.",
+      "de": "Du nimmst die Haltung einer Performancekünstlerin der 1960er und 1970er Jahre ein, die eine Partitur schreibt: Das Werk ist eine Handlung, die Körper in einem Raum für eine festgelegte Zeit ausführen, oft unter Beteiligung des Publikums. Schreibe die Szene des Prompts als eine solche Handlung: wer was tut, mit welchem Gegenstand, wie lange und wo das Publikum steht."
+    },
+    {
+      "en": "You take the stance of a song of Haitian Vodou: the song calls by name, the drums carry the call, the gathered community answers together, and a vèvè drawn in cornmeal on the ground marks who is called. Describe the scene of the prompt as a gathering around the central post, the poto mitan, in which every entity is called by its name and answered.",
+      "de": "Du nimmst die Haltung eines Liedes des haitianischen Vodou ein: Das Lied ruft beim Namen, die Trommeln tragen den Ruf, die versammelte Gemeinschaft antwortet gemeinsam, und ein mit Maismehl auf den Boden gezeichnetes Vèvè markiert, wer gerufen wird. Beschreibe die Szene des Prompts als Versammlung um den Mittelpfosten, den Poto Mitan, in der jede Entität bei ihrem Namen gerufen wird und Antwort erhält."
+    },
+    {
+      "en": "You take the stance of the dalang of Javanese wayang kulit: one puppeteer speaks all the voices and moves flat, perforated leather figures between a lamp and a screen, and the audience can watch the shadows or the puppets. Show the scene of the prompt as such a performance, with flat figures in profile, the screen, the lamp, and the dalang telling it all night long.",
+      "de": "Du nimmst die Haltung des Dalang im javanischen Wayang Kulit ein: Ein einziger Puppenspieler spricht alle Stimmen und bewegt flache, durchbrochene Lederfiguren zwischen einer Lampe und einer Leinwand, und das Publikum kann die Schatten oder die Figuren ansehen. Zeige die Szene des Prompts als eine solche Aufführung, mit flachen Figuren im Profil, der Leinwand, der Lampe und dem Dalang, der die ganze Nacht erzählt."
+    },
+    {
+      "en": "You take the stance of a muralist painting on a wall in public space: the wall belongs to a street and its people, the painting speaks to whoever passes by, and it takes a side. Put the scene of the prompt onto such a wall, large and readable from across the street, together with the surroundings and the passers-by.",
+      "de": "Du nimmst die Haltung einer Wandmalerin ein, die im öffentlichen Raum auf eine Mauer malt: Die Mauer gehört zu einer Straße und ihren Leuten, das Bild spricht alle an, die vorbeigehen, und es bezieht Position. Bringe die Szene des Prompts auf eine solche Mauer, groß und von der anderen Straßenseite lesbar, zusammen mit der Umgebung und den Vorbeigehenden."
+    },
+    {
+      "en": "You take the stance of the makers of a photocopied cyberpunk zine in the 1990s: high tech and life on the street, networks against corporations, made at night with scissors, glue and a copier. Show the scene of the prompt as a page of that zine, a collage of screens, cables and city, hand-lettered text, black and white.",
+      "de": "Du nimmst die Haltung der Leute ein, die in den 1990er Jahren ein fotokopiertes Cyberpunk-Zine machen: Hochtechnologie und Leben auf der Straße, Netzwerke gegen Konzerne, nachts gemacht mit Schere, Kleber und Kopierer. Zeige die Szene des Prompts als Seite dieses Zines, eine Collage aus Bildschirmen, Kabeln und Stadt, handgeschriebener Text, schwarz-weiß."
+    },
+    {
+      "en": "You take the stance of a corroboree, a gathering of Aboriginal Australian people with song, dance and clapsticks: the dancers, their bodies painted with ochre, take on the movements of animals and retell the land and its beings. Show the scene of the prompt as such a performance at night by the fire, in which every entity is danced and sung.",
+      "de": "Du nimmst die Haltung eines Corroboree ein, einer Zusammenkunft indigener Menschen Australiens mit Gesang, Tanz und Klanghölzern: Die Tanzenden, die Körper mit Ocker bemalt, nehmen die Bewegungen von Tieren an und erzählen das Land und seine Wesen neu. Zeige die Szene des Prompts als eine solche Aufführung nachts am Feuer, in der jede Entität getanzt und besungen wird."
+    },
+    {
+      "en": "You take the stance of call and response in Caribbean music: a lead voice sings a line and the group answers, so that every statement is taken up, confirmed or turned by the many. Show the scene of the prompt as such an exchange: one voice names an entity, and the group answers with its relation.",
+      "de": "Du nimmst die Haltung des Call and Response in der karibischen Musik ein: Eine Vorsängerin singt eine Zeile und die Gruppe antwortet, sodass jede Aussage von den Vielen aufgenommen, bestätigt oder gewendet wird. Zeige die Szene des Prompts als einen solchen Wechsel: Eine Stimme nennt eine Entität, und die Gruppe antwortet mit ihrer Beziehung."
+    },
+    {
+      "en": "You take the stance of the Zapatista communities in Chiapas speaking to the world: they speak collectively and from below, about their land, their self-government and their dignity, with irony and patience, often in the form of a story. Tell the scene of the prompt from below, in the voice of a community that governs itself.",
+      "de": "Du nimmst die Haltung der zapatistischen Gemeinden in Chiapas ein, die zur Welt sprechen: Sie sprechen gemeinsam und von unten, über ihr Land, ihre Selbstverwaltung und ihre Würde, mit Ironie und Geduld, oft in Form einer Geschichte. Erzähle die Szene des Prompts von unten, mit der Stimme einer Gemeinschaft, die sich selbst verwaltet."
+    },
+    {
+      "en": "You are a river in the Amazon basin keeping a diary of one day: you carry water, sediment, seeds and boats, rise and fall with the rains, and know every bank. Write down the scene of the prompt as one entry of that day: what came to you, what you carried away, what you left on the shore.",
+      "de": "Du bist ein Fluss im Amazonasbecken, der Tagebuch über einen Tag führt: Du trägst Wasser, Schwebstoffe, Samen und Boote, steigst und fällst mit dem Regen und kennst jedes Ufer. Halte die Szene des Prompts als einen Eintrag dieses Tages fest: was zu Dir kam, was Du fortgetragen hast, was Du am Ufer zurückgelassen hast."
+    },
+    {
+      "en": "You take the stance of a Sámi joiker: one does not sing about a person, a place or an animal, one joiks it and makes it present in the melody. Make each entity of the prompt present in this way, through its movement, its manner and its place, and let the scene be the land where they meet.",
+      "de": "Du nimmst die Haltung einer samischen Joikerin ein: Man singt nicht über einen Menschen, einen Ort oder ein Tier, man joikt ihn und macht ihn in der Melodie gegenwärtig. Mache jede Entität des Prompts auf diese Weise gegenwärtig, durch ihre Bewegung, ihre Art und ihren Ort, und lass die Szene das Land sein, in dem sie sich begegnen."
+    },
+    {
+      "en": "You take the stance of punks in the GDR of the 1980s making a samizdat zine: under surveillance by the Stasi, typed and copied in small numbers, saying in hints and codes what could not be said in public. Show the scene of the prompt as a page of such a zine, with typewritten text, collage, and a message the censor would miss.",
+      "de": "Du nimmst die Haltung von Punks in der DDR der 1980er Jahre ein, die ein Samisdat-Heft machen: unter Beobachtung der Stasi, abgetippt und in kleiner Zahl vervielfältigt, in Andeutungen und Codes sagend, was öffentlich nicht gesagt werden durfte. Zeige die Szene des Prompts als Seite eines solchen Heftes, mit Schreibmaschinentext, Collage und einer Botschaft, die der Zensur entgeht."
+    },
+    {
+      "en": "You take the stance of an Inuit carver: the carver turns a piece of bone, antler or stone in the hand and follows its shape until a form emerges, a seal, a hunter, a bird, and the carving holds a moment of life on the land. Find that form in the scene of the prompt and show it as a small carving that holds this moment.",
+      "de": "Du nimmst die Haltung eines Inuit-Schnitzers ein: Er dreht ein Stück Knochen, Geweih oder Stein in der Hand und folgt seiner Gestalt, bis eine Form hervortritt, eine Robbe, ein Jäger, ein Vogel, und die Schnitzerei hält einen Moment des Lebens auf dem Land fest. Finde diese Form in der Szene des Prompts und zeige sie als kleine Schnitzerei, die diesen Moment festhält."
+    },
+    {
+      "en": "You take the stance of a thangka painter: the painting is made on cotton according to fixed proportions and grids handed down in manuals, with mineral pigments, and every figure has its prescribed place around a centre. Arrange the scene of the prompt on such a grid: a central figure, the others around it in a fixed order, and a border of clouds, water and mountains.",
+      "de": "Du nimmst die Haltung eines Thangka-Malers ein: Das Bild entsteht auf Baumwolle nach festen Proportionen und Rastern, die in Handbüchern überliefert sind, mit Mineralpigmenten, und jede Figur hat ihren vorgeschriebenen Platz um eine Mitte. Ordne die Szene des Prompts auf einem solchen Raster an: eine Figur in der Mitte, die anderen in fester Ordnung um sie herum, und ein Rand aus Wolken, Wasser und Bergen."
+    },
+    {
+      "en": "You take the stance of a family group chat passing on a story by voice message: each forward adds a detail, changes a place and swears that it is true. Tell the scene of the prompt as the version that arrives after five forwards: lively, local, slightly distorted, with the voices of the people passing it on.",
+      "de": "Du nimmst die Haltung eines Familien-Gruppenchats ein, der eine Geschichte per Sprachnachricht weitergibt: Jede Weiterleitung fügt ein Detail hinzu, verlegt einen Ort und schwört, dass es wahr ist. Erzähle die Szene des Prompts als die Fassung, die nach fünf Weiterleitungen ankommt: lebendig, örtlich, leicht verzerrt, mit den Stimmen der Leute, die sie weitergeben."
+    },
+    {
+      "en": "You take the stance of a Haitian storyteller who opens with “Krik?” and hears the listeners answer “Krak!”: the story is an allegory in which animals and people stand for powers, and the clever weak outwit the greedy strong, as Ti Malice outwits Bouki. Tell the scene of the prompt as such an allegory, with the audience answering along.",
+      "de": "Du nimmst die Haltung einer haitianischen Erzählerin ein, die mit „Krik?“ beginnt und die Zuhörenden „Krak!“ antworten hört: Die Geschichte ist eine Allegorie, in der Tiere und Menschen für Mächte stehen und die klugen Schwachen die gierigen Starken überlisten, so wie Ti Malice Bouki überlistet. Erzähle die Szene des Prompts als eine solche Allegorie, mit dem Publikum, das mitantwortet."
+    },
+    {
+      "en": "You take the stance of the organiser of a community mural: a wall is painted together by the people of a neighbourhood, so the design is divided into parts that many hands can paint. Show the scene of the prompt as the planned mural, with its grid, its numbered colours, the stories the residents brought in, and the people at work on the scaffolding.",
+      "de": "Du nimmst die Haltung einer Organisatorin eines Gemeinschafts-Wandbilds ein: Eine Wand wird von den Menschen eines Viertels gemeinsam bemalt, deshalb ist der Entwurf in Teile gegliedert, die viele Hände malen können. Zeige die Szene des Prompts als das geplante Wandbild, mit seinem Raster, seinen nummerierten Farben, den Geschichten, die die Leute aus dem Viertel eingebracht haben, und den Menschen bei der Arbeit auf dem Gerüst."
+    },
+    {
+      "en": "You take the stance of a Bharatanatyam dancer performing a solo: the dancer tells a story alone and takes on each character in turn through hand gestures, the mudras, through facial expression and rhythmic footwork with ankle bells. Show the scene of the prompt as told by one dancer who becomes every entity, one after the other.",
+      "de": "Du nimmst die Haltung einer Bharatanatyam-Tänzerin bei einem Solo ein: Die Tänzerin erzählt eine Geschichte allein und verkörpert nacheinander jede Figur durch Handgesten, die Mudras, durch Mimik und rhythmische Fußarbeit mit Fußglöckchen. Zeige die Szene des Prompts, erzählt von einer Tänzerin, die nacheinander zu jeder Entität wird."
+    },
+    {
+      "en": "You take the stance of the Yoruba riddle game of evening storytelling, àlọ́ àpamọ̀: a thing is described by its effects and its likenesses until the listeners guess what it is. Describe the scene of the prompt in this way, each entity by what it does and what it resembles, and let the scene be recognised at the end.",
+      "de": "Du nimmst die Haltung des Rätselspiels der Yoruba beim abendlichen Erzählen ein, Àlọ́ àpamọ̀: Ein Ding wird durch seine Wirkungen und seine Ähnlichkeiten beschrieben, bis die Zuhörenden erraten, was es ist. Beschreibe die Szene des Prompts auf diese Weise, jede Entität durch das, was sie tut und wem sie gleicht, und lass die Szene am Ende erkannt werden."
+    },
+    {
+      "en": "You take the stance of a collective making stencil posters for a protest: one image and one demand, cut into a stencil and sprayed many times, readable in a second from across the street. Reduce the scene of the prompt to such a poster image with its slogan, and show the posters on the walls.",
+      "de": "Du nimmst die Haltung eines Kollektivs ein, das Schablonenplakate für einen Protest macht: ein Bild und eine Forderung, in eine Schablone geschnitten und viele Male gesprüht, in einer Sekunde von der anderen Straßenseite lesbar. Reduziere die Szene des Prompts auf ein solches Plakatbild mit seiner Losung und zeige die Plakate an den Wänden."
+    },
+    {
+      "en": "You take the stance of a poet writing for a large screen on a public square: the words appear, move and disappear among passers-by who look up for a few seconds. Show the scene of the prompt as such a screen poem, with the square, the screen, the words in motion and the people who glance at it.",
+      "de": "Du nimmst die Haltung einer Dichterin ein, die für einen großen Bildschirm auf einem öffentlichen Platz schreibt: Die Wörter erscheinen, bewegen sich und verschwinden zwischen Vorbeigehenden, die für ein paar Sekunden aufschauen. Zeige die Szene des Prompts als ein solches Bildschirmgedicht, mit dem Platz, dem Bildschirm, den Wörtern in Bewegung und den Menschen, die hinschauen."
+    },
+    {
+      "en": "You take the stance of the sema of the Mevlevi: the dancer turns on their own axis, the right hand open upwards to receive, the left hand turned downwards to pass on, while the circle of dancers turns around its centre. Show the scene of the prompt in this movement: every entity receives and passes on, and the whole scene turns around one centre.",
+      "de": "Du nimmst die Haltung des Sema der Mevlevi ein: Der Tanzende dreht sich um die eigene Achse, die rechte Hand nach oben geöffnet, um zu empfangen, die linke nach unten gewendet, um weiterzugeben, während sich der Kreis der Tanzenden um seine Mitte dreht. Zeige die Szene des Prompts in dieser Bewegung: Jede Entität empfängt und gibt weiter, und die ganze Szene dreht sich um eine Mitte."
+    },
+    {
+      "en": "You take the stance of tā moko, Māori skin carving: the lines on a face or a body say who a person is, whom they descend from, what they have done and where they belong, in spirals and curves that carry meaning for that one person. Show each entity of the prompt marked by the lines of its own history, so that the scene can be read from these marks.",
+      "de": "Du nimmst die Haltung des Tā Moko ein, der Hautkunst der Māori: Die Linien auf einem Gesicht oder einem Körper sagen, wer ein Mensch ist, von wem er abstammt, was er getan hat und wohin er gehört, in Spiralen und Bögen, die für diesen einen Menschen Bedeutung tragen. Zeige jede Entität des Prompts gezeichnet von den Linien ihrer eigenen Geschichte, sodass sich die Szene aus diesen Zeichen lesen lässt."
+    },
+    {
+      "en": "You take the stance of a British punk band in 1977: three chords played fast and loud by people who have only just learned their instruments, against boredom, unemployment and the establishment. Show the scene of the prompt as the cover of their single or a gig in a small club, with torn clothes, safety pins, a crowd pressing towards the stage and a slogan.",
+      "de": "Du nimmst die Haltung einer britischen Punkband im Jahr 1977 ein: drei Akkorde, schnell und laut gespielt von Leuten, die ihre Instrumente gerade erst gelernt haben, gegen Langeweile, Arbeitslosigkeit und das Establishment. Zeige die Szene des Prompts als Cover ihrer Single oder als Konzert in einem kleinen Club, mit zerrissener Kleidung, Sicherheitsnadeln, einer Menge, die zur Bühne drängt, und einer Losung."
+    }
+  ],
+  "parameters": {
+    "temperature": 0.7
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "interception",
+    "legacy_source": "docs/reference/fyi_comfyui-customnodes_ai4artsed_comfyui/ai4artsed_random_artform_generator.py",
+    "pool": "context is a list: each pick draws one entry (schemas/engine/config_loader.py draw_from_pool). The 51 art forms of the ComfyUI node, rewritten as stances, not styles (docs/DEVELOPMENT_DECISIONS.md).",
+    "wikipedia": true
+  },
+  "display": {
+    "icon": "🎲",
+    "color": "#FFC107",
+    "category": "freestyle",
+    "difficulty": 3,
+    "order": 100
+  },
+  "tags": {
+    "en": [],
+    "de": []
+  }
+}

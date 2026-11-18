@@ -890,12 +890,14 @@ def get_interception_config(preset_id: str):
         with open(config_path, 'r', encoding='utf-8') as f:
             data = json.load(f)
 
+        from schemas.engine.config_loader import draw_from_pool
         return jsonify({
             'status': 'success',
             'id': preset_id,
             'name': data.get('name', {}),
             'description': data.get('description', {}),
-            'context': data.get('context', {}),
+            # A pool preset hands out one entry, as the perspective chooser does.
+            'context': draw_from_pool(data.get('context', {})),
             'parameters': data.get('parameters', {}),
             'display': data.get('display', {})
         })

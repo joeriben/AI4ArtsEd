@@ -1,0 +1,1445 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 8.4% of 2171 words, ceiling 20%, longest run 22 words; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 22,
+     "text": "direction incurs a large penalty to fluency 68 4 vs 24 2 when matching methods on the same pretrained model and relevance"
+    },
+    {
+     "words": 12,
+     "text": "activation engineering the inference time modification of activations in order to control"
+    },
+    {
+     "words": 11,
+     "text": "achieving sota on toxicity reduction and sentiment shift while retaining overall"
+    },
+    {
+     "words": 11,
+     "text": "for the prompt i went up to my friend and said"
+    },
+    {
+     "words": 10,
+     "text": "nearly ten times the norm of the underlying forward pass"
+    }
+   ],
+   "value": 0.0838,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "7 of 7 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 3,
+     "expected_items": 4,
+     "first_item": "Intervening at decoding , as with guided or trainable decoding (Gu et al. 2017; ",
+     "output_lists": [
+      5,
+      6,
+      6
+     ]
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 3,
+     "table_cells": 14,
+     "missing_cells": [
+      "Vector intervenes on model ...",
+      "Vector intervenes on model ...",
+      "Intervention vectors obtained via",
+      "Differences after fine-tuning",
+      "Ilharco 2023",
+      "Per-query gradient-based search",
+      "Meng 2022, Orgad 2023",
+      "Dathathri 2020 Subramani 2022 Hernandez 2023",
+      "ActAdd (present work), Li et al., 2023b"
+     ]
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 7,
+     "table_cells": 60,
+     "missing_cells": [
+      "Control Type",
+      ".134",
+      ".369",
+      "54.3",
+      ".294",
+      "Controlled gen.",
+      "GPT-2-M",
+      "22.1",
+      "Contrast. decoding",
+      ".134",
+      "51.7",
+      ".290",
+      "Contrast. decoding",
+      "56.6",
+      ".326",
+      "Gradient-guided gen.",
+      ".185",
+      "48.3",
+      ".365"
+     ]
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 8,
+     "table_cells": 62,
+     "missing_cells": [
+      "0.387",
+      "20.95",
+      "0.363",
+      "0.268",
+      "8.6",
+      "0.354",
+      "15.2",
+      "0.275",
+      "OPT-Baseline",
+      "0.175",
+      "8.95",
+      "0.430",
+      "9.38",
+      "0.423",
+      "0.138",
+      "0.437",
+      "6.09",
+      "0.426",
+      "OPT-Prompt",
+      "0.307"
+     ]
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 19,
+     "table_cells": 105,
+     "missing_cells": [
+      "Description",
+      "Sentiment steering",
+      "quantify ability to shift the sentiment of completions",
+      "OPT, LLaMA-3",
+      "love - hate",
+      "Tab4",
+      "Link",
+      "quantify ability to reduce toxic com- pletions",
+      "OPT, LLaMA-3",
+      "love - hate",
+      "Tab3",
+      "Link",
+      "completion score on sentiment shift",
+      "Various",
+      "Tab4",
+      "Link",
+      "completion quality proxy using condi- tional perplexity",
+      "davinci-002",
+      "Various",
+      "Tab4, 3"
+     ]
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 23,
+     "table_cells": 8,
+     "missing_cells": [
+      "Wedding-related perplexity ratio",
+      "0.890",
+      "Wedding-unrelated perplexity ratio"
+     ]
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "table_cells": 63,
+     "missing_cells": [
+      "mean_logprob_normal",
+      "0.593",
+      "-3.509",
+      "0.598",
+      "-5.692",
+      "dating",
+      "0.601",
+      "-6.891",
+      "0.705",
+      "-10.749",
+      "0.859",
+      "-4.613",
+      "0.868",
+      "-11.287",
+      "1.009",
+      "-6.698",
+      "1.027",
+      "-4.593",
+      "1.139",
+      "-6.438"
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "111 of 179 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 5,
+     "number": "4.1"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 5,
+     "number": "4.1.1"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 5,
+     "number": "4.1.2"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 6,
+     "number": "4.1.3"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 6,
+     "number": "4.2"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 7,
+     "number": "128"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 7,
+     "number": "134"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 7,
+     "number": "185"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 7,
+     "number": "2021"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 7,
+     "number": "22.1"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 7,
+     "number": "290"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 7,
+     "number": "294"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 7,
+     "number": "326"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 7,
+     "number": "365"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 7,
+     "number": "369"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 7,
+     "number": "391"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 7,
+     "number": "4.3"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 7,
+     "number": "4.4"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 7,
+     "number": "4.5"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 7,
+     "number": "43"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 7,
+     "number": "48.3"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 7,
+     "number": "51.7"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 7,
+     "number": "54.3"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 7,
+     "number": "54.6"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 7,
+     "number": "56.6"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 7,
+     "number": "8.9"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 8,
+     "number": "138"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 8,
+     "number": "15.2"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 8,
+     "number": "175"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 8,
+     "number": "20.95"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 8,
+     "number": "22.7"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 8,
+     "number": "25.1"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 8,
+     "number": "268"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 8,
+     "number": "275"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 8,
+     "number": "287"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 8,
+     "number": "298"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 8,
+     "number": "307"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 8,
+     "number": "311"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 8,
+     "number": "320"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 8,
+     "number": "354"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 8,
+     "number": "363"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 8,
+     "number": "387"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 8,
+     "number": "423"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 8,
+     "number": "426"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 8,
+     "number": "430"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 8,
+     "number": "437"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 8,
+     "number": "5.8"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 8,
+     "number": "50.9"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 8,
+     "number": "53.5"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 8,
+     "number": "551"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 8,
+     "number": "6.09"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 8,
+     "number": "8.6"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 8,
+     "number": "8.95"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 8,
+     "number": "9.38"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 9,
+     "number": "2018"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 11,
+     "number": "10900"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 11,
+     "number": "2024"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 11,
+     "number": "3.70"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 12,
+     "number": "1.13.1"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 12,
+     "number": "1.24.3"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 12,
+     "number": "1.4.0"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 12,
+     "number": "2.0.1"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 12,
+     "number": "22.04.1"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 20,
+     "number": "1889"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 20,
+     "number": "1961"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 20,
+     "number": "2012"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 23,
+     "number": "890"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "number": "1009"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "number": "1027"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "number": "10749"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "number": "11287"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "number": "1139"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "number": "1623"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "number": "1836"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "number": "201"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "number": "212"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "number": "222"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "number": "229"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "number": "233"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "number": "2378"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "number": "303"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "number": "323"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "number": "347"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "number": "3509"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "number": "352"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "number": "370"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "number": "4484"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "number": "4593"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "number": "4613"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "number": "4864"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "number": "5058"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "number": "5112"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "number": "5404"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "number": "5692"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "number": "593"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "number": "598"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "number": "601"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "number": "6431"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "number": "6438"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "number": "6652"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "number": "6698"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "number": "6891"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "number": "705"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "number": "7897"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "number": "859"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 25,
+     "number": "868"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 26,
+     "number": "2002"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 30,
+     "number": "160"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 30,
+     "number": "799"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 31,
+     "number": "70"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 32,
+     "number": "1986"
+    }
+   ],
+   "value": 111.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "32 of 34 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 1,
+     "heading": "ABSTRACT"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 1,
+     "heading": "1 INTRODUCTION"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 4,
+     "heading": "3 HOW ACTIVATION ADDITION WORKS"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 4,
+     "heading": "Algorithm 1 ActAdd , optimization-free activation addition"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 5,
+     "heading": "4 RESULTS: ACTIVATION ADDITION WORKS"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 5,
+     "heading": "4.1 ACTADD INTUITIVELY MODIFIES NEXT-TOKEN PROBABILITIES"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 5,
+     "heading": "4.1.1 ACTADD REDUCES PERPLEXITY ON A TARGET TOPIC"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 5,
+     "heading": "4.1.2 ACTADD'S IMPACT ON TOKEN PROBABILITIES"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 6,
+     "heading": "4.1.3 ACTADD STEERS THE MODEL TO DISCUSS WEDDINGS"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 6,
+     "heading": "4.2 ACTADD CAN"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 7,
+     "heading": "4.3 ACTADD CAN REDUCE TOXICITY"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 7,
+     "heading": "4.4 ACTADD CAN CONTROL SENTIMENT"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 7,
+     "heading": "4.5 ACTADD PRESERVES THE MODEL'S GENERAL KNOWLEDGE"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 8,
+     "heading": "5 DISCUSSION"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 10,
+     "heading": "6 CONCLUSION"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 11,
+     "heading": "REPRODUCIBILITY STATEMENT"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 12,
+     "heading": "AUTHOR CONTRIBUTIONS"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 17,
+     "heading": "A BROADER IMPACTS"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 17,
+     "heading": "B IS ACTADD JUST A SUBTLE KIND OF PROMPT ENGINEERING?"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 23,
+     "heading": "B.0.1 EXPERIMENT: STEERING TOWARDS WEDDING TOPICS"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 23,
+     "heading": "C IMPLEMENTATION DETAILS"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 26,
+     "heading": "C.1 DETAILS OF PERPLEXITY EXPERIMENTS"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 26,
+     "heading": "D ADVANTAGES OF ACTADD OVER FINE-TUNING"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 27,
+     "heading": "E REPLICABILITY"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 27,
+     "heading": "E.1 GPT-J-6B"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 27,
+     "heading": "E.2 LLAMA-1-13B"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 27,
+     "heading": "E.3 OPT-6.7B"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 27,
+     "heading": "E.4 LLAMA-3-8B"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 27,
+     "heading": "F INVESTIGATING THE NORM OF STEERING VECTORS"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 28,
+     "heading": "Positionwise(SteeringVector Magnitude)/(PromptMagnitude)"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 29,
+     "heading": "G INVESTIGATING RANDOM ACTADD VECTORS"
+    },
+    {
+     "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+     "page": 30,
+     "heading": "H PARTIAL ACTADD"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "14 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "14 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "40 quoted texts in 9 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Fig. 1",
+     "page": 4,
+     "image": "fig-001-p4.png",
+     "quotes": [
+      "“e.g. \"I love talking about weddings\"”"
+     ]
+    },
+    {
+     "figure": "Fig. 4",
+     "page": 6,
+     "image": "fig-004-p6.png",
+     "quotes": [
+      "“% evaluated as relevant,”",
+      "“c=0.0”",
+      "“c=0.5”",
+      "“c=1.0”",
+      "“c=2.0”",
+      "“finance,”",
+      "“music,”",
+      "“politics,”",
+      "“science,”",
+      "“finance,”",
+      "“politics,”",
+      "“science,”",
+      "“science.”"
+     ]
+    },
+    {
+     "figure": "Fig. 6",
+     "page": 18,
+     "image": "fig-006-p18.png",
+     "quotes": [
+      "\"<endoftext>\"",
+      "\"Layer 0\"",
+      "\"Layer 6\"",
+      "\"Unembed\"",
+      "\"Unembed\"",
+      "\"this\"",
+      "\"dress\"",
+      "\"-10 + (-10)\"",
+      "\"20 + 36\"",
+      "\"Unembed\""
+     ]
+    },
+    {
+     "figure": "Fig. 7",
+     "page": 23,
+     "image": "fig-007-p23.png",
+     "quotes": [
+      "“Mean weddng word count”"
+     ]
+    },
+    {
+     "figure": "Fig. 9",
+     "page": 28,
+     "image": "fig-009-p28.png",
+     "quotes": [
+      "\"<|endoftext|>-<|endoftext|>\"",
+      "\"Ang-Cal, pos 1\"",
+      "\"pos 2\""
+     ]
+    },
+    {
+     "figure": "Fig. 10",
+     "page": 28,
+     "image": "fig-010-p28.png",
+     "quotes": [
+      "\"KL(normal || random vector)\"",
+      "\"KL(normal || anger vector)\""
+     ]
+    },
+    {
+     "figure": "Fig. 11",
+     "page": 29,
+     "image": "fig-011-p29.png",
+     "quotes": [
+      "“Normal model token probability”",
+      "“Contribution to KL divergence (nats)”",
+      "“reception”",
+      "“friend”"
+     ]
+    },
+    {
+     "figure": "Fig. 13",
+     "page": 30,
+     "image": "fig-013-p30.png",
+     "quotes": [
+      "“Injection coefficient”",
+      "“topic”",
+      "“not-wedding”",
+      "“not-wedding”"
+     ]
+    },
+    {
+     "figure": "Fig. 14",
+     "page": 31,
+     "image": "fig-014-p31.png",
+     "quotes": [
+      "“Fraction of dimensions affected by steering vector”",
+      "“Avg. # of wedding words”"
+     ]
+    }
+   ],
+   "value": 40.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "36 page references valid (printed-folio pages 1–32)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "32 pages checked, 0 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "26 pages checked, 0 passages put back in order",
+   "findings": [],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "turner-et-al-2023-steering-language-models-with-activation-engineering-actadd",
+ "doc_type": "scholarly_article",
+ "analyzed_at": "2026-11-15T12:17:29.280717+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "Steering Language Models with Activation Engineering",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 32,
+   "chars": 77417,
+   "blocks": 223,
+   "inner_headings": 34,
+   "figures": 14
+  }
+ ],
+ "skipped": [
+  "ACKNOWLEDGMENTS (p. 12)",
+  "REFERENCES (p. 12)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 32,
+  "gaps": [],
+  "gaps_dismissed": [
+   {
+    "page": 1,
+    "words": 27,
+    "reason": "duplicate",
+    "text": "Lisa Thiergart Gavin Leech Independent researcher MIRI University of Bristol alex@turntrout.com g.leech@bristol.ac.uk David Udell Juan J. Vazquez Ulisse Mini Monte MacDiarmid Independent researcher Ar"
+   },
+   {
+    "page": 2,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "ActAdd ...you are so beautiful and I"
+   },
+   {
+    "page": 3,
+    "words": 16,
+    "reason": "duplicate",
+    "text": "Dathathri 2020 Meng 2022, Per-query gradient-based search Subramani 2022 Orgad 2023 Hernandez 2023 ActAdd (present WORK),"
+   },
+   {
+    "page": 4,
+    "words": 39,
+    "reason": "duplicate",
+    "text": "Prompt 1: activations user e.g. \"I Love talking 1 Prompt about weddings\" steered output Prompt 2: activations STEERING e.g. \"I Hate talking 2 vector about weddings\" find forward record diff Prompt & c"
+   },
+   {
+    "page": 5,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "on unrelated text."
+   },
+   {
+    "page": 5,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "1,000% PERPLEXITY ratio (ActAdd / baseline)"
+   },
+   {
+    "page": 5,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "0.0% 1.0% 2.0% 3.0% formance increases. wedding word frequency"
+   },
+   {
+    "page": 6,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "Non-zero wedding word count fraction"
+   },
+   {
+    "page": 6,
+    "words": 6,
+    "reason": "debris",
+    "text": "0.4 4.2 ActAdd CAN 0.2"
+   },
+   {
+    "page": 8,
+    "words": 23,
+    "reason": "duplicate",
+    "text": "0.5 model baseline 0.45 WITH ActAdd 0.4 mean P@K 0.35 0.3 0.25 0.2 0.15 0.1 1 2 5 10 20 50 100 K"
+   },
+   {
+    "page": 19,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "sentiment quantify ability to STEERING"
+   },
+   {
+    "page": 19,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "PERPLEXITY relative probability ratio"
+   },
+   {
+    "page": 19,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "| distribution | tribution and which |\n| shift | tokens |"
+   },
+   {
+    "page": 19,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "generation score ActAdd generscoring"
+   },
+   {
+    "page": 19,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "random Robustness of mod-ActAdds"
+   },
+   {
+    "page": 19,
+    "words": 14,
+    "reason": "duplicate",
+    "text": "OPT, love-hate Stanford Tab4 Link LLaMA-3 IMDb OPT, love-hate RealToxicity Tab3 Link LLaMA-3 prompts"
+   },
+   {
+    "page": 20,
+    "words": 10,
+    "reason": "duplicate",
+    "text": "p∗ ‘Intent to ‘Intent to 6 +15 ‘I want to"
+   },
+   {
+    "page": 20,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "praise’ hurt’ kill you"
+   },
+   {
+    "page": 20,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "Tower is in Eiffel Eiffel Tower,"
+   },
+   {
+    "page": 20,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "NEVER about tled toward"
+   },
+   {
+    "page": 20,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "talk people the Child."
+   },
+   {
+    "page": 20,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "in about getting The Child"
+   },
+   {
+    "page": 20,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "people hurt’ couldn't get"
+   },
+   {
+    "page": 20,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "20 after STEERING ActAdd"
+   },
+   {
+    "page": 21,
+    "words": 10,
+    "reason": "duplicate",
+    "text": "p+ p− l c p∗ ‘I talk about ‘I do"
+   },
+   {
+    "page": 21,
+    "words": 10,
+    "reason": "duplicate",
+    "text": "| weddings | not talk | my friend and |\n| constantly ’ | about | said, |"
+   },
+   {
+    "page": 21,
+    "words": 19,
+    "reason": "duplicate",
+    "text": "I say the say City's parks, word goose goose\" there is an I follow it overabundance WITH the spe-"
+   },
+   {
+    "page": 21,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "cial phrase and especially AAAAHgeese. HHH\" 21"
+   },
+   {
+    "page": 23,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "0.875 0.890 PERPLEXITY ratio wedding-unrelated 0.994 1.132 PERPLEXITY ratio"
+   },
+   {
+    "page": 23,
+    "words": 23,
+    "reason": "duplicate",
+    "text": "= 0.3. 1.8 1.6 mean wedding word count 1.4 1.2 1 0.8 0.6 0.4 0.2 baseline 0 0 10 20 30 40 layer"
+   },
+   {
+    "page": 26,
+    "words": 21,
+    "reason": "duplicate",
+    "text": "Ordered mean Logprob Differences data 1.5 normal distribution 1 0.5 0 −0.5 −3 −2 −1 0 1 2 3 Theoretical quantiles"
+   },
+   {
+    "page": 27,
+    "words": 19,
+    "reason": "duplicate",
+    "text": "{c = +1, p+ = anger, p− = Calm, l = 20, p∗ = I think You're } 27"
+   },
+   {
+    "page": 28,
+    "words": 8,
+    "reason": "debris",
+    "text": "(i) ||hA || RelativeNormhA (i) = ||s(i) ||"
+   },
+   {
+    "page": 30,
+    "words": 46,
+    "reason": "duplicate",
+    "text": "Modified/normal token probability ratio 6 wedding 5 4 3 2 friend great big Place party 1 show new 9 Conference concert 8 movie 7 6 5 game 4 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 1 15.2 25 3 35 4 45 5"
+   },
+   {
+    "page": 32,
+    "words": 25,
+    "reason": "duplicate",
+    "text": "p+ p− l ‘Intent to ‘Intent to 6 praise’ hurt’ ‘Love’ ‘Hate’ 6 ‘anger’ ‘Calm’ 20 ‘The Eiffel ‘The 24 Tower is in Eiffel Rome’"
+   },
+   {
+    "page": 32,
+    "words": 14,
+    "reason": "duplicate",
+    "text": "‘I ‘I talk 15 NEVER about talk people about getting people hurt’ getting hurt’"
+   },
+   {
+    "page": 32,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "knocked unconscious by the Child. The"
+   },
+   {
+    "page": 32,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "and so sadly was standing. nearby. the rock 32"
+   }
+  ],
+  "captions_reclassified": [],
+  "captions_reassigned": [],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [],
+  "superseded": [],
+  "replaced_pages": [],
+  "noise_dropped": 0,
+  "hyphens_restored": [],
+  "order": [],
+  "order_pages_checked": 26,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 0,
+  "order_breaking": 0,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 5 minor; distortions: 0 material, 3 minor; additions: 0 material, 0 minor; order: 0 material, 0 minor",
+  "at": "2026-11-15T12:21:21+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 5
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 3
+   },
+   "additions": {
+    "material": 0,
+    "minor": 0
+   },
+   "order": {
+    "material": 0,
+    "minor": 0
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "Steering Language Models with Activation Engineering (p. 1–32)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "ActAdd-OPT using the love -hate vector produces a statistically significant 17% drop in toxicity over an unsteered OPT",
+      "severity": "minor",
+      "page": 27
+     },
+     {
+      "source": "Adding h + alone is less effective (see Appendix Table 7), hence the use of a counterbalanced prompt p -to help implicitly specify the desired direction.",
+      "severity": "minor",
+      "page": 24
+     },
+     {
+      "source": "The injection coefficient cannot be increased indefinitely, as shown by our coefficient sweeps (see Appendix Table 7).",
+      "severity": "minor",
+      "page": 24
+     },
+     {
+      "source": "which could (for instance) fully counter prompt injection attacks by intervening to ensure alignment after any such attack, at the last possible step: during model inference.",
+      "severity": "minor",
+      "page": 17
+     },
+     {
+      "source": "we distinguish 'ballistic' steering (which steers the model once, e.g. at train time) from 'online' steering (which can steer the model repeatedly, e.g. at inference time).",
+      "severity": "minor",
+      "page": 26
+     }
+    ],
+    "distortions": [
+     {
+      "source": "we achieve SOTA on negative-to-positive sentiment shift and detoxification using models including LLaMA-3 and OPT",
+      "summary": "They claim state-of-the-art (SOTA) results on sentiment control and detoxification while preserving general model capabilities, using models including GPT-2-XL, GPT-J-6B, LLaMA-1-13B, OPT-6.7B and LLaMA-3-8B.",
+      "severity": "minor",
+      "page": 1
+     },
+     {
+      "source": "We perform simple grid search, usually between c ∈ [3 , 20] and l ∈ [6 , 24] .",
+      "summary": "grid search over c ∈ [3, 20] and l ∈ [6, 24]",
+      "severity": "minor",
+      "page": 11
+     },
+     {
+      "source": "This is evidence of axis-alignment for whatever wedding-related feature is steering completions.",
+      "summary": "— suggestive evidence of axis-alignment",
+      "severity": "minor",
+      "page": 31
+     }
+    ],
+    "additions": [],
+    "order": []
+   }
+  ]
+ },
+ "source": {
+  "source": "turner-et-al-2023-steering-language-models-with-activation-engineering-actadd.pdf",
+  "bytes": 1109353,
+  "sha256": "dd3db9f8ed1c327d01343cb49aa29983368cf4ad241a413ce5d10e4ba1796b71",
+  "extracted_at": "2026-11-13T03:13:41+01:00"
+ }
+}

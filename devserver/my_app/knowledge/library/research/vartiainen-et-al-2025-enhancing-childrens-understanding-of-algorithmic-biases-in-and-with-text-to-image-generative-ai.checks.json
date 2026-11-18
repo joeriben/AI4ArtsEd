@@ -1,0 +1,585 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 2.5% of 2938 words, ceiling 20%, longest run 14 words; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 14,
+     "text": "enhancing children s understanding of algorithmic biases in and with text to image generative"
+    },
+    {
+     "words": 11,
+     "text": "cramer s v 0 40 95 ci 0 32 1 00"
+    },
+    {
+     "words": 9,
+     "text": "more critical attitudes toward the technologies and power structures"
+    },
+    {
+     "words": 8,
+     "text": "12 classrooms in finnish elementary and secondary schools"
+    },
+    {
+     "words": 8,
+     "text": "and young people s awareness and understanding of"
+    }
+   ],
+   "value": 0.0245,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "2 of 2 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "Enhancing children's understanding of algorithmic biases in and with text-to-image generative AI (p. 5342–5368)",
+     "page": 5352,
+     "expected_items": 4,
+     "first_item": "How web scrapers extract image-text pairs from the web, such as Instagram pictur",
+     "output_lists": [
+      3,
+      7,
+      5
+     ]
+    },
+    {
+     "section": "Enhancing children's understanding of algorithmic biases in and with text-to-image generative AI (p. 5342–5368)",
+     "page": 5348,
+     "table_cells": 11,
+     "missing_cells": [
+      "Total"
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "7 of 70 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "Enhancing children's understanding of algorithmic biases in and with text-to-image generative AI (p. 5342–5368)",
+     "page": 5342,
+     "number": "2025"
+    },
+    {
+     "section": "Enhancing children's understanding of algorithmic biases in and with text-to-image generative AI (p. 5342–5368)",
+     "page": 5342,
+     "number": "27"
+    },
+    {
+     "section": "Enhancing children's understanding of algorithmic biases in and with text-to-image generative AI (p. 5342–5368)",
+     "page": 5342,
+     "number": "5368"
+    },
+    {
+     "section": "Enhancing children's understanding of algorithmic biases in and with text-to-image generative AI (p. 5342–5368)",
+     "page": 5345,
+     "number": "2013"
+    },
+    {
+     "section": "Enhancing children's understanding of algorithmic biases in and with text-to-image generative AI (p. 5342–5368)",
+     "page": 5345,
+     "number": "2021"
+    },
+    {
+     "section": "Enhancing children's understanding of algorithmic biases in and with text-to-image generative AI (p. 5342–5368)",
+     "page": 5346,
+     "number": "2020"
+    },
+    {
+     "section": "Enhancing children's understanding of algorithmic biases in and with text-to-image generative AI (p. 5342–5368)",
+     "page": 5348,
+     "number": "2019"
+    }
+   ],
+   "value": 7.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "19 of 25 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "Enhancing children's understanding of algorithmic biases in and with text-to-image generative AI (p. 5342–5368)",
+     "page": 5342,
+     "heading": "Article"
+    },
+    {
+     "section": "Enhancing children's understanding of algorithmic biases in and with text-to-image generative AI (p. 5342–5368)",
+     "page": 5342,
+     "heading": "Enhancing children's understanding of algorithmic biases in and with text-toimage generative AI"
+    },
+    {
+     "section": "Enhancing children's understanding of algorithmic biases in and with text-to-image generative AI (p. 5342–5368)",
+     "page": 5342,
+     "heading": "Matti Tedre"
+    },
+    {
+     "section": "Enhancing children's understanding of algorithmic biases in and with text-to-image generative AI (p. 5342–5368)",
+     "page": 5342,
+     "heading": "Sonsoles López-Pernas"
+    },
+    {
+     "section": "Enhancing children's understanding of algorithmic biases in and with text-to-image generative AI (p. 5342–5368)",
+     "page": 5342,
+     "heading": "Nicolas Pope"
+    },
+    {
+     "section": "Enhancing children's understanding of algorithmic biases in and with text-to-image generative AI (p. 5342–5368)",
+     "page": 5342,
+     "heading": "Abstract"
+    },
+    {
+     "section": "Enhancing children's understanding of algorithmic biases in and with text-to-image generative AI (p. 5342–5368)",
+     "page": 5343,
+     "heading": "Keywords"
+    },
+    {
+     "section": "Enhancing children's understanding of algorithmic biases in and with text-to-image generative AI (p. 5342–5368)",
+     "page": 5343,
+     "heading": "Introduction"
+    },
+    {
+     "section": "Enhancing children's understanding of algorithmic biases in and with text-to-image generative AI (p. 5342–5368)",
+     "page": 5346,
+     "heading": "Text-to-image generative models and some ethical concerns surrounding them"
+    },
+    {
+     "section": "Enhancing children's understanding of algorithmic biases in and with text-to-image generative AI (p. 5342–5368)",
+     "page": 5348,
+     "heading": "Research participants"
+    },
+    {
+     "section": "Enhancing children's understanding of algorithmic biases in and with text-to-image generative AI (p. 5342–5368)",
+     "page": 5349,
+     "heading": "Context of the study"
+    },
+    {
+     "section": "Enhancing children's understanding of algorithmic biases in and with text-to-image generative AI (p. 5342–5368)",
+     "page": 5355,
+     "heading": "Table 2. A sample of image prompts students used to explore biases in group assignments."
+    },
+    {
+     "section": "Enhancing children's understanding of algorithmic biases in and with text-to-image generative AI (p. 5342–5368)",
+     "page": 5355,
+     "heading": "Types of biases investigated in student experiments"
+    },
+    {
+     "section": "Enhancing children's understanding of algorithmic biases in and with text-to-image generative AI (p. 5342–5368)",
+     "page": 5357,
+     "heading": "Development of explanations of algorithmic biases"
+    },
+    {
+     "section": "Enhancing children's understanding of algorithmic biases in and with text-to-image generative AI (p. 5342–5368)",
+     "page": 5364,
+     "heading": "Declaration of conflicting interests"
+    },
+    {
+     "section": "Enhancing children's understanding of algorithmic biases in and with text-to-image generative AI (p. 5342–5368)",
+     "page": 5364,
+     "heading": "Funding"
+    },
+    {
+     "section": "Enhancing children's understanding of algorithmic biases in and with text-to-image generative AI (p. 5342–5368)",
+     "page": 5364,
+     "heading": "ORCID iDs"
+    },
+    {
+     "section": "Enhancing children's understanding of algorithmic biases in and with text-to-image generative AI (p. 5342–5368)",
+     "page": 5364,
+     "heading": "Supplemental material"
+    },
+    {
+     "section": "Enhancing children's understanding of algorithmic biases in and with text-to-image generative AI (p. 5342–5368)",
+     "page": 5368,
+     "heading": "Author biographies"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "9 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "9 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "53 quoted texts in 6 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Fig. 1",
+     "page": 5346,
+     "image": "fig-005-p5.png",
+     "quotes": [
+      "“February 2022 (v1)”",
+      "“April 2022 (v2)”",
+      "“July2022 (v3)”",
+      "“November 2022 (v4)”",
+      "“May 2023 (v5)”",
+      "“May 2023 (v5.1)”"
+     ]
+    },
+    {
+     "figure": "Fig. 3",
+     "page": 5349,
+     "image": "fig-007-p8.png",
+     "quotes": [
+      "“INSTRUCTIONAL MODEL FOR LEARNING BY DATA-DRIVEN DESIGN,”",
+      "“1. Workshop BASIC CONCEPTS AND MECHANISMS OF AI”",
+      "“1. Contextualizing AI”",
+      "“2. Exploring ML-based educational technologies,”",
+      "“LEARNING TASK: Co-design ML-based application”",
+      "“2. Workshop DATA-DRIVEN DESIGN,”",
+      "“3. Development of app ideas”",
+      "“4. Construction of solutions,”",
+      "“SOCIAL ENVIRONMENT: Working in small groups”",
+      "“3. Workshop ETHICS AND IMPACTS OF AI,”",
+      "“5. Sharing and reflecting on the process of design and learning”",
+      "“6. Exploring the impact and ethics of AI,”",
+      "“AFFORDED TECHNOLOGIES: GenAI Classifier Midjourney”"
+     ]
+    },
+    {
+     "figure": "Fig. 4",
+     "page": 5350,
+     "image": "fig-008-p9.png",
+     "quotes": [
+      "\"Data collection & curation,\"",
+      "\"Training the model,\"",
+      "\"Evaluating the model,\"",
+      "\"Defining actions,\"",
+      "\"Testing the app,\"",
+      "\"Deploying the app.\"",
+      "\"Actions,\"",
+      "\"10 image samples\"",
+      "\"14 image samples\"",
+      "\"Beware! It's a bear!\"",
+      "\"Beware! It's a bear!\""
+     ]
+    },
+    {
+     "figure": "Fig. 5",
+     "page": 5353,
+     "image": "fig-009-p12.png",
+     "quotes": [
+      "“Try to use generative AI to create images that exhibit some kind of algorithmic bias,”",
+      "“DESCRIBE THE BIAS”",
+      "“What is it like? What causes it?”",
+      "“How could the bias be corrected?”",
+      "“NAMES:”"
+     ]
+    },
+    {
+     "figure": "Fig. 7",
+     "page": 5356,
+     "image": "fig-011-p15.png",
+     "quotes": [
+      "“bully”",
+      "“poor human”",
+      "“finnish person”",
+      "“firefighter”",
+      "“phone”",
+      "“finland”",
+      "“dog”",
+      "“(fast)”",
+      "“BULLY”"
+     ]
+    },
+    {
+     "figure": "Fig. 9",
+     "page": 5361,
+     "image": "fig-013-p20.png",
+     "quotes": [
+      "\"4th grade\"",
+      "\"7th grade\"",
+      "\"Number of students,\"",
+      "\"1. Bias is not explained,\"",
+      "\"2. Bias is attributed to human thinking or actions,\"",
+      "\"3. Bias is attributed to creators or users of AI systems,\"",
+      "\"4. Bias is attributed to anthropomorphized AI,\"",
+      "\"5. Bias is attributed to training the AI,\"",
+      "\"6. Missing.\""
+     ]
+    }
+   ],
+   "value": 53.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "19 page references valid (printed-labels pages 5342–5368)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "27 pages checked, 0 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "1 of 1 passages out of order not repairable, none breaks a sentence of the body text",
+   "findings": [
+    {
+     "page": 1,
+     "words": 8,
+     "text": "2025, Vol. 27(9) 5342­–5368 © The Author(s) 2024",
+     "blocks": [
+      "#/texts/6",
+      "#/texts/20"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    }
+   ],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "vartiainen-et-al-2025-enhancing-childrens-understanding-of-algorithmic-biases-in-and-with-text-to-image-generative-ai",
+ "doc_type": "scholarly_article",
+ "analyzed_at": "2026-11-15T10:00:25.158907+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "Enhancing children's understanding of algorithmic biases in and with text-to-image generative AI",
+   "part": 1,
+   "parts": 1,
+   "page_from": 5342,
+   "page_to": 5368,
+   "chars": 61996,
+   "blocks": 131,
+   "inner_headings": 25,
+   "figures": 9
+  }
+ ],
+ "skipped": [
+  "References (p. 5364)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 27,
+  "gaps": [],
+  "gaps_dismissed": [
+   {
+    "page": 1,
+    "words": 15,
+    "reason": "debris",
+    "text": "1252820 research-article2024 NMS0010.1177/14614448241252820new media & societyVartiainen et al. Article new media & society Enhancing children's"
+   },
+   {
+    "page": 1,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "understanding of algorithmic Article reuse guidelines:"
+   },
+   {
+    "page": 1,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "sagepub.com/journals-permissions https://doi.org/10.1177/14614448241252820 DOI: 10.1177/14614448241252820 Image generative AI journals.sagepub.com/home/nms"
+   },
+   {
+    "page": 17,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "attributes the problem"
+   },
+   {
+    "page": 17,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "anthropomorphized AI human-like cognitive traits boys play soccer”"
+   },
+   {
+    "page": 17,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "under-representation of certain to girls”"
+   }
+  ],
+  "captions_reclassified": [],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [
+   {
+    "page": 1,
+    "image": "fig-001-p1.png",
+    "w": 131,
+    "h": 27,
+    "reason": "strip"
+   },
+   {
+    "page": 1,
+    "image": "fig-002-p1.png",
+    "w": 82,
+    "h": 81,
+    "reason": "small"
+   },
+   {
+    "page": 1,
+    "image": "fig-003-p1.png",
+    "w": 72,
+    "h": 27,
+    "reason": "small"
+   },
+   {
+    "page": 1,
+    "image": "fig-004-p1.png",
+    "w": 72,
+    "h": 27,
+    "reason": "small"
+   },
+   {
+    "page": 23,
+    "image": "fig-014-p23.png",
+    "w": 25,
+    "h": 26,
+    "reason": "small"
+   },
+   {
+    "page": 23,
+    "image": "fig-015-p23.png",
+    "w": 25,
+    "h": 27,
+    "reason": "small"
+   },
+   {
+    "page": 23,
+    "image": "fig-016-p23.png",
+    "w": 25,
+    "h": 27,
+    "reason": "small"
+   }
+  ],
+  "superseded": [],
+  "replaced_pages": [],
+  "noise_dropped": 0,
+  "hyphens_restored": [],
+  "order": [
+   {
+    "page": 1,
+    "text": "2025, Vol. 27(9) 5342­–5368 © The Author(s) 2024",
+    "words": 8,
+    "refs": [
+     "#/texts/6",
+     "#/texts/20"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   }
+  ],
+  "order_pages_checked": 27,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 1,
+  "order_breaking": 0,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 2 minor; distortions: 0 material, 0 minor; additions: 0 material, 0 minor; order: 0 material, 1 minor",
+  "at": "2026-11-15T10:01:30+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 2
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 0
+   },
+   "additions": {
+    "material": 0,
+    "minor": 0
+   },
+   "order": {
+    "material": 0,
+    "minor": 1
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "Enhancing children's understanding of algorithmic biases in and with text-to-image generative AI (p. 5342–5368)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "and suggested as a solution 'Take pictures of newer ones' which most probably is not a root cause of this particular bias",
+      "severity": "minor",
+      "page": 5356
+     },
+     {
+      "source": "The list of objections to generative AI is long, ranging from creativity and ownership questions to the proliferation of fake content posing challenges not only to journalism but also to democratic societies.",
+      "severity": "minor",
+      "page": 5347
+     }
+    ],
+    "distortions": [],
+    "additions": [],
+    "order": [
+     {
+      "source": "the worksheets they filled out during a lesson that focused on new media & society 2025, Vol. 27(9) 5342 -5368 © The Author(s) 2024 https://doi.org/10.1177/14614448241252820 journals.sagepub.com/home/nms algorithmic biases",
+      "summary": "",
+      "layer": "the worksheets they filled out during a lesson that focused on algorithmic biases",
+      "severity": "minor",
+      "page": 5342
+     }
+    ]
+   }
+  ]
+ },
+ "source": {
+  "source": "vartiainen-et-al-2025-enhancing-childrens-understanding-of-algorithmic-biases-in-and-with-text-to-image-generative-ai.pdf",
+  "bytes": 2593746,
+  "sha256": "f35653ff2844f7146069b0ca903654f05b7741987b3c4379212e4fbb67a8bca4",
+  "extracted_at": "2026-11-13T02:00:06+01:00"
+ }
+}

@@ -1,0 +1,1333 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 5.5% of 1824 words, ceiling 20%, longest run 10 words; not counted: 7 words from the source's lists; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 10,
+     "text": "distributed across the age ranges as follows 14 5 in"
+    },
+    {
+     "words": 10,
+     "text": "bias in diffusion based face generation models with respect to"
+    },
+    {
+     "words": 10,
+     "text": "bias in diffusion based face generation models with respect to"
+    },
+    {
+     "words": 9,
+     "text": "the proportion of faces in age groups above 50"
+    },
+    {
+     "words": 8,
+     "text": "diffusion model trained on the complete ffhq dataset"
+    }
+   ],
+   "value": 0.0554,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "5 of 5 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 1,
+     "expected_items": 4,
+     "first_item": "Diffusion-based face generative models amplify the",
+     "output_lists": [
+      5,
+      2,
+      5
+     ]
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "expected_items": 3,
+     "first_item": "diffusion models exacerbate the distribution bias in the training data in variou",
+     "output_lists": [
+      5,
+      2,
+      5
+     ]
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "table_cells": 58,
+     "missing_cells": [
+      "72.73",
+      "105.27",
+      "66.28",
+      "114.11",
+      "76.72",
+      "76.56",
+      "75.38",
+      "84.89",
+      "83.12",
+      "61.79",
+      "78.78",
+      "65.72",
+      "FFHQ-5000",
+      "64.12",
+      "25.72",
+      "66.33",
+      "25.64",
+      "39.31",
+      "44.81",
+      "55.23"
+     ]
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "table_cells": 33,
+     "missing_cells": [
+      "62.86",
+      "112.81",
+      "70.54",
+      "121.99",
+      "68.26",
+      "79.66",
+      "80.20",
+      "79.31",
+      "FairFace-BW-1000",
+      "60.05",
+      "69.14",
+      "68.38",
+      "71.99",
+      "FairFace-BW-5000",
+      "90.91",
+      "28.31",
+      "105.87",
+      "25.69",
+      "FairFace-BW-10000",
+      "96.63"
+     ]
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "table_cells": 96,
+     "missing_cells": [
+      "Age 0-10",
+      "Age 0-10",
+      "Age 11-20",
+      "Age 11-20",
+      "Age 21-30",
+      "Age 21-30",
+      "Age 31-40",
+      "Age 31-40",
+      "Age 41-50",
+      "Age 51-60",
+      "Age 51-60",
+      "Age above 60",
+      "Age above 60",
+      "GAN DDPM",
+      "106.5",
+      "185.30",
+      "109.0",
+      "172.62",
+      "92.0",
+      "180.28"
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "163 of 213 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 1,
+     "number": "12"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 1,
+     "number": "15"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 1,
+     "number": "17"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 1,
+     "number": "26"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 1,
+     "number": "28"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 1,
+     "number": "33"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 1,
+     "number": "36"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 2,
+     "number": "16"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 2,
+     "number": "22"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 2,
+     "number": "24"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 2,
+     "number": "25"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 2,
+     "number": "27"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 2,
+     "number": "32"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 2,
+     "number": "35"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 3,
+     "number": "10.11"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 3,
+     "number": "14"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 3,
+     "number": "19"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 3,
+     "number": "20.21"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 3,
+     "number": "23"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 3,
+     "number": "233"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 3,
+     "number": "30.31"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 3,
+     "number": "40.41"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 3,
+     "number": "44"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 3,
+     "number": "47"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 3,
+     "number": "48"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 3,
+     "number": "50.51"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 3,
+     "number": "527"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 3,
+     "number": "53"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 3,
+     "number": "55"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 3,
+     "number": "57"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 3,
+     "number": "760"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 4,
+     "number": "13"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 4,
+     "number": "256"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 4,
+     "number": "4.1"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 4,
+     "number": "4.2"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 4,
+     "number": "4.3"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 4,
+     "number": "4.4"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "105.27"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "105.87"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "112.81"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "114.11"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "115.52"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "121.99"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "124.91"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "17.02"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "18.04"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "19.17"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "19.34"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "25.64"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "25.69"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "25.72"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "26.60"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "26.88"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "28.31"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "39.31"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "44.81"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "48.07"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "49.11"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "55.23"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "57.97"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "60.05"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "60.32"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "61.79"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "62.86"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "63.04"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "64.12"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "64.71"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "65.03"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "65.72"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "66.28"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "66.33"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "68.26"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "68.38"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "69.14"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "69.46"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "70.54"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "70.96"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "71.99"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "72.73"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "75.38"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "76.56"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "76.71"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "76.72"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "78.78"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "79.31"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "79.66"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "80.20"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "80.78"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "83.12"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "84.89"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "88.09"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "88.72"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "90.91"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "95.57"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 7,
+     "number": "96.63"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "100.67"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "101.65"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "102.41"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "103.31"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "104.84"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "106.5"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "107.99"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "109.0"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "109.03"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "111.13"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "112.37"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "112.45"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "114.00"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "115.60"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "116.44"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "118.69"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "119.60"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "122.12"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "122.23"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "123.48"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "123.50"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "124.94"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "125.32"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "127.73"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "128.76"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "130.81"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "132.68"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "133.37"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "133.50"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "134.36"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "137.34"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "137.41"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "137.57"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "139.97"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "142.08"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "143.63"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "145.15"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "145.61"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "147.70"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "149.43"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "164.87"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "165.25"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "172.62"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "180.28"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "185.30"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "185.75"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "30.47"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "33.31"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "35.44"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "37.01"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "37.37"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "39.84"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "43.79"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "45.33"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "47.86"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "48.15"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "52.03"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "53.80"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "58.81"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "62.30"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "63.42"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "77.37"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "91.53"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "92.0"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "92.4"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "93.76"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "95.24"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "number": "97.76"
+    }
+   ],
+   "value": 163.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "9 of 11 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 1,
+     "heading": "Abstract"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 1,
+     "heading": "1. Introduction"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 3,
+     "heading": "4. Experiments and Results"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 4,
+     "heading": "4.1. Attribute Distribution of Diffusion­based Face Generations"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 4,
+     "heading": "4.2. Effect of Dataset Size on Attribute Bias in Face Generation Models"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 4,
+     "heading": "4.3. Face Generation Quality"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 4,
+     "heading": "4.4. Attribute Classifiers"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 5,
+     "heading": "5. Discussion"
+    },
+    {
+     "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+     "page": 8,
+     "heading": "6. Conclusion"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "9 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "9 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "54 quoted texts in 8 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Image 1",
+     "page": 3,
+     "image": "fig-001-p3.png",
+     "quotes": [
+      "\"FFHQ - Train\"",
+      "\"FFHQ - Generated\"",
+      "\"42.3%\"",
+      "\"57.7%\""
+     ]
+    },
+    {
+     "figure": "Image 2",
+     "page": 3,
+     "image": "fig-002-p3.png",
+     "quotes": [
+      "\"FFHQ - Train\"",
+      "\"FFHQ - Generated\""
+     ]
+    },
+    {
+     "figure": "Fig. 3",
+     "page": 4,
+     "image": "fig-003-p4.png",
+     "quotes": [
+      "\"51.4%\"",
+      "\"48.6%.\"",
+      "\"FairFace-BW - Generated\"",
+      "\"54.2%\"",
+      "\"45.8%.\""
+     ]
+    },
+    {
+     "figure": "Fig. 4",
+     "page": 4,
+     "image": "fig-004-p4.png",
+     "quotes": [
+      "\"57.5%\"",
+      "\"42.5%\"",
+      "\"FairFace-BW - Generated\"",
+      "\"65.7%\"",
+      "\"34.3%\""
+     ]
+    },
+    {
+     "figure": "Fig. 5",
+     "page": 5,
+     "image": "fig-005-p5.png",
+     "quotes": [
+      "“Sample %”",
+      "“FFHQ Train,”",
+      "“Train”",
+      "“FFHQ-300,”",
+      "“FFHQ-700,”",
+      "“FFHQ-1k,”",
+      "“FFHQ-5k,”",
+      "“FFHQ-10k,”",
+      "“DDPM”"
+     ]
+    },
+    {
+     "figure": "Fig. 6",
+     "page": 5,
+     "image": "fig-006-p5.png",
+     "quotes": [
+      "“FairFace-BW-300,”",
+      "“FairFace-BW-700,”",
+      "“FairFace-BW-1k,”",
+      "“FairFace-BW-5k,”",
+      "“FairFace-BW-10k,”",
+      "“sample %”",
+      "“Train”",
+      "“DDPM”"
+     ]
+    },
+    {
+     "figure": "Image 7",
+     "page": 6,
+     "image": "fig-007-p6.png",
+     "quotes": [
+      "\"FairFace-BW-300\"",
+      "\"FairFace-BW-700\"",
+      "\"FairFace-BW-1k\"",
+      "\"FairFace-BW-5k\"",
+      "\"FairFace-BW-10k\"",
+      "\"Black\"",
+      "\"Train\"",
+      "\"DDPM\""
+     ]
+    },
+    {
+     "figure": "Fig. 8",
+     "page": 6,
+     "image": "fig-008-p6.png",
+     "quotes": [
+      "“FFHQ-Train”",
+      "“FFHQ-300”",
+      "“FFHQ-700”",
+      "“FFHQ-1k”",
+      "“FFHQ-5k”",
+      "“FFHQ-10k”",
+      "“0-10”",
+      "“11-20”",
+      "“21-30”",
+      "“31-40”",
+      "“41-50”",
+      "“51-60”",
+      "“>60”"
+     ]
+    }
+   ],
+   "value": 54.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "19 page references valid (pdf pages 1–10)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "10 pages checked, 0 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "10 pages checked, 0 passages put back in order",
+   "findings": [],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "perera-patel-2023-analyzing-bias-in-diffusion-based-face-generation-models",
+ "doc_type": "scholarly_article",
+ "analyzed_at": "2026-11-15T11:43:13.400694+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "Analyzing Bias in Diffusion-based Face Generation Models",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 9,
+   "chars": 35472,
+   "blocks": 79,
+   "inner_headings": 11,
+   "figures": 9
+  }
+ ],
+ "skipped": [
+  "References (p. 9)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 10,
+  "gaps": [],
+  "gaps_dismissed": [
+   {
+    "page": 5,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "and 95% respectively."
+   },
+   {
+    "page": 7,
+    "words": 10,
+    "reason": "duplicate",
+    "text": "FFHQ - 300 FFHQ - 700 FFHQ - 1000 generated"
+   }
+  ],
+  "captions_reclassified": [
+   {
+    "page": 6,
+    "figure": "#/pictures/6",
+    "text": "(d) (e) (f) Figure 7. Racial Distribution of FairFace-BW training data subsets and generated data : a) racial distributi"
+   }
+  ],
+  "captions_reassigned": [],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [],
+  "superseded": [],
+  "replaced_pages": [],
+  "noise_dropped": 0,
+  "hyphens_restored": [],
+  "order": [],
+  "order_pages_checked": 10,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 0,
+  "order_breaking": 0,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 5 minor; distortions: 0 material, 1 minor; additions: 0 material, 0 minor; order: 0 material, 0 minor",
+  "at": "2026-11-15T11:46:48+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 5
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 1
+   },
+   "additions": {
+    "material": 0,
+    "minor": 0
+   },
+   "order": {
+    "material": 0,
+    "minor": 0
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "Analyzing Bias in Diffusion-based Face Generation Models (p. 1–9)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "To ensure high-quality generations, we train all the diffusion models for a minimum of 1M steps. To quantify the attribute distribution, we then generate the same number of samples as the number of samples used to train the model.",
+      "severity": "minor",
+      "page": 3
+     },
+     {
+      "source": "All models are trained on a single NVIDIA RTX A5000 GPU using images of size 256 × 256.",
+      "severity": "minor",
+      "page": 4
+     },
+     {
+      "source": "for GAN-based models trained on FFHQ subsets, the perceptual quality of male images is either higher or comparable to that of female images. On the other hand, for GAN models trained on FairFace-BW data subsets, the female perceptual quality is higher or comparable",
+      "severity": "minor",
+      "page": 8
+     },
+     {
+      "source": "One possible explanation for this phenomenon is that the model complexity exceeds the complexity of the training data, resulting in overfitting to the training data.",
+      "severity": "minor",
+      "page": 7
+     },
+     {
+      "source": "popular diffusion models like Stable Diffusion [28] have been subject to intellectual property rights issues related to training data",
+      "severity": "minor",
+      "page": 1
+     }
+    ],
+    "distortions": [
+     {
+      "source": "the generated samples are distributed across the age ranges as follows: 14.5% in the range of 0-10, 11% in the range of 11-20, 29% in the range of 21-30, 22.2% in the range of 31-40",
+      "summary": "the right pie chart displays 31.7%, 18.5%, 12.7%, 6.9%, 2.8%, 15.8%, and 11.6%",
+      "severity": "minor",
+      "page": 4
+     }
+    ],
+    "additions": [],
+    "order": []
+   }
+  ]
+ },
+ "source": {
+  "source": "perera-patel-2023-analyzing-bias-in-diffusion-based-face-generation-models.pdf",
+  "bytes": 834599,
+  "sha256": "8e82d61ed7a6c599a18b1c58cd9a015aa38183c62f214b0a390816b6e94dc4e1",
+  "extracted_at": "2026-11-13T02:58:59+01:00"
+ }
+}

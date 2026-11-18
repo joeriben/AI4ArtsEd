@@ -1,0 +1,750 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 7.7% of 2431 words, ceiling 20%, longest run 15 words; not counted: 76 words from the source's lists; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 15,
+     "text": "perceived gender and ethnic diversity by learning a new embedding from a small more diverse"
+    },
+    {
+     "words": 14,
+     "text": "an image is worth one word personalizing text to image generation using textual inversion"
+    },
+    {
+     "words": 14,
+     "text": "an image is worth one word personalizing text to image generation using textual inversion"
+    },
+    {
+     "words": 12,
+     "text": "with prompts of the form a painting in the style of s"
+    },
+    {
+     "words": 11,
+     "text": "to capture fine visual details unique to the concept implementation details"
+    }
+   ],
+   "value": 0.0773,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "3 of 3 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 2,
+     "expected_items": 2,
+     "first_item": "We introduce the task of personalized text-to-image generation, where we synthes",
+     "output_lists": [
+      4,
+      8,
+      8,
+      4
+     ]
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 3,
+     "expected_items": 2,
+     "first_item": "We analyze the embedding space in light of GAN-inspired inversion techniques and",
+     "output_lists": [
+      4,
+      8,
+      8,
+      4
+     ]
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 26,
+     "expected_items": 26,
+     "first_item": "'a rendering of a S ∗ .',",
+     "output_lists": [
+      4,
+      8,
+      8,
+      4
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "17 of 43 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 3,
+     "number": "2021"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 6,
+     "number": "4.1"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 7,
+     "number": "4.2"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 9,
+     "number": "4.3"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 9,
+     "number": "4.4"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 9,
+     "number": "4.5"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 10,
+     "number": "4.6"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 10,
+     "number": "4.7"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 11,
+     "number": "5.1"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 12,
+     "number": "2019"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 12,
+     "number": "5.2"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 12,
+     "number": "5.3"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 13,
+     "number": "200"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 13,
+     "number": "5.4"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 14,
+     "number": "2020280"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 14,
+     "number": "2492"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 14,
+     "number": "3441"
+    }
+   ],
+   "value": 17.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "25 of 25 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 1,
+     "heading": "Abstract"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 2,
+     "heading": "1 Introduction"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 3,
+     "heading": "2 Related work"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 4,
+     "heading": "3 Method"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 6,
+     "heading": "4 Qualitative comparisons and applications"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 6,
+     "heading": "4.1 Image variations"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 7,
+     "heading": "4.2 Text-guided synthesis"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 9,
+     "heading": "4.3 Style transfer"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 9,
+     "heading": "4.4 Concept compositions"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 9,
+     "heading": "4.5 Bias reduction"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 10,
+     "heading": "4.6 Downstream applications"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 10,
+     "heading": "4.7 Image curation"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 11,
+     "heading": "5 Quantitative analysis"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 11,
+     "heading": "5.1 Evaluation metrics"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 12,
+     "heading": "5.2 Evaluation setups"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 12,
+     "heading": "5.3 Results"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 13,
+     "heading": "5.4 Human evaluations"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 13,
+     "heading": "6 Limitations"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 14,
+     "heading": "7 Social impact"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 14,
+     "heading": "8 Conclusions"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 19,
+     "heading": "Supplementary Materials An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 19,
+     "heading": "A Additional inversion approaches"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 21,
+     "heading": "B Effect of training set size"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 21,
+     "heading": "C Additional results"
+    },
+    {
+     "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+     "page": 26,
+     "heading": "D Training prompt templates"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "16 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "16 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "36 quoted texts in 9 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Fig. 2",
+     "page": 4,
+     "image": "fig-002-p4.png",
+     "quotes": [
+      "“A photo of S_*”"
+     ]
+    },
+    {
+     "figure": "Image 4",
+     "page": 7,
+     "image": "fig-004-p7.png",
+     "quotes": [
+      "“Watercolor painting of S. on a branch,”",
+      "“Death metal album cover featuring S.,”",
+      "“Masterful oil painting of S. hanging on the wall,”"
+     ]
+    },
+    {
+     "figure": "Image 5",
+     "page": 8,
+     "image": "fig-005-p8.png",
+     "quotes": [
+      "\"A photo of $S_*$\""
+     ]
+    },
+    {
+     "figure": "Image 7",
+     "page": 10,
+     "image": "fig-007-p10.png",
+     "quotes": [
+      "“Photo of S_clock in the style of S_style,”",
+      "“Photo of S_cat in the style of S_style,”",
+      "“Photo of S_clock in the style of S_craft,”"
+     ]
+    },
+    {
+     "figure": "Image 8",
+     "page": 10,
+     "image": "fig-008-p10.png",
+     "quotes": [
+      "“A photo of S_*”"
+     ]
+    },
+    {
+     "figure": "Fig. 10",
+     "page": 13,
+     "image": "fig-010-p13.png",
+     "quotes": [
+      "“Text Similarity”",
+      "“Image Similarity,”",
+      "“Image only,”",
+      "“Prompt only,”",
+      "“Short captions,”",
+      "“3-words,”",
+      "“2-words,”",
+      "“w/Progressive,”",
+      "“High-LR,”",
+      "“Per-image token,”",
+      "“Low-LR,”",
+      "“w/Regularization.”",
+      "“Text Similarity Rank”",
+      "“Image Similarity Rank,”",
+      "“3-words,”",
+      "“Short captions,”",
+      "“w/Regularization.”"
+     ]
+    },
+    {
+     "figure": "Image 12",
+     "page": 21,
+     "image": "fig-012-p21.png",
+     "quotes": [
+      "\"Text Similarity\"",
+      "\"Image Similarity.\"",
+      "\"Long captions\"",
+      "\"Short captions\""
+     ]
+    },
+    {
+     "figure": "Image 15",
+     "page": 24,
+     "image": "fig-015-p24.png",
+     "quotes": [
+      "\"S_cat\"",
+      "\"S_clock\"",
+      "\"S_bird\""
+     ]
+    },
+    {
+     "figure": "Image 16",
+     "page": 25,
+     "image": "fig-016-p25.png",
+     "quotes": [
+      "“S_sculpture”",
+      "“S_craft,”",
+      "“S_style”"
+     ]
+    }
+   ],
+   "value": 36.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "39 page references valid (printed-folio pages 1–26)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "26 pages checked, 5 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "1 of 1 passages out of order not repairable, none breaks a sentence of the body text",
+   "findings": [
+    {
+     "page": 24,
+     "words": 4,
+     "text": "“Ukiyo-e painting of Sbird",
+     "blocks": [
+      "#/texts/907",
+      "#/repaired/3"
+     ],
+     "problem": "blocks of kind caption are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    }
+   ],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "gal-et-al-2022-an-image-is-worth-one-word-textual-inversion",
+ "doc_type": "scholarly_article",
+ "analyzed_at": "2026-11-15T11:12:12.392464+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 26,
+   "chars": 49972,
+   "blocks": 205,
+   "inner_headings": 25,
+   "figures": 16
+  }
+ ],
+ "skipped": [
+  "References (p. 15)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 26,
+  "gaps": [
+   {
+    "page": 10,
+    "text": "Sstyle Sclock Scat Scraf t “photo of Sclock “photo of Scat “photo of Scraf t “photo of Sclock “photo of Sclock “photo of Scat",
+    "words": 24,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "before #/texts/433"
+   },
+   {
+    "page": 22,
+    "text": "→ “Girl with a Pearl Earring “The Scream “The Great Wave input samples in the style of S∗ ” “S∗ Starry Night” in the style of S∗ ” by Johannes Vermeer in the style of S∗ ” → “Anime painting of “S∗ skeleton in the “Negative space input samples a Kawaii S∗ ” “A mossy S∗ ” National Science Museum” painting of S∗ ” → “painting of S∗ “Advertisement brochure input samples in the style of Monet” “A banana S∗ ” for S∗ ” “S∗ cookies” → “A stained glass “Sketch of a input samples “S∗ in Minecraft” window depicting S∗ ” steampunk S∗ ” “A S∗ submarine” → “A poster for the movie “Manga drawing of input samples a steaming S∗ ” “A S∗ watering can” “S∗ Death Star” ‘The teapot’ starring S∗ ” Figure 13: injecting user-specific concepts into new scenes. Our method can change a concepts style, composition, or use it to inspire new creations. Top row Image credits: @Øyvind Holmstad. 22",
+    "words": 166,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/721"
+   },
+   {
+    "page": 23,
+    "text": "→ input samples → input samples → input samples → input samples → input samples → input samples Figure 14: uncurated samples of object variations created using the prompt ”A photo of S∗ ”. “A photo of S∗ ” “A photo of S∗ ” “A photo of S∗ ” “A photo of S∗ ” “A photo of S∗ ” “A photo of S∗ ” 23",
+    "words": 65,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/830"
+   },
+   {
+    "page": 24,
+    "text": "“Banksy art of Scat ” “painting of a Scat riding a dragon” “painting of two Scat fishing on a boat” “A Scat themed lunchbox” “A painting of Scat holding a Sclock ”",
+    "words": 32,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/911"
+   },
+   {
+    "page": 25,
+    "text": "“Crochet Ssculpture ” Ssculpture “Ssculpture ink wash calligraphy” “A Black and white sketch of Ssculpture ” Scraf t “A Scraf t backpack” “A painting of Scraf t invading from space” Sstyle",
+    "words": 31,
+    "kind": "missing",
+    "repaired": true,
+    "anchor": "before #/texts/943"
+   }
+  ],
+  "gaps_dismissed": [
+   {
+    "page": 1,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "1 2 Tel-Aviv University"
+   },
+   {
+    "page": 1,
+    "words": 10,
+    "reason": "duplicate",
+    "text": "→ invert “Elmo sitting in input samples −−−−→ “S∗ ”"
+   },
+   {
+    "page": 1,
+    "words": 27,
+    "reason": "duplicate",
+    "text": "S∗ ” “App icon of S∗ ” the same pose as S∗ ” “Crochet S∗ ” → invert “painting of two S∗ input samples −−−−→ “S∗ ”"
+   },
+   {
+    "page": 1,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "“A S∗ backpack” “Banksy art of S∗ ” “A S∗ themed lunchbox”"
+   },
+   {
+    "page": 4,
+    "words": 46,
+    "reason": "duplicate",
+    "text": "input sample “A photo of 𝑆∗ ” Tokenizer 𝑣0 ⋮ ⋮ 73 𝑣73 508 701 73 ∗ 508 𝑣508 ⋮ ⋮ 701 𝑣701 embedding lookup ⋮ ⋮ 𝑣508 𝑣701 𝑣73 𝑣∗ ∗ 𝑣∗ ? ? ? ? text Transformer 𝑐𝜃 𝑦 text encoder generator noised sample"
+   },
+   {
+    "page": 5,
+    "words": 16,
+    "reason": "debris",
+    "text": "| h | i |\n| LLDM := Ez∼E(x),y,\u000f∼N (0,1),t k\u000f − \u000fθ (zt , t, cθ (y))k22 , | (1) |"
+   },
+   {
+    "page": 5,
+    "words": 19,
+    "reason": "debris",
+    "text": "h i v∗ = arg min Ez∼E(x),y,\u000f∼N (0,1),t k\u000f − \u000fθ (zt , t, cθ (y))k22 , (2) v"
+   },
+   {
+    "page": 6,
+    "words": 112,
+    "reason": "duplicate",
+    "text": "skull Mug teapot Aladdin lamp input samples ours “A photo of S∗ ” “A photo of S∗ ” “A photo of S∗ ” DALLE-2 (Image Inputs) DALLE-2 (long captions) LDM (long captions) A mug having many skulls at the b"
+   },
+   {
+    "page": 7,
+    "words": 126,
+    "reason": "duplicate",
+    "text": "4.2 Text-guided synthesis → input samples “S∗ sports car” “S∗ made of lego” “S∗ onesie” “da Vinci sketch of S∗ ” → “watercolor painting of S∗ “Grainy photo of S∗ input samples on a branch” “A house in"
+   },
+   {
+    "page": 8,
+    "words": 68,
+    "reason": "duplicate",
+    "text": "Clock Mug input samples PALAVRA (VQGAN-CLIP) PALAVRA (guided diffusion) VQGAN-CLIP (text + Image loss) guided diffusion (text loss + Init Image) ours “A photo of S∗ “A photo of S∗ “Elmo holding “A pho"
+   },
+   {
+    "page": 9,
+    "words": 17,
+    "reason": "duplicate",
+    "text": "→ → “The streets of Paris “Adorable corgi “painting of a Black hole “times square input samples"
+   },
+   {
+    "page": 10,
+    "words": 14,
+    "reason": "duplicate",
+    "text": "“A stock photo of a Doctor” (base model) “A photo of S∗ ” (ours)"
+   },
+   {
+    "page": 11,
+    "words": 28,
+    "reason": "duplicate",
+    "text": "input samples target Image with Mask output Image “An oil painting “A Black and white “A S∗ ” “A S∗ ” of S∗ ” photo of S∗ ”"
+   },
+   {
+    "page": 19,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "2 Tel-Aviv University"
+   },
+   {
+    "page": 20,
+    "words": 10,
+    "reason": "duplicate",
+    "text": "input samples bipartite Inversion pivotal tuning reconstruction s=1 s=2 s=5"
+   }
+  ],
+  "captions_reclassified": [],
+  "captions_reassigned": [],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [],
+  "superseded": [
+   {
+    "page": 22,
+    "ref": "#/texts/825",
+    "text": "starring"
+   },
+   {
+    "page": 22,
+    "ref": "#/texts/826",
+    "text": "S"
+   },
+   {
+    "page": 26,
+    "ref": "#/texts/951",
+    "text": "'a photo of a S ∗ .',"
+   }
+  ],
+  "replaced_pages": [
+   22,
+   23
+  ],
+  "noise_dropped": 11,
+  "hyphens_restored": [],
+  "order": [
+   {
+    "page": 24,
+    "text": "“Ukiyo-e painting of Sbird",
+    "words": 4,
+    "refs": [
+     "#/texts/907",
+     "#/repaired/3"
+    ],
+    "repaired": false,
+    "note": "blocks of kind caption are involved",
+    "breaks": [],
+    "section": ""
+   }
+  ],
+  "order_pages_checked": 24,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 1,
+  "order_breaking": 0,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 2 minor; distortions: 0 material, 1 minor; additions: 0 material, 0 minor; order: 0 material, 0 minor",
+  "at": "2026-11-15T11:22:56+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 2
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 1
+   },
+   "additions": {
+    "material": 0,
+    "minor": 0
+   },
+   "order": {
+    "material": 0,
+    "minor": 0
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion (p. 1–26)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "Note that our method does not involve the direct optimization of the CLIP-based objective score and, as such, is not sensitive to the adversarial scoring flaws outlined by Nichol et al. (2021).",
+      "severity": "minor",
+      "page": 11
+     },
+     {
+      "source": "Prior work has shown that this embedding space is expressive enough to capture basic image semantics (Cohen et al., 2022; Tsimpoukelli et al., 2021). However, these approaches leveraged contrastive or language-completion objectives, neither of which require an in-depth visual understanding of the image.",
+      "severity": "minor",
+      "page": 4
+     }
+    ],
+    "distortions": [
+     {
+      "source": "Below we provide the list of text templates used when optimizing a pseudo-word: [list of 26 templates]",
+      "summary": "the full list of 25 templates used during optimization",
+      "severity": "minor",
+      "page": 26
+     }
+    ],
+    "additions": [],
+    "order": []
+   }
+  ]
+ },
+ "source": {
+  "source": "gal-et-al-2022-an-image-is-worth-one-word-textual-inversion.pdf",
+  "bytes": 29283498,
+  "sha256": "21c1c7c4842f2e559888dbf432ad2345e6a87ce10a6f90398ddfa2562fa70b3f",
+  "extracted_at": "2026-11-13T02:33:39+01:00"
+ }
+}

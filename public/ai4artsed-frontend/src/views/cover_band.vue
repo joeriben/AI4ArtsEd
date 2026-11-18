@@ -279,6 +279,7 @@ import ShellRun from '@/components/ShellRun.vue'
 import { usePageContextStore } from '@/stores/pageContext'
 import { useI18n } from 'vue-i18n'
 import { refusalKeyOf, reportRefusal } from '@/composables/useLabRun'
+import { suspectSignIn } from '@/lib/signInLapse'
 
 const { t, locale } = useI18n()
 
@@ -692,6 +693,9 @@ function runChain(id: string) {
   }
   source.onerror = () => {
     source?.close(); source = null
+    // An EventSource does not say why it was refused; the sign-in may have
+    // ended (lib/signInLapse.ts).
+    suspectSignIn()
     if (busy.value) { error.value = t('coverBand.errors.chain'); busy.value = false }
     stopRunning()
   }

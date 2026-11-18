@@ -848,6 +848,31 @@ curl -s http://localhost:7801/API/GetNewSession > /dev/null && echo "✓ SwarmUI
 curl -s http://localhost:17801/ > /dev/null && echo "✓ Backend ready" || echo "✗ Backend not responding"
 ```
 
+### Set the Admin Account
+
+No password is built into the code. After its first start the backend has an
+admin account without a password and no settings password. Every page but the
+start page, the sign-in page, the imprint and the privacy notice needs a sign-in.
+Run, from the repository root and as the user the backend runs as, once the
+backend has started:
+
+```bash
+./venv/bin/python devserver/scripts/set_admin_account.py
+```
+
+With the system user `ai4artsed` of this guide:
+
+```bash
+sudo -u ai4artsed ./venv/bin/python devserver/scripts/set_admin_account.py
+```
+
+It asks for the user name and the email address of the admin account and for a
+password of at least 12 characters, and offers to make the settings password the
+same. It prints the path of the lab database it changes; where the backend's
+service sets `AI4ARTSED_DB_PATH`, run it with the same value. Sign in on the tab
+"Course leader" with that user name or email address. The passwords that earlier
+versions built into the code are refused there.
+
 ### Access Web Interface
 
 **Local Access:**

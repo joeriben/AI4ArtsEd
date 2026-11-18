@@ -7623,14 +7623,15 @@ def _run_direct_workflow(data: dict, safety_level: str):
         cfg = data.get('cfg')
         fusion_strategy = data.get('fusion_strategy')
         # Encoder Fusion since 2026-09-15: the three factors on the conditioning
-        # table, the layout of the T5 block and, since 2026-09-17, the pooled
-        # vector. The chunk checks them; here they are carried to it and into
+        # table, the layout of the T5 block, since 2026-09-17 the pooled
+        # vector and since 2026-11-15 the CLIP encoders. The chunk checks them; here they are carried to it and into
         # the record, so a restore puts them back on the sliders and the fields.
         factor_a = data.get('factor_a')
         factor_b = data.get('factor_b')
         factor_c = data.get('factor_c')
         t5_rows = data.get('t5_rows')
         pooled = data.get('pooled')
+        clip_encoder = data.get('clip_encoder')
 
         # How many denoising steps the run takes. Five Latent Lab instruments
         # have been sending this since they were built and it never arrived:
@@ -7870,7 +7871,7 @@ def _run_direct_workflow(data: dict, safety_level: str):
         # same reason: a record without the keys stays distinguishable.
         for _name, _value in (('factor_a', factor_a), ('factor_b', factor_b),
                               ('factor_c', factor_c), ('t5_rows', t5_rows),
-                              ('pooled', pooled)):
+                              ('pooled', pooled), ('clip_encoder', clip_encoder)):
             if _value is not None:
                 recorder.metadata['current_state'][_name] = _value
         # The original fusion is the one run whose two encoder texts are written
@@ -7895,7 +7896,7 @@ def _run_direct_workflow(data: dict, safety_level: str):
             custom_params['fusion_strategy'] = backend_fusion_strategy
         for _name, _value in (('factor_a', factor_a), ('factor_b', factor_b),
                               ('factor_c', factor_c), ('t5_rows', t5_rows),
-                              ('pooled', pooled)):
+                              ('pooled', pooled), ('clip_encoder', clip_encoder)):
             if _value is not None:
                 custom_params[_name] = _value
         if surrealizer_clip_prompt is not None:
@@ -10699,17 +10700,26 @@ def get_config_context(config_id):
         if not config:
             return jsonify({"error": f"Config not found: {config_id}"}), 404
 
-        # Get context from config
-        context = config.context if hasattr(config, 'context') else None
+        # Get context from config. A pool hands out one of its entries: the
+        # draw happens here, at the pick (config_loader.draw_from_pool).
+        from schemas.engine.config_loader import draw_from_pool
+        drawn = isinstance(getattr(config, 'context', None), list)
+        context = draw_from_pool(config.context) if hasattr(config, 'context') else None
 
         if context is None:
             return jsonify({"error": f"Config {config_id} has no context field"}), 404
 
         # Return context (can be string or {en: ..., de: ...})
-        return jsonify({
+        response = jsonify({
             "config_id": config_id,
             "context": context
         })
+        if drawn:
+            # Production keeps /api/config/ answers for five minutes
+            # (CACHE_STRATEGY); a kept draw would hand every pick in that
+            # time the same entry. my_app.add_header reads the mark.
+            response.headers['X-Drawn'] = '1'
+        return response
 
     except Exception as e:
         logger.error(f"Error loading context for config {config_id}: {e}")

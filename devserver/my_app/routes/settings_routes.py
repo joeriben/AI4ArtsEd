@@ -8,7 +8,7 @@ import json
 import logging
 from pathlib import Path
 from datetime import datetime, date
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import check_password_hash
 from my_app.services.safety_level_resolver import resolve_safety_level
 from my_app.services.model_capabilities import is_local
 # The miniatures themselves are made platform-wide in one place (2026-08-25).
@@ -328,29 +328,34 @@ def find_metadata_by_run_id(base_path: Path, run_id: str) -> Optional[Path]:
 # ============================================================================
 
 
+# The same command as lab/auth_service.py's SET_ADMIN_COMMAND, written out
+# here because this module imports the lab system only inside its routes
+# (tests/test_set_admin_account.py holds the two to one string).
+SET_PASSWORD_COMMAND = "./venv/bin/python devserver/scripts/set_admin_account.py"
+
+
 def initialize_password():
-    """Initialize password - use fixed password for all instances (dev/prod/ports)"""
-    # FIXED PASSWORD: Same for all instances (17801, 17802, all domains)
-    # Solves password manager confusion between dev/prod/ports
-    FIXED_PASSWORD = "mkjdU4dz8H3!F"
+    """Warn at start-up when the settings password is not set.
 
-    if not SETTINGS_PASSWORD_FILE.exists():
-        # Generate hash from fixed password
-        password_hash = generate_password_hash(FIXED_PASSWORD, method='pbkdf2:sha256')
+    No password is written into the code, and this function creates no
+    password file. devserver/scripts/set_admin_account.py writes
+    settings_password.key. Without it the settings password opens nothing;
+    an admin who is signed in opens the settings all the same
+    (`_settings_admitted`). Where the file exists, it says nothing.
 
-        # Store hash
-        SETTINGS_PASSWORD_FILE.write_text(password_hash)
-        SETTINGS_PASSWORD_FILE.chmod(0o600)  # Restrict to owner only
+    Returns True when the file exists, False when it does not.
+    """
+    if SETTINGS_PASSWORD_FILE.exists():
+        return True
+    logger.warning(
+        "[SETTINGS] %s is missing: the settings password is not set. "
+        "Set it with: %s (from the repository root, as the user the backend runs as)",
+        SETTINGS_PASSWORD_FILE.name, SET_PASSWORD_COMMAND,
+    )
+    return False
 
-        # Log confirmation (not the password itself for security)
-        logger.info("[SETTINGS] Settings password initialized with fixed password")
-        logger.info("[SETTINGS] Password is centrally managed (same for all instances)")
 
-        return FIXED_PASSWORD
-    return None
-
-
-# Initialize password on module load
+# Warn on module load when the settings password is not set
 initialize_password()
 
 
@@ -481,43 +486,106 @@ def get_merged_preset(provider: str, vram_tier: str) -> dict:
 HARDWARE_MATRIX = get_hardware_matrix()
 
 
-# Localhost detection for auto-login
+# Headers a proxy in front of this server sets besides `CF-Connecting-IP`. A
+# request carrying one came through that proxy, whatever its peer address:
+# behind the Cloudflare tunnel every request arrives from 127.0.0.1.
+# `CF-Connecting-IP` goes missing where the zone removes the visitor's address
+# ("Remove visitor IP headers"); `CF-Ray` and `CDN-Loop` stay. The services on
+# this machine send none of them.
+_OTHER_PROXY_HEADERS = ('CF-Ray', 'CDN-Loop', 'X-Forwarded-For', 'X-Real-IP', 'Forwarded')
+
+
 def is_localhost_request():
-    """Check if request comes from localhost (for auto-login in development)"""
+    """Whether the request comes from the machine the server runs on: the
+    server's own services (lab/sign_in_gate.py, MACHINE_ENDPOINTS)."""
     if request.headers.get('CF-Connecting-IP'):
+        return False
+    if any(request.headers.get(name) for name in _OTHER_PROXY_HEADERS):
         return False
     # The address alone decides. The Host header is the client's to choose,
     # and "Host: localhost" from another machine on the network used to pass.
     return request.remote_addr in ('127.0.0.1', '::1')
 
 
-# Authentication decorator
+def _settings_admitted() -> bool:
+    """The settings session: the settings password, or a sign-in as an admin;
+    never a place.
+
+    Until 2026-11-15 a request from the machine the server runs on was
+    admitted without a password and its session marked as signed in through
+    the settings password, which made the browser there the first admin
+    (lab/auth_service.py, `current_user`). That ended with the obligation to
+    sign in (lab/sign_in_gate.py); the server's own services keep their
+    routes (`require_machine_or_settings_auth`).
+    """
+    from my_app.lab.sign_in_gate import signed_in_user
+    from my_app.lab.models import Role
+    user = signed_in_user()
+    if user is not None and user.role == Role.participant:
+        # A place sees what was made under its code
+        # (docs/DEVELOPMENT_DECISIONS.md, 2026-11-15); the settings show and
+        # change the whole installation.
+        return False
+    if session.get('settings_authenticated', False):
+        return True
+    return user is not None and user.role == Role.admin
+
+
 def require_settings_auth(f):
-    """Decorator to protect settings routes - auto-login for localhost"""
+    """The settings routes: the settings password, or a sign-in as an admin."""
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        # Auto-authenticate localhost requests (no password needed for local dev)
-        if is_localhost_request():
-            session['settings_authenticated'] = True
-            return f(*args, **kwargs)
-
-        if not session.get('settings_authenticated', False):
+        if not _settings_admitted():
             return jsonify({"error": "Authentication required"}), 401
         return f(*args, **kwargs)
+    return decorated_function
+
+
+def require_machine_or_settings_auth(f):
+    """A route the server's own services call from this machine without a
+    session (the lease of the card, routes/gpu_gate_routes.py), and an
+    operator with the settings session from anywhere else. Nothing is written
+    into the session of a request from this machine."""
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if is_localhost_request() or _settings_admitted():
+            return f(*args, **kwargs)
+        return jsonify({"error": "Authentication required"}), 401
     return decorated_function
 
 
 @settings_bp.route('/auth', methods=['POST'])
 def authenticate():
     """Authenticate with settings password (using password hash)"""
+    # A place does not open the settings (`_settings_admitted`), and the
+    # password is not tried for it.
+    from my_app.lab.sign_in_gate import signed_in_user
+    from my_app.lab.models import Role
+    user = signed_in_user()
+    if user is not None and user.role == Role.participant:
+        return jsonify({"error": "place_cannot_open_settings"}), 401
     try:
         data = request.get_json()
         password = data.get('password', '')
 
-        # Password file should always exist (created by initialize_password)
+        # A password earlier versions built into the code opens nothing, on an
+        # installation that kept it too (lab/auth_service.py).
+        from my_app.lab.auth_service import is_published_password
+        if is_published_password(password):
+            logger.warning(
+                "[SETTINGS] refused a password that was published with the code; "
+                "set a new one with: %s", SET_PASSWORD_COMMAND,
+            )
+            return jsonify({"error": "published_password"}), 403
+
+        # devserver/scripts/set_admin_account.py writes the file
         if not SETTINGS_PASSWORD_FILE.exists():
-            logger.error("[SETTINGS] Password file missing! Run initialize_password()")
-            return jsonify({"error": "Authentication system not initialized"}), 500
+            logger.error(
+                "[SETTINGS] %s is missing. Set the settings password with: %s "
+                "(from the repository root, as the user the backend runs as)",
+                SETTINGS_PASSWORD_FILE.name, SET_PASSWORD_COMMAND,
+            )
+            return jsonify({"error": "settings_password_not_set"}), 503
 
         # Read password hash
         password_hash = SETTINGS_PASSWORD_FILE.read_text().strip()
@@ -540,14 +608,9 @@ def authenticate():
 
 @settings_bp.route('/check-auth', methods=['GET'])
 def check_auth():
-    """Check if currently authenticated - auto-auth for localhost"""
-    # Auto-authenticate localhost requests
-    if is_localhost_request():
-        session['settings_authenticated'] = True
-        return jsonify({"authenticated": True, "auto_login": True}), 200
-
-    authenticated = session.get('settings_authenticated', False)
-    return jsonify({"authenticated": authenticated}), 200
+    """Whether this session has the settings: the settings password, or a
+    sign-in as an admin (`_settings_admitted`)."""
+    return jsonify({"authenticated": _settings_admitted()}), 200
 
 
 @settings_bp.route('/safety-level', methods=['GET'])
@@ -940,6 +1003,7 @@ def get_dsgvo_setting():
 
 
 @settings_bp.route('/gpu-info', methods=['GET'])
+@require_settings_auth
 def get_gpu_info():
     """
     Detect GPU and return VRAM information for auto-selection
@@ -1983,6 +2047,7 @@ def reload_settings():
 
 
 @settings_bp.route('/backend-status', methods=['GET'])
+@require_settings_auth
 def get_backend_status():
     """
     Aggregated backend status for the dashboard tab.
@@ -2403,6 +2468,7 @@ def _generate_sse_event(event_type: str, data: dict) -> str:
 
 
 @settings_bp.route('/workshop/preload', methods=['POST'])
+@require_settings_auth
 def workshop_preload():
     """
     Preload selected models into GPU memory via SSE streaming.
@@ -2670,6 +2736,7 @@ def workshop_preload():
 
 
 @settings_bp.route('/workshop/clear-all', methods=['POST'])
+@require_settings_auth
 def workshop_clear_all():
     """
     Clear ALL GPU memory: unload all GPU service models + free ComfyUI.
@@ -2697,6 +2764,7 @@ def workshop_clear_all():
 
 
 @settings_bp.route('/llm-models', methods=['GET'])
+@require_settings_auth
 def get_llm_models():
     """
     Get list of available local LLM models for dropdown selection.

@@ -262,6 +262,99 @@ def test_read_scenario():
     assert "Composable Diffusion" in nobody and "Flow" in nobody
 
 
+def test_on_togethers_board_the_scenarios_stand_as_a_list():
+    """Together reads a page's scenarios as a list, so the one a proposal
+    rests on is opened with read_scenario, and that lays it on the board, the
+    one place the educator can read it. Help keeps them in full (2026-11-15)."""
+    from my_app.services import platform_items as pi
+    from my_app.services.tool_registry import get_tool_registry
+    registry = get_tool_registry()
+    for place, number in (("Stereotype Analysis", "07"), ("Flow", "01"), ("1", "01")):
+        rec = _instrument(number)
+        assert rec["scenarios"], number
+        full = registry.execute("lookup_place", {"place": place})
+        listed = registry.execute("lookup_place", {"place": place}, context={"board": True})
+        for scen in rec["scenarios"]:
+            assert f"{scen['id']} — {scen['title']}" in full, (place, scen["id"])
+            assert f"{number}/{scen['id']} — {scen['title']}" in listed, (place, scen["id"])
+            opening = pi.scenario_opening(scen)
+            assert opening and opening in listed, (place, scen["id"])
+            if scen.get("sequence"):
+                assert f"Sequence: {scen['sequence']}" in full
+                assert f"Sequence: {scen['sequence']}" not in listed, (place, scen["id"])
+            if scen.get("uncertainty"):
+                assert f"Uncertainty: {scen['uncertainty']}" not in listed, (place, scen["id"])
+        assert (f"read_scenario('{number}/S1') gives one in full and lays it on the "
+                "board as a card.") in listed
+        # The mapping stays whole on both roads.
+        assert listed.count(ENTRY) == full.count(ENTRY) == _entries(rec), place
+    # The flag is the backend's: a model that passes it gets the full report.
+    forged = registry.execute("lookup_place", {"place": "Stereotype Analysis", "_board": True})
+    assert forged == registry.execute("lookup_place", {"place": "Stereotype Analysis"})
+
+
+def test_read_scenario_on_the_board_says_where_the_card_lies():
+    from my_app.services.tool_registry import get_tool_registry
+    registry = get_tool_registry()
+    plain = registry.execute("read_scenario", {"id": "07/S1"})
+    on_board = registry.execute("read_scenario", {"id": "07/S1"}, context={"board": True})
+    line = ("It now lies on the board as a card under its title, with its setting, "
+            "text, sequence and subject link in the report's English wording.")
+    assert line not in plain
+    assert on_board.replace(line + "\n\n", "") == plain
+
+
+def test_the_opening_is_whole_sentences_of_every_scenario():
+    """The list gives each scenario's text up to a sentence end past
+    OPENING_MIN, so a short first sentence is followed by what the group
+    does; a first sentence past OPENING_MAX is cut at a clause and marked."""
+    from my_app.services import platform_items as pi
+    for rec in _record()["instruments"]:
+        for scen in rec["scenarios"]:
+            where = (rec["number"], scen["id"])
+            opening = pi.scenario_opening(scen)
+            text = " ".join(scen["text"].split())
+            assert opening, where
+            if opening.endswith(" \u2026"):
+                assert text.startswith(opening[:-2]), where
+                assert pi.OPENING_MIN <= len(opening) <= pi.OPENING_MAX + 2, where
+            else:
+                assert text.startswith(opening), where
+                assert len(opening) <= pi.OPENING_MAX, where
+                assert opening == text or (
+                    len(opening) >= pi.OPENING_MIN
+                    and opening.rstrip("\"\u201d\u2019)")[-1] in ".!?"), where
+
+
+def test_the_opening_ends_outside_abbreviations_brackets_and_quotations():
+    from my_app.services import platform_items as pi
+    head = "x" * pi.OPENING_MIN
+    for text, expected in [
+        (head + " (one. Two) three. Four.", head + " (one. Two) three."),
+        (head + " e.g. Masks and more. Next.", head + " e.g. Masks and more."),
+        (head + ' "Stop. Go" said. Next.', head + ' "Stop. Go" said.'),
+        (head + " J. Smith wrote. Next.", head + " J. Smith wrote."),
+        (head + ' ends "here." Next.', head + ' ends "here."'),
+        (head + " in grade 5. Next.", head + " in grade 5."),
+    ]:
+        assert pi.scenario_opening({"text": text}) == expected, text
+
+
+def test_together_introduces_a_scenario_before_building_on_it():
+    """The rule stands in the shared language of the core, so it holds in
+    every situation: an educator with a chosen course is in the workshop
+    situation, which never reads the planning block."""
+    from my_app.routes.chat_routes import RESONA_CORE_PROMPT, RESONA_PLANNING_BLOCK
+    C = " ".join(RESONA_CORE_PROMPT.split())
+    assert ("the teaching scenarios of the use reports, which no page of the "
+            "platform shows") in C
+    assert "comes from the scenario opened with read_scenario" in C
+    assert ("its title as the card shows it, said in the language of the "
+            "conversation, the instrument it runs on, and what the group does in it") in C
+    assert "read_scenario gives one in full and lays it on the board as a card" in C
+    assert "no page of the platform shows" not in " ".join(RESONA_PLANNING_BLOCK.split()).lower()
+
+
 def test_new_tools_in_both_scopes():
     from my_app.services.tool_registry import get_tool_registry
     registry = get_tool_registry()

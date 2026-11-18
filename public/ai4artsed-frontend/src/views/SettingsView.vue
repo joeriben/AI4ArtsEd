@@ -999,22 +999,22 @@ async function checkAuth() {
 function onAuthenticated() {
   authenticated.value = true
   showAuthModal.value = false
-  // The settings password signs this browser in as the first admin account
-  // (lab/auth_service.py, `current_user`), and what it keeps from now on is
-  // that account's (favorites_routes.py, `_asker`). The page asks who is
-  // signed in, so that the header shows it and the favourites strip reloads;
-  // until 2026-11-15 it learnt of it only with the next reload.
+  // The settings password opens the settings for the account signed in in
+  // this browser and signs nobody in (2026-11-15, lab/sign_in_gate.py). The
+  // page asks who is signed in, so that the header shows what the server
+  // holds.
   void useLabAuthStore().fetchMe()
   // Load settings after authentication
   loadSettings()
-  // Load local LLM models for dropdown (no auth required)
+  // The list of local language models and the card need the settings
+  // (2026-11-15); asked at the mount, the card was refused before the
+  // password. checkAuth comes here for settings already open as well.
   loadLlmModels()
+  detectGpu()
 }
 
 onMounted(() => {
   checkAuth()
-  // Detect GPU immediately (no auth required)
-  detectGpu()
 })
 </script>
 

@@ -333,7 +333,9 @@ def client(tmp_path, monkeypatch):
     from my_app import create_app
     app = create_app()
     app.config.update(TESTING=True)
-    return app.test_client(), run_id, run_done
+    # Every route needs a sign-in since 2026-11-15 (lab_sign_in.py).
+    from lab_sign_in import sign_in_admin
+    return sign_in_admin(app.test_client()), run_id, run_done
 
 
 def test_partial_route_lists_sorted_items(client):

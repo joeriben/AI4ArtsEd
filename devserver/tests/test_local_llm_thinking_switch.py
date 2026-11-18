@@ -361,10 +361,11 @@ def test_the_media_reader_stops_at_the_same_tokens(llm, monkeypatch):
 
     model = types.SimpleNamespace(generate=generate)
     inputs = {"input_ids": torch.tensor([tok.ids(["hello"])])}
-    text = reader._answer(model, tok, inputs, 64, 1, 1, "Some--Model", eos_ids=(5, 9))
+    booking = mod.CacheBooking(types.SimpleNamespace(patcher=None), None, 1, 64, "Some--Model")
+    text = reader._answer(model, tok, inputs, 64, 1, 1, "Some--Model", booking, eos_ids=(5, 9))
     assert text == "a picture"
     assert seen["eos_token_id"] == [5, 9]
-    reader._answer(model, tok, inputs, 64, 1, 1, "Some--Model")
+    reader._answer(model, tok, inputs, 64, 1, 1, "Some--Model", booking)
     assert "eos_token_id" not in seen or seen["eos_token_id"] == [5, 9]
 
 

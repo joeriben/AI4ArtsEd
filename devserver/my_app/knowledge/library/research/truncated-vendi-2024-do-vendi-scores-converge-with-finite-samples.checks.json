@@ -1,0 +1,2613 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 11.0% of 2826 words, ceiling 20%, longest run 20 words; not counted: 24 words from the source's lists; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 20,
+     "text": "between the t truncated population vendi and the empirical t truncated vendi is bounded with probability at least 1 δ"
+    },
+    {
+     "words": 16,
+     "text": "that the nyström method friedman and dieng 2023 and the fkea method ospanov et al 2024b"
+    },
+    {
+     "words": 15,
+     "text": "the nyström method friedman and dieng 2023 and the fkea method ospanov et al 2024b"
+    },
+    {
+     "words": 14,
+     "text": "n 2 8 log 1 δ the truncation parameter t plays the role of"
+    },
+    {
+     "words": 12,
+     "text": "to its population value within o 1 n error for n samples"
+    }
+   ],
+   "value": 0.11,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "5 of 5 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 3,
+     "expected_items": 4,
+     "first_item": "Analyzing the statistical convergence of Vendi and RKE diversity scores under re",
+     "output_lists": [
+      2,
+      3,
+      2,
+      5
+     ]
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 15,
+     "expected_items": 4,
+     "first_item": "Primal Feasibility. The solution u ∗ satisfies the primal feasibility, since ϵ 2",
+     "output_lists": [
+      2,
+      3,
+      2,
+      5
+     ]
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "table_cells": 40,
+     "missing_cells": [
+      "228.69",
+      "0.76",
+      "0.86",
+      "4000",
+      "315.35",
+      "13.51",
+      "315.35",
+      "280.68",
+      "315.35",
+      "0.81",
+      "0.87",
+      "6000",
+      "357.15",
+      "346.27",
+      "310.9",
+      "345.49",
+      "0.83",
+      "0.91",
+      "329.56",
+      "357.41"
+     ]
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "table_cells": 48,
+     "missing_cells": [
+      "10.65",
+      "173.06",
+      "187.18",
+      "0.78",
+      "0.85",
+      "4000",
+      "236.49",
+      "10.7",
+      "236.49",
+      "222.78",
+      "236.08",
+      "0.82",
+      "0.87",
+      "6000",
+      "264.82",
+      "10.7",
+      "258.21",
+      "236.37",
+      "257.34",
+      "0.86"
+     ]
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 22,
+     "table_cells": 39,
+     "missing_cells": [
+      "samples n",
+      "samples n",
+      "samples n",
+      "samples n",
+      "samples n",
+      "samples n",
+      "samples n",
+      "40000",
+      "50000",
+      "60000",
+      "1868s",
+      "36s",
+      "53s",
+      "71s",
+      "88s",
+      "105s",
+      "44s",
+      "78s",
+      "91s",
+      "112s"
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "75 of 127 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 2,
+     "number": "1.1"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 2,
+     "number": "2009"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 3,
+     "number": "1.2"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 3,
+     "number": "2018"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 3,
+     "number": "2019"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 3,
+     "number": "2020"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 3,
+     "number": "2021"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 3,
+     "number": "2025"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 4,
+     "number": "1950"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 4,
+     "number": "2001"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 4,
+     "number": "2002"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 4,
+     "number": "2016"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 4,
+     "number": "3.1"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 5,
+     "number": "1961"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 5,
+     "number": "3.2"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 5,
+     "number": "3.3"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 7,
+     "number": "6.1"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 7,
+     "number": "6.2"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 16,
+     "number": "236"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 18,
+     "number": "128"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "0.76"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "0.78"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "0.81"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "0.82"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "0.83"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "0.85"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "0.86"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "0.87"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "0.91"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "10.65"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "10.7"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "10.71"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "10.72"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "13.51"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "173.06"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "187.18"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "222.78"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "228.69"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "236.08"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "236.37"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "236.49"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "251.59"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "256.24"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "257.34"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "258.21"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "264.82"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "265.84"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "266.23"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "268.34"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "280.68"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "289.08"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "304.44"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "310.9"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "315.35"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "329.56"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "345.49"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "346.27"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "357.15"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "357.41"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "4000"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 20,
+     "number": "6000"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 22,
+     "number": "105"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 22,
+     "number": "112"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 22,
+     "number": "136"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 22,
+     "number": "1868"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 22,
+     "number": "36"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 22,
+     "number": "40000"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 22,
+     "number": "44"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 22,
+     "number": "50000"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 22,
+     "number": "53"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 22,
+     "number": "60000"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 22,
+     "number": "71"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 22,
+     "number": "78"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 22,
+     "number": "88"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 22,
+     "number": "91"
+    }
+   ],
+   "value": 75.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "26 of 27 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 1,
+     "heading": "Abstract"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 1,
+     "heading": "1 INTRODUCTION"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 2,
+     "heading": "1.1 OUR RESULTS ON VENDI'S CONVERGENCE"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 3,
+     "heading": "1.2 OUR RESULTS ON RKE'S CONVERGENCE"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 3,
+     "heading": "2 RELATED WORKS"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 4,
+     "heading": "3 PRELIMINARIES"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 4,
+     "heading": "3.1 KERNEL FUNCTIONS AND MATRICES"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 5,
+     "heading": "3.2 MATRIX-BASED ENTROPY FUNCTIONS AND VENDI SCORE"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 5,
+     "heading": "3.3 STATISTICAL ANALYSIS OF VENDI SCORE"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 5,
+     "heading": "4 STATISTICAL CONVERGENCE OF VENDI AND RKE SCORES"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 6,
+     "heading": "5 TRUNCATED VENDI SCORE AND ITS ESTIMATION VIA PROXY KERNELS"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 7,
+     "heading": "6 NUMERICAL RESULTS"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 7,
+     "heading": "6.1 CONVERGENCE ANALYSIS OF VENDI SCORES"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 7,
+     "heading": "6.2 CORRELATION BETWEEN THE TRUNCATED VENDI SCORE AND DIVERSITY OF DATA"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 9,
+     "heading": "7 CONCLUSION"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 13,
+     "heading": "Azim Ospanov 1"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 13,
+     "heading": "Farzan Farnia 1"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 13,
+     "heading": "A PROOFS"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 13,
+     "heading": "A.1 PROOF OF THEOREM 1"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 14,
+     "heading": "A.2 PROOF OF COROLLARY 2"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 16,
+     "heading": "A.3 PROOF OF COROLLARY 1"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 16,
+     "heading": "A.4 PROOF OF THEOREM 2"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 17,
+     "heading": "A.5 PROOF OF THEOREM 3"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 19,
+     "heading": "B ADDITIONAL NUMERICAL RESULTS"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 19,
+     "heading": "B.1 BANDWIDTH σ SELECTION"
+    },
+    {
+     "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+     "page": 25,
+     "heading": "C SELECTION OF EMBEDDING SPACE"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "17 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "17 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "156 quoted texts in 17 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Fig. 1",
+     "page": 2,
+     "image": "fig-001-p2.png",
+     "quotes": [
+      "“Truncated RKE”"
+     ]
+    },
+    {
+     "figure": "Fig. 2",
+     "page": 4,
+     "image": "fig-002-p4.png",
+     "quotes": [
+      "“sim(x_i, x_j)”",
+      "“Original Eigenvalues Distribution”",
+      "“Truncated Eigenvalues Distribution,”",
+      "“Truncated-Vendi(x) = exp(∑ λ̃_i log 1/λ̃_i)”",
+      "“Truncated-RKE(x) = 1/(∑_{i=1}^{n} λ̃_i²).”"
+     ]
+    },
+    {
+     "figure": "Image 3",
+     "page": 8,
+     "image": "fig-003-p8.png",
+     "quotes": [
+      "“sample size n”",
+      "“VENDI-1.0,”",
+      "“Truncated Vendi,”",
+      "“Nyström Vendi,”",
+      "“sample size n”",
+      "“VENDI-1.0,”",
+      "“Truncated Vendi,”",
+      "“Nyström Vendi,”",
+      "“FKEA Vendi,”",
+      "“VENDI-1.0”"
+     ]
+    },
+    {
+     "figure": "Fig. 4",
+     "page": 8,
+     "image": "fig-004-p8.png",
+     "quotes": [
+      "“sample size n”",
+      "“VENDI-1.0,”",
+      "“Truncated Vendi,”",
+      "“Nyström Vendi,”",
+      "“Synthetic Countries Text Dataset: Gaussian Kernel (infinite dimension)”",
+      "“sample size n”",
+      "“VENDI-1.0,”",
+      "“Truncated Vendi,”",
+      "“Nyström Vendi,”",
+      "“FKEA Vendi”",
+      "“VENDI-1.0”"
+     ]
+    },
+    {
+     "figure": "Fig. 5",
+     "page": 8,
+     "image": "fig-005-p8.png",
+     "quotes": [
+      "\"sample size n\"",
+      "\"VENDI-1.0\"",
+      "\"Truncated Vendi\"",
+      "\"Nyström Vendi\"",
+      "\"sample size n\"",
+      "\"VENDI-1.0\"",
+      "\"Truncated Vendi\"",
+      "\"Nyström Vendi\"",
+      "\"FKEA Vendi\""
+     ]
+    },
+    {
+     "figure": "Fig. 6",
+     "page": 9,
+     "image": "fig-006-p9.png",
+     "quotes": [
+      "“truncation factor ψ”",
+      "“Vendi-1.0”",
+      "“Vendi-1.5”",
+      "“RKE (Vendi-2)”",
+      "“ψ = 0.2”",
+      "“ψ = 0.4”",
+      "“ψ = 0.6”",
+      "“ψ = 0.8”",
+      "“ψ = 1.0”"
+     ]
+    },
+    {
+     "figure": "Fig. 7",
+     "page": 9,
+     "image": "fig-007-p9.png",
+     "quotes": [
+      "\"Vendi-1.0\"",
+      "\"truncation factor ψ\"",
+      "\"Truncated VENDI-1.0\"",
+      "\"Nyström VENDI-1.0\"",
+      "\"FKEA-VENDI-1.0\"",
+      "\"Vendi-1.5\"",
+      "\"truncation factor ψ\"",
+      "\"Truncated VENDI-1.5\"",
+      "\"Nyström VENDI-1.5\"",
+      "\"FKEA-VENDI-1.5\"",
+      "\"RKE (Vendi-2)\"",
+      "\"truncation factor ψ\"",
+      "\"Truncated RKE\"",
+      "\"Nyström RKE\"",
+      "\"FKEA-RKE\""
+     ]
+    },
+    {
+     "figure": "Fig. 8",
+     "page": 20,
+     "image": "fig-008-p20.png",
+     "quotes": [
+      "“Vendi-1.5,”",
+      "“RKE (Vendi-2),”",
+      "“Vendi-2.5,”",
+      "“Vendi-inf,”",
+      "“score”",
+      "“truncation factor ψ”",
+      "“ψ = 0.2,”",
+      "“ψ = 0.4,”",
+      "“ψ = 0.6,”",
+      "“ψ = 0.8,”",
+      "“ψ = 1.0.”"
+     ]
+    },
+    {
+     "figure": "Fig. 9",
+     "page": 21,
+     "image": "fig-009-p21.png",
+     "quotes": [
+      "“Vendi-1.0”",
+      "“Vendi-1.5”",
+      "“RKE (Vendi-2)”",
+      "“Vendi-2.5”",
+      "“Vendi-inf”",
+      "“Nyström …”",
+      "“FKEA-…”",
+      "“n = 5”",
+      "“n = 10”",
+      "“n = 50”",
+      "“n = 100”",
+      "“Argentina”",
+      "“Tanzania”",
+      "“Malaysia”",
+      "“Guatemala”",
+      "“Saudi Arabia”",
+      "“Spain”"
+     ]
+    },
+    {
+     "figure": "Fig. 10",
+     "page": 21,
+     "image": "fig-010-p21.png",
+     "quotes": [
+      "“σ = 30”",
+      "“σ = 40”",
+      "“score”",
+      "“Number of classes n”",
+      "“n = 1”",
+      "“n = 2”",
+      "“n = 4”",
+      "“n = 16”",
+      "“n = 1”",
+      "“n = 2”",
+      "“n = 4”",
+      "“n = 16”"
+     ]
+    },
+    {
+     "figure": "Fig. 11",
+     "page": 22,
+     "image": "fig-011-p22.png",
+     "quotes": [
+      "\"Vendi-1.0\"",
+      "\"Vendi-1.5\"",
+      "\"RKE (Vendi-2)\"",
+      "\"Vendi-2.5\"",
+      "\"Vendi-inf\"",
+      "\"Nyström ...\"",
+      "\"n = 1\"",
+      "\"n = 3\"",
+      "\"n = 9\""
+     ]
+    },
+    {
+     "figure": "Fig. 12",
+     "page": 23,
+     "image": "fig-012-p23.png",
+     "quotes": [
+      "\"sample size n\"",
+      "\"VENDI-1.0\"",
+      "\"Truncated Vendi\"",
+      "\"Nyström Vendi\"",
+      "\"FKEA Vendi\""
+     ]
+    },
+    {
+     "figure": "Fig. 13",
+     "page": 24,
+     "image": "fig-013-p24.png",
+     "quotes": [
+      "“sample size n”"
+     ]
+    },
+    {
+     "figure": "Fig. 14",
+     "page": 25,
+     "image": "fig-014-p25.png",
+     "quotes": [
+      "\"Vendi-1.0\"",
+      "\"Vendi-1.5\"",
+      "\"RKE (Vendi-2)\"",
+      "\"Vendi-2.5\"",
+      "\"Vendi-5\"",
+      "\"Vendi-inf\"",
+      "\"Truncated VENDI-1.0\"",
+      "\"Nyström VENDI-1.0\"",
+      "\"FKEA-VENDI-1.0\""
+     ]
+    },
+    {
+     "figure": "Fig. 15",
+     "page": 26,
+     "image": "fig-015-p26.png",
+     "quotes": [
+      "“score”",
+      "“truncation factor ψ”",
+      "“Vendi-1.0”",
+      "“Vendi-1.5”",
+      "“RKE (Vendi-2)”",
+      "“Vendi-2.5”",
+      "“Vendi-5”",
+      "“Vendi-inf”",
+      "“Nyström”",
+      "“FKEA-”"
+     ]
+    },
+    {
+     "figure": "Fig. 16",
+     "page": 27,
+     "image": "fig-016-p27.png",
+     "quotes": [
+      "\"score\"",
+      "\"Vendi-1.0\"",
+      "\"Vendi-1.5\"",
+      "\"RKE (Vendi-2)\"",
+      "\"Vendi-2.5\"",
+      "\"Vendi-5\"",
+      "\"Vendi-inf\"",
+      "\"Truncated Vendi\"",
+      "\"Nyström Vendi\"",
+      "\"FKEA-Vendi\"",
+      "\"FKEA-RKE\""
+     ]
+    },
+    {
+     "figure": "Fig. 17",
+     "page": 28,
+     "image": "fig-017-p28.png",
+     "quotes": [
+      "“score”",
+      "“truncation factor ψ”",
+      "“Vendi-1.0”",
+      "“Vendi-1.5”",
+      "“RKE (Vendi-2)”",
+      "“Vendi-2.5”",
+      "“Vendi-5”",
+      "“Vendi-inf”",
+      "“Truncated VENDI-1.0”",
+      "“Nyström VENDI-1.0”",
+      "“FKEA-VENDI-1.0”"
+     ]
+    }
+   ],
+   "value": 156.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "30 page references valid (pdf pages 1–28)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "28 pages checked, 13 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "6 passages out of order break a sentence (26 of 27 not repairable; listed, not gated)",
+   "findings": [
+    {
+     "page": 2,
+     "words": 42,
+     "text": "Following the above discussion, a key question that arises is whether the Vendi Score estimated from restricted sample sizes (i.e. n ≤ 20,000) has converged to its asymptotic value with infinite Sampl",
+     "blocks": [
+      "#/texts/81",
+      "#/texts/83",
+      "#/texts/84"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 2,
+     "words": 19,
+     "text": "the Vendi Score has not been thoroughly investigated in the literature. In this work, we study the statistical Convergence",
+     "blocks": [
+      "#/texts/81",
+      "#/texts/83",
+      "#/texts/84"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 2,
+     "words": 23,
+     "text": "RKE diversity Scores and aim to analyze the concentration of the estimated Scores from a limited number of generated Samples n ⪅ 20,000.",
+     "blocks": [
+      "#/texts/81",
+      "#/texts/83",
+      "#/texts/84"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 2,
+     "words": 25,
+     "text": "1.1 OUR RESULTS ON VENDI'S Convergence We discuss the answer to the Vendi Convergence question for two types of kernel functions: 1) kernel functions with",
+     "blocks": [
+      "#/texts/82",
+      "#/texts/83",
+      "#/texts/84",
+      "#/texts/85"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 3,
+     "words": 6,
+     "text": "The Following summarizes this work's contributions:",
+     "blocks": [
+      "#/texts/88",
+      "#/texts/92"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 3,
+     "words": 9,
+     "text": "diversity Scores under restricted sample sizes n ⪅ 2×104",
+     "blocks": [
+      "#/texts/88",
+      "#/texts/93"
+     ],
+     "problem": "blocks of kind heading, list_item are involved",
+     "fails": true,
+     "breaks": [
+      "sentence cut: 'r restricted sample sizes n ⪅ 2 × 10 4 ,' | 'Providing numerical evidence on the Vend'",
+      "passage cut out of 'where we shift each of the topt eigenval'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 51,
+     "text": "Truncated Vendi Score correlated with the underlying diversity of the models. In addition, we plot the PROXY Nyström and FKEA PROXY Vendi values computed using 20,000 Samples which remain close to the",
+     "blocks": [
+      "#/repaired/0",
+      "#/texts/405",
+      "#/repaired/1",
+      "#/repaired/2",
+      "#/repaired/3",
+      "#/repaired/4",
+      "#/repaired/5",
+      "#/repaired/6"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "sentence cut: 'es 6, 7 show how the estimated statistic' | '7 CONCLUSION'",
+      "sentence start cut out of the block before: 're is another relevant future direction.' | 'mated Truncated Vendi Score correlated w'",
+      "sentence cut: 'els. In addition, we plot the PROXY Nys-' | 'tröm and FKEA PROXY Vendi values compute'",
+      "sentence cut: 'core with Gaussian kernel can be used to' | 'and FKEA methods were both computational'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 8,
+     "text": "and FKEA methods were both computationally Efficient in",
+     "blocks": [
+      "#/repaired/0",
+      "#/texts/405",
+      "#/repaired/7"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "sentence cut: 'es 6, 7 show how the estimated statistic' | '7 CONCLUSION'",
+      "sentence start cut out of the block before: 're is another relevant future direction.' | 'mated Truncated Vendi Score correlated w'",
+      "sentence cut: 'els. In addition, we plot the PROXY Nys-' | 'tröm and FKEA PROXY Vendi values compute'",
+      "sentence cut: 'core with Gaussian kernel can be used to' | 'and FKEA methods were both computational'",
+      "sentence cut: 's were both computationally Efficient in' | 'data. We defer the presentation of the a'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 9,
+     "text": "data. We defer the presentation of the additional numerical",
+     "blocks": [
+      "#/repaired/0",
+      "#/texts/405",
+      "#/repaired/8"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "sentence cut: 'es 6, 7 show how the estimated statistic' | '7 CONCLUSION'",
+      "sentence start cut out of the block before: 're is another relevant future direction.' | 'mated Truncated Vendi Score correlated w'",
+      "sentence cut: 'els. In addition, we plot the PROXY Nys-' | 'tröm and FKEA PROXY Vendi values compute'",
+      "sentence cut: 'core with Gaussian kernel can be used to' | 'and FKEA methods were both computational'",
+      "sentence cut: 's were both computationally Efficient in' | 'data. We defer the presentation of the a'",
+      "sentence cut: 'presentation of the additional numerical' | 'orders, kernel functions and embedding s'",
+      "passage cut out of 'In this work, we investigated the statis'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 9,
+     "text": "orders, kernel functions and embedding spaces to the Appendix.",
+     "blocks": [
+      "#/repaired/0",
+      "#/texts/405",
+      "#/repaired/9"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "sentence cut: 'es 6, 7 show how the estimated statistic' | '7 CONCLUSION'",
+      "sentence start cut out of the block before: 're is another relevant future direction.' | 'mated Truncated Vendi Score correlated w'",
+      "sentence cut: 'els. In addition, we plot the PROXY Nys-' | 'tröm and FKEA PROXY Vendi values compute'",
+      "sentence cut: 'core with Gaussian kernel can be used to' | 'and FKEA methods were both computational'",
+      "sentence cut: 's were both computationally Efficient in' | 'data. We defer the presentation of the a'",
+      "sentence cut: 'presentation of the additional numerical' | 'orders, kernel functions and embedding s'",
+      "sentence cut: 'unctions and embedding spaces to the Ap-' | 'pendix. Acknowledgements 7 CONCLUSION'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 56,
+     "text": "7 CONCLUSION In this work, we investigated the statistical Convergence behavior of Vendi diversity Scores estimated from empirical Samples. We highlighted that, due to the high computational complexit",
+     "blocks": [
+      "#/texts/404",
+      "#/texts/405",
+      "#/texts/407"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "sentence cut: 'es 6, 7 show how the estimated statistic' | '7 CONCLUSION'",
+      "sentence start cut out of the block before: 're is another relevant future direction.' | 'mated Truncated Vendi Score correlated w'",
+      "sentence cut: 'els. In addition, we plot the PROXY Nys-' | 'tröm and FKEA PROXY Vendi values compute'",
+      "sentence cut: 'core with Gaussian kernel can be used to' | 'and FKEA methods were both computational'",
+      "sentence cut: 's were both computationally Efficient in' | 'data. We defer the presentation of the a'",
+      "sentence cut: 'presentation of the additional numerical' | 'orders, kernel functions and embedding s'",
+      "sentence cut: 'unctions and embedding spaces to the Ap-' | 'pendix. Acknowledgements 7 CONCLUSION'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 10,
+     "words": 21,
+     "text": "Mathilde Caron, Ishan Misra, Julien Mairal, Priya Goyal, Piotr Bojanowski, and Armand Joulin. Unsupervised Learning of Visual Features by Contrasting Cluster",
+     "blocks": [
+      "#/texts/416",
+      "#/texts/417",
+      "#/texts/418"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [
+      "sentence start detached: ' arXiv preprint arXiv:2506.06231 , 2025.' | 'html'"
+     ],
+     "section": "bibliography"
+    },
+    {
+     "page": 10,
+     "words": 4,
+     "text": "signments. In Advances in",
+     "blocks": [
+      "#/texts/416",
+      "#/texts/418"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [
+      "sentence start detached: ' arXiv preprint arXiv:2506.06231 , 2025.' | 'html'"
+     ],
+     "section": "bibliography"
+    },
+    {
+     "page": 10,
+     "words": 6,
+     "text": "Systems, volume 33, pages 9912-9924. Curran",
+     "blocks": [
+      "#/texts/416",
+      "#/texts/418"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [
+      "sentence start detached: ' arXiv preprint arXiv:2506.06231 , 2025.' | 'html'"
+     ],
+     "section": "bibliography"
+    },
+    {
+     "page": 10,
+     "words": 5,
+     "text": "ciates, Inc., 2020. URL https://proceedings.",
+     "blocks": [
+      "#/texts/416",
+      "#/texts/418",
+      "#/texts/422"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [
+      "sentence start detached: ' arXiv preprint arXiv:2506.06231 , 2025.' | 'html'",
+      "sentence cut: 'html' | 'Jia Deng, Wei Dong, Richard Socher, Li-J'"
+     ],
+     "section": "bibliography"
+    },
+    {
+     "page": 10,
+     "words": 8,
+     "text": "Karras, Samuli Laine, and Timo Aila. A style-based",
+     "blocks": [
+      "#/texts/418",
+      "#/texts/422",
+      "#/texts/429"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [
+      "sentence start detached: ' arXiv preprint arXiv:2506.06231 , 2025.' | 'html'",
+      "sentence cut: 'html' | 'Jia Deng, Wei Dong, Richard Socher, Li-J'"
+     ],
+     "section": "bibliography"
+    },
+    {
+     "page": 10,
+     "words": 13,
+     "text": "generator architecture for generative adversarial networks. In Proceedings of the IEEE/CVF Conference on",
+     "blocks": [
+      "#/texts/418",
+      "#/texts/422",
+      "#/texts/429"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [
+      "sentence start detached: ' arXiv preprint arXiv:2506.06231 , 2025.' | 'html'",
+      "sentence cut: 'html' | 'Jia Deng, Wei Dong, Richard Socher, Li-J'"
+     ],
+     "section": "bibliography"
+    },
+    {
+     "page": 10,
+     "words": 7,
+     "text": "Karras, Miika Aittala, Samuli Laine, Erik Härkönen,",
+     "blocks": [
+      "#/texts/422",
+      "#/texts/423",
+      "#/texts/430"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [
+      "sentence cut: 'html' | 'Jia Deng, Wei Dong, Richard Socher, Li-J'"
+     ],
+     "section": "bibliography"
+    },
+    {
+     "page": 10,
+     "words": 5,
+     "text": "Janne Hellsten, Jaakko Lehtinen, and",
+     "blocks": [
+      "#/texts/422",
+      "#/texts/423",
+      "#/texts/430"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [
+      "sentence cut: 'html' | 'Jia Deng, Wei Dong, Richard Socher, Li-J'"
+     ],
+     "section": "bibliography"
+    },
+    {
+     "page": 10,
+     "words": 7,
+     "text": "free generative adversarial networks. In Advances in",
+     "blocks": [
+      "#/texts/423",
+      "#/texts/424",
+      "#/texts/430"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 10,
+     "words": 10,
+     "text": "Processing Systems, volume 34, pages 852-863. Curran Associates, Inc., 2021.",
+     "blocks": [
+      "#/texts/423",
+      "#/texts/424",
+      "#/texts/430"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 10,
+     "words": 32,
+     "text": "will Kay, Joao Carreira, Karen Simonyan, Brian Zhang, Chloe Hillier, Sudheendra Vijayanarasimhan, Fabio Viola, Tim Green, Trevor Back, Paul Natsev, Mustafa Suleyman, and Andrew Zisserman. The Kinetics",
+     "blocks": [
+      "#/texts/424",
+      "#/texts/425",
+      "#/texts/431"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 10,
+     "words": 15,
+     "text": "Jonas Moritz Kohler and Aurelien Lucchi. Sub-sampled cubic regularization for non-convex optimization. In International Conference",
+     "blocks": [
+      "#/texts/426",
+      "#/texts/427",
+      "#/texts/432"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 10,
+     "words": 6,
+     "text": "Machine Learning, pages 1895-1904. PMLR, 2017.",
+     "blocks": [
+      "#/texts/426",
+      "#/texts/427",
+      "#/texts/432"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 10,
+     "words": 20,
+     "text": "Kynkäänniemi, Tero Karras, Samuli Laine, Jaakko Lehtinen, and Timo Aila. Improved precision and Recall metric for assessing generative models. In",
+     "blocks": [
+      "#/texts/427",
+      "#/texts/428",
+      "#/texts/433"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 10,
+     "words": 8,
+     "text": "Processing Systems, volume 32. Curran Associates, Inc., 2019.",
+     "blocks": [
+      "#/texts/427",
+      "#/texts/428",
+      "#/texts/433"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    }
+   ],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "truncated-vendi-2024-do-vendi-scores-converge-with-finite-samples",
+ "doc_type": "scholarly_article",
+ "analyzed_at": "2026-11-15T11:33:10.291173+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 28,
+   "chars": 55338,
+   "blocks": 192,
+   "inner_headings": 27,
+   "figures": 17
+  }
+ ],
+ "skipped": [
+  "Acknowledgements (p. 9)",
+  "References (p. 10)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 28,
+  "gaps": [
+   {
+    "page": 9,
+    "text": "lying value. Figures 6, 7 show how the estimated statistic",
+    "words": 10,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/pictures/5"
+   },
+   {
+    "page": 9,
+    "text": "mated Truncated Vendi Score correlated with the underlying",
+    "words": 8,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/405"
+   },
+   {
+    "page": 9,
+    "text": "diversity of the models. In addition, we plot the PROXY Nys-",
+    "words": 11,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/405"
+   },
+   {
+    "page": 9,
+    "text": "tröm and FKEA PROXY Vendi values computed using 20,000",
+    "words": 9,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/405"
+   },
+   {
+    "page": 9,
+    "text": "Samples which remain close to the estimated t-truncated",
+    "words": 8,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/405"
+   },
+   {
+    "page": 9,
+    "text": "statistic. these empirical RESULTS suggest that the estimated",
+    "words": 8,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/405"
+   },
+   {
+    "page": 9,
+    "text": "t-truncated Vendi Score with Gaussian kernel can be used to",
+    "words": 10,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/405"
+   },
+   {
+    "page": 9,
+    "text": "and FKEA methods were both computationally Efficient in",
+    "words": 8,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/405"
+   },
+   {
+    "page": 9,
+    "text": "data. We defer the presentation of the additional numerical",
+    "words": 9,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/405"
+   },
+   {
+    "page": 9,
+    "text": "orders, kernel functions and embedding spaces to the Ap-",
+    "words": 9,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/405"
+   },
+   {
+    "page": 9,
+    "text": "pendix. Acknowledgements 7 CONCLUSION",
+    "words": 4,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/405"
+   },
+   {
+    "page": 23,
+    "text": "finite-dimension kernel infinite-dimension kernel StyleGAN3-t FFHQ: cosine similarity kernel StyleGAN3-t FFHQ: Gaussian kernel finite-dimension kernel infinite-dimension kernel StyleGAN3-t FFHQ: cosine similarity kernel StyleGAN3-t FFHQ: Gaussian kernel finite-dimension kernel infinite-dimension kernel StyleGAN3-t FFHQ: cosine similarity kernel StyleGAN3-t FFHQ: Gaussian kernel finite-dimension kernel infinite-dimension kernel StyleGAN3-t FFHQ: cosine similarity kernel StyleGAN3-t FFHQ: Gaussian kernel finite-dimension kernel infinite-dimension kernel StyleGAN3-t FFHQ: cosine similarity kernel StyleGAN3-t FFHQ: Gaussian kernel Figure 12: statistical Convergence of Vendi Score for different sample sizes on StyleGAN3 generated FFHQ data at various truncation factors ψ: (Left plot) finite-dimension cosine similarity kernel (Right plot) infinite dimension Gaussian kernel with bandwidth σ = 35. DINOv2 embedding (dimension 768) is used in computing the Scores.",
+    "words": 113,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/tables/2"
+   },
+   {
+    "page": 24,
+    "text": "finite-dimension kernel infinite-dimension kernel StyleGAN-XL ImageNet: cosine similarity kernel StyleGAN-XL ImageNet: Gaussian kernel finite-dimension kernel infinite-dimension kernel StyleGAN-XL ImageNet: cosine similarity kernel StyleGAN-XL ImageNet: Gaussian kernel finite-dimension kernel infinite-dimension kernel StyleGAN-XL ImageNet: cosine similarity kernel StyleGAN-XL ImageNet: Gaussian kernel finite-dimension kernel infinite-dimension kernel StyleGAN-XL ImageNet: cosine similarity kernel StyleGAN-XL ImageNet: Gaussian kernel finite-dimension kernel infinite-dimension kernel StyleGAN-XL ImageNet: cosine similarity kernel StyleGAN-XL ImageNet: Gaussian kernel Figure 13: statistical Convergence of Vendi Score for different sample sizes on StyleGAN-XL generated ImageNet data: (Left plot) finite-dimension cosine similarity kernel (Right plot) infinite dimension Gaussian kernel with bandwidth σ = 40. DINOv2 embedding (dimension 768) is used in computing the Scores.",
+    "words": 108,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/1072"
+   }
+  ],
+  "gaps_dismissed": [
+   {
+    "page": 1,
+    "words": 15,
+    "reason": "debris",
+    "text": "Vendi(x1 , . . . , xn ) := exp λi log(1) i=1 λi"
+   },
+   {
+    "page": 1,
+    "words": 15,
+    "reason": "debris",
+    "text": "RKE(x1 , . . . , xn ) := 2 (2) 1 aziksh-ospanov/truncated-vendi. nK F"
+   },
+   {
+    "page": 2,
+    "words": 15,
+    "reason": "duplicate",
+    "text": "finite-dimension kernel infinite-dimension kernel Vendi Score RKE Score ImageNet: cosine similarity kernel ImageNet: Gaussian kernel"
+   },
+   {
+    "page": 3,
+    "words": 16,
+    "reason": "debris",
+    "text": "Truncated-Vendi (x1 , . . . , xn ) = exp λi log trunc i=1 λi"
+   },
+   {
+    "page": 4,
+    "words": 16,
+    "reason": "duplicate",
+    "text": "Redistribute tail of the eigenvalue distribution K equally compute normalized kernel eigendecomposition proposed eigenvalue truncation compute"
+   },
+   {
+    "page": 5,
+    "words": 18,
+    "reason": "debris",
+    "text": "as \u0010 2 x − x′ 2 \u0011 kGaussian(σ) x, x′ := exp − \u0001 (5) 2σ 2"
+   },
+   {
+    "page": 5,
+    "words": 13,
+    "reason": "duplicate",
+    "text": "d 1 \u0010X \u0011 Hα (A) := log λα i (6) 1−α i=1"
+   },
+   {
+    "page": 5,
+    "words": 23,
+    "reason": "debris",
+    "text": "\u0010 1 \u0001\u0011 1 −2 RKE(x1 , . . . , xn ) := exp H2 K = K (7) n n F"
+   },
+   {
+    "page": 5,
+    "words": 18,
+    "reason": "debris",
+    "text": "\u0001 \u0010 1 \u0001\u0011 Vendiα x1 , . . . , xn := exp Hα K (8) n"
+   },
+   {
+    "page": 5,
+    "words": 19,
+    "reason": "debris",
+    "text": "bX defined as: n bX := 1 1 X C ϕ(xi )ϕ(xi )⊤ = Φ⊤ Φ. n i=1 n"
+   },
+   {
+    "page": 5,
+    "words": 15,
+    "reason": "duplicate",
+    "text": "bX = 1 Φ⊤ Φ n 1 1 ⊤ and kernel matrix n K ="
+   },
+   {
+    "page": 5,
+    "words": 20,
+    "reason": "debris",
+    "text": "eX = Ex∼P ϕ(x)ϕ(x)⊤ as C \u0003 X \u0010 \u0011 Vendiα (PX ) := exp Hα (C eX ) (10)"
+   },
+   {
+    "page": 5,
+    "words": 15,
+    "reason": "duplicate",
+    "text": "− δ: s \u0001 32 log 2/δ λn − λ 2 ≤ b e n"
+   },
+   {
+    "page": 6,
+    "words": 25,
+    "reason": "debris",
+    "text": "− δ: s \u0001 1−α \u0001 1−α 32 log 2δ Vendiα x1 , . . . , xn α − Vendiα PX α ≤ n"
+   },
+   {
+    "page": 6,
+    "words": 19,
+    "reason": "duplicate",
+    "text": "s \u0001−1/2 \u0001−1/2 32 log 2δ RKE x1 , . . . , xn − RKE PX ≤ n"
+   },
+   {
+    "page": 6,
+    "words": 31,
+    "reason": "debris",
+    "text": "− δ: \u0001\u0001 \u0001\u0001 log Vendi-1 x1 , . . . , xn − log Vendi-1 PX s \u0001 8d log 2/δ find \u0010 \u0011 ≤ log . n 32 log(2/δ)"
+   },
+   {
+    "page": 6,
+    "words": 26,
+    "reason": "debris",
+    "text": "− δ: \u0001 1−α \u0001 1−α Vendiα x1 , . . . , xn α − Vendiα PX α s \u0001 32d2−α log 2/δ ≤ n"
+   },
+   {
+    "page": 6,
+    "words": 16,
+    "reason": "duplicate",
+    "text": "n1 K: λ1 ≥ λ2 ≥ · · · ≥ λt . Pt define St ="
+   },
+   {
+    "page": 6,
+    "words": 26,
+    "reason": "debris",
+    "text": "trunc 1 , . . . , λt ]: 1 − St λtrunc i = λi + for i = 1, . . . , t"
+   },
+   {
+    "page": 6,
+    "words": 23,
+    "reason": "debris",
+    "text": "t \u0010 1 \u0010X α \u0011\u0011 Vendi-t) α (x1 , . . . , xn ) := exp log λtrunc i 1−α i=1"
+   },
+   {
+    "page": 6,
+    "words": 22,
+    "reason": "debris",
+    "text": "t (t) \u0010X 1 \u0011 Vendi-1 (x1 , . . . , xn ) := exp λtrunc i log λtrunc i i=1"
+   },
+   {
+    "page": 7,
+    "words": 32,
+    "reason": "debris",
+    "text": "− δ: \u0001 1−α \u0001 1−α Vendi-t) α x1 , . . . , x n α − Vendi-t) α PX α s \u0001 32 max{1, t2−α } log 2/δ ≤ n"
+   },
+   {
+    "page": 7,
+    "words": 33,
+    "reason": "debris",
+    "text": "− δ: \u0001 1−α \u0001 1−α FKEA-Vendi(t) α − Vendi-t) α α x1 , . . . , x n α PX s \u0001 128 max{1, t2−α } log 3/δ ≤ min{n, t}"
+   },
+   {
+    "page": 7,
+    "words": 34,
+    "reason": "debris",
+    "text": ": \u0001 1−α \u0001 1−α Nystrom-Vendi(t) α x1 , . . . , x n α − Vendi-t) α PX α s \u0010 max{1, t2−α } log 2/δ \u0001tτ 2 log(n)2 \u0011 ≤O n"
+   },
+   {
+    "page": 8,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "FFHQ image dataset: FFHQ image dataset: cosine similarity kernel"
+   },
+   {
+    "page": 8,
+    "words": 11,
+    "reason": "duplicate",
+    "text": "synthetic countries text dataset: synthetic Countires text dataset: cosine similarity kernel"
+   },
+   {
+    "page": 8,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "Kinetics400 video dataset: Kinetics400 video dataset: cosine similarity kernel"
+   },
+   {
+    "page": 9,
+    "words": 8,
+    "reason": "debris",
+    "text": "correlates with the truncation parameter for orderα Vendi"
+   },
+   {
+    "page": 9,
+    "words": 13,
+    "reason": "debris",
+    "text": "Scores with α = 1, 1.5, 2. In all these experiments, the esti-"
+   },
+   {
+    "page": 9,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "evaluate the diversity of generated data. also, the Nyström"
+   },
+   {
+    "page": 9,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "estimating the Truncated Vendi Score from limited generated"
+   },
+   {
+    "page": 9,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "RESULTS on the Convergence of Vendi Scores with different"
+   },
+   {
+    "page": 10,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "neurips.cc/paper/2020/hash/ 2025. 70feb62b69f16e0238f741fab228fec2-Abstract."
+   },
+   {
+    "page": 10,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "1895-1904. PMLR, 2017."
+   },
+   {
+    "page": 10,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "theory, 57(3):1548-1566, 2011."
+   },
+   {
+    "page": 10,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "2022. URL https://openreview.net/forum?"
+   },
+   {
+    "page": 13,
+    "words": 21,
+    "reason": "debris",
+    "text": "\u0012 n \u0013 \u0010 nϵ2 1X 1\u0011 P zi ≥ ϵ ≤ exp − 2 + n i=1 2 8c 4"
+   },
+   {
+    "page": 13,
+    "words": 21,
+    "reason": "debris",
+    "text": "2 2 2 ϕ(x) ⊗ ϕ(x) 2 = ϕ(x) 2 · ϕ(x) 2 = k(x, x) · k(x, x) = 1"
+   },
+   {
+    "page": 13,
+    "words": 34,
+    "reason": "debris",
+    "text": "\u0002 \u0003 \u0002 \u0003 vi 2 ≤ ϕ(xi ) ⊗ ϕ(xi ) 2 + Ex∼P ϕ(x) ⊗ ϕ(x) 2 ≤ ϕ(xi ) ⊗ ϕ(xi ) 2 + Ex∼P ϕ(x) ⊗ ϕ(x) 2 = 2"
+   },
+   {
+    "page": 13,
+    "words": 32,
+    "reason": "debris",
+    "text": "\u0002 \u0003 \u0002 \u0003 P ≥ ϵ ≤ exp n i=1 HS 32 \u0010 \u0011 \u0010 8 − nϵ2 \u0011 =⇒ P CX − C eX ≥ ϵ ≤ exp HS 32"
+   },
+   {
+    "page": 13,
+    "words": 16,
+    "reason": "duplicate",
+    "text": "∥λ eX (denoted by λ b n − λ∥ e 2 ≤ ∥CX − C eX"
+   },
+   {
+    "page": 14,
+    "words": 20,
+    "reason": "duplicate",
+    "text": "2\u0011 e ≥ ϵ ≤ exp 8 − nϵ \u0010 \u0011 \u0010 P λ bn − λ 2 32 q"
+   },
+   {
+    "page": 14,
+    "words": 35,
+    "reason": "debris",
+    "text": "r \u0010 32 log(2/δ) \u0011 P λn − λ 2 ≥ b e ≤ δ n r e ≤ 32 log(2/δ) ≥ 1 − δ \u0010 \u0011 =⇒ P λ bn − λ 2 n"
+   },
+   {
+    "page": 14,
+    "words": 20,
+    "reason": "debris",
+    "text": "): d ei log(1 X H1 (CX ) := H1 (λ) = λ i=1 λ ei q 32 log(2/δ)"
+   },
+   {
+    "page": 14,
+    "words": 18,
+    "reason": "duplicate",
+    "text": "| 1 | 1 | 1 |\n| α log | − β log | ≤ |β − α| log |\n| α | β | |β − α| |"
+   },
+   {
+    "page": 14,
+    "words": 36,
+    "reason": "duplicate",
+    "text": "1 1 1 1 1 1 α log − β log ≤ α∗ log ∗ − β ∗ log ∗ = 0 log 0 − c log ≤ c log α β α β c c"
+   },
+   {
+    "page": 14,
+    "words": 36,
+    "reason": "duplicate",
+    "text": "1 1 1 1 1 1 α log − β log ≤ α∗ log ∗ − β ∗ log ∗ = (1 − c) log ≤ c log α β α β (1 − c) c"
+   },
+   {
+    "page": 14,
+    "words": 15,
+    "reason": "duplicate",
+    "text": "1−c 1 , then ′ 1 −2 −1 −2 we have h (c) = log"
+   },
+   {
+    "page": 15,
+    "words": 37,
+    "reason": "duplicate",
+    "text": "1 1 n 1 1 1 1 o 1 α log − β log ≤ max (1/e) log − β log , α log − (1/e) log ≤ c log α β 1/e β α 1/e c"
+   },
+   {
+    "page": 15,
+    "words": 16,
+    "reason": "duplicate",
+    "text": "d √ X 1 √ d ui log ≤ ϵ d log i=1 u i ϵ"
+   },
+   {
+    "page": 15,
+    "words": 29,
+    "reason": "debris",
+    "text": "d X 1 max ui log( ) u∈Rd i=1 ui subject to ui ≥ 0, for all i d X u2i ≤ ϵ2 (equivalent to ∥u∥2 ≤ ϵ) i=1"
+   },
+   {
+    "page": 15,
+    "words": 36,
+    "reason": "debris",
+    "text": "d d d X 1 X X L(u, λ, µ1 , . . . , µd ) = ui log( ) + λ(ϵ2 − u2i ) − µi ui i=1 ui i=1 i=1 Pd 2 •"
+   },
+   {
+    "page": 15,
+    "words": 21,
+    "reason": "duplicate",
+    "text": "− i=1 ( √ϵ )2 = ϵ2 − d ϵ d d = 0 and √ϵ ≥ 0. d √ •"
+   },
+   {
+    "page": 15,
+    "words": 50,
+    "reason": "debris",
+    "text": "√ ∂ ∗ ∗ ∗ ∗ ∗ ϵ d ϵ \u0001 ϵ L(u ) = − log(ui ) − 1 − 2λ ui + µi = − log( √ ) − 1 − 2 · − log( √ ) − 1 · √ = 0 ∂ui d 2ϵ d d"
+   },
+   {
+    "page": 15,
+    "words": 16,
+    "reason": "duplicate",
+    "text": "d √ X 1 √ d ui log ≤ ϵ d log i=1 u i ϵ"
+   },
+   {
+    "page": 16,
+    "words": 32,
+    "reason": "debris",
+    "text": "r bn ) − H1 (CX ) = H1 (λ bn ) − H1 (λ) e ≤ 8d log(2/δ) \u0010 find \u0011 H1 ( C log n 32 log(2/δ) \u0010q \u0001\u0011 d"
+   },
+   {
+    "page": 16,
+    "words": 46,
+    "reason": "debris",
+    "text": "< α < 2 1−α 1−α Vendiα (x1 , . . . , xn ) α − Vendiα (Px ) α = bn − λ λ α e α ≤ bn − λ λ e α 2−α ≤ d 2 bn − λ λ e ."
+   },
+   {
+    "page": 16,
+    "words": 32,
+    "reason": "debris",
+    "text": "− δ r r 1−α 1−α 2−α 32 log(2/δ) 32d2−α log(2/δ) Vendiα (x1 , . . . , xn ) α − Vendiα (Px ) α ≤ d 2 = n n"
+   },
+   {
+    "page": 16,
+    "words": 35,
+    "reason": "debris",
+    "text": "α 1−α b n 1−α Vendiα (x1 , . . . , xn ) = λ α ⇐⇒ Vendiα (x1 , . . . , xn ) α = λ bn α where λ b"
+   },
+   {
+    "page": 16,
+    "words": 13,
+    "reason": "debris",
+    "text": "e we can write 1−α Vendiα (Px ) α = λ e α"
+   },
+   {
+    "page": 16,
+    "words": 40,
+    "reason": "debris",
+    "text": "1−α 1−α Vendiα (x1 , . . . , xn ) α − Vendiα (Px ) α = bn − λ λ α e α ≤ bn − λ λ e α ≤ bn − λ λ e . 2"
+   },
+   {
+    "page": 16,
+    "words": 22,
+    "reason": "debris",
+    "text": "r 1−α 1−α 32 log(2/δ) Vendiα (x1 , . . . , xn ) α − Vendiα (Px ) α ≤ n"
+   },
+   {
+    "page": 16,
+    "words": 28,
+    "reason": "duplicate",
+    "text": "n t X o ∆t := u ∈ [0, 1]d : vi = 0 for all t + 1 ≤ i ≤ d, vi = 1 . i=1"
+   },
+   {
+    "page": 17,
+    "words": 24,
+    "reason": "debris",
+    "text": "t X \u00012 mint ui − vi u∈R i=1 subject to ui ≥ 0, for all i t X ui = 1 i=1 Pt"
+   },
+   {
+    "page": 17,
+    "words": 36,
+    "reason": "debris",
+    "text": "r \u0010 32 log(2/δ) \u0011 bn − λ e ≤ P λ 2 ≥ 1−δ n r e (t) ≤ 32 log(2/δ) ≥ 1 − δ \u0010 (t) \u0011 =⇒ P λb −λ n 2 n"
+   },
+   {
+    "page": 17,
+    "words": 24,
+    "reason": "debris",
+    "text": "− δ r 1−α 1−α 32t2−α log(2/δ) Vendiα (x1 , . . . , xn ) α − Vendiα (Px ) α ≤ n"
+   },
+   {
+    "page": 17,
+    "words": 25,
+    "reason": "debris",
+    "text": "r 1−α 1−α 32 max{1, t2−α } log(2/δ) Vendiα (x1 , . . . , xn ) α − Vendiα (Px ) α ≤ n"
+   },
+   {
+    "page": 17,
+    "words": 11,
+    "reason": "debris",
+    "text": "t 1 FKEA(t) 1X1 K = Ki n t i=1 n"
+   },
+   {
+    "page": 18,
+    "words": 10,
+    "reason": "debris",
+    "text": "where Eωi ∼pω [ n1 Ki ] = n1 K."
+   },
+   {
+    "page": 18,
+    "words": 48,
+    "reason": "debris",
+    "text": "\u0010 1X \u0010 8 − tϵ2 \u0011 \u00021 \u0003 1 \u0011 P Ki − K ≥ ϵ ≤ exp t i=1 n n F 32 \u0010 1 1 \u0011 \u0010 8 − tϵ2 \u0011 =⇒ P K FKEA(t) − K ≥ ϵ ≤ exp n n F 32"
+   },
+   {
+    "page": 18,
+    "words": 14,
+    "reason": "debris",
+    "text": "n1 K (denoted by λ b n ) and 1 FKEA(t) FKEA(t) FKEA(t) 1"
+   },
+   {
+    "page": 18,
+    "words": 15,
+    "reason": "debris",
+    "text": ") we will have ∥λ bn − λ ∥2 ≤ ∥ n K FKEA(t) −"
+   },
+   {
+    "page": 18,
+    "words": 18,
+    "reason": "debris",
+    "text": "\u0010 \u0011 \u0010 8 − tϵ2 \u0011 P b n − λFKEA(t) λ ≥ϵ ≤ exp((2 32"
+   },
+   {
+    "page": 18,
+    "words": 18,
+    "reason": "debris",
+    "text": "2\u0011 e ≥ γ ≤ exp 8 − nγ \u0010 \u0011 \u0010 P λbn − λ 2 32"
+   },
+   {
+    "page": 18,
+    "words": 35,
+    "reason": "debris",
+    "text": "\u0010 \u0011 \u0010 8 − tϵ2 \u0011 \u0010 8 − nϵ2 \u0011 P λe − λFKEA(t) ≥ 2ϵ ≤ exp + exp((2 32 32 \u0010 8 − min{n, t}ϵ2 \u0011 ≤ 2exp 32"
+   },
+   {
+    "page": 18,
+    "words": 22,
+    "reason": "debris",
+    "text": "\u0010 (t) \u0011 \u0010 32 − min{n, t}ϵ2 \u0011 P λe − λFKEA(t) ≥ ϵ ≤ 2exp 2 128 2\u0001 q"
+   },
+   {
+    "page": 18,
+    "words": 15,
+    "reason": "debris",
+    "text": "s \u0010 (t) FKEA(t) 128 log(3/δ) \u0011 P λ e −λ ≤ ≥1−δ 2 min{n,"
+   },
+   {
+    "page": 18,
+    "words": 29,
+    "reason": "debris",
+    "text": "show s 1−α 1−α 128 max{1, t2−α } log(3/δ) FKEA-Vendi(t) α (x1 , . . . , xn ) α − Vendi-t) α (Px ) α ≤ min{n, t}"
+   },
+   {
+    "page": 18,
+    "words": 21,
+    "reason": "debris",
+    "text": "− n23 : 1 1 \u0010 τ log(n) \u0011 K − K Nystrom(t) sp ≤ O √ . n n nt"
+   },
+   {
+    "page": 18,
+    "words": 33,
+    "reason": "debris",
+    "text": "n1 K, i.e. λ b n , and that of 1 Nystrom(t) Nystrom(t) nK , i.e., λ , \u0010 τ log(n) \u0011 b n − λNystrom(t) λ ≤ O √ . ∞ nt"
+   },
+   {
+    "page": 19,
+    "words": 42,
+    "reason": "debris",
+    "text": "\u0010 τ log(n) \u0011 r \u0011 Nystrom(t) Nystrom(t) \u0010 t λn [1 : t] − λ b [1 : t] ∞ ≤ O √ =⇒ λn [1 : t] − λ b [1 : t] 2 ≤ O τ log(n) nt n"
+   },
+   {
+    "page": 19,
+    "words": 17,
+    "reason": "debris",
+    "text": "have r \u0011 (t) Nystrom(t) \u0010 t λn − λ b ≤ O τ log(n) 2 n"
+   },
+   {
+    "page": 19,
+    "words": 19,
+    "reason": "debris",
+    "text": "r \u0010 b (t) − λ e (t) ≤ 32 log(2/δ) \u0011 P λ n 2 ≥ 1−δ n"
+   },
+   {
+    "page": 19,
+    "words": 50,
+    "reason": "debris",
+    "text": "have e (t) λNystrom(t) − λ ≤ b (t) + λ λNystrom(t) − λ b (t) − λe (t) n n 2 2 2 r r \u0011 32 log(2/δ) \u0010 t ≤ + O τ log(n) n n r \u0010 log(2/δ) + t log(n)2 τ 2 \u0011 = O n"
+   },
+   {
+    "page": 19,
+    "words": 36,
+    "reason": "debris",
+    "text": "prove s 1−α 1−α \u0010 max{t2−α , 1} log(2/δ) + t log(n)2 τ 2 \u0001 \u0011 Nystrom-Vendi(t) α (x1 , . . . , xn ) α − Vendi-t) α (Px ) α ≤ O n"
+   },
+   {
+    "page": 20,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "dog cat turtle elephant"
+   }
+  ],
+  "captions_reclassified": [],
+  "captions_reassigned": [],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [],
+  "superseded": [],
+  "replaced_pages": [
+   23,
+   24
+  ],
+  "noise_dropped": 2,
+  "hyphens_restored": [],
+  "order": [
+   {
+    "page": 2,
+    "text": "Following the above discussion, a key question that arises is whether the Vendi Score estimated from restricted sample sizes (i.e. n ≤ 20,000) has converged to its asymptotic value with infinite Samples, which we call the population Vendi. However, the statistical Convergence",
+    "words": 42,
+    "refs": [
+     "#/texts/81",
+     "#/texts/83",
+     "#/texts/84"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 2,
+    "text": "the Vendi Score has not been thoroughly investigated in the literature. In this work, we study the statistical Convergence",
+    "words": 19,
+    "refs": [
+     "#/texts/81",
+     "#/texts/83",
+     "#/texts/84"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 2,
+    "text": "RKE diversity Scores and aim to analyze the concentration of the estimated Scores from a limited number of generated Samples n ⪅ 20,000.",
+    "words": 23,
+    "refs": [
+     "#/texts/81",
+     "#/texts/83",
+     "#/texts/84"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 2,
+    "text": "1.1 OUR RESULTS ON VENDI'S Convergence We discuss the answer to the Vendi Convergence question for two types of kernel functions: 1) kernel functions with",
+    "words": 25,
+    "refs": [
+     "#/texts/82",
+     "#/texts/83",
+     "#/texts/84",
+     "#/texts/85"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 3,
+    "text": "The Following summarizes this work's contributions:",
+    "words": 6,
+    "refs": [
+     "#/texts/88",
+     "#/texts/92"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 3,
+    "text": "diversity Scores under restricted sample sizes n ⪅ 2×104",
+    "words": 9,
+    "refs": [
+     "#/texts/88",
+     "#/texts/93"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading, list_item are involved",
+    "breaks": [
+     "sentence cut: 'r restricted sample sizes n ⪅ 2 × 10 4 ,' | 'Providing numerical evidence on the Vend'",
+     "passage cut out of 'where we shift each of the topt eigenval'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "Truncated Vendi Score correlated with the underlying diversity of the models. In addition, we plot the PROXY Nyström and FKEA PROXY Vendi values computed using 20,000 Samples which remain close to the estimated t-truncated statistic. these empirical RESULTS suggest that the estimated t-truncated Vendi Score with Gaussian kernel can be used",
+    "words": 51,
+    "refs": [
+     "#/repaired/0",
+     "#/texts/405",
+     "#/repaired/1",
+     "#/repaired/2",
+     "#/repaired/3",
+     "#/repaired/4",
+     "#/repaired/5",
+     "#/repaired/6"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "sentence cut: 'es 6, 7 show how the estimated statistic' | '7 CONCLUSION'",
+     "sentence start cut out of the block before: 're is another relevant future direction.' | 'mated Truncated Vendi Score correlated w'",
+     "sentence cut: 'els. In addition, we plot the PROXY Nys-' | 'tröm and FKEA PROXY Vendi values compute'",
+     "sentence cut: 'core with Gaussian kernel can be used to' | 'and FKEA methods were both computational'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "and FKEA methods were both computationally Efficient in",
+    "words": 8,
+    "refs": [
+     "#/repaired/0",
+     "#/texts/405",
+     "#/repaired/7"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "sentence cut: 'es 6, 7 show how the estimated statistic' | '7 CONCLUSION'",
+     "sentence start cut out of the block before: 're is another relevant future direction.' | 'mated Truncated Vendi Score correlated w'",
+     "sentence cut: 'els. In addition, we plot the PROXY Nys-' | 'tröm and FKEA PROXY Vendi values compute'",
+     "sentence cut: 'core with Gaussian kernel can be used to' | 'and FKEA methods were both computational'",
+     "sentence cut: 's were both computationally Efficient in' | 'data. We defer the presentation of the a'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "data. We defer the presentation of the additional numerical",
+    "words": 9,
+    "refs": [
+     "#/repaired/0",
+     "#/texts/405",
+     "#/repaired/8"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "sentence cut: 'es 6, 7 show how the estimated statistic' | '7 CONCLUSION'",
+     "sentence start cut out of the block before: 're is another relevant future direction.' | 'mated Truncated Vendi Score correlated w'",
+     "sentence cut: 'els. In addition, we plot the PROXY Nys-' | 'tröm and FKEA PROXY Vendi values compute'",
+     "sentence cut: 'core with Gaussian kernel can be used to' | 'and FKEA methods were both computational'",
+     "sentence cut: 's were both computationally Efficient in' | 'data. We defer the presentation of the a'",
+     "sentence cut: 'presentation of the additional numerical' | 'orders, kernel functions and embedding s'",
+     "passage cut out of 'In this work, we investigated the statis'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "orders, kernel functions and embedding spaces to the Appendix.",
+    "words": 9,
+    "refs": [
+     "#/repaired/0",
+     "#/texts/405",
+     "#/repaired/9"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "sentence cut: 'es 6, 7 show how the estimated statistic' | '7 CONCLUSION'",
+     "sentence start cut out of the block before: 're is another relevant future direction.' | 'mated Truncated Vendi Score correlated w'",
+     "sentence cut: 'els. In addition, we plot the PROXY Nys-' | 'tröm and FKEA PROXY Vendi values compute'",
+     "sentence cut: 'core with Gaussian kernel can be used to' | 'and FKEA methods were both computational'",
+     "sentence cut: 's were both computationally Efficient in' | 'data. We defer the presentation of the a'",
+     "sentence cut: 'presentation of the additional numerical' | 'orders, kernel functions and embedding s'",
+     "sentence cut: 'unctions and embedding spaces to the Ap-' | 'pendix. Acknowledgements 7 CONCLUSION'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "7 CONCLUSION In this work, we investigated the statistical Convergence behavior of Vendi diversity Scores estimated from empirical Samples. We highlighted that, due to the high computational complexity of the Score for datasets larger than a few tens of thousands of generated data points, the Score is often calculated using sample sizes below 10000. We demonstrated",
+    "words": 56,
+    "refs": [
+     "#/texts/404",
+     "#/texts/405",
+     "#/texts/407"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "sentence cut: 'es 6, 7 show how the estimated statistic' | '7 CONCLUSION'",
+     "sentence start cut out of the block before: 're is another relevant future direction.' | 'mated Truncated Vendi Score correlated w'",
+     "sentence cut: 'els. In addition, we plot the PROXY Nys-' | 'tröm and FKEA PROXY Vendi values compute'",
+     "sentence cut: 'core with Gaussian kernel can be used to' | 'and FKEA methods were both computational'",
+     "sentence cut: 's were both computationally Efficient in' | 'data. We defer the presentation of the a'",
+     "sentence cut: 'presentation of the additional numerical' | 'orders, kernel functions and embedding s'",
+     "sentence cut: 'unctions and embedding spaces to the Ap-' | 'pendix. Acknowledgements 7 CONCLUSION'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 10,
+    "text": "Mathilde Caron, Ishan Misra, Julien Mairal, Priya Goyal, Piotr Bojanowski, and Armand Joulin. Unsupervised Learning of Visual Features by Contrasting Cluster",
+    "words": 21,
+    "refs": [
+     "#/texts/416",
+     "#/texts/417",
+     "#/texts/418"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [
+     "sentence start detached: ' arXiv preprint arXiv:2506.06231 , 2025.' | 'html'"
+    ],
+    "section": "bibliography"
+   },
+   {
+    "page": 10,
+    "text": "signments. In Advances in",
+    "words": 4,
+    "refs": [
+     "#/texts/416",
+     "#/texts/418"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [
+     "sentence start detached: ' arXiv preprint arXiv:2506.06231 , 2025.' | 'html'"
+    ],
+    "section": "bibliography"
+   },
+   {
+    "page": 10,
+    "text": "Systems, volume 33, pages 9912-9924. Curran",
+    "words": 6,
+    "refs": [
+     "#/texts/416",
+     "#/texts/418"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [
+     "sentence start detached: ' arXiv preprint arXiv:2506.06231 , 2025.' | 'html'"
+    ],
+    "section": "bibliography"
+   },
+   {
+    "page": 10,
+    "text": "ciates, Inc., 2020. URL https://proceedings.",
+    "words": 5,
+    "refs": [
+     "#/texts/416",
+     "#/texts/418",
+     "#/texts/422"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [
+     "sentence start detached: ' arXiv preprint arXiv:2506.06231 , 2025.' | 'html'",
+     "sentence cut: 'html' | 'Jia Deng, Wei Dong, Richard Socher, Li-J'"
+    ],
+    "section": "bibliography"
+   },
+   {
+    "page": 10,
+    "text": "Karras, Samuli Laine, and Timo Aila. A style-based",
+    "words": 8,
+    "refs": [
+     "#/texts/418",
+     "#/texts/422",
+     "#/texts/429"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [
+     "sentence start detached: ' arXiv preprint arXiv:2506.06231 , 2025.' | 'html'",
+     "sentence cut: 'html' | 'Jia Deng, Wei Dong, Richard Socher, Li-J'"
+    ],
+    "section": "bibliography"
+   },
+   {
+    "page": 10,
+    "text": "generator architecture for generative adversarial networks. In Proceedings of the IEEE/CVF Conference on",
+    "words": 13,
+    "refs": [
+     "#/texts/418",
+     "#/texts/422",
+     "#/texts/429"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [
+     "sentence start detached: ' arXiv preprint arXiv:2506.06231 , 2025.' | 'html'",
+     "sentence cut: 'html' | 'Jia Deng, Wei Dong, Richard Socher, Li-J'"
+    ],
+    "section": "bibliography"
+   },
+   {
+    "page": 10,
+    "text": "Karras, Miika Aittala, Samuli Laine, Erik Härkönen,",
+    "words": 7,
+    "refs": [
+     "#/texts/422",
+     "#/texts/423",
+     "#/texts/430"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [
+     "sentence cut: 'html' | 'Jia Deng, Wei Dong, Richard Socher, Li-J'"
+    ],
+    "section": "bibliography"
+   },
+   {
+    "page": 10,
+    "text": "Janne Hellsten, Jaakko Lehtinen, and",
+    "words": 5,
+    "refs": [
+     "#/texts/422",
+     "#/texts/423",
+     "#/texts/430"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [
+     "sentence cut: 'html' | 'Jia Deng, Wei Dong, Richard Socher, Li-J'"
+    ],
+    "section": "bibliography"
+   },
+   {
+    "page": 10,
+    "text": "free generative adversarial networks. In Advances in",
+    "words": 7,
+    "refs": [
+     "#/texts/423",
+     "#/texts/424",
+     "#/texts/430"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 10,
+    "text": "Processing Systems, volume 34, pages 852-863. Curran Associates, Inc., 2021.",
+    "words": 10,
+    "refs": [
+     "#/texts/423",
+     "#/texts/424",
+     "#/texts/430"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 10,
+    "text": "will Kay, Joao Carreira, Karen Simonyan, Brian Zhang, Chloe Hillier, Sudheendra Vijayanarasimhan, Fabio Viola, Tim Green, Trevor Back, Paul Natsev, Mustafa Suleyman, and Andrew Zisserman. The Kinetics human action video dataset, 2017.",
+    "words": 32,
+    "refs": [
+     "#/texts/424",
+     "#/texts/425",
+     "#/texts/431"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 10,
+    "text": "Jonas Moritz Kohler and Aurelien Lucchi. Sub-sampled cubic regularization for non-convex optimization. In International Conference",
+    "words": 15,
+    "refs": [
+     "#/texts/426",
+     "#/texts/427",
+     "#/texts/432"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 10,
+    "text": "Machine Learning, pages 1895-1904. PMLR, 2017.",
+    "words": 6,
+    "refs": [
+     "#/texts/426",
+     "#/texts/427",
+     "#/texts/432"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 10,
+    "text": "Kynkäänniemi, Tero Karras, Samuli Laine, Jaakko Lehtinen, and Timo Aila. Improved precision and Recall metric for assessing generative models. In",
+    "words": 20,
+    "refs": [
+     "#/texts/427",
+     "#/texts/428",
+     "#/texts/433"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 10,
+    "text": "Processing Systems, volume 32. Curran Associates, Inc., 2019.",
+    "words": 8,
+    "refs": [
+     "#/texts/427",
+     "#/texts/428",
+     "#/texts/433"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 14,
+    "text": "H1 (CX ), we leverage the Following two lemmas:",
+    "words": 9,
+    "refs": [
+     "#/texts/485"
+    ],
+    "repaired": true,
+    "note": "1 blocks replaced by the text layer's passage",
+    "breaks": [],
+    "section": ""
+   }
+  ],
+  "order_pages_checked": 19,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 26,
+  "order_breaking": 6,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 3 minor; distortions: 0 material, 2 minor; additions: 0 material, 1 minor; order: 0 material, 0 minor",
+  "at": "2026-11-15T11:34:58+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 3
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 2
+   },
+   "additions": {
+    "material": 0,
+    "minor": 1
+   },
+   "order": {
+    "material": 0,
+    "minor": 0
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "Do Vendi Scores Converge with Finite Samples?. Truncated Vendi Score for Finite-Sample Convergence Guarantees (p. 1–28)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "The Vendi and RKE scores have been further extended to quantify the diversity of conditional prompt-based generative AI models [Ospanov et al., 2024a, Jalali et al., 2024] and to select generative models in online settings [Rezaei et al., 2024, Hu et al., 2024, 2025].",
+      "severity": "minor",
+      "page": 3
+     },
+     {
+      "source": "In our image-related experiments, we used the DinoV2 embedding [Oquab et al., 2023], as Stein et al. [2023] demonstrate the alignment of this embedding with human evaluations.",
+      "severity": "minor",
+      "page": 4
+     },
+     {
+      "source": "In general, we consider the trace-normalized kernel matrix 1/Tr(K) K, which given ∀x : k(x, x) = 1, reduces to 1/n K.",
+      "severity": "minor",
+      "page": 1
+     }
+    ],
+    "distortions": [
+     {
+      "source": "in the case of infinite dimension Gaussian kernel, we observed that the Vendi 1 score did not converge using 20k samples and the score value kept growing with a considerable rate",
+      "summary": "showing curves that increase and then plateau, with the blue square-marked “VENDI-1.0” line ending highest",
+      "severity": "minor",
+      "page": 7
+     },
+     {
+      "source": "in the case of infinite dimension Gaussian kernel, we observed that the Vendi 1 score did not converge using 20k samples and the score value kept growing with a considerable rate",
+      "summary": "it displays four curves identified as \"VENDI-1.0\", \"Truncated Vendi\", \"Nyström Vendi\", and \"FKEA Vendi\" that increase and level off at different values",
+      "severity": "minor",
+      "page": 7
+     }
+    ],
+    "additions": [
+     {
+      "summary": "the Vendi score—a popular reference-free metric for measuring the diversity of generative AI models",
+      "severity": "minor"
+     }
+    ],
+    "order": []
+   }
+  ]
+ },
+ "source": {
+  "source": "truncated-vendi-2024-do-vendi-scores-converge-with-finite-samples.pdf",
+  "bytes": 12463139,
+  "sha256": "3812980519eda677f8cf635cddffe2c13609e58a16f517ba904b52ba53cd8b9e",
+  "extracted_at": "2026-11-13T03:12:50+01:00"
+ }
+}

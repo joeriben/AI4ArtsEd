@@ -134,6 +134,17 @@ def _app(monkeypatch):
     return app
 
 
+def _operator(app):
+    """A client with the settings session."""
+    c = app.test_client()
+    # The settings session: the settings password, or a sign-in as an admin.
+    # The machine the server runs on is no admin since 2026-11-15
+    # (routes/settings_routes.py, `_settings_admitted`).
+    with c.session_transaction() as s:
+        s["settings_authenticated"] = True
+    return c
+
+
 def test_the_save_route_writes_the_merge(tmp_path, monkeypatch, caplog):
     """POST /api/settings/ writes what _file_after_save returns, and then
     names in the log what it left out."""
@@ -145,7 +156,7 @@ def test_the_save_route_writes_the_merge(tmp_path, monkeypatch, caplog):
     }))
     monkeypatch.setattr(sr, "SETTINGS_FILE", settings_file)
     with caplog.at_level("WARNING", logger=sr.logger.name):
-        response = _app(monkeypatch).test_client().post("/api/settings/", json={"UI_MODE": "youth"})
+        response = _operator(_app(monkeypatch)).post("/api/settings/", json={"UI_MODE": "youth"})
     assert response.status_code == 200, response.get_json()
     assert json.loads(settings_file.read_text()) == {
         "UI_MODE": "youth",
@@ -162,6 +173,6 @@ def test_a_save_that_fails_names_nothing(tmp_path, monkeypatch, caplog):
     monkeypatch.setattr(sr, "SETTINGS_FILE", blocker / "user_settings.json")
     monkeypatch.setattr(sr, "_read_settings_file", lambda: {"PORT": 1, "UI_MODE": "kids"})
     with caplog.at_level("WARNING", logger=sr.logger.name):
-        response = _app(monkeypatch).test_client().post("/api/settings/", json={"UI_MODE": "youth"})
+        response = _operator(_app(monkeypatch)).post("/api/settings/", json={"UI_MODE": "youth"})
     assert response.status_code == 500, response.get_json()
     assert "PORT" not in caplog.text

@@ -57,10 +57,14 @@ except OSError:
     pass
 
 # check_same_thread=False because Waitress serves with multiple threads.
+# hide_parameters: an error text carries the statement, and without it the
+# bound values too, password hashes among them; the error goes to the log
+# and, in scripts/set_admin_account.py, to the terminal (2026-11-15).
 engine = create_engine(
     f"sqlite:///{_DB_PATH}",
     echo=False,
     future=True,
+    hide_parameters=True,
     connect_args={"check_same_thread": False},
 )
 

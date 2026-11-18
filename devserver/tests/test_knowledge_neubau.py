@@ -210,6 +210,20 @@ def test_page_refs_inside_document_and_section():
     assert kc.check_page_refs([_pair([], "### Ablauf\n\nDetail.")], 0, 0, "none").passed
 
 
+def test_page_refs_leave_the_figure_list_out():
+    # An image of a table of contents: its description gives the pages the
+    # image shows, not pages of the section (OECD 2025, image 6).
+    out = ("### Ablauf (p. 1–42)\n\nDetail (p. 4).\n\n### Figures (p. 4)\n\n"
+           '*Image 6 (p. 4):* — A table of contents: "The AILit Framework" (p. 17-43).')
+    pair = _pair([], out, 1, 42)
+    pair.figure_idents = ["Image 6"]
+    res = kc.check_page_refs([pair], 1, 62)
+    assert res.passed, res.findings
+    # The same line under an ident the unit does not carry is summary text.
+    pair.figure_idents = ["Image 60"]
+    assert not kc.check_page_refs([pair], 1, 62).passed
+
+
 def test_verbatim_share_is_a_copyright_quantity_with_a_ceiling():
     source = " ".join(f"quelle{i}" for i in range(200))
     own = " ".join(f"eigen{i}" for i in range(80))
@@ -1120,6 +1134,46 @@ def test_a_numbered_list_split_around_pictures_is_one_list_again():
                    "### A\n\n1. Ausschneiden der Karten\n2. Falten\n3. Mischen\n"
                    "4. Aufdecken\n5. Ausprobieren")]
     assert not kc.check_lists(pairs).findings
+
+
+def _esser_p22(free_caption: str = "Figure 12. Qualitative effects of scaling.") -> Extraction:
+    """Esser et al. 2024, p. 22, as Docling gave it: the distribution charts
+    without a caption, the caption of Figure 11 on the image grid below
+    them, and the grid's own caption as a free caption block."""
+    return Extraction(blocks=[
+        Block("figure", page=22, seq=26, image="fig-026-p22.png", ref="#/pictures/25"),
+        Block("figure_text", text="0.5", page=22, figure_ref="#/pictures/25"),
+        Block("paragraph", text="t", page=22),
+        Block("figure", page=22, seq=27, image="fig-027-p22.png", ref="#/pictures/26",
+              caption="Figure 11. The mode (left) and logit-normal (right) distributions.",
+              figure_no="11"),
+        Block("figure_text", text="'A bowl of soup'", page=22, figure_ref="#/pictures/26"),
+        Block("caption", text=free_caption, page=22, ref="#/texts/884"),
+    ], pages=22)
+
+
+def test_a_caption_given_to_the_next_picture_goes_back_to_its_own():
+    from my_app.services.knowledge_extract import normalise
+    ext = _esser_p22()
+    normalise(ext)
+    figs = [b for b in ext.blocks if b.kind == "figure"]
+    assert [(b.image, b.figure_no, b.caption[:9]) for b in figs] == [
+        ("fig-026-p22.png", "11", "Figure 11"), ("fig-027-p22.png", "12", "Figure 12")]
+    assert not [b for b in ext.blocks if b.kind == "caption"]
+    assert ext.integrity.captions_reassigned == [
+        {"page": 22, "caption": "fig 11", "from": "#/pictures/26", "to": "#/pictures/25"}]
+
+
+def test_a_caption_stays_where_the_numbering_does_not_continue():
+    """The free caption below is a table's, or carries another number: the
+    picture keeps its caption."""
+    from my_app.services.knowledge_extract import normalise
+    for free in ("Table 4. Results.", "Figure 14. Something else."):
+        ext = _esser_p22(free)
+        normalise(ext)
+        figs = [b for b in ext.blocks if b.kind == "figure"]
+        assert [b.figure_no for b in figs] == ["", "11"]
+        assert ext.integrity.captions_reassigned == []
 
 
 def test_lists_are_not_joined_across_a_heading_or_a_broken_numbering():

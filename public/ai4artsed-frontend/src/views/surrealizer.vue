@@ -208,30 +208,49 @@
               :columns="2"
               @update:model-value="applyPreset"
             />
-            <ConditioningTable class="ef-table" :a="factorA" :b="factorB" :c="factorC" :t5-rows="t5Rows" :pooled="pooled" />
+            <ConditioningTable class="ef-table" :a="factorA" :b="factorB" :c="factorC" :t5-rows="t5Rows" :pooled="pooled" :clip-encoder="clipEncoder" />
 
-            <!-- The three factors. a and b run on the axis the alpha of this
+            <!-- The three factors, all three on the axis the alpha of this
                  page ran on (lib/fusionWeights: linear inside ±1, logarithmic
-                 out to ±75, whole numbers hold the handle); c runs 0..1 in
-                 steps of 0.05. Over each axis its line: the letter of the
+                 out to ±75, whole numbers hold the handle); c on it since
+                 2026-11-15, before that 0..1. Over each axis its line: the letter of the
                  drawing, the name of the block, in the lines of a and c the
                  two fields of a switch, the number. The axis is
                  components/MarkedSlider.vue, compact, so that three of them
                  fit the column. -->
             <div class="ef-factor">
-              <div class="ef-factor-line">
+              <div class="ef-factor-line ef-factor-line-a">
                 <b>a</b><span>{{ t('surrealizer.factorA') }}</span>
+                <!-- The CLIP encoders, the sixth setting (since 2026-11-15):
+                     clip-l, clip-g, both. The block and the pooled vector
+                     are read from both encoders, or from one alone, the
+                     other one's columns and its half of the vector then
+                     zeros, as ComfyUI assembles them without it; the drawing
+                     follows. Three fields, then a gap, then the pool's two.
+                     The five need some 300 px at the line's step and the
+                     column has 277 on the reference device (1210 x 834), so
+                     they stand as a row of their own under the name and the
+                     number. -->
+                <div class="ef-switches">
+                <ChipSelect
+                  class="ef-switch ef-switch-three"
+                  :model-value="clipEncoder"
+                  :options="clipEncoderOptions"
+                  :columns="3"
+                  @update:model-value="setClipEncoder"
+                />
                 <!-- The pooled vector, the fifth setting; the bar over the
                      drawing follows it. As CLIP-L and CLIP-G compute it, or
                      zeros in its place, which ComfyUI itself puts there when
                      no CLIP encoder runs. Two fields, as in the line of c. -->
                 <ChipSelect
-                  class="ef-switch"
+                  class="ef-switch ef-switch-apart"
                   :model-value="pooled"
                   :options="pooledOptions"
                   :columns="2"
                   @update:model-value="setPooled"
                 />
+                </div>
                 <output class="ef-factor-val" aria-live="off">{{ fmt(factorA) }}</output>
               </div>
               <MarkedSlider
@@ -283,11 +302,11 @@
               <MarkedSlider
                 class="ef-track"
                 compact
-                v-model="factorC"
-                :min="C_RANGE.min"
-                :max="C_RANGE.max"
-                :step="C_RANGE.step"
-                :marks="C_MARKS"
+                v-model="posC"
+                :min="ALPHA_POSITIONS.min"
+                :max="ALPHA_POSITIONS.max"
+                :step="ALPHA_POSITIONS.step"
+                :marks="factorMarks"
                 :aria-label="'c · ' + t('surrealizer.factorC')"
                 :value-text="'c = ' + fmt(factorC)"
               />
@@ -482,10 +501,12 @@ import {
   formatFactor,
   fusionSettingLabel,
   minus,
+  recordedClipEncoder,
   recordedFactors,
   recordedNumber,
   recordedPooled,
   recordedRows,
+  type ClipEncoder,
   type Pooled,
   type T5Rows,
 } from '@/lib/fusionSetting'
@@ -617,9 +638,13 @@ const {
  * which CLIP-L and CLIP-G compute and the model reads beside the table in
  * the modulation of every block, is the fifth setting, `pooled` (the chunk's
  * `pooled`): `clip`, the vector as computed, or `zero`, zeros in its place,
- * which ComfyUI itself puts there when no CLIP encoder runs.
+ * which ComfyUI itself puts there when no CLIP encoder runs. Which CLIP
+ * encoders fill the block and the pooled vector is the sixth setting,
+ * `clipEncoder` (the chunk's `clip_encoder`, since 2026-11-15): `both`, or
+ * `clip_l` / `clip_g` alone, the other one's columns and its half of the
+ * vector then zeros, as ComfyUI assembles them without that encoder.
  * The three factors are free of each other
- * and of the two switches. The setting SD 3.5 runs on its own is a 1, b 0,
+ * and of the three switches. The setting SD 3.5 runs on its own is a 1, b 0,
  * c 1 on the full block with the pooled vector, named Standard, and the page
  * opens on it.
  * Concatenation is the edge b 0; the alpha of this page ran until
@@ -645,7 +670,7 @@ const {
  * them the old runs bit for bit (comfyui_nodes/ai4artsed_sd3_conditioning.py:
  * (1 − α, α, 1, tail, clip) is AI4ArtsEdSD3Fusion under legacy at α). Every
  * field
- * carries its layout and its pooled vector; the three named points stand on
+ * carries its layout, its pooled vector and both CLIP encoders; the three named points stand on
  * the full block, and T5 only alone puts zeros in the pooled vector's place,
  * so that no number CLIP computed reaches the model: the
  * CLIP block zero and the vector zero, the two CLIP outputs the training of
@@ -653,12 +678,12 @@ const {
  * of these alphas lands on its field.
  */
 const PRESETS = [
-  { id: 'standard', a: 1, b: 0, c: 1, rows: 'full', pooled: 'clip', name: () => t('surrealizer.standardButton') },
-  { id: 'clip_only', a: 1, b: 0, c: 0, rows: 'full', pooled: 'clip', name: () => t('surrealizer.presetClipOnly') },
-  { id: 't5_only', a: 0, b: 0, c: 1, rows: 'full', pooled: 'zero', name: () => t('surrealizer.presetT5Only') },
-  { id: 'surrealization_5', a: -4, b: 5, c: 1, rows: 'tail', pooled: 'clip', name: () => t('surrealizer.presetSurrealization', { n: 5 }) },
-  { id: 'surrealization_15', a: -14, b: 15, c: 1, rows: 'tail', pooled: 'clip', name: () => t('surrealizer.presetSurrealization', { n: 15 }) },
-  { id: 'surrealization_35', a: -34, b: 35, c: 1, rows: 'tail', pooled: 'clip', name: () => t('surrealizer.presetSurrealization', { n: 35 }) },
+  { id: 'standard', a: 1, b: 0, c: 1, rows: 'full', pooled: 'clip', clip: 'both', name: () => t('surrealizer.standardButton') },
+  { id: 'clip_only', a: 1, b: 0, c: 0, rows: 'full', pooled: 'clip', clip: 'both', name: () => t('surrealizer.presetClipOnly') },
+  { id: 't5_only', a: 0, b: 0, c: 1, rows: 'full', pooled: 'zero', clip: 'both', name: () => t('surrealizer.presetT5Only') },
+  { id: 'surrealization_5', a: -4, b: 5, c: 1, rows: 'tail', pooled: 'clip', clip: 'both', name: () => t('surrealizer.presetSurrealization', { n: 5 }) },
+  { id: 'surrealization_15', a: -14, b: 15, c: 1, rows: 'tail', pooled: 'clip', clip: 'both', name: () => t('surrealizer.presetSurrealization', { n: 15 }) },
+  { id: 'surrealization_35', a: -34, b: 35, c: 1, rows: 'tail', pooled: 'clip', clip: 'both', name: () => t('surrealizer.presetSurrealization', { n: 35 }) },
 ] as const
 const STANDARD = PRESETS[0]
 const factorA = ref<number>(STANDARD.a)
@@ -684,12 +709,23 @@ const pooledOptions = computed<ChipOption[]>(() => [
 function setPooled(v: string | string[]) {
   pooled.value = recordedPooled(v)
 }
-/** The field whose point the three factors, the layout and the pooled vector stand on; none while they stand elsewhere. */
+/** The CLIP encoders the block and the pooled vector are read from (lib/fusionSetting, `ClipEncoder`). */
+const clipEncoder = ref<ClipEncoder>(STANDARD.clip)
+/** The three fields in the line of a, before the pool's two. */
+const clipEncoderOptions = computed<ChipOption[]>(() => [
+  { value: 'clip_l', label: t('surrealizer.clipEncoderL'), title: t('surrealizer.clipEncoderLTitle') },
+  { value: 'clip_g', label: t('surrealizer.clipEncoderG'), title: t('surrealizer.clipEncoderGTitle') },
+  { value: 'both', label: t('surrealizer.clipEncoderBoth'), title: t('surrealizer.clipEncoderBothTitle') },
+])
+function setClipEncoder(v: string | string[]) {
+  clipEncoder.value = recordedClipEncoder(v)
+}
+/** The field whose point the three factors, the layout, the pooled vector and the CLIP encoders stand on; none while they stand elsewhere. */
 const activePreset = computed(() =>
   PRESETS.find(p => p.a === factorA.value && p.b === factorB.value && p.c === factorC.value
-    && p.rows === t5Rows.value && p.pooled === pooled.value)?.id ?? '')
+    && p.rows === t5Rows.value && p.pooled === pooled.value && p.clip === clipEncoder.value)?.id ?? '')
 const presetOptions = computed<ChipOption[]>(() =>
-  PRESETS.map(p => ({ value: p.id, label: p.name(), title: factorLabel(p.a, p.b, p.c, p.rows, p.pooled) })))
+  PRESETS.map(p => ({ value: p.id, label: p.name(), title: factorLabel(p.a, p.b, p.c, p.rows, p.pooled, p.clip) })))
 function applyPreset(id: string | string[]) {
   const preset = PRESETS.find(p => p.id === id)
   if (!preset) return
@@ -698,18 +734,20 @@ function applyPreset(id: string | string[]) {
   factorC.value = preset.c
   t5Rows.value = preset.rows
   pooled.value = preset.pooled
+  clipEncoder.value = preset.clip
 }
 /** The rows of the CLIP block; the rows of T5 that b pairs with it. */
 const CLIP_ROWS = 77
 /**
- * a and b stand on the axis the alpha stood on: ±75 (the fp16 cliff), the
+ * a, b and c stand on the axis the alpha stood on: ±75 (the fp16 cliff), the
  * band −1..1 taking 30 % of the track's each half, logarithmic past it, whole
- * numbers holding the handle (lib/fusionWeights). The step of 0.05 is the
- * slider's; the node takes any value in its range. c stands on a linear
- * 0..1 in the same steps.
+ * numbers holding the handle (lib/fusionWeights). The track runs on the
+ * positions −1000..1000 and the factor is read off them in hundredths; the node takes any
+ * value in its range. c stood on a linear 0..1 in steps of 0.05 until
+ * 2026-11-15: a negative c is the same product on T5's rows that a negative b
+ * already put into the CLIP block.
  */
 const FACTOR_SCALE: AlphaScale = { min: -75, max: 75, step: 0.05, band: { lo: -1, mid: 0, hi: 1 } }
-const C_RANGE = Object.freeze({ min: 0, max: 1, step: 0.05 })
 /**
  * The name of a stored run made before the three factors, on its card: the
  * position of the switch it ran under, or, for a strategy this page never had
@@ -734,11 +772,13 @@ function runSub(strategy: string, sphere = false): string {
 }
 /**
  * In the card's bar: the three factors of a run, its layout where that is
- * the old one, and its pooled vector where zeros stand in its place, in the
- * words the favourites panel uses for the same record (lib/fusionSetting).
+ * the old one, its CLIP encoder where one runs alone, and its pooled vector
+ * where zeros stand in its place, in the words the favourites panel uses for
+ * the same record (lib/fusionSetting).
  */
-function factorLabel(a: number, b: number, c: number, rows: T5Rows = 'full', pool: Pooled = 'clip'): string {
-  return fusionSettingLabel(a, b, c, rows, pool, locale.value)
+function factorLabel(a: number, b: number, c: number, rows: T5Rows = 'full', pool: Pooled = 'clip',
+  clip: ClipEncoder = 'both'): string {
+  return fusionSettingLabel(a, b, c, rows, pool, clip, locale.value)
 }
 const isExecuting = ref(false)
 const generationErrorMessage = ref('')
@@ -803,7 +843,10 @@ function cardFor(run: InstrumentRun): DrawerItem | null {
   const setting = parseFusionStrategy(String(params.fusion_strategy ?? ''))
   return {
     id: pipelineRunId,
-    label: threeFactors ? factorLabel(fa, fb, fc, recordedRows(params.t5_rows), recordedPooled(params.pooled)) : `\u03b1 ${fmt(axis)}`,
+    label: threeFactors
+      ? factorLabel(fa, fb, fc, recordedRows(params.t5_rows), recordedPooled(params.pooled),
+        recordedClipEncoder(params.clip_encoder))
+      : `\u03b1 ${fmt(axis)}`,
     sub: threeFactors ? '' : (setting.base ? runSub(setting.base, setting.sphere) : ''),
     meta: [`seed: ${params.seed ?? ''}`],
     prompt: String(params.prompt ?? ''),
@@ -837,7 +880,7 @@ const randomSeed = ref(false)
  */
 function inputsKey(): string {
   return JSON.stringify([inputText.value, factorA.value, factorB.value, factorC.value,
-    t5Rows.value, pooled.value, negativePrompt.value, cfgScale.value])
+    t5Rows.value, pooled.value, clipEncoder.value, negativePrompt.value, cfgScale.value])
 }
 const seedAutomatic = useSeedAutomatic(seed, randomSeed, 'lat_lab_ef_seed_yardstick')
 
@@ -878,6 +921,8 @@ const seedAutomatic = useSeedAutomatic(seed, randomSeed, 'lat_lab_ef_seed_yardst
   if (s('lat_lab_ef_t5_rows') === 'tail') t5Rows.value = 'tail'
   // The pooled vector: only its two names count; anything else leaves the vector.
   if (s('lat_lab_ef_pooled') === 'zero') pooled.value = 'zero'
+  // The CLIP encoders: only their names count; anything else leaves both.
+  clipEncoder.value = recordedClipEncoder(s('lat_lab_ef_clip_encoder'))
   if (s('lat_lab_ef_negative')) negativePrompt.value = s('lat_lab_ef_negative')!
   if (s('lat_lab_ef_cfg')) cfgScale.value = parseFloat(s('lat_lab_ef_cfg')!) || 5.5
   // parseInt, not `|| 123456789`: a seed of 0 is a seed.
@@ -888,13 +933,14 @@ const seedAutomatic = useSeedAutomatic(seed, randomSeed, 'lat_lab_ef_seed_yardst
 
 // Session persistence — save on change
 watch(inputText, v => sessionStorage.setItem('lat_lab_ef_prompt', v))
-watch([factorA, factorB, factorC, t5Rows, pooled,
+watch([factorA, factorB, factorC, t5Rows, pooled, clipEncoder,
        negativePrompt, cfgScale, seed, randomSeed], () => {
   sessionStorage.setItem('lat_lab_ef_a', String(factorA.value))
   sessionStorage.setItem('lat_lab_ef_b', String(factorB.value))
   sessionStorage.setItem('lat_lab_ef_c', String(factorC.value))
   sessionStorage.setItem('lat_lab_ef_t5_rows', t5Rows.value)
   sessionStorage.setItem('lat_lab_ef_pooled', pooled.value)
+  sessionStorage.setItem('lat_lab_ef_clip_encoder', clipEncoder.value)
   sessionStorage.setItem('lat_lab_ef_negative', negativePrompt.value)
   sessionStorage.setItem('lat_lab_ef_cfg', String(cfgScale.value))
   sessionStorage.setItem('lat_lab_ef_seed', String(seed.value))
@@ -969,6 +1015,10 @@ const posB = computed({
   get: () => alphaToPos(factorB.value, FACTOR_SCALE),
   set: (p: number) => { factorB.value = posToAlpha(p, FACTOR_SCALE) },
 })
+const posC = computed({
+  get: () => alphaToPos(factorC.value, FACTOR_SCALE),
+  set: (p: number) => { factorC.value = posToAlpha(p, FACTOR_SCALE) },
+})
 
 /** A factor in the reader's language, two decimals (lib/fusionSetting). */
 function fmt(x: number) {
@@ -980,7 +1030,7 @@ function fmtMark(x: number) {
 }
 
 /**
- * The marks on a and on b: the two ends, 0, and 1, the factor a block stands
+ * The marks on a, b and c: the two ends, 0, and 1, the factor a block stands
  * on unchanged. Numbers alone; the axis is compact.
  */
 const factorMarks = computed(() => {
@@ -988,11 +1038,6 @@ const factorMarks = computed(() => {
   const pct = (v: number) => ((alphaToPos(v, FACTOR_SCALE) - ALPHA_POSITIONS.min) / span) * 100
   return [FACTOR_SCALE.min, 0, 1, FACTOR_SCALE.max].map(v => ({ value: fmtMark(v), pct: pct(v) }))
 })
-/** The marks on c: its two ends. */
-const C_MARKS = computed(() => [
-  { value: fmtMark(C_RANGE.min), pct: 0 },
-  { value: fmtMark(C_RANGE.max), pct: 100 },
-])
 
 // The sliders cannot leave their axes, but a stored or restored factor can.
 // The watcher catches a restore; the read from storage above calls this
@@ -1001,7 +1046,7 @@ function clampFactors() {
   const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v))
   const a = clamp(factorA.value, FACTOR_SCALE.min, FACTOR_SCALE.max)
   const b = clamp(factorB.value, FACTOR_SCALE.min, FACTOR_SCALE.max)
-  const c = clamp(factorC.value, C_RANGE.min, C_RANGE.max)
+  const c = clamp(factorC.value, FACTOR_SCALE.min, FACTOR_SCALE.max)
   if (a !== factorA.value) factorA.value = a
   if (b !== factorB.value) factorB.value = b
   if (c !== factorC.value) factorC.value = c
@@ -1214,13 +1259,14 @@ async function executeWorkflow() {
     const sent = Object.freeze({
       prompt: inputText.value,
       // The three factors, as they stand on the sliders, the layout of the
-      // T5 block and the pooled vector, as the fields in the lines of c and
-      // a have them.
+      // T5 block, the pooled vector and the CLIP encoders, as the fields in
+      // the lines of c and a have them.
       a: factorA.value,
       b: factorB.value,
       c: factorC.value,
       rows: t5Rows.value,
       pooled: pooled.value,
+      clip: clipEncoder.value,
       negative: negativePrompt.value,
       cfg: cfgScale.value,
     })
@@ -1236,6 +1282,7 @@ async function executeWorkflow() {
       factor_c: sent.c,
       t5_rows: sent.rows,
       pooled: sent.pooled,
+      clip_encoder: sent.clip,
       seed: runSeed,
       negative_prompt: sent.negative,
       cfg: sent.cfg,
@@ -1264,7 +1311,7 @@ async function executeWorkflow() {
           runs.value.push({
             id: runId,
             // In the card's bar: what tells two runs of this instrument apart.
-            label: factorLabel(sent.a, sent.b, sent.c, sent.rows, sent.pooled),
+            label: factorLabel(sent.a, sent.b, sent.c, sent.rows, sent.pooled, sent.clip),
             sub: '',
             // On its back, with the prompt and the model's sheet: the record.
             meta: [`seed: ${lastRunSeed.value ?? runSeed}`],
@@ -1287,6 +1334,7 @@ async function executeWorkflow() {
             factor_a: sent.a, factor_b: sent.b, factor_c: sent.c,
             t5_rows: sent.rows,
             pooled: sent.pooled,
+            clip_encoder: sent.clip,
             // The name the chunk reports for a run of the three factors, so
             // that a record of this run and a record of an alpha run are told
             // apart by the same field.
@@ -1494,6 +1542,7 @@ watch(() => favoritesStore.pendingRestoreData, (restoreData) => {
     factorC.value = factors.c
     t5Rows.value = factors.rows
     pooled.value = factors.pooled
+    clipEncoder.value = factors.clip
     if (!factors.exact) readWhole = false
   } else {
     readWhole = false
@@ -1750,15 +1799,42 @@ const folded = ref(false)
   color: #fff;
 }
 
-/* The two fields in a factor's line between the name and the number: in the
-   line of a for the pooled vector, in the line of c for the T5 block's rows.
-   Two columns as wide as their labels, at the line's own step. The selector
-   outranks the component's own `.chip-select` rule, whose columns are equal,
-   each as wide as the wider label. */
+/* The fields in a factor's line between the name and the number: in the
+   line of a the three CLIP encoders and, apart from them, the pooled vector's
+   two; in the line of c the T5 block's rows. Columns as wide as their
+   labels, at the line's own step. The selector outranks the component's own
+   `.chip-select` rule, whose columns are equal, each as wide as the wider
+   label. */
 .ef-factor-line .ef-switch {
   grid-template-columns: auto auto;
   gap: 0.3rem;
   margin-inline-start: 4px;
+}
+.ef-factor-line .ef-switch-three {
+  grid-template-columns: auto auto auto;
+}
+/* The line of a: name and number on the first row, the five fields on a
+   row of their own under them, the CLIP encoders' three, a gap (since
+   2026-11-15), the pool's two. The fields of this row take a narrower
+   padding so that the five fit the column of the reference device. */
+.ef-factor-line-a {
+  flex-wrap: wrap;
+  row-gap: 3px;
+}
+.ef-switches {
+  order: 1;
+  flex: 1 0 100%;
+  display: flex;
+  align-items: center;
+}
+.ef-switches .ef-switch {
+  margin-inline-start: 0;
+}
+.ef-switches .ef-switch-apart {
+  margin-inline-start: 0.75rem;
+}
+.ef-switches .ef-switch :deep(.chip-select-option) {
+  padding: 0.12rem 0.4rem;
 }
 .ef-switch :deep(.chip-select-option) {
   padding: 0.12rem 0.55rem;

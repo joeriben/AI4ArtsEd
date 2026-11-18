@@ -153,16 +153,27 @@ The `resona`-scoped set in `tool_registry.py` is what Resona can reach:
 default scope), `generate_media`, `compose_media`, `remember`, `recall`,
 `lookup_shared_favorites`, `view_favorite`, `view_upload`, `view_run`,
 `run_canvas_graph`, `canvas_graph_library`, `search_websites`, `read_webpage`,
-`lookup_knowledge`, `read_knowledge`.
+`lookup_knowledge`, `read_knowledge`, and with the default scope
+`lookup_scenarios` and `read_scenario`. Resona's turn hands the tools the
+context key `board`: `lookup_place` then lists a page's teaching scenarios by
+title, setting, the opening of its text and subject link, and `read_scenario`
+gives one in full (2026-11-15). The rule that a proposal introduces a scenario
+before building on it stands in the shared language of the core prompt, so it
+holds in every situation; the evidence duty takes the platform's page names out
+of a reply before it looks for discourse signals.
 
 An apparatus Resona authors leaves the conversation in the Canvas's own export
 format and opens there ready to run: the model roles are filled from the
 configured settings, the authored question stands on the surface, the inputs of
 a comparison are numbered, and a collector gathers every node that feeds nothing
 further plus every generation node (`canvas_graph_authoring.py`). What the turn
-worked with — an apparatus, a note, a library document, a web page — gets a
-square anchor on the board, the name on the front, an excerpt and the reference
-on the back (`resona_entities.py`, `ResonaEntityCard` / `ResonaEntityCardBack`).
+worked with — an apparatus, a note, a library document, a web page, a teaching
+scenario opened with `read_scenario` — gets a square anchor on the board, the
+name on the front, an excerpt and the reference on the back
+(`resona_entities.py`, `ResonaEntityCard` / `ResonaEntityCardBack`). The
+scenario's card opens at 300 × 300 px and its back holds the scenario in the
+report's English wording, one paragraph per part, because no page of the
+platform shows the scenarios. Only a turn with a board lays anchors down.
 
 **What V 1.0 fixed rather than offered.** The platform's own notices — a reply
 that did not arrive, a reply that broke off — used to be written into the

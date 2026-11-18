@@ -76,12 +76,29 @@ async function authenticate() {
     if (response.ok) {
       emit('authenticated')
       closeModal()
-    } else if (response.status === 403) {
-      error.value = t('settings.authIncorrectPassword')
-      password.value = ''
     } else {
-      const data = await response.json()
-      error.value = data.error || t('settings.authError')
+      const data = await response.json().catch(() => ({}))
+      // A device signed in as a place opens no settings; the server tries no
+      // password for it (devserver/my_app/routes/settings_routes.py).
+      // Where the sign-in of this browser ended while the dialog stood, the
+      // gate refuses the password unread (lib/signInLapse.ts). A password
+      // earlier versions built into the code opens nothing, and without
+      // settings_password.key no password does (2026-11-15).
+      const known: Record<string, string> = {
+        place_cannot_open_settings: 'settings.authPlaceRefused',
+        sign_in_required: 'settings.authSignInEnded',
+        published_password: 'settings.authPublishedPassword',
+        settings_password_not_set: 'settings.authNotSet',
+      }
+      const key = known[data.error]
+      if (key) {
+        error.value = t(key)
+      } else if (response.status === 403) {
+        error.value = t('settings.authIncorrectPassword')
+      } else {
+        error.value = data.error || t('settings.authError')
+      }
+      if (response.status === 403) password.value = ''
     }
   } catch (e) {
     error.value = 'Connection error'

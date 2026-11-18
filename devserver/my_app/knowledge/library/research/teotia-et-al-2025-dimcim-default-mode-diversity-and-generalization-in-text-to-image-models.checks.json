@@ -1,0 +1,801 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 10.7% of 2576 words, ceiling 20%, longest run 20 words; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 20,
+     "text": "models improve in generalization at the cost of default mode diversity when scaling from 1 5b to 8 1b parameters"
+    },
+    {
+     "words": 19,
+     "text": "the difference between the mean image attribute score of attribute a and the mean image attribute score of all"
+    },
+    {
+     "words": 15,
+     "text": "30 concepts 494 attributes 930 coarse prompts and 14 641 dense prompts each concept has"
+    },
+    {
+     "words": 14,
+     "text": "the difference between the mean image attribute score of attribute a and the mean"
+    },
+    {
+     "words": 14,
+     "text": "a correlation of 0 85 between diversity in training images and default mode diversity"
+    }
+   ],
+   "value": 0.1071,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "3 of 5 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "DIMCIM: A Quantitative Evaluation Framework for Default-mode Diversity and Generalization in Text-to-Image Generative Models (p. 1–18)",
+     "page": 2,
+     "expected_items": 6,
+     "first_item": "We propose DIMCIM, a new quantitative assessment for both default-mode diversity",
+     "output_lists": [
+      5,
+      3,
+      5,
+      2,
+      3,
+      4,
+      4,
+      3
+     ]
+    },
+    {
+     "section": "DIMCIM: A Quantitative Evaluation Framework for Default-mode Diversity and Generalization in Text-to-Image Generative Models (p. 1–18)",
+     "page": 6,
+     "table_cells": 15,
+     "missing_cells": [
+      "LDM2.1 (1.5B) (Rombach et al., 2022)",
+      "LDM3.5L (8.1B) (Esser et al., 2024)",
+      "FLUX.1-dev (12B) (Labs, 2024)"
+     ]
+    },
+    {
+     "section": "DIMCIM: A Quantitative Evaluation Framework for Default-mode Diversity and Generalization in Text-to-Image Generative Models (p. 1–18)",
+     "page": 6,
+     "table_cells": 12,
+     "missing_cells": [
+      "Model (CFG scale)",
+      "Flow-Int (2.0 CFG)",
+      "Flow-Int (5.0 CFG)",
+      "Flow-Int (7.5 CFG)"
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "10 of 56 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "DIMCIM: A Quantitative Evaluation Framework for Default-mode Diversity and Generalization in Text-to-Image Generative Models (p. 1–18)",
+     "page": 1,
+     "number": "2025"
+    },
+    {
+     "section": "DIMCIM: A Quantitative Evaluation Framework for Default-mode Diversity and Generalization in Text-to-Image Generative Models (p. 1–18)",
+     "page": 1,
+     "number": "2741"
+    },
+    {
+     "section": "DIMCIM: A Quantitative Evaluation Framework for Default-mode Diversity and Generalization in Text-to-Image Generative Models (p. 1–18)",
+     "page": 2,
+     "number": "5.1"
+    },
+    {
+     "section": "DIMCIM: A Quantitative Evaluation Framework for Default-mode Diversity and Generalization in Text-to-Image Generative Models (p. 1–18)",
+     "page": 2,
+     "number": "5.2"
+    },
+    {
+     "section": "DIMCIM: A Quantitative Evaluation Framework for Default-mode Diversity and Generalization in Text-to-Image Generative Models (p. 1–18)",
+     "page": 4,
+     "number": "3.2"
+    },
+    {
+     "section": "DIMCIM: A Quantitative Evaluation Framework for Default-mode Diversity and Generalization in Text-to-Image Generative Models (p. 1–18)",
+     "page": 4,
+     "number": "3.3"
+    },
+    {
+     "section": "DIMCIM: A Quantitative Evaluation Framework for Default-mode Diversity and Generalization in Text-to-Image Generative Models (p. 1–18)",
+     "page": 5,
+     "number": "2020"
+    },
+    {
+     "section": "DIMCIM: A Quantitative Evaluation Framework for Default-mode Diversity and Generalization in Text-to-Image Generative Models (p. 1–18)",
+     "page": 6,
+     "number": "5.2.1"
+    },
+    {
+     "section": "DIMCIM: A Quantitative Evaluation Framework for Default-mode Diversity and Generalization in Text-to-Image Generative Models (p. 1–18)",
+     "page": 7,
+     "number": "5.2.2"
+    },
+    {
+     "section": "DIMCIM: A Quantitative Evaluation Framework for Default-mode Diversity and Generalization in Text-to-Image Generative Models (p. 1–18)",
+     "page": 9,
+     "number": "6.1"
+    }
+   ],
+   "value": 10.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "19 of 21 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "DIMCIM: A Quantitative Evaluation Framework for Default-mode Diversity and Generalization in Text-to-Image Generative Models (p. 1–18)",
+     "page": 1,
+     "heading": "1 Introduction"
+    },
+    {
+     "section": "DIMCIM: A Quantitative Evaluation Framework for Default-mode Diversity and Generalization in Text-to-Image Generative Models (p. 1–18)",
+     "page": 3,
+     "heading": "3 DIMCIMFramework"
+    },
+    {
+     "section": "DIMCIM: A Quantitative Evaluation Framework for Default-mode Diversity and Generalization in Text-to-Image Generative Models (p. 1–18)",
+     "page": 3,
+     "heading": "3.1 Preliminary Definitions"
+    },
+    {
+     "section": "DIMCIM: A Quantitative Evaluation Framework for Default-mode Diversity and Generalization in Text-to-Image Generative Models (p. 1–18)",
+     "page": 4,
+     "heading": "3.2 Attribute-Concept Scoring"
+    },
+    {
+     "section": "DIMCIM: A Quantitative Evaluation Framework for Default-mode Diversity and Generalization in Text-to-Image Generative Models (p. 1–18)",
+     "page": 4,
+     "heading": "3.3 SummaryStatistics"
+    },
+    {
+     "section": "DIMCIM: A Quantitative Evaluation Framework for Default-mode Diversity and Generalization in Text-to-Image Generative Models (p. 1–18)",
+     "page": 5,
+     "heading": "4 COCO-DIMCIMDataset"
+    },
+    {
+     "section": "DIMCIM: A Quantitative Evaluation Framework for Default-mode Diversity and Generalization in Text-to-Image Generative Models (p. 1–18)",
+     "page": 6,
+     "heading": "5 Experiments"
+    },
+    {
+     "section": "DIMCIM: A Quantitative Evaluation Framework for Default-mode Diversity and Generalization in Text-to-Image Generative Models (p. 1–18)",
+     "page": 6,
+     "heading": "5.1 Overall DIMCIM results"
+    },
+    {
+     "section": "DIMCIM: A Quantitative Evaluation Framework for Default-mode Diversity and Generalization in Text-to-Image Generative Models (p. 1–18)",
+     "page": 6,
+     "heading": "5.2 Finding model failure modes"
+    },
+    {
+     "section": "DIMCIM: A Quantitative Evaluation Framework for Default-mode Diversity and Generalization in Text-to-Image Generative Models (p. 1–18)",
+     "page": 6,
+     "heading": "5.2.1 Pinpointing default-mode bias with Does-It Metric"
+    },
+    {
+     "section": "DIMCIM: A Quantitative Evaluation Framework for Default-mode Diversity and Generalization in Text-to-Image Generative Models (p. 1–18)",
+     "page": 7,
+     "heading": "5.2.2 FindinggeneralizationfailureswithCan-ItMetric"
+    },
+    {
+     "section": "DIMCIM: A Quantitative Evaluation Framework for Default-mode Diversity and Generalization in Text-to-Image Generative Models (p. 1–18)",
+     "page": 8,
+     "heading": "5.3 Training data investigation"
+    },
+    {
+     "section": "DIMCIM: A Quantitative Evaluation Framework for Default-mode Diversity and Generalization in Text-to-Image Generative Models (p. 1–18)",
+     "page": 9,
+     "heading": "6 Discussion"
+    },
+    {
+     "section": "DIMCIM: A Quantitative Evaluation Framework for Default-mode Diversity and Generalization in Text-to-Image Generative Models (p. 1–18)",
+     "page": 9,
+     "heading": "6.1 Limitations"
+    },
+    {
+     "section": "DIMCIM: A Quantitative Evaluation Framework for Default-mode Diversity and Generalization in Text-to-Image Generative Models (p. 1–18)",
+     "page": 12,
+     "heading": "A Flow-Int Training Details"
+    },
+    {
+     "section": "DIMCIM: A Quantitative Evaluation Framework for Default-mode Diversity and Generalization in Text-to-Image Generative Models (p. 1–18)",
+     "page": 12,
+     "heading": "B Examples of model generalization capacity analysis through DIMCIM"
+    },
+    {
+     "section": "DIMCIM: A Quantitative Evaluation Framework for Default-mode Diversity and Generalization in Text-to-Image Generative Models (p. 1–18)",
+     "page": 15,
+     "heading": "C Example plots to show that model default-mode diversity reflects training data diversity"
+    },
+    {
+     "section": "DIMCIM: A Quantitative Evaluation Framework for Default-mode Diversity and Generalization in Text-to-Image Generative Models (p. 1–18)",
+     "page": 16,
+     "heading": "D COCO-DIMCIMdataset creation figure"
+    },
+    {
+     "section": "DIMCIM: A Quantitative Evaluation Framework for Default-mode Diversity and Generalization in Text-to-Image Generative Models (p. 1–18)",
+     "page": 17,
+     "heading": "E Meta-prompts for instructing the LLM"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "12 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "12 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "62 quoted texts in 8 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Fig. 1",
+     "page": 2,
+     "image": "fig-001-p2.png",
+     "quotes": [
+      "\"A refrigerator in a kitchen\"",
+      "\"T2I Model\"",
+      "\"Low DIM\"",
+      "\"No, it doesn't generate diverse colors by default\"",
+      "\"Can it generate diverse attributes?\"",
+      "\"A white refrigerator in a kitchen\"",
+      "\"A red refrigerator in a kitchen\"",
+      "\"A black refrigerator in a kitchen\"",
+      "\"T2I Model\"",
+      "\"High CIM\"",
+      "\"Yes, it can generate diverse colors when prompted\""
+     ]
+    },
+    {
+     "figure": "Fig. 2",
+     "page": 4,
+     "image": "fig-002-p4.png",
+     "quotes": [
+      "\"1) image generation\"",
+      "\"2) image-attribute scoring\"",
+      "\"3) attribute-concept scoring\"",
+      "\"wooden dining table\"",
+      "\"glass dining table\"",
+      "\"plastic dining table\"",
+      "\"S(prompt, metal) = 0.90 - 0.39 = 0.51\"",
+      "\"Mean metal score 0.90\"",
+      "\"Mean others score 0.39\""
+     ]
+    },
+    {
+     "figure": "Fig. 3",
+     "page": 7,
+     "image": "fig-003-p7.png",
+     "quotes": [
+      "“airplane attributes”",
+      "“type: cargo”",
+      "“type: military”",
+      "“type: passenger”",
+      "“type: private”",
+      "“table attributes”",
+      "“material: glass”",
+      "“material: metal”",
+      "“material: plastic”",
+      "“material: wooden”",
+      "“bird attributes”",
+      "“state: flying”",
+      "“state: perched”",
+      "“state: swimming”",
+      "“state: walking”",
+      "“LDM-2.1”"
+     ]
+    },
+    {
+     "figure": "Fig. 6",
+     "page": 9,
+     "image": "fig-006-p9.png",
+     "quotes": [
+      "“Concept: bowl”",
+      "“Correlation: 0.97”",
+      "“Concept: bird”",
+      "“Correlation: 0.82.”",
+      "“Training data Does-It Metric”",
+      "“Model Does-It Metric,”",
+      "“plastic,”",
+      "“glass,”",
+      "“metal,”",
+      "“perched,”",
+      "“walking,”",
+      "“swimming”",
+      "“Attribute types,”"
+     ]
+    },
+    {
+     "figure": "Fig. 9",
+     "page": 14,
+     "image": "fig-009-p14.png",
+     "quotes": [
+      "“LDM-2.1,”"
+     ]
+    },
+    {
+     "figure": "Fig. 10",
+     "page": 14,
+     "image": "fig-010-p14.png",
+     "quotes": [
+      "“material: ceramic,”",
+      "“material: wooden,”",
+      "“pattern: floral,”",
+      "“pattern: striped,”",
+      "“breed: Bulldog,”",
+      "“breed: Poodle.”"
+     ]
+    },
+    {
+     "figure": "Fig. 11",
+     "page": 15,
+     "image": "fig-011-p15.png",
+     "quotes": [
+      "“Concept: airplane,”",
+      "“Concept: boat,”",
+      "“Concept: clock,”",
+      "“Concept: table,”",
+      "“Concept: cow.”"
+     ]
+    },
+    {
+     "figure": "Fig. 12",
+     "page": 16,
+     "image": "fig-012-p16.png",
+     "quotes": [
+      "“Attribute generation + manual filtering”"
+     ]
+    }
+   ],
+   "value": 62.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "28 page references valid (printed-folio pages 1–18)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "18 pages checked, 1 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "5 of 7 passages out of order not repairable, none breaks a sentence of the body text",
+   "findings": [
+    {
+     "page": 7,
+     "words": 66,
+     "text": "attribute type state, we find that the “perched” attribute has high Does-it Metric scores, even though some of the other states, e.g. “flying,” are also common realworld occurrences. this result is co",
+     "blocks": [
+      "#/texts/213",
+      "#/texts/214"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 48,
+     "text": "Interestingly, we Note that the Can-it Metric scores of These under-represented attributes are still high: when specifically asked to generate These attributes through dense prompts, the Models are ab",
+     "blocks": [
+      "#/texts/214",
+      "#/texts/216",
+      "#/texts/217"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 8,
+     "words": 15,
+     "text": "identifying new Generalization failure modes DIMCIM identifies a new failure mode where Models have low",
+     "blocks": [
+      "#/texts/306",
+      "#/texts/308"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 8,
+     "words": 114,
+     "text": "Can-it Metric scores but high Does-it Metric scores. For example, Most Models fail to differentiate between “open” and “closed” attributes when explicitly asked to do so through dense prompts. Sometim",
+     "blocks": [
+      "#/texts/306",
+      "#/texts/308"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 8,
+     "words": 72,
+     "text": "T2I Models struggle with negations. For example, Figure 4 shows that all Models have low Can-it Metric scores for the concept bed when negation attributes “Without blanket” and “Without pillows,” gene",
+     "blocks": [
+      "#/texts/307",
+      "#/texts/310"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    }
+   ],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "teotia-et-al-2025-dimcim-default-mode-diversity-and-generalization-in-text-to-image-models",
+ "doc_type": "scholarly_article",
+ "analyzed_at": "2026-11-15T11:59:13.673968+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "DIMCIM: A Quantitative Evaluation Framework for Default-mode Diversity and Generalization in Text-to-Image Generative Models",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 18,
+   "chars": 47811,
+   "blocks": 105,
+   "inner_headings": 21,
+   "figures": 12
+  }
+ ],
+ "skipped": [
+  "References (p. 10)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 18,
+  "gaps": [
+   {
+    "page": 16,
+    "text": "D COCO-DIMCIM dataset creation Figure Figure 12 shows a flow chart of COCO-DIMCIM dataset creation process. It shows how we use llms to collect attributes, coarse prompts and dense prompts from seed prompts as explained in Section 4. color-brown: A brown table in a living room. COCO captions color-white: A white table in a living room. with selected concept (table) A table in a living room. ... coarse prompts as main subject LLM A table sitting Under a ceiling fan. material-plastic: A plastic table in a living room. generation … material-metal: A metal table in a living room. A table with boxes on it. ... A wooden table in a living ... room. coarse prompts color-brown: A brown table sitting Under a ceiling fan. A red table sitting Under a w/ no visual attributes for the LLM color-white: A white table sitting Under a ceiling fan. ceiling fan. concept (table) ... … material-plastic: A plastic table sitting Under a ceiling fan. A yellow table with boxes on it. material-metal: A metal table sitting Under a ceiling fan. material: [wooden, metal, plastic] … attribute generation color: [brown, white, black, gray] ... seed prompts LLM shape: [rectangular, round] color-brown: A brown table with boxes on it. + manual filtering ... … possible visual attributes for dense prompts the concept (table) after adding attributes to coarse prompts Figure 12 COCO-DIMCIM dataset creation: For a concept (table in this example), we start by randomly selecting captions from COCO Lin et al. (2015) as seed prompts. We then use an LLM (Llama3.1 Team (2024)) to generate coarse prompts from seed prompts and find possible concept attributes. To generate dense prompts from a coarse prompt, we use the LLM (Llama3.1 Team (2024)) to inject attributes from the possible visual attributes to the coarse prompt, Thus creating multiple dense prompts with different visual attributes. 16",
+    "words": 309,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/903"
+   }
+  ],
+  "gaps_dismissed": [
+   {
+    "page": 4,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "3.3 summary Statistics"
+   },
+   {
+    "page": 7,
+    "words": 49,
+    "reason": "duplicate",
+    "text": "Default-mode bias Flow-Int images LDM3.5L images Flux images model capacity dense prompts: \"a military airplane in ...\" \"military\" airplane CIM Score = 0.56 dense prompts: \"a glass table in ...\" \"glas"
+   },
+   {
+    "page": 8,
+    "words": 42,
+    "reason": "duplicate",
+    "text": "color: easy for all Models negation: tough for all Models convertible car: tough for some Models Can-it? Metric plots dense \"blue bowl on ...\" \"a bed Without pillows in ...\" \"a convertible car in ...\""
+   },
+   {
+    "page": 9,
+    "words": 43,
+    "reason": "duplicate",
+    "text": "| dense prompts: | coarse prompts: |\n| \"bird with closed wings in ..\" | \"bird in ...\" |\n| \"closed wings\" CIM Score: -0.44 | both closed and open wings |\n| dense prompts: | coarse prompts: |\n| \"full re"
+   },
+   {
+    "page": 13,
+    "words": 43,
+    "reason": "duplicate",
+    "text": "empty fridge: tough for some Models broken umbrella: tough for some Models horse age: tough for some Models Can-it? Metric plots dense \"an empty refrigerator in ...\" \"a broken umbrella is ...\" \"a foal"
+   },
+   {
+    "page": 13,
+    "words": 43,
+    "reason": "duplicate",
+    "text": "inverted bowls: tough for all Models curly dog: tough for some Models boat location: tough for some Models Can-it? Metric plots dense \"an inverted bowl on ...\" \"a curly dog in ...\" \"a … boat on land\" "
+   },
+   {
+    "page": 14,
+    "words": 46,
+    "reason": "duplicate",
+    "text": "negation: tough for all Models negation: tough for all Models negation: tough for all Models Can-it? Metric plots dense \"a suitcase Without wheels on ...\" \"an elephant with no tusks in ...\" \"a bed wit"
+   },
+   {
+    "page": 14,
+    "words": 41,
+    "reason": "duplicate",
+    "text": "Materials: easy for all Models patterns: easy for all Models dog breeds: easy for all Models Can-it? Metric plots dense \"wooden bowl on ...\" \"a floral suitcase on ...\" \"a Poodle dog in ...\" prompts Fl"
+   },
+   {
+    "page": 15,
+    "words": 33,
+    "reason": "duplicate",
+    "text": "concept: dog correlation: 0.93 0.3 0.2 model Does-it? Metric 0.1 0.0 0.1 attribute types action 0.2 age breed coat_type 0.3 color state 0.3 0.2 0.1 0.0 0.1 0.2 0.3 training data Does-it? Metric"
+   }
+  ],
+  "captions_reclassified": [],
+  "captions_reassigned": [],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [],
+  "superseded": [
+   {
+    "page": 16,
+    "ref": "#/texts/905",
+    "text": "Figure 12 shows a flow chart of COCO-DIMCIM dataset creation process. It shows how we use LLMs to collect attributes, co"
+   }
+  ],
+  "replaced_pages": [
+   16
+  ],
+  "noise_dropped": 1,
+  "hyphens_restored": [
+   {
+    "page": 6,
+    "ref": "#/texts/137",
+    "word": "InstructBLIP-Flan"
+   },
+   {
+    "page": 6,
+    "ref": "#/texts/144",
+    "word": "Does-It"
+   },
+   {
+    "page": 9,
+    "ref": "#/texts/335",
+    "word": "Does-It"
+   },
+   {
+    "page": 10,
+    "ref": "#/texts/413",
+    "word": "Romero-Soriano"
+   },
+   {
+    "page": 10,
+    "ref": "#/texts/414",
+    "word": "Marie-Francine"
+   }
+  ],
+  "order": [
+   {
+    "page": 1,
+    "text": "In Recent years, Text-to-Image (T2I) Generative Models have witnessed impressive advances, yielding unprecedented photorealistic quality. These advances have been driven by Models optimized for human preference. performance improvements for These Models are usually reported in terms of image realism and prompt-image consistency, with well-established metrics (Heusel et al., 2018; Kynkäänniemi et al., 2019; Naeem et al., 2020; Hessel et al., 2021; Hu et al., 2023b; Cho et al., 2024; Lin et al., 2024). However, optimizing for human preference alone has led to state-of-the-art Models having limited representation Diversity (Hall et al., 2024; Sehwag et al., 2022; Zameshina et al., 2023; Corso et al., 2023; Askari Hemmat et al., 2023; Hemmat et al., 2024; Sadat et al., 2023).",
+    "words": 117,
+    "refs": [
+     "#/texts/13",
+     "#/texts/14"
+    ],
+    "repaired": true,
+    "note": "2 blocks replaced by the text layer's passage",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 4,
+    "text": "Once we have calculated image-attribute scores (s(i, aj )) for all then images, we define the “attribute-concept Score” S(pc , a) as the difference between the mean image-attribute Score of attribute a and the mean image-attribute Score of all the other attributes in Ac,t . i.e.",
+    "words": 47,
+    "refs": [
+     "#/texts/114",
+     "#/texts/115",
+     "#/texts/116"
+    ],
+    "repaired": true,
+    "note": "3 blocks replaced by the text layer's passage",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "attribute type state, we find that the “perched” attribute has high Does-it Metric scores, even though some of the other states, e.g. “flying,” are also common realworld occurrences. this result is confirmed when visualizing images in Figure 3. In Section 5.3 we further explore the relationship between the (explicit or implicit) prevalence of concept-attribute pairs in the training data of the Models and their DIMCIM scores.",
+    "words": 66,
+    "refs": [
+     "#/texts/213",
+     "#/texts/214"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "Interestingly, we Note that the Can-it Metric scores of These under-represented attributes are still high: when specifically asked to generate These attributes through dense prompts, the Models are able to (last column in Figure 3). However, we also find opposite trends. For example, for the concept bird and",
+    "words": 48,
+    "refs": [
+     "#/texts/214",
+     "#/texts/216",
+     "#/texts/217"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 8,
+    "text": "identifying new Generalization failure modes DIMCIM identifies a new failure mode where Models have low",
+    "words": 15,
+    "refs": [
+     "#/texts/306",
+     "#/texts/308"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 8,
+    "text": "Can-it Metric scores but high Does-it Metric scores. For example, Most Models fail to differentiate between “open” and “closed” attributes when explicitly asked to do so through dense prompts. Sometimes they fail to consistently generate the “closed” attribute, While other times they fail to consistently generate “open” concepts. However, Models are able to generate both “open” and “closed” attributes when generating images through coarse prompts. which means that the Models fail to generate certain attributes when explicitly asked, but generates them in Default-mode. such examples of “closed-wings” birds generated by LDM3.5L (Esser et al., 2024) and “full” refrigerators generated by Flow-Int are shown in Figure 5. We include more examples in the Supplementary Materials.",
+    "words": 114,
+    "refs": [
+     "#/texts/306",
+     "#/texts/308"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 8,
+    "text": "T2I Models struggle with negations. For example, Figure 4 shows that all Models have low Can-it Metric scores for the concept bed when negation attributes “Without blanket” and “Without pillows,” generating images of blankets and pillows even when explicitly asked not to generate those. this is also observed by previous work (Conwell et al., 2024), and demonstrates the efficacy of DIMCIM in serving as an automatic identifier of established failure modes.",
+    "words": 72,
+    "refs": [
+     "#/texts/307",
+     "#/texts/310"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   }
+  ],
+  "order_pages_checked": 14,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 5,
+  "order_breaking": 0,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 1 minor; distortions: 0 material, 3 minor; additions: 0 material, 2 minor; order: 0 material, 0 minor",
+  "at": "2026-11-15T12:13:26+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 1
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 3
+   },
+   "additions": {
+    "material": 0,
+    "minor": 2
+   },
+   "order": {
+    "material": 0,
+    "minor": 0
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "DIMCIM: A Quantitative Evaluation Framework for Default-mode Diversity and Generalization in Text-to-Image Generative Models (p. 1–18)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "Recent advances in text-to-image (T2I) models have achieved impressive quality and consistency. However, this has come at the cost of representation diversity. ... optimizing for human preference alone has led to state-of-the-art Models having limited representation Diversity",
+      "severity": "minor",
+      "page": 1
+     }
+    ],
+    "distortions": [
+     {
+      "source": "the 'perched' attribute has high Does-It Metric scores, even though some of the other states, e.g. 'flying,' are also common real-world occurrences",
+      "summary": "for the concept bird (state), \"perched\" scores high even though \"flying\" is equally common in the real world",
+      "severity": "minor",
+      "page": 7
+     },
+     {
+      "source": "These works may test a few attribute-object combinations ( e.g . red dog and blue dog ), whereas we extensively generate a large number of prompts and attributes for a given concept",
+      "summary": "these test only a few attribute-object combinations, whereas DIMCIM extensively generates many prompts and attributes per concept",
+      "severity": "minor",
+      "page": 3
+     },
+     {
+      "source": "We show plots for attributes of 6 concepts (airplane, boar, clock, cow, dog, and table)",
+      "summary": "each titled \"Concept: airplane,\" \"Concept: boat,\" \"Concept: clock,\" \"Concept: table,\" \"Concept: dog,\" and \"Concept: cow.\"",
+      "severity": "minor",
+      "page": 15
+     }
+    ],
+    "additions": [
+     {
+      "summary": "Consistency metrics (including CLIPScore-style and VQA-based approaches like TIFA and VQAScore)",
+      "severity": "minor"
+     },
+     {
+      "summary": "DIMCIM uses a modified VQAScore that considers only the specific attribute-object pair, avoiding the need for an external LLM for question generation and mitigating linguistic biases",
+      "severity": "minor"
+     }
+    ],
+    "order": []
+   }
+  ]
+ },
+ "source": {
+  "source": "teotia-et-al-2025-dimcim-default-mode-diversity-and-generalization-in-text-to-image-models.pdf",
+  "bytes": 12732383,
+  "sha256": "6281f94f5cfd27c6f1883c65fbdb511417188005b727cbfb2202af5d57db76b1",
+  "extracted_at": "2026-11-13T03:08:40+01:00"
+ }
+}

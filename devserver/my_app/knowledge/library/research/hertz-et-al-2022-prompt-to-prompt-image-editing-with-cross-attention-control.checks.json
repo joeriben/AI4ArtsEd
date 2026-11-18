@@ -1,0 +1,695 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 8.4% of 2578 words, ceiling 20%, longest run 20 words; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 20,
+     "text": "e g p a castle next to a river to p children drawing of a castle next to a river"
+    },
+    {
+     "words": 15,
+     "text": "concatenating the text embedding sequence to the key value pairs of each self attention layer"
+    },
+    {
+     "words": 14,
+     "text": "e g p a big red bicycle to p a big red car the"
+    },
+    {
+     "words": 13,
+     "text": "translating a sketch into a photo realistic image and inducing an artistic style"
+    },
+    {
+     "words": 12,
+     "text": "three text conditioned diffusion models a text to image 64 64 model"
+    }
+   ],
+   "value": 0.0842,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "1 lists/tables complete",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "32 of 57 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 1,
+     "number": "1.2"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 1,
+     "number": "28"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 1,
+     "number": "33"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 1,
+     "number": "38"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 1,
+     "number": "48"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 2,
+     "number": "21"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 2,
+     "number": "27"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 2,
+     "number": "29"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 2,
+     "number": "46"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 3,
+     "number": "22"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 3,
+     "number": "23"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 3,
+     "number": "25"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 3,
+     "number": "26"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 3,
+     "number": "30"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 3,
+     "number": "31"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 3,
+     "number": "34"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 3,
+     "number": "36"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 3,
+     "number": "39"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 3,
+     "number": "41"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 3,
+     "number": "42"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 3,
+     "number": "49"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 4,
+     "number": "3.1"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 4,
+     "number": "3.2"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 4,
+     "number": "37"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 5,
+     "number": "44"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 9,
+     "number": "24"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 10,
+     "number": "35"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 10,
+     "number": "43"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 10,
+     "number": "45"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 10,
+     "number": "47"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 10,
+     "number": "50"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 10,
+     "number": "51"
+    }
+   ],
+   "value": 32.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "16 of 18 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 1,
+     "heading": "Abstract"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 1,
+     "heading": "1 Introduction"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 4,
+     "heading": "3.1 Cross-attention in text-conditioned Diffusion Models"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 5,
+     "heading": "3.2 Controlling the Cross-attention"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 6,
+     "heading": "'A photo of a butterfly on...'"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 6,
+     "heading": "Algorithm 1: Prompt-to-Prompt image editing"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 8,
+     "heading": "'A car on the side of the street.'"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 8,
+     "heading": "4 Applications"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 11,
+     "heading": "'A black bear is walking in the grass.'"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 11,
+     "heading": "5 Conclusions"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 15,
+     "heading": "A Background"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 15,
+     "heading": "A.1 Diffusion Models"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 16,
+     "heading": "A.2 Cross-attention in Imagen"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 16,
+     "heading": "B Additional results"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 17,
+     "heading": "'Photo of a cat riding on a bicycle.'"
+    },
+    {
+     "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+     "page": 18,
+     "heading": "'A photo of a bear wearing sunglasses on and having a drink.'"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "15 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "15 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "15 quoted texts in 8 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Fig. 1",
+     "page": 2,
+     "image": "fig-001-p2.png",
+     "quotes": [
+      "\"Children drawing of a castle next to a river.\""
+     ]
+    },
+    {
+     "figure": "Fig. 3",
+     "page": 4,
+     "image": "fig-003-p4.png",
+     "quotes": [
+      "“Cross Attention Control.”",
+      "“φ(z_t)”",
+      "“M_t”",
+      "“φ̂(z_t).”",
+      "“M_t,”",
+      "“M_t*,”"
+     ]
+    },
+    {
+     "figure": "Fig. 4",
+     "page": 5,
+     "image": "fig-004-p5.png",
+     "quotes": [
+      "“Average attention maps across all timesteps”",
+      "“Attention maps for individual timesteps,”"
+     ]
+    },
+    {
+     "figure": "Image 6",
+     "page": 7,
+     "image": "fig-006-p7.png",
+     "quotes": [
+      "\"Source image and prompt: 'photo of a cat riding on a bicycle.'\""
+     ]
+    },
+    {
+     "figure": "Image 7",
+     "page": 8,
+     "image": "fig-007-p8.png",
+     "quotes": [
+      "\"...convertible car...\"",
+      "\"...in the forest.\""
+     ]
+    },
+    {
+     "figure": "Image 8",
+     "page": 9,
+     "image": "fig-008-p9.png",
+     "quotes": [
+      "\"charcoal...\""
+     ]
+    },
+    {
+     "figure": "Image 9",
+     "page": 10,
+     "image": "fig-009-p10.png",
+     "quotes": [
+      "\"A photo of a birthday(↓) cake to an apple.\""
+     ]
+    },
+    {
+     "figure": "Fig. 13",
+     "page": 17,
+     "image": "fig-013-p17.png",
+     "quotes": [
+      "“ball → palace,”"
+     ]
+    }
+   ],
+   "value": 15.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "38 page references valid (printed-folio pages 1–19)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "19 pages checked, 2 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "17 pages checked, 0 passages put back in order",
+   "findings": [],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "hertz-et-al-2022-prompt-to-prompt-image-editing-with-cross-attention-control",
+ "doc_type": "scholarly_article",
+ "analyzed_at": "2026-11-15T09:29:01.608720+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "Prompt-to-Prompt Image Editing with Cross Attention Control",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 19,
+   "chars": 35551,
+   "blocks": 103,
+   "inner_headings": 18,
+   "figures": 15
+  }
+ ],
+ "skipped": [
+  "6 Acknowledgments (p. 12)",
+  "References (p. 12)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 19,
+  "gaps": [
+   {
+    "page": 17,
+    "text": "“photo of a cat riding on a bicycle.” source Image cat dog cat chicken cat “photo of a house with a ﬂag on a mountain.” source Image house hotel house tent house “A basket Full of apples.” source Image basket bowl basket box basket apples oranges apples chocolates apples cookies apples “A ball between two chairs on the beach. source Image ball frisbee ball bucket ball Figure 13: additional results for Prompt-to-Prompt Editing by word Swap. 17 squirrel cat elephant car house tree pot basket nest kittens apples smoke palace ball turtle",
+    "words": 92,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/369"
+   },
+   {
+    "page": 18,
+    "text": "“A photo of a bear wearing sunglasses on and having a drink.” source Image “...wearing a squared sunglasses...” “A photo of a butterfly on a ﬂower.” source Image “...on a spikey ﬂower.” “A mushroom in the forest.” source Image “...in the wet forest.” Figure 14: additional results for Prompt-to-Prompt Editing by adding a 18 “...geeky sunglasses...” “...beer drink.” “...rounded sunglasses...” “”...coffee drink.” “...wither ﬂower.” “...origami ﬂower.” “...ﬂower made out “...wooden ﬂower.” from candies.” “line art of...” “A plastic mushroom...” “...in the dry forest.” “A neon mushroom...” specification.",
+    "words": 87,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/425"
+   }
+  ],
+  "gaps_dismissed": [
+   {
+    "page": 2,
+    "words": 23,
+    "reason": "duplicate",
+    "text": "| “The boulevards are crowded today.” | “photo of a cat riding on a bicycle.” |\n| a castle next to a river.” | “a cake with decorations.” |"
+   },
+   {
+    "page": 3,
+    "words": 73,
+    "reason": "duplicate",
+    "text": "“lemon cake.” “cheese cake.” “apple cake.” “pumpkin cake.” “chocolate cake.” “pistachio cake.” “jello cake.” “matcha cake.” “monster cake.” “lego cake.” “beet cake.” “pepperoni cake.” “ﬁsh cake.” “ric"
+   },
+   {
+    "page": 4,
+    "words": 52,
+    "reason": "duplicate",
+    "text": "ap on m enti s pixel features pixel queries tokens keys tokens values output t At (from prompt) (from prompt) X X φ (zt ) Q K Mt V φ b (zt ) text to Image Cross Attention Cross Attenetion Control Mt M"
+   },
+   {
+    "page": 5,
+    "words": 23,
+    "reason": "duplicate",
+    "text": "synthesized Image “a furry bear watching a bird” average Attention maps across all timestamps Attention maps for individual timestamps bear bird t=T t=1"
+   },
+   {
+    "page": 6,
+    "words": 47,
+    "reason": "duplicate",
+    "text": "| “...on a ﬂower.” | “...on grass.” | “...on the ground.” | “...on the river.” | “...on a fruit” | “...on a table | “...on a cup,” | “...on a Computer.” |\n| “...on a ﬂute.” | “...on a violin,” | “...o"
+   },
+   {
+    "page": 7,
+    "words": 16,
+    "reason": "duplicate",
+    "text": "“photo of a cat riding on a bicycle.” bicycle motorcycle bicycle car bicycle airplane bicycle train"
+   },
+   {
+    "page": 7,
+    "words": 14,
+    "reason": "debris",
+    "text": "Mt∗ \u001a if t < τ Edit(Mt , Mt∗ , t) := Mt otherwise."
+   },
+   {
+    "page": 8,
+    "words": 36,
+    "reason": "duplicate",
+    "text": "“...old car...” “...mat black car...” “...American car...” source Image “...sport car...” “...crushed car...” “...limousine car...” “...convertibae car...” local description global description “...the"
+   },
+   {
+    "page": 8,
+    "words": 18,
+    "reason": "debris",
+    "text": "(Mt∗ )i,j \u001a if A(j) = none (edit (Mt , Mt∗ , t))i,j := (Mt )i,A(j) otherwise."
+   },
+   {
+    "page": 8,
+    "words": 21,
+    "reason": "debris",
+    "text": "if j = j ∗ \u001a ∗ c · (Mt )i,j (edit (Mt , Mt , t))i,j := (Mt )i,j otherwise."
+   },
+   {
+    "page": 9,
+    "words": 34,
+    "reason": "duplicate",
+    "text": "“drawing of...” “photo of...” source Image “relaxing photo of...” “dramatic photo of...” “...in the jungle.” “... in the desert.” “... on mars.” “photo of...” “painting of...” source Image “watercolor"
+   },
+   {
+    "page": 10,
+    "words": 30,
+    "reason": "duplicate",
+    "text": "“A photo of a birthday( ) cake next to an apple.” “The picnic is ready under a blossom( ) tree.” “A photo of a house on a snowy( ) mountain.”"
+   },
+   {
+    "page": 11,
+    "words": 38,
+    "reason": "duplicate",
+    "text": "real Image reconstructed “...next to red ﬂowers.” “...When snow comes “while another black bear “Oil painting of...” down.” is watching.” “Landscape Image of trees in a valley...” real Image reconstru"
+   },
+   {
+    "page": 11,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "real Image Reconstructed real Image Reconstructed real Image Reconstructed"
+   },
+   {
+    "page": 12,
+    "words": 27,
+    "reason": "duplicate",
+    "text": "“Image of cat wearing a ﬂoral shirt.” “shirt” Resized Image + prompt Noised Denoised + Attention map Bended SR real Image “...wearing a colorful shirt...” more dresses"
+   },
+   {
+    "page": 15,
+    "words": 21,
+    "reason": "duplicate",
+    "text": "√ √ xt = αt x0 + 1 − αt w, w ∼ N (0, I), (2) Qt where αt :="
+   },
+   {
+    "page": 15,
+    "words": 24,
+    "reason": "debris",
+    "text": "\u0012 \u0013 1 βt µθ (xt , t) = √ xt − √ εθ (xt , t) . (3) αt 1 − αt †"
+   },
+   {
+    "page": 16,
+    "words": 15,
+    "reason": "debris",
+    "text": "xt−1 = µθ (xt , t) + σt z, z ∼ N (0, I). (4)"
+   },
+   {
+    "page": 16,
+    "words": 18,
+    "reason": "debris",
+    "text": "2 min L(θ) := min Ex0 ∼q(x0 ),w∼N (0,I),t kw − εθ (xt , t)k2 , θ θ"
+   },
+   {
+    "page": 19,
+    "words": 27,
+    "reason": "duplicate",
+    "text": "“A tiger is sleeping( ) in a field.” “A smiling( ) teddy bear.” “photo of a cubic( ) sushi.” “The modern( ) city.” “My colorful( ) bedroom.”"
+   }
+  ],
+  "captions_reclassified": [],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [],
+  "superseded": [],
+  "replaced_pages": [
+   17,
+   18
+  ],
+  "noise_dropped": 0,
+  "hyphens_restored": [],
+  "order": [],
+  "order_pages_checked": 17,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 0,
+  "order_breaking": 0,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 7 minor; distortions: 0 material, 0 minor; additions: 0 material, 0 minor; order: 0 material, 0 minor",
+  "at": "2026-11-15T09:31:14+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 7
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 0
+   },
+   "additions": {
+    "material": 0,
+    "minor": 0
+   },
+   "order": {
+    "material": 0,
+    "minor": 0
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "Prompt-to-Prompt Image Editing with Cross Attention Control (p. 1–19)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "Moreover, masking the image content removes important structural information, which is completely ignored in the inpainting process. Therefore, some editing capabilities are out of the inpainting scope, such as modifying the texture of a specific object.",
+      "severity": "minor",
+      "page": 1
+     },
+     {
+      "source": "While most works that require only text (i.e., no masks) are limited to global editing [9, 23], Bar-Tal et al. [6] proposed a text-based localized editing technique without using any mask, showing impressive results.",
+      "severity": "minor",
+      "page": 3
+     },
+     {
+      "source": "Note that averaging is done for visualization purposes, and attention maps are kept separate for each head in our method.",
+      "severity": "minor",
+      "page": 5
+     },
+     {
+      "source": "We note that for the method above to work, we must fix the internal randomness. This is due to the nature of diffusion models, where even for the same prompt, two random seeds produce drastically different outputs.",
+      "severity": "minor",
+      "page": 6
+     },
+     {
+      "source": "While controlling the image by editing the prompt is very effective, we find that it still does not allow full control over the generated image.",
+      "severity": "minor",
+      "page": 9
+     },
+     {
+      "source": "This process, known as inversion, has recently drawn considerable attention for GANs, but has not yet been fully addressed for text-guided diffusion models.",
+      "severity": "minor",
+      "page": 10
+     },
+     {
+      "source": "Diffusion Denoising Probabilistic Models (DDPM) [39, 17] are generative latent variable models that aim to model a distribution p θ ( x 0 ) that approximates the data distribution q ( x 0 ) and easy to sample from.",
+      "severity": "minor",
+      "page": 15
+     }
+    ],
+    "distortions": [],
+    "additions": [],
+    "order": []
+   }
+  ]
+ },
+ "source": {
+  "source": "hertz-et-al-2022-prompt-to-prompt-image-editing-with-cross-attention-control.pdf",
+  "bytes": 30629542,
+  "sha256": "7497a79ed190960d69f1d9c3d1cc7fa67754c48bf0dd0233df0851cc43889514",
+  "extracted_at": "2026-11-13T01:56:42+01:00"
+ }
+}

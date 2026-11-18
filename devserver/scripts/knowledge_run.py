@@ -331,8 +331,11 @@ class UsageLedger:
     ledger is shared by every caller on the machine; `since(mark, models)`
     keeps the records of the run's models only, so a run of another model at
     the same time does not count into this one (measured 13.11.2026, issue
-    #138: Sonnet and Hydrogen counted GLM's calls). A concurrent run of the
-    SAME model still counts in: the ledger carries no run of its own."""
+    #138: Sonnet and Hydrogen counted GLM's calls), and a record that names
+    the process it was made in (`pid`) counts for that process only: on
+    2026-11-15 seven GLM runs at once each counted all seven, and the first
+    stopped at its ceiling of 8 million tokens with three documents to go.
+    A record without a pid predates the field and is counted."""
 
     def __init__(self, path: Optional[Path] = None) -> None:
         if path is None:
@@ -353,6 +356,7 @@ class UsageLedger:
             fh.seek(mark)
             lines = fh.read().decode("utf-8", errors="replace").splitlines()
         wanted = {m.rsplit("/", 1)[-1] for m in models or [] if m}
+        own = os.getpid()
         out = []
         for line in lines:
             try:
@@ -360,6 +364,8 @@ class UsageLedger:
             except ValueError:
                 continue
             if wanted and str(rec.get("model") or "").rsplit("/", 1)[-1] not in wanted:
+                continue
+            if rec.get("pid") not in (None, own):
                 continue
             out.append(rec)
         return out
@@ -510,12 +516,14 @@ def source_record_path(blocks_json: Path, doc_id: str) -> Path:
 
 def source_record(blocks_json: Path, doc_id: str,
                   page_range: Optional[Tuple[int, int]]) -> Dict[str, Any]:
-    """The provenance of the condensation: the file (path, size, SHA-256 of
+    """The provenance of the condensation: the file (name, size, SHA-256 of
     the whole file) and, for a document that is part of it, its PDF pages as
     `pdf_seiten`. Docling converts the whole file; the range is applied after
     (knowledge_extract.restrict_to_pages), so one extraction serves every
     range of the file. The record beside the extraction is brought to the
-    range of this run."""
+    range of this run; it keeps the path of the file, the provenance names
+    the file only, as the ingest service writes it (it goes into the sidecar
+    beside the library file)."""
     path = source_record_path(blocks_json, doc_id)
     try:
         record = json.loads(path.read_text(encoding="utf-8"))
@@ -528,6 +536,8 @@ def source_record(blocks_json: Path, doc_id: str,
         else:
             record.pop("pdf_seiten", None)
         path.write_text(json.dumps(record, indent=1), encoding="utf-8")
+    if "source" in record:
+        return dict(record, source=Path(record["source"]).name)
     return record
 
 
@@ -635,9 +645,12 @@ def run_doc(doc: Doc, a: argparse.Namespace, budget: Budget) -> Dict[str, Any]:
         if plan["skipped"]:
             log(f"  skipped: {plan['skipped']}")
         log(f"  planned: {t['llm_calls']} LLM calls (bibliographic {int(biblio)}) "
-            f"+ up to {t['revision_calls_max']} revision calls, input <= "
+            f"+ up to {t['revision_calls_max']} revision calls "
+            f"+ up to {t['correction_calls_max']} correction calls, input <= "
             f"{t['llm_input_chars_max']} chars; {t['review_calls']} review calls, input <= "
-            f"{t['review_input_chars_max']} chars; {t['image_calls']} image calls, "
+            f"{t['review_input_chars_max']} chars (+ up to "
+            f"{t['correction_review_calls_max']} after corrections); "
+            f"{t['image_calls']} image calls, "
             f"{t['image_bytes']} bytes, prompts {t['image_prompt_chars']} chars")
         return summary
 
@@ -970,9 +983,10 @@ def figures_step(doc: Doc, extraction, blocks_json: Path, lang: str,
 def plan_totals(summaries: List[Dict[str, Any]]) -> Dict[str, Any]:
     """The totals of a dry run over the documents planned."""
     planned = [s for s in summaries if "plan" in s]
-    keys = ("llm_calls", "revision_calls_max", "llm_input_chars_max", "review_calls",
-            "review_repair_calls_max", "review_input_chars_max", "image_calls", "image_bytes")
-    totals: Dict[str, Any] = {k: sum(s["plan"]["totals"][k] for s in planned) for k in keys}
+    keys = ("llm_calls", "revision_calls_max", "correction_calls_max", "llm_input_chars_max",
+            "review_calls", "review_repair_calls_max", "correction_review_calls_max",
+            "review_input_chars_max", "image_calls", "image_bytes")
+    totals: Dict[str, Any] = {k: sum(s["plan"]["totals"].get(k, 0) for s in planned) for k in keys}
     totals.update({
         "documents": len(planned),
         "pages": sum(s["pages"] for s in planned),

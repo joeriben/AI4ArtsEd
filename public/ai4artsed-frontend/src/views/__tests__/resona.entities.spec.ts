@@ -57,6 +57,15 @@ const PAGE = {
   facts: ['https://example.org/tagung'],
 }
 
+const SCENARIO = {
+  kind: 'scenario',
+  key: 'scenario:07/S1',
+  name: 'Two lenses on one place',
+  detail: 'Small groups, art, grades 7-10, 90 min\n\nGroups run one prompt twice.\n\nSequence: run, compare, write.',
+  facts: ['Stereotype Analysis (/latent-lab/stereotype-analysis)'],
+  source: { version: '1.0', scenario: '07/S1' },
+}
+
 function done(extra: Record<string, unknown> = {}) {
   return {
     type: 'done', reply: 'Aufbewahrt.',
@@ -134,6 +143,20 @@ describe('Together — the anchors for what a room worked out', () => {
     expect(names(w)).toEqual([PAGE.name])
     // Only the link travels; the body was never sent and is nowhere on the board.
     expect(w.text()).not.toContain('example.org/andere-seite')
+  })
+
+  it('lays a teaching scenario down at reading size, its parts as paragraphs and its source named', async () => {
+    const w = await open()
+    await say(w, 'welches Szenario?', [{ type: 'entity', entity: SCENARIO }, done()])
+    expect(names(w)).toEqual([SCENARIO.name])
+    const node = w.findAll('.board-node').find((n: any) => n.text().includes(SCENARIO.name))!
+    expect(node.attributes('style')).toContain('width: 300px')
+    expect(node.attributes('style')).toContain('height: 300px')
+    expect(node.find('.eb-detail').element.textContent).toBe(SCENARIO.detail)
+    const t = i18n.global.t as (k: string, v?: Record<string, unknown>) => string
+    expect(node.find('.eb-label').text()).toBe(t('resonaEntityCard.scenario'))
+    expect(node.find('.eb-facts').text()).toContain(
+      t('resonaEntityCard.scenarioSource', { version: '1.0', scenario: '07/S1' }))
   })
 
   it('passes over an entity with nothing to name it', async () => {

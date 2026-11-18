@@ -1,4 +1,5 @@
 import axios, { type AxiosInstance } from 'axios'
+import { watchAxios } from '@/lib/signInLapse'
 import type { SupportedLanguage, LocalizedString } from '@/i18n'
 
 /**
@@ -135,6 +136,9 @@ apiClient.interceptors.request.use(
     return Promise.reject(error)
   }
 )
+
+// The gate's refusal tells the page that its sign-in ended (lib/signInLapse.ts).
+watchAxios(apiClient)
 
 // Response interceptor (error handling)
 apiClient.interceptors.response.use(

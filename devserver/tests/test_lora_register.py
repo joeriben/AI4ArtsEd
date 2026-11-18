@@ -48,6 +48,7 @@ from flask import Flask
 from my_app.lab.db import Base, engine, SessionLocal
 from my_app.lab import models as M
 from my_app.lab.auth_service import hash_password
+from my_app.lab.terms import TERMS_VERSION
 from my_app.routes.auth_routes import auth_bp
 from my_app.routes.lora_routes import loras_bp
 from my_app.services import lora_base as B
@@ -169,7 +170,10 @@ def _leads(user_id: int, course_id: int) -> None:
 
 
 def _login(client, identifier, password="secret12"):
-    return client.post("/api/auth/login", json={"identifier": identifier, "password": password})
+    # An account with a password signs in with its agreement to the
+    # conditions of use (lab/terms.py, 2026-11-15).
+    return client.post("/api/auth/login", json={"identifier": identifier, "password": password,
+                                                "accept_terms": TERMS_VERSION, "language": "en"})
 
 
 # ---------------------------------------------------------------------------

@@ -2409,7 +2409,7 @@ export const de = {
       // Purpose written from the documented group wording and the use
       // report; no supplied wording of the project lead for this page.
       // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
-      purpose: 'Mit einem Adapter kann sich die gewöhnliche Bedeutung eines Wortes, das in den Beschriftungen stand, mitverschieben. Bei einem Motiv außerhalb des Trainingssets des Adapters zeigt die Spalte, ob die Bilder mit dem Adapter das Motiv in einer trainierten Machart wiedergeben oder die Gegenstände seines Trainingssets.',
+      purpose: 'Ein Adapter kann driften, wie der Hinweiskasten „LoRA Explorer“ mit Ruiz et al. (2023) sagt: Die gewöhnliche Bedeutung eines Wortes, das in den Beschriftungen stand, kann sich mitverschieben. Bei einem Motiv außerhalb des Trainingssets des Adapters zeigt die Spalte, ob die Bilder mit dem Adapter das Motiv in einer trainierten Machart wiedergeben oder die Gegenstände seines Trainingssets.',
       generate: 'Vergleich starten',
       adapterLabel: 'Adapter',
       noAdapters: 'Hier wurde noch nichts trainiert. Im Training Studio entsteht ein Adapter.',
@@ -2434,7 +2434,7 @@ export const de = {
       // docs/COPY_RULES.md zugleich das Ankunftsverb verbietet.
       // Address, German authored, English set after it (2026-11-07).
       // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
-      story: 'Mehrere Bildmodelle erhalten den Basis-Prompt einmal allein und daneben mit einer Kultur oder einem Land darin: „Yoruba“, „Sámi“, „Franconian“. Jede Zeile im Feld „Variationen (weitere Spalten)“ ersetzt das Asterisk-Zeichen „*“ im Basis-Prompt einmal und bekommt eine eigene Spalte. Die Liste zu den Variationen bietet Kulturen und sechs Gefühle an, für einen Basis-Prompt wie „a person feeling *“. In den Reihen stehen die Modelle, in den Spalten die Variationen, und ein Modell rechnet in seiner Reihe mit demselben Seed und mit genau diesem Wortlaut.',
+      story: 'Mehrere Bildmodelle erhalten den Basis-Prompt einmal allein und daneben mit einer Kultur oder einem Land darin: „Yoruba“, „Sámi“, „Franconian“. Jede Zeile im Feld „Variationen (weitere Spalten)“ ersetzt das Asterisk-Zeichen „*“ im Basis-Prompt einmal und bekommt eine eigene Spalte. Die Liste zu den Variationen bietet Kulturen und sechs Gefühle an, für einen Basis-Prompt wie „a person feeling *“. In den Reihen stehen die Modelle, in den Spalten die Variationen, und ein Modell rechnet in seiner Reihe mit demselben Seed und mit genau diesem Wortlaut. Ein weiterer Lauf rechnet die geänderten und die leeren Zellen neu, die übrigen Bilder bleiben stehen. Die Zahlen im Hinweiskasten „Stereotypen-Analyse“ stammen aus den dort genannten Studien.',
       // Closing sentence is SUPPLIED WORDING of the project lead (2026-10-31).
       // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
       purpose: 'Das Feld „Variationen (weitere Spalten)“ nimmt jedes eigene Wort: die eigene Region, Stadt, Gemeinschaft oder Sprache. Ob ein Modell ein Essen, ein Fest oder eine Begrüßung von dort so zeigt, wie es dort aussieht, beurteilt, wer den Ort kennt. Wenn nur ein Modell ausgewählt wird, so werden fünf verschiedene Variationen (Seeds) verwendet, so dass eine Bandbreite von Ergebnissen verglichen werden kann.',
@@ -2480,9 +2480,9 @@ export const de = {
       models: {
         // Address, German authored, English set after it (2026-11-07).
         // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
-        story: 'Prompt Interception ist der Schritt, in dem ein Sprachmodell einen Prompt durch eine Perspektive neu schreibt. Hier läuft dieser Schritt mehrfach auf demselben Prompt, einmal je schreibendem Modell. Gebt den Prompt ein, wählt die Perspektive, durch die er geschrieben werden soll, und wählt die Gruppe der Modelle, die schreiben sollen („Schreibende Modelle“); ein Bildmodell erzeugt zu jedem Text ein Bild. Die oberste Zeile enthält den Prompt, wie er eingegeben wurde, und das, was das Bildmodell daraus macht, ohne diesen Schritt.',
+        story: 'Prompt Interception ist der Schritt, in dem ein Sprachmodell einen Prompt durch eine Perspektive neu schreibt. Hier läuft dieser Schritt mehrfach auf demselben Prompt, einmal je schreibendem Modell. Gebt den Prompt ein, wählt die Perspektive, durch die er geschrieben werden soll, und wählt die Gruppe der Modelle, die schreiben sollen („Schreibende Modelle“); ein Bildmodell erzeugt zu jedem Text ein Bild. Die oberste Zeile enthält den Prompt, wie er eingegeben wurde, und das, was das Bildmodell daraus macht, ohne diesen Schritt. Die Zeilenköpfe nennen die Modelle der Gruppe, die in dieser Installation laufen. Ein Wechsel der Gruppe setzt deren Zeilen oben hinzu, und die bisherigen Zeilen behalten Text und Bild.',
         // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
-        purpose: 'Gegenstand des Vergleichs sind die Texte: die Form, die jedes Modell setzt und benennt, was es vom Prompt behält, was es weglässt und was es hinzusetzt, und sein Register. Wo eine Perspektive eine Tradition nennt, etwa „Bauhaus“, „Literati“ oder „Renaissance“, zeigt der Text, ob ein Modell deren Formen schreibt oder ein Klischee davon.',
+        purpose: 'Gegenstand des Vergleichs sind die Texte: die Form, die jedes Modell setzt und benennt, was es vom Prompt behält, was es weglässt und was es hinzusetzt, und sein Register. Das Bild neben einem Text zeigt, was ein Bildmodell aus diesem Text gemacht hat. Wo eine Perspektive eine Tradition nennt, etwa „Bauhaus“, „Literati“ oder „Renaissance“, zeigt der Text, ob ein Modell deren Formen schreibt oder ein Klischee davon.',
         generate: 'Serie starten',
         perspectiveLabel: 'Perspektive',
         perspectiveAdd: 'Perspektive wählen',
@@ -2523,7 +2523,7 @@ export const de = {
         // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
         story: 'Prompt Interception ist der Schritt, in dem ein Sprachmodell einen Prompt durch eine Perspektive neu schreibt. Hier läuft dieser Schritt mehrfach auf demselben Prompt, einmal je gewählter Perspektive, und ein Bildmodell erzeugt zu jedem neu geschriebenen Prompt ein Bild. Bei einem eingegebenen Prompt zeigt das erste Bild, was das Bildmodell aus dem Prompt selbst macht, mit ausgelassenem Schritt.',
         // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
-        purpose: 'Diese Fläche dient dem Kennenlernen von Prompt Interception: Ein Werk steht unter mehreren Perspektiven, und die Unterschiede zwischen den Ergebnissen sind der Gegenstand des Gesprächs darüber. Ein klassisches Gemälde, auf das Feld gezogen, ist ein solches Werk: etwa Caspar David Friedrichs „Der Wanderer über dem Nebelmeer“ (1818), neu geschrieben durch die Perspektive „Jugendslang“. Der neue Prompt zeigt im Vergleich mit dem Werk, was unter dieser Perspektive bleibt, was sich ändert und in welchem Register das Sprachmodell schreibt.',
+        purpose: 'Diese Fläche dient dem Kennenlernen von Prompt Interception: Ein Werk steht unter mehreren Perspektiven, und die Unterschiede zwischen den Ergebnissen sind der Gegenstand des Gesprächs darüber. Ein klassisches Gemälde, auf das Feld gezogen, ist ein solches Werk: etwa Caspar David Friedrichs „Der Wanderer über dem Nebelmeer“ (1818), neu geschrieben durch die Perspektive „Jugendslang“. Der neue Prompt zeigt im Vergleich mit dem Werk, was unter dieser Perspektive bleibt, was sich ändert und in welchem Register das Sprachmodell schreibt. Die Zahlen im Hinweiskasten „Wirkungsvergleich“ stammen aus den dort genannten Studien.',
         generate: 'Serie starten',
         templateLabel: 'Vorlage',
         perspectivesLabel: 'Perspektiven',
@@ -2573,7 +2573,7 @@ export const de = {
     workbench: {
       // Address, German authored, English set after it (2026-11-07).
       // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
-      story: 'Nach „Sweep starten“ erzeugt das Bildmodell ein Raster von Bildern, eines je Zelle. In der Voreinstellung sind die Spalten die gewählten Fusionsstrategien („X · Spalten“) und die Zeilen die Denoising-Fenster („Y · Zeilen“), und in jeder Zelle wirkt die Fusion der Kodierungen von CLIP und T5 in den Schritten, die ihr Fenster deckt.',
+      story: 'Nach „Sweep starten“ erzeugt das Bildmodell aus einem Prompt mit einem Seed ein Raster von Bildern, eines je Zelle. In der Voreinstellung sind die Spalten die gewählten Fusionsstrategien („X · Spalten“) und die Zeilen die Denoising-Fenster („Y · Zeilen“), und in jeder Zelle wirkt die Fusion der Kodierungen von CLIP und T5 in den Schritten, die ihr Fenster deckt. Der Text hinter „T5 erweitern“ geht allein an den T5-Encoder und ist in jeder Zelle derselbe.',
       // Purpose written from the documented group wording and the use
       // report; no supplied wording of the project lead for this page.
       // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
@@ -2863,7 +2863,7 @@ export const de = {
       // 2026-11-15: Sätze 1 und 2 aus der am 2026-09-24 abgenommenen Fassung (WO-2026-09-24-C1) zurückgeholt, Sätze 3 und 4 aus der Fassung vom 2026-11-08 (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
       story: 'Ein Bildgenerator beginnt mit reinem Zufallsrauschen, einem Flimmern ohne jeden Gegenstand, und entfernt dieses Rauschen Step für Step, voreingestellt in 25, bis eine Szene übrig bleibt. Die Plattform hält jeden einzelnen dieser Steps fest; der Regler in der linken Spalte wählt aus, welcher davon die Ansicht füllt. Nach dem Lauf steht die Ansicht auf Step 1, dem Rauschen. Zwei Netze stehen am Backbone zur Wahl, SDXL (2023) und SD 3.5 (2024), und jeder Lauf bleibt unter „Läufe“ stehen.',
       // 2026-11-15: Sätze 2 und 3 aus der am 2026-09-24 abgenommenen Fassung zurückgeholt, Satz 3 um die beiden Backbones berichtigt. Die Imperative lenken konkretes Sehen und bleiben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
-      purpose: 'Gegenstand dieser Seite ist das Denoising: Bei jedem Step rechnet das Netz aus dem verrauschten Zwischenstand einen weniger verrauschten. Geht am Regler vor und zurück und achtet darauf, ab welchem Step die Szene zu erkennen ist. Diese Stelle verschiebt sich mit dem Prompt und mit dem Modell; vergleicht dazu zwei Läufe mit demselben Prompt, einen auf SDXL und einen auf SD 3.5.',
+      purpose: 'Gegenstand dieser Seite ist das Denoising: Bei jedem Step rechnet das Netz aus dem verrauschten Zwischenstand einen weniger verrauschten. Nach Choi et al. (2022, im Hinweiskasten) legt das Netz die groben Züge bei starkem Rauschen fest, den Inhalt in der Mitte und die Details am Ende, gemessen nach Rauschstärke. Als Ort im Lauf ist diese Einteilung eine grobe Orientierung, wie der Kasten sagt. Geht am Regler vor und zurück und achtet darauf, ab welchem Step die Szene zu erkennen ist. Diese Stelle verschiebt sich mit dem Prompt und mit dem Modell; vergleicht dazu zwei Läufe mit demselben Prompt, einen auf SDXL und einen auf SD 3.5.',
       headerSubtitle: 'Beobachte jeden einzelnen Entrauschungsschritt.',
       explanationToggle: 'Ausführliche Erklärung anzeigen',
       explainWhatTitle: 'Was zeigt dieses Tool?',
@@ -2981,7 +2981,7 @@ export const de = {
         // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
         story: 'Drei Sprachmodelle, je Spalte eines aus der Liste „Modell“, antworten auf dieselbe Nachricht. System-Prompt und Zufälligkeit sind für alle drei dieselben. Die Liste nennt zu den Modellen Land, Jahr und Größe und ob sie lokal rechnen. Das Feld „System-Prompt“ zeigt den Text des gewählten Presets und bleibt änderbar.',
         // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
-        purpose: 'Gegenstand des Vergleichs ist, was ein Sprachmodell sagt, was es auslässt oder verweigert und wie es das sagt: Register, Vorbehalte, Listen, der Wortlaut einer Ablehnung. Drei Modelle aus drei Ländern zu derselben Nachricht zeigen, ob eines ablehnt oder ausweicht, und mit welchen Worten.',
+        purpose: 'Gegenstand des Vergleichs ist, was ein Sprachmodell sagt, was es auslässt oder verweigert und wie es das sagt: Register, Vorbehalte, Listen, der Wortlaut einer Ablehnung. Drei Modelle aus drei Ländern zu derselben Nachricht zeigen, ob eines ablehnt oder ausweicht, und mit welchen Worten. Ein lokales Modell rechnet auf dem Server dieser Installation, ein Cloud-Modell beim Anbieter.',
       },
       repeng: {
         // Address, German authored, English set after it (2026-11-07).
@@ -3447,7 +3447,7 @@ export const de = {
       model: {
         // Address, German authored, English set after it (2026-11-07).
         // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
-        story: 'Zwei Dreiergruppen stehen zur Wahl: drei heutige KI-Modelle oder dieselbe Familie in drei Jahren, 2022, 2023 und 2024. Alle drei rechnen mit demselben Prompt und demselben Seed. Neben den Dreiergruppen lassen sich die Modelle auch einzeln wählen. Zum Prompt sucht die Plattform außerdem Bilder auf Wikimedia Commons.',
+        story: 'Zwei Dreiergruppen stehen zur Wahl: drei heutige KI-Modelle oder dieselbe Familie in drei Jahren, 2022, 2023 und 2024. Alle drei rechnen mit demselben Prompt und demselben Seed. Neben den Dreiergruppen lassen sich die Modelle auch einzeln wählen. Mindestens zwei Modelle bleiben ausgewählt. Zum Prompt sucht die Plattform außerdem Bilder auf Wikimedia Commons. Die Reihe „Ergebnisse zu diesem Prompt“ zeigt diese Funde. Den Suchbegriff bildet die Plattform aus dem Prompt.',
         // Sentences 1 and 2 are the SUPPLIED WORDING of the project lead named in
         // the comment above `address`; sentences 2 and 4 of the earlier text were
         // struck by the project lead on 2026-10-31.
@@ -3457,19 +3457,23 @@ export const de = {
       'vlm-analysis': {
         // Address, German authored, English set after it (2026-11-07).
         // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
-        story: 'Die Seite nimmt ein Bild entgegen, hochgeladen oder hier gezeichnet, und bietet darunter sechs Perspektiven an: zwei Beschreibungen, eine kunsthistorische, eine bildungstheoretische, eine ethische, eine kritische. Die Seite trägt die gewählte Perspektive als Auftrag in das Feld darunter ein. Mehrere Vision-Modelle führen den Auftrag aus; alle bekommen dasselbe Bild.',
+        story: 'Die Seite nimmt ein Bild entgegen, hochgeladen oder hier gezeichnet, und bietet darunter sechs Perspektiven an: zwei Beschreibungen, eine kunsthistorische, eine bildungstheoretische, eine ethische, eine kritische. Die Perspektiven reichen von zwei Sätzen („Neutrale Beschreibung“) bis zu einem seitenlangen Rahmen („Bildungstheoretisch“). Die Seite trägt die gewählte Perspektive als Auftrag in das Feld darunter ein. Mehrere Vision-Modelle führen den Auftrag aus; alle bekommen dasselbe Bild.',
         // 2026-11-15: Sätze 1 und 2 stehen wieder, wie sie bis zum 2026-11-08 standen; die Projektleitung hat
         // sie am 2026-11-15 bestätigt, sie bleiben wörtlich. Satz 1 hielt der Quellkommentar in
-        // pageAddress.ts. Die Sätze danach: gestrichen und berichtigt, nicht neu geschrieben
+        // pageAddress.ts. Satz 3 stand ebenfalls bis zum 2026-11-08; Nutzungsbericht 08, Abschnitt 6,
+        // führt ihn als Inhalt des Hilfetexts. Die Sätze danach: gestrichen und berichtigt, nicht neu geschrieben
         // (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
-        purpose: 'Hier geht es nicht darum, die Arbeit der Bildinterpretation abzunehmen: Die maschinellen Interpretationen sind selbst der Gegenstand. Maschinelle Bildauswertung entscheidet über Menschen: Aus ihr folgen Diagnosen, Festnahmen, Zurückweisungen an der Grenze — Menschen sind verhaftet worden, weil ein System ihr Gesicht einem Bild zugeordnet hat, und die Auswertung selbst bekommen die Betroffenen selten zu sehen. Der Vergleich mit dem Bild trennt in einer Lesart, was sie beschreibt, was sie deutet und was sie hinzusetzt. Eine Lesart kann Dinge nennen, die im Bild fehlen, etwa eine Farbe in einer Schwarzweiß-Fotografie. Dasselbe Bild in zwei Läufen unter zwei Perspektiven zeigt, was die Perspektive an der Lesart ändert: die Form, manchmal auch die Tatsachenbehauptungen.',
+        purpose: 'Hier geht es nicht darum, die Arbeit der Bildinterpretation abzunehmen: Die maschinellen Interpretationen sind selbst der Gegenstand. Maschinelle Bildauswertung entscheidet über Menschen: Aus ihr folgen Diagnosen, Festnahmen, Zurückweisungen an der Grenze — Menschen sind verhaftet worden, weil ein System ihr Gesicht einem Bild zugeordnet hat, und die Auswertung selbst bekommen die Betroffenen selten zu sehen. Verfolgt, was ein Modell zuerst benennt, woran es festhält, und an welcher Stelle es von dem, was zu sehen ist, zu dem übergeht, was es bedeuten soll. Der Vergleich mit dem Bild trennt in einer Lesart, was sie beschreibt, was sie deutet und was sie hinzusetzt. Eine Lesart kann Dinge nennen, die im Bild fehlen, etwa eine Farbe in einer Schwarzweiß-Fotografie. Dasselbe Bild in zwei Läufen unter zwei Perspektiven zeigt, was die Perspektive an der Lesart ändert: die Form, manchmal auch die Tatsachenbehauptungen.',
       },
       language: {
         // Address, German authored, English set after it (2026-11-07).
         // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
         story: 'In jeder Spalte steht derselbe Prompt, nur in einer anderen Sprache. Zwei bis vier Sprachen stehen zur Wahl, die Sprachen der Plattform und zehn weitere, unter ihnen Hornjoserbšćina, Yorùbá und Runasimi. Jedes gewählte Bildmodell erzeugt dazu in jeder Spalte ein Bild, eine Reihe je Modell; innerhalb einer Reihe rechnet das Modell alle Bilder mit demselben Seed. Über jeder Spalte steht die Übersetzung, mit der die Modelle gerechnet haben, und darunter ihre Rückübersetzung zum Mitlesen.',
-        // 2026-11-15: an diesem Text gestrichen und berichtigt, nicht neu geschrieben (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
-        purpose: 'Weicht die Rückübersetzung über einer Spalte vom eingegebenen Prompt ab, können die Modelle in dieser Spalte einen anderen Prompt erhalten haben. Der Vergleich entlang einer Reihe zeigt, in welchen Sprachen ein Modell die Szene des Prompts ins Bild setzt und in welchen etwas anderes. Ein Modell kann den Prompt in der Spaltensprache als Schriftzug ins Bild setzen.',
+        // 2026-11-15: Sätze 3 und 4 stehen wieder, wie bis zum 2026-11-08: der Sachverhalt, den der
+        // Quellkommentar in pageAddress.ts markiert; „dieses Bildmodells“ ist „von SD 3.5“ wie im
+        // Englischen. Satz 5 berichtigt. Übrige Sätze: gestrichen und berichtigt, nicht neu geschrieben
+        // (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        purpose: 'Weicht die Rückübersetzung über einer Spalte vom eingegebenen Prompt ab, können die Modelle in dieser Spalte einen anderen Prompt erhalten haben. Der Vergleich entlang einer Reihe zeigt, in welchen Sprachen ein Modell die Szene des Prompts ins Bild setzt und in welchen etwas anderes. Die Textteile von SD 3.5 sind an englischem Text trainiert; einen Prompt in einer anderen Sprache verarbeiten sie so wenig, dass die Sprache selbst das Bild bestimmt und der Inhalt dahinter zurücktritt. Das Bild zeigt dann das Klischee: das, was in den Trainingsdaten am häufigsten zu dieser Sprache stand. Der Kasten unter den Modellen nennt mit Quellen, über welche Textteile die Bildmodelle den Prompt lesen. Ein Modell kann den Prompt in der Spaltensprache als Schriftzug ins Bild setzen.',
       },
       voice: {
         // Der Testsatz wird aus einem Dropdown neben einem freien Eingabefeld

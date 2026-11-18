@@ -251,8 +251,11 @@ def test_no_perspective_writes_at_the_translator_itself(loader):
     gesehen = set()
     for name in loader.list_configs():
         context = getattr(loader.get_config(name), 'context', None)
-        fassungen = context.values() if isinstance(context, dict) else (
-            [context] if isinstance(context, str) else [])
+        # A pool (a list) holds one context per entry (config_loader.draw_from_pool).
+        eintraege = context if isinstance(context, list) else [context]
+        fassungen = [text for entry in eintraege
+                     for text in (entry.values() if isinstance(entry, dict) else
+                                  [entry] if isinstance(entry, str) else [])]
         for text in fassungen:
             gesehen.add(name)
             assert "Translator-LLM" not in text, name

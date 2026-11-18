@@ -1,0 +1,5999 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 8.0% of 13768 words, ceiling 20%, longest run 22 words; not counted: 3052 words from the source's lists; not counted: figure descriptions",
+   "findings": [
+    {
+     "words": 22,
+     "text": "phase 3 examination november year 2 the committee examines the nominations proposals and requests and makes its decisions i 16 incorporation of"
+    },
+    {
+     "words": 21,
+     "text": "states with no element inscribed on the representative list excluding elements proposed via multinational nominations who wish to submit a nomination"
+    },
+    {
+     "words": 19,
+     "text": "phase 1 preparation and submission 31 march year 0 deadline for preparatory assistance requests december year 0 deadline for"
+    },
+    {
+     "words": 16,
+     "text": "for international assistance ich 07 grant of rights and register of documentation for photos and videos"
+    },
+    {
+     "words": 16,
+     "text": "concerned shall be informed in a timely manner i 10 examination of files by the committee"
+    }
+   ],
+   "value": 0.08,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "189 of 195 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 5,
+     "expected_items": 4,
+     "first_item": "(a) to safeguard the intangible cultural heritage;",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ],
+     "unanswered_items": [
+      {
+       "item": 3,
+       "source": "(c) to raise awareness at the local, national and international levels of the im",
+       "output": "G.3 It is or has been implemented with the participation of the community, group"
+      }
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 5,
+     "expected_items": 3,
+     "first_item": "The 'Intangible Cultural Heritage' means the practices, representations, express",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 6,
+     "expected_items": 7,
+     "first_item": "(b) performing arts;",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 6,
+     "expected_items": 2,
+     "first_item": "(a) altering the status or diminishing the level of protection under the 1972 Co",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 7,
+     "expected_items": 3,
+     "first_item": "A General Assembly of the States Parties is hereby established, hereinafter refe",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 7,
+     "expected_items": 2,
+     "first_item": "An Intergovernmental Committee for the Safeguarding of the Intangible Cultural H",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 7,
+     "expected_items": 7,
+     "first_item": "The election of States Members of the Committee shall obey the principles of equ",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 8,
+     "expected_items": 7,
+     "first_item": "(a) promote the objectives of the Convention, and to encourage and monitor the i",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 9,
+     "expected_items": 2,
+     "first_item": "(i) inscription on the lists and proposals mentioned under Articles 16, 17 and 1",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 9,
+     "expected_items": 4,
+     "first_item": "The Committee shall be answerable to the General Assembly. It shall report to it",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 9,
+     "expected_items": 2,
+     "first_item": "The Committee shall propose to the General Assembly the accreditation of non-gov",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 9,
+     "expected_items": 2,
+     "first_item": "The Committee shall be assisted by the UNESCO Secretariat.",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 10,
+     "expected_items": 2,
+     "first_item": "(a) take the necessary measures to ensure the safeguarding of the intangible cul",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 10,
+     "expected_items": 2,
+     "first_item": "To ensure identification with a view to safeguarding, each State Party shall dra",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 10,
+     "expected_items": 2,
+     "first_item": "(a) adopt a general policy aimed at promoting the function of the intangible cul",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 11,
+     "expected_items": 5,
+     "first_item": "(c) foster scientific, technical and artistic studies, as well as research metho",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 11,
+     "expected_items": 7,
+     "first_item": "(a) ensure recognition of, respect for, and enhancement of the intangible cultur",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 12,
+     "expected_items": 2,
+     "first_item": "In order to ensure better visibility of the intangible cultural heritage and awa",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 12,
+     "expected_items": 3,
+     "first_item": "With a view to taking appropriate safeguarding measures, the Committee shall est",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 13,
+     "expected_items": 3,
+     "first_item": "On the basis of proposals submitted by States Parties, and in accordance with cr",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 13,
+     "expected_items": 2,
+     "first_item": "For the purposes of this Convention, international cooperation includes, inter a",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 14,
+     "expected_items": 4,
+     "first_item": "(a) the safeguarding of the heritage inscribed on the List of Intangible Cultura",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 14,
+     "expected_items": 7,
+     "first_item": "(a) studies concerning various aspects of safeguarding;",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 14,
+     "expected_items": 3,
+     "first_item": "The Committee shall establish the procedure for examining requests for internati",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 15,
+     "expected_items": 3,
+     "first_item": "Each State Party may submit to the Committee a request for international assista",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 15,
+     "expected_items": 3,
+     "first_item": "In conformity with the provisions of this Convention, the international assistan",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 15,
+     "expected_items": 2,
+     "first_item": "A 'Fund for the Safeguarding of the Intangible Cultural Heritage', hereinafter r",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 16,
+     "expected_items": 13,
+     "first_item": "The resources of the Fund shall consist of:",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 16,
+     "expected_items": 5,
+     "first_item": "Without prejudice to any supplementary voluntary contribution, the States Partie",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ],
+     "unanswered_items": [
+      {
+       "item": 2,
+       "source": "However, each State referred to in Article 32 or in Article 33 of this Conventio",
+       "output": "R.2 Inscription will contribute to ensuring visibility and awareness of the sign"
+      },
+      {
+       "item": 3,
+       "source": "A State Party to this Convention which has made the declaration referred to in p",
+       "output": "R.3 Safeguarding measures are elaborated that may protect and promote the elemen"
+      }
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 18,
+     "expected_items": 2,
+     "first_item": "On the basis of its activities and the reports by States Parties referred to in ",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 18,
+     "expected_items": 3,
+     "first_item": "The Committee shall incorporate in the Representative List of the Intangible Cul",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 19,
+     "expected_items": 2,
+     "first_item": "This Convention shall be subject to ratification, acceptance or approval by Stat",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 19,
+     "expected_items": 3,
+     "first_item": "This Convention shall be open to accession by all States not Members of UNESCO t",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 20,
+     "expected_items": 2,
+     "first_item": "(a) with regard to the provisions of this Convention, the implementation of whic",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 20,
+     "expected_items": 3,
+     "first_item": "Each State Party may denounce this Convention.",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 21,
+     "expected_items": 7,
+     "first_item": "Amendments shall be adopted by a two-thirds majority of States Parties present a",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ],
+     "unanswered_items": [
+      {
+       "item": 6,
+       "source": "(a) as a Party to this Convention as so amended; and",
+       "output": "A.6 The assistance aims at building up or reinforcing capacities in safeguarding"
+      }
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 30,
+     "expected_items": 8,
+     "first_item": "In nomination files, the submitting State(s) Party(ies) is (are) requested to de",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 31,
+     "expected_items": 6,
+     "first_item": "In nomination files, the submitting State(s) Party(ies) is (are) requested to de",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 31,
+     "expected_items": 2,
+     "first_item": "States Parties are encouraged to propose national, subregional or regional progr",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 32,
+     "expected_items": 7,
+     "first_item": "Such programmes, projects and activities may be completed or in progress at the ",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 33,
+     "expected_items": 11,
+     "first_item": "The Committee may receive, examine and approve requests for any purpose and for ",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 34,
+     "expected_items": 6,
+     "first_item": "A.2 The amount of assistance requested is appropriate.",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 34,
+     "expected_items": 3,
+     "first_item": "States Parties are encouraged to jointly submit multi-national nominations to th",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 36,
+     "expected_items": 2,
+     "first_item": "States Parties may request preparatory assistance, in consultation with communit",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 37,
+     "expected_items": 8,
+     "first_item": "(b) nomination files to the Representative List (only for States Parties with no",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 37,
+     "expected_items": 4,
+     "first_item": "Evaluation includes assessment of the conformity of the nomination, proposal or ",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 39,
+     "expected_items": 7,
+     "first_item": "The Evaluation Body shall submit to the Committee an evaluation report that incl",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 40,
+     "expected_items": 5,
+     "first_item": "The Committee determines two years beforehand, in accordance with the available ",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 41,
+     "expected_items": 5,
+     "first_item": "After examination, the Committee decides:",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ],
+     "unanswered_items": [
+      {
+       "item": 1,
+       "source": "After examination, the Committee decides:",
+       "output": "'Intangible Cultural Heritage' (ICH) means the practices, representations, expre"
+      },
+      {
+       "item": 2,
+       "source": "-whether or not an element shall be inscribed on the List of Intangible Cultural",
+       "output": "ICH is manifested inter alia in five domains: (a) oral traditions and expression"
+      }
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 42,
+     "expected_items": 5,
+     "first_item": "38.1 An element may not simultaneously be inscribed on the List of Intangible Cu",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 43,
+     "expected_items": 8,
+     "first_item": "(c) In relation to criterion U.4 - Consent from the concerned communities, group",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 44,
+     "expected_items": 8,
+     "first_item": "40.2 (a) A removal request from the submitting entity (i.e. State Party concerne",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 45,
+     "expected_items": 10,
+     "first_item": "(e) In other cases:",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 46,
+     "expected_items": 5,
+     "first_item": "The Committee shall encourage research, documentation, publication and dissemina",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 47,
+     "expected_items": 7,
+     "first_item": "International Assistance requests (including for preparatory assistance) shall n",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 50,
+     "expected_items": 9,
+     "first_item": "In conformity with Article 31.1 of the Convention, the Committee shall automatic",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 52,
+     "expected_items": 5,
+     "first_item": "The resources of the Fund, which is managed as a special account in conformity w",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 53,
+     "expected_items": 2,
+     "first_item": "(d) for the costs of advisory services to be provided, at the request of the Com",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 53,
+     "expected_items": 4,
+     "first_item": "The Committee welcomes contributions to the Intangible Cultural Heritage Fund ['",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 54,
+     "expected_items": 7,
+     "first_item": "No political, economic or other conditions which are incompatible with the objec",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 55,
+     "expected_items": 5,
+     "first_item": "Recognition to contributors shall be provided as follows:",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 56,
+     "expected_items": 8,
+     "first_item": "Recalling Article 11(b) of the Convention and in the spirit of Article 15 of the",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 57,
+     "expected_items": 8,
+     "first_item": "In conformity with the provisions of Articles 11-15 of the Convention, States Pa",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 58,
+     "expected_items": 4,
+     "first_item": "Non-governmental organizations shall:",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 59,
+     "expected_items": 5,
+     "first_item": "(d) cooperate in a spirit of mutual respect with communities, groups, and, where",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 59,
+     "expected_items": 4,
+     "first_item": "The Committee asks the Secretariat to receive requests from nongovernmental orga",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 60,
+     "expected_items": 5,
+     "first_item": "Accredited non-governmental organizations who, according to Article 9.1 of the C",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 60,
+     "expected_items": 9,
+     "first_item": "A non-governmental organization requesting accreditation to act in an advisory c",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 61,
+     "expected_items": 5,
+     "first_item": "(iii) having existed and having carried out appropriate activities for at least ",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 61,
+     "expected_items": 2,
+     "first_item": "With a view to effectively implementing the Convention, States Parties shall end",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 62,
+     "expected_items": 10,
+     "first_item": "(a) The intangible cultural heritage concerned responds to the definition in Art",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 63,
+     "expected_items": 9,
+     "first_item": "States Parties are encouraged to develop and adopt codes of ethics based on the ",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 64,
+     "expected_items": 2,
+     "first_item": "(g) support the development and implementation of local policies aiming at promo",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 64,
+     "expected_items": 8,
+     "first_item": "States Parties shall endeavour, by all appropriate means, to ensure recognition ",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 65,
+     "expected_items": 6,
+     "first_item": "(h) privileging experience of intangible cultural heritage with practical method",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 65,
+     "expected_items": 4,
+     "first_item": "Community centres and associations that are created and managed by communities t",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 66,
+     "expected_items": 6,
+     "first_item": "Research institutes, centres of expertise, museums, archives, libraries, documen",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 66,
+     "expected_items": 6,
+     "first_item": "The media can effectively contribute to raising awareness about the importance o",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 67,
+     "expected_items": 2,
+     "first_item": "Commercial activities that can emerge from certain forms of intangible cultural ",
+     "output_lists": [
+      5,
+      6,
+      5,
+      4,
+      7
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 27,
+     "table_cells": 10,
+     "missing_cells": [
+      "Non-governmental organizations and the Convention",
+      "Non-governmental organizations and the Convention",
+      "III.2.1",
+      "Participation of non-governmental organizations at the national level",
+      "III.2.2",
+      "Participation of accredited non-governmental organizations",
+      "91-99"
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 27,
+     "table_cells": 51,
+     "missing_cells": [
+      "Raising awareness about intangible cultural heritage and use of the emblem of the Convention for the",
+      "Raising awareness about intangible cultural heritage and use of the emblem of the Convention for the",
+      "Raising awareness about intangible cultural heritage and use of the emblem of the Convention for the",
+      "100-150",
+      "Raising awareness about intangible cultural heritage",
+      "Raising awareness about intangible cultural heritage",
+      "100-123",
+      "IV.1.3",
+      "118-123",
+      "IV.2",
+      "Use of the emblem of the Convention for the Safeguarding",
+      "Use of the emblem of the Convention for the Safeguarding",
+      "Use of the emblem of the Convention for the Safeguarding",
+      "124-150",
+      "IV.2.1",
+      "124-125",
+      "IV.2.2",
+      "Rules applicable to use of the emblem of UNESCO and the emblem of the Convention respectively",
+      "126-128",
+      "IV.2.3"
+     ]
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 29,
+     "table_cells": 22,
+     "missing_cells": [
+      "VI.3.2",
+      "Environmental impacts in the safeguarding of intangible cultural heritage",
+      "190",
+      "VI.3.3",
+      "Community-based resilience to natural disasters and climate change",
+      "191",
+      "VI.4",
+      "Intangible cultural heritage and peace",
+      "Intangible cultural heritage and peace",
+      "192-197",
+      "VI.4.1",
+      "Social cohesion and equity",
+      "VI.4.2",
+      "Preventing and resolving disputes",
+      "195",
+      "VI.4.3",
+      "Restoring peace and security",
+      "VI.4.4",
+      "Achieving lasting peace"
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 68,
+     "expected_items": 8,
+     "first_item": "The Committee updates and publishes annually the List of Intangible Cultural Her",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 69,
+     "expected_items": 9,
+     "first_item": "To contribute to the fullest possible visibility and raise awareness about intan",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 70,
+     "expected_items": 2,
+     "first_item": "The emblem or logo of the Convention, which is used as its official seal, is sho",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 70,
+     "expected_items": 3,
+     "first_item": "The provisions of the present Directives apply only to the use of the emblem of ",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 71,
+     "expected_items": 7,
+     "first_item": "Authorizing the use of the emblem of the Convention is the prerogative of the st",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 72,
+     "expected_items": 7,
+     "first_item": "The use of the emblem for the purpose of patronage may be authorized for various",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 73,
+     "expected_items": 4,
+     "first_item": "(ii) In the case of national activities, the decision regarding the authorizatio",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 73,
+     "expected_items": 4,
+     "first_item": "Any contractual arrangement between the Secretariat and outside organizations in",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 74,
+     "expected_items": 6,
+     "first_item": "To the extent that the emblem of the Convention has been notified and accepted b",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 75,
+     "expected_items": 4,
+     "first_item": "Each State Party to the Convention periodically submits to the Committee reports",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 76,
+     "expected_items": 12,
+     "first_item": "(b) other safeguarding measures as referred to in Articles 11 and 13 of the Conv",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 77,
+     "expected_items": 11,
+     "first_item": "(d) non-formal means of transmitting knowledge;",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 78,
+     "expected_items": 2,
+     "first_item": "(b) the organization(s) of the community or group concerned with the element and",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 78,
+     "expected_items": 6,
+     "first_item": "Each State Party shall submit to the Committee reports on the status of elements",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 79,
+     "expected_items": 6,
+     "first_item": "(d) an update of the safeguarding plan included in the nomination file or in the",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 79,
+     "expected_items": 3,
+     "first_item": "Upon receipt of reports from States Parties, the Secretariat shall register them",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 80,
+     "expected_items": 2,
+     "first_item": "Paragraphs 157-159 and 165-166 of these directives shall apply fully to States n",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 81,
+     "expected_items": 8,
+     "first_item": "Insofar as their development plans, policies and programmes involve intangible c",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 82,
+     "expected_items": 4,
+     "first_item": "(b) adopt appropriate legal, technical, administrative and financial measures, i",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 83,
+     "expected_items": 4,
+     "first_item": "States Parties shall endeavour to ensure the recognition of, respect for and enh",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 84,
+     "expected_items": 3,
+     "first_item": "(a) foster scientific studies and research methodologies, including those conduc",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 85,
+     "expected_items": 7,
+     "first_item": "(a) adopt appropriate legal, technical, administrative and financial measures to",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 86,
+     "expected_items": 6,
+     "first_item": "States Parties shall endeavour to foster the contributions of intangible cultura",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 87,
+     "expected_items": 3,
+     "first_item": "States Parties shall endeavour to ensure the viability of water management syste",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 87,
+     "expected_items": 2,
+     "first_item": "States Parties are encouraged to acknowledge that the safeguarding of the intang",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 88,
+     "expected_items": 5,
+     "first_item": "States Parties shall endeavour to recognize, promote and enhance the contributio",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 89,
+     "expected_items": 5,
+     "first_item": "States Parties shall endeavour to recognize, promote and enhance the contributio",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 90,
+     "expected_items": 5,
+     "first_item": "(a) assess, both in general and in specific terms, the potential of intangible c",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 91,
+     "expected_items": 5,
+     "first_item": "(a) recognize communities, groups and individuals as the bearers of knowledge ab",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 92,
+     "expected_items": 2,
+     "first_item": "(a) foster scientific studies and research methodologies, including those conduc",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 93,
+     "expected_items": 2,
+     "first_item": "States Parties are encouraged to acknowledge the contribution of safeguarding of",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 94,
+     "expected_items": 7,
+     "first_item": "States Parties should endeavour to recognize, promote and enhance the contributi",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 94,
+     "expected_items": 2,
+     "first_item": "States Parties should endeavour to take full advantage of the potential role of ",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 95,
+     "expected_items": 4,
+     "first_item": "States Parties should endeavour to recognize, promote and enhance the contributi",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 100,
+     "expected_items": 2,
+     "first_item": "3.1 The representatives of Member States of UNESCO not parties to the Convention",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 100,
+     "expected_items": 2,
+     "first_item": "4.1 The Assembly shall meet every two years in ordinary session in accordance wi",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 100,
+     "expected_items": 3,
+     "first_item": "5.1 The Director-General shall determine the date of the ordinary session. The D",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 101,
+     "expected_items": 4,
+     "first_item": "6.1 The Assembly may hold online sessions only during periods of emergency or in",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 101,
+     "expected_items": 9,
+     "first_item": "7.1 The provisional agenda of the session shall be prepared by the Director-Gene",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 102,
+     "expected_items": 3,
+     "first_item": "10.1 The Bureau shall consist of the Chairperson, the Vice-Chairperson(s) and th",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 102,
+     "expected_items": 3,
+     "first_item": "11.1 The Assembly shall elect the Chairperson, up to five Vice-Chairpersons and ",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 103,
+     "expected_items": 2,
+     "first_item": "12.1 In addition to exercising the powers and duties which are conferred upon he",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 103,
+     "expected_items": 2,
+     "first_item": "13.1 A quorum shall consist of a majority of the States Parties referred to in R",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 103,
+     "expected_items": 2,
+     "first_item": "14.1 Meetings shall be held in public unless decided otherwise by the Assembly.",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 104,
+     "expected_items": 4,
+     "first_item": "15.1 The Assembly may establish such subsidiary bodies, including working groups",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 104,
+     "expected_items": 3,
+     "first_item": "16.1 The Chairperson shall call upon speakers in the order in which they signify",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 104,
+     "expected_items": 2,
+     "first_item": "17.1 Draft resolutions and amendments may be proposed by the States Parties and ",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 106,
+     "expected_items": 4,
+     "first_item": "(a) to suspend the meeting;",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 106,
+     "expected_items": 4,
+     "first_item": "24.1 The working languages of the Assembly shall be Arabic, Chinese, English, Fr",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 107,
+     "expected_items": 2,
+     "first_item": "30.1 When the Assembly resorts to voting, decisions shall be taken by a simple m",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 108,
+     "expected_items": 3,
+     "first_item": "31.1 Except as otherwise provided for in the present Rules of Procedure, voting ",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 108,
+     "expected_items": 2,
+     "first_item": "32.1 If two or more proposals, other than amendments, relate to the same questio",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 108,
+     "expected_items": 3,
+     "first_item": "33.1 When an amendment to a proposal is moved, the amendment shall be voted on f",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 109,
+     "expected_items": 2,
+     "first_item": "35.1 The election of Members of the Committee shall be conducted on the basis of",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 109,
+     "expected_items": 2,
+     "first_item": "36.1 The Secretariat shall ask all States Parties, three months prior to the dat",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 110,
+     "expected_items": 2,
+     "first_item": "36.3 No payments of compulsory and voluntary contributions to the Fund (for the ",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 110,
+     "expected_items": 6,
+     "first_item": "37.1 The election of Members of the Committee shall be conducted by secret ballo",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 111,
+     "expected_items": 4,
+     "first_item": "37.7 Ballot papers on which more names have been circled than there are seats to",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 111,
+     "expected_items": 2,
+     "first_item": "38.1 The Director-General of UNESCO or her or his representative shall participa",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 112,
+     "expected_items": 2,
+     "first_item": "38.3 The Secretariat shall receive, translate and distribute all documents; arra",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 115,
+     "expected_items": 2,
+     "first_item": "2.1 The Committee shall meet at least once a year in ordinary session.",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 116,
+     "expected_items": 3,
+     "first_item": "3.1 Sessions of the Committee shall be convened by the Chairperson of the Commit",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 116,
+     "expected_items": 3,
+     "first_item": "4.1 The Committee shall determine at each session, in consultation with the Dire",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 117,
+     "expected_items": 4,
+     "first_item": "5.2 States Members of the Committee shall choose as their representatives person",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 118,
+     "expected_items": 5,
+     "first_item": "8.1 States Parties to the Convention which are not Members of the Committee may ",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 118,
+     "expected_items": 4,
+     "first_item": "9.1 The Director-General shall prepare the provisional agenda of the sessions of",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 119,
+     "expected_items": 3,
+     "first_item": "(c) all questions proposed by States Parties to the Convention which are not Mem",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 119,
+     "expected_items": 3,
+     "first_item": "12.1 The Bureau of the Committee shall consist of the Chairperson, one or more V",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 120,
+     "expected_items": 4,
+     "first_item": "13.1 The Committee, at the end of each ordinary session, shall elect, from among",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 120,
+     "expected_items": 2,
+     "first_item": "14.1 In addition to the powers conferred upon him/her elsewhere by these Rules, ",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 121,
+     "expected_items": 3,
+     "first_item": "15.1 If the Chairperson is unable to act at any session of the Committee or Bure",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 121,
+     "expected_items": 2,
+     "first_item": "16.1 If the Rapporteur is unable to act at any session of the Committee or Burea",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 122,
+     "expected_items": 2,
+     "first_item": "17.2 At meetings of subsidiary bodies, a quorum shall consist of a majority of t",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 122,
+     "expected_items": 3,
+     "first_item": "19.1 When in exceptional circumstances, the Committee decides to hold a private ",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 122,
+     "expected_items": 3,
+     "first_item": "20.1 The Committee may establish, on a temporary basis, whatever ad hoc consulta",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 123,
+     "expected_items": 4,
+     "first_item": "21.1 The Committee may establish such subsidiary bodies as it deems necessary fo",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 123,
+     "expected_items": 4,
+     "first_item": "22.1 The Chairperson shall call upon speakers in the order in which they signify",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 124,
+     "expected_items": 3,
+     "first_item": "25.1 When an amendment to a proposal is moved, the amendment shall be voted on f",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 125,
+     "expected_items": 2,
+     "first_item": "28.1 During a discussion, a State Member may rise to a point of order and the po",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 126,
+     "expected_items": 4,
+     "first_item": "(a) suspension of the meeting;",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 126,
+     "expected_items": 2,
+     "first_item": "34.1 The Committee shall adopt such decisions and recommendations as it may deem",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 127,
+     "expected_items": 3,
+     "first_item": "39.1 Voting shall normally be by a show of hands.",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 127,
+     "expected_items": 3,
+     "first_item": "39.4 A decision shall be voted on by secret ballot whenever two or more States M",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 127,
+     "expected_items": 3,
+     "first_item": "(a) the number of States Members of the Committee absent, if any;",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 128,
+     "expected_items": 8,
+     "first_item": "39.7 Elections shall be conducted by secret ballot except that, where the number",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 129,
+     "expected_items": 2,
+     "first_item": "39.15 The Chairperson shall declare elected those candidates who obtain the grea",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 129,
+     "expected_items": 5,
+     "first_item": "40.1 The Committee shall be assisted by the UNESCO Secretariat (Article 10.1 of ",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 130,
+     "expected_items": 4,
+     "first_item": "41.1 The working languages of the Committee shall be English and French. Every e",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 131,
+     "expected_items": 3,
+     "first_item": "46.1 The Committee shall submit a report on its activities and decisions to the ",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 135,
+     "expected_items": 3,
+     "first_item": "1.1 Article 25 of the Convention for the Safeguarding of the Intangible Cultural",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 135,
+     "expected_items": 2,
+     "first_item": "2.1 The financial period for budget estimates shall be two consecutive calendar ",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 136,
+     "expected_items": 4,
+     "first_item": "4.1 The General Assembly of the States Parties (hereinafter referred to as the '",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 136,
+     "expected_items": 3,
+     "first_item": "5.1 In accordance with Article 25.3 of the Convention, the income of the Special",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 137,
+     "expected_items": 8,
+     "first_item": "(c) contributions, gifts or bequests which may be made by:",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 137,
+     "expected_items": 3,
+     "first_item": "6.1 The use of the resources of the Special Account shall be approved by the Gen",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 138,
+     "expected_items": 5,
+     "first_item": "8.1 Subsidiary Accounts may be established by the General Assembly and the Commi",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 138,
+     "expected_items": 2,
+     "first_item": "9.1 The Director-General may make short-term or long-term investments of sums st",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 138,
+     "expected_items": 2,
+     "first_item": "10.1 A biennial financial report showing the income and expenditure under the Sp",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 139,
+     "expected_items": 2,
+     "first_item": "12.1 Any amendment to these Financial Regulations shall be approved by the Gener",
+     "output_lists": [
+      5
+     ]
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 126,
+     "table_cells": 6,
+     "missing_cells": [
+      "VII",
+      "Rule 35",
+      "Voting rights Each State Member of the Committee shall have one vote in the Committee.",
+      "Rule 36",
+      "Conduct during voting"
+     ]
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 144,
+     "expected_items": 7,
+     "first_item": "All interactions with the communities, groups and, where applicable, individuals",
+     "output_lists": [
+      12,
+      6,
+      6,
+      4,
+      3,
+      8,
+      8,
+      6
+     ]
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 145,
+     "expected_items": 2,
+     "first_item": "Cultural diversity and the identities of communities, groups and individuals sho",
+     "output_lists": [
+      12,
+      6,
+      6,
+      4,
+      3,
+      8,
+      8,
+      6
+     ]
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 153,
+     "expected_items": 3,
+     "first_item": "Carry out the community-based needs identification if this could not be performe",
+     "output_lists": [
+      12,
+      6,
+      6,
+      4,
+      3,
+      8,
+      8,
+      6
+     ]
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 175,
+     "table_cells": 36,
+     "missing_cells": [
+      "First session",
+      "27 to 29 June 2006",
+      "UNESCO Headquarters, Paris",
+      "UNESCO Headquarters, Paris",
+      "Second session",
+      "16 to 19 June 2008",
+      "UNESCO Headquarters, Paris",
+      "Third session",
+      "22 to 24 June 2010",
+      "UNESCO Headquarters, Paris",
+      "Fourth session",
+      "4 to 8 June 2012",
+      "UNESCO Headquarters, Paris",
+      "2 to 4 June 2014",
+      "UNESCO Headquarters, Paris",
+      "Sixth session",
+      "30 May to 1 June 2016",
+      "UNESCO Headquarters, Paris",
+      "4 to 6 June 2018",
+      "UNESCO Headquarters, Paris"
+     ]
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 176,
+     "table_cells": 51,
+     "missing_cells": [
+      "First session",
+      "18 to 19 November 2006",
+      "23 to 27 May 2007",
+      "Second session",
+      "3 to 7 September 2007",
+      "Tokyo, Japan",
+      "Second extraordinary session",
+      "18 to 22 February 2008",
+      "Third extraordinary session",
+      "16 June 2008",
+      "UNESCO Headquarters, Paris",
+      "Third session",
+      "4 to 8 November 2008",
+      "Istanbul, Türkiye",
+      "Fourth session",
+      "28 September to 2 October 2009",
+      "Abu Dhabi, United Arab Emirates",
+      "15 to 19 November 2010",
+      "Nairobi, Kenya",
+      "Sixth session"
+     ]
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 177,
+     "table_cells": 24,
+     "missing_cells": [
+      "Thirteenth session",
+      "26 November to 1 December 2018",
+      "Port Louis, Republic of Mauritius",
+      "9 to 14 December 2019",
+      "Bogotá, Republic of Colombia",
+      "Fifteenth session",
+      "14 to 19 December 2020",
+      "Sixteenth session",
+      "13 to 18 December 2021",
+      "Fifth extraordinary session",
+      "Seventeenth session",
+      "28 November to 3 December 2022",
+      "Rabat, Kingdom of Morocco",
+      "Eighteenth session",
+      "5 to 8 December 2023"
+     ]
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 178,
+     "table_cells": 15,
+     "missing_cells": [
+      "List of Intangible Cultural Heritage in Need of",
+      "List of Intangible Cultural Heritage in Need of",
+      "Nomination form",
+      "ICH-01 (extension)",
+      "Nomination on an extended basis",
+      "ICH-01 (reduction)",
+      "Nomination on a reduced basis",
+      "ICH-01 RL to USL",
+      "Transfer request of an element from the Representative List to the Urgent Safeguarding List"
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "245 of 512 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 0,
+     "number": "45"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 0,
+     "number": "459"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 0,
+     "number": "75732"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 26,
+     "number": "2.2"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 27,
+     "number": "1.3"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 27,
+     "number": "118"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 27,
+     "number": "123"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 27,
+     "number": "124"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 27,
+     "number": "125"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 27,
+     "number": "126"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 27,
+     "number": "128"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 27,
+     "number": "129"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 27,
+     "number": "130"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 27,
+     "number": "136"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 27,
+     "number": "137"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 27,
+     "number": "139"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 27,
+     "number": "140"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 27,
+     "number": "143"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 27,
+     "number": "144"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 27,
+     "number": "145"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 27,
+     "number": "150"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 27,
+     "number": "2.4"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 27,
+     "number": "2.5"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 27,
+     "number": "2.6"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 27,
+     "number": "2.7"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 27,
+     "number": "2.8"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 29,
+     "number": "190"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 29,
+     "number": "191"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 29,
+     "number": "192"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 29,
+     "number": "194"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 29,
+     "number": "195"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 29,
+     "number": "196"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 29,
+     "number": "197"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 29,
+     "number": "3.2"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 29,
+     "number": "3.3"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 29,
+     "number": "4.1"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 29,
+     "number": "4.2"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 29,
+     "number": "4.3"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 29,
+     "number": "4.4"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 60,
+     "number": "9.1"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 68,
+     "number": "118"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 69,
+     "number": "126"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 70,
+     "number": "2.1"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 70,
+     "number": "2.2"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 71,
+     "number": "2.3"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 71,
+     "number": "2.4"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 72,
+     "number": "2.5"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 73,
+     "number": "2.6"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 74,
+     "number": "1883"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 74,
+     "number": "1967"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 74,
+     "number": "2.7"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 74,
+     "number": "2.8"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 78,
+     "number": "152"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 79,
+     "number": "161"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 80,
+     "number": "157"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 83,
+     "number": "1.1"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 83,
+     "number": "1.2"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 86,
+     "number": "1.4"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 87,
+     "number": "1.5"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 90,
+     "number": "3.1"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 91,
+     "number": "3.2"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 92,
+     "number": "3.3"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 93,
+     "number": "4.1"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 94,
+     "number": "4.2"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 94,
+     "number": "4.3"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 95,
+     "number": "4.4"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 99,
+     "number": "2003"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 99,
+     "number": "32"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 100,
+     "number": "16.3"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 100,
+     "number": "5.1"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 100,
+     "number": "5.3"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 101,
+     "number": "6.1"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 101,
+     "number": "6.2"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 101,
+     "number": "6.3"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 101,
+     "number": "6.4"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 101,
+     "number": "7.1"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 101,
+     "number": "7.2"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 101,
+     "number": "7.3"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 101,
+     "number": "7.4"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 102,
+     "number": "10.1"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 102,
+     "number": "10.2"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 102,
+     "number": "10.3"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 102,
+     "number": "11.1"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 102,
+     "number": "11.2"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 102,
+     "number": "11.3"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 103,
+     "number": "12.1"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 103,
+     "number": "12.2"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 103,
+     "number": "13.1"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 103,
+     "number": "13.2"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 103,
+     "number": "14.1"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 103,
+     "number": "14.2"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 104,
+     "number": "15.1"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 104,
+     "number": "15.2"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 104,
+     "number": "15.3"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 104,
+     "number": "15.4"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 104,
+     "number": "16.1"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 104,
+     "number": "16.2"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 104,
+     "number": "17.1"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 104,
+     "number": "17.2"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 104,
+     "number": "18.1"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 105,
+     "number": "18.2"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 105,
+     "number": "22"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 106,
+     "number": "24.1"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 106,
+     "number": "24.2"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 106,
+     "number": "24.3"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 106,
+     "number": "24.4"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 107,
+     "number": "28"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 107,
+     "number": "30"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 107,
+     "number": "30.1"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 108,
+     "number": "31.1"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 108,
+     "number": "31.2"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 108,
+     "number": "31.3"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 108,
+     "number": "32.1"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 108,
+     "number": "32.2"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 108,
+     "number": "33.1"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 108,
+     "number": "33.2"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 108,
+     "number": "33.3"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 109,
+     "number": "35.1"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 109,
+     "number": "35.2"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 109,
+     "number": "36"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 109,
+     "number": "36.1"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 109,
+     "number": "36.2"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 110,
+     "number": "36.3"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 110,
+     "number": "36.4"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 110,
+     "number": "37.1"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 110,
+     "number": "37.2"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 110,
+     "number": "37.3"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 110,
+     "number": "37.4"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 110,
+     "number": "37.5"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 110,
+     "number": "37.6"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 111,
+     "number": "37.10"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 111,
+     "number": "37.7"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 111,
+     "number": "37.8"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 111,
+     "number": "37.9"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 111,
+     "number": "38.1"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 111,
+     "number": "38.2"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 112,
+     "number": "38.3"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 112,
+     "number": "38.4"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 117,
+     "number": "5.4"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 117,
+     "number": "5.5"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 117,
+     "number": "6.7"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 117,
+     "number": "8.4"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 117,
+     "number": "9.1"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 118,
+     "number": "8.1"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 118,
+     "number": "8.2"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 118,
+     "number": "8.5"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 118,
+     "number": "9.2"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 119,
+     "number": "12.3"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 119,
+     "number": "9.3"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 120,
+     "number": "12.4"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 120,
+     "number": "13.3"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 120,
+     "number": "13.4"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 121,
+     "number": "14.3"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 122,
+     "number": "19.1"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 122,
+     "number": "19.2"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 122,
+     "number": "19.3"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 122,
+     "number": "20.1"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 122,
+     "number": "20.2"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 122,
+     "number": "20.3"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 123,
+     "number": "20.4"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 123,
+     "number": "21.1"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 123,
+     "number": "21.2"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 123,
+     "number": "21.3"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 123,
+     "number": "21.4"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 123,
+     "number": "22.1"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 123,
+     "number": "22.3"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 124,
+     "number": "25.1"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 124,
+     "number": "25.2"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 124,
+     "number": "25.3"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 125,
+     "number": "28.1"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 125,
+     "number": "28.2"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 126,
+     "number": "34.1"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 126,
+     "number": "34.2"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 127,
+     "number": "39.1"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 127,
+     "number": "39.2"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 127,
+     "number": "39.3"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 127,
+     "number": "39.4"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 127,
+     "number": "39.5"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 127,
+     "number": "39.6"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 128,
+     "number": "39.10"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 128,
+     "number": "39.11"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 128,
+     "number": "39.12"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 128,
+     "number": "39.13"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 128,
+     "number": "39.14"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 128,
+     "number": "39.8"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 128,
+     "number": "39.9"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 129,
+     "number": "39.15"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 129,
+     "number": "40.1"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 129,
+     "number": "40.2"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 129,
+     "number": "40.3"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 129,
+     "number": "40.4"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 129,
+     "number": "40.5"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 130,
+     "number": "41.1"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 130,
+     "number": "41.2"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 130,
+     "number": "41.3"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 130,
+     "number": "41.4"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 131,
+     "number": "44"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 131,
+     "number": "45"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 131,
+     "number": "46.1"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 131,
+     "number": "46.2"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 131,
+     "number": "46.3"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 131,
+     "number": "48"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 137,
+     "number": "26.1"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 0,
+     "number": "45"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 0,
+     "number": "68"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 160,
+     "number": "1.2"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 160,
+     "number": "1.3"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 160,
+     "number": "1.4"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 160,
+     "number": "2.2"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 161,
+     "number": "4.2"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 161,
+     "number": "4.3"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 161,
+     "number": "5.2"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 161,
+     "number": "5.3"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 162,
+     "number": "7.2"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 162,
+     "number": "7.3"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 162,
+     "number": "9.2"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 163,
+     "number": "10.1"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 163,
+     "number": "10.2"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 163,
+     "number": "10.3"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 163,
+     "number": "11.2"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 163,
+     "number": "11.3"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 163,
+     "number": "12.2"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 164,
+     "number": "13.2"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 164,
+     "number": "13.3"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 164,
+     "number": "13.4"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 164,
+     "number": "14.2"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 165,
+     "number": "15.2"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 166,
+     "number": "17.2"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 166,
+     "number": "17.3"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 166,
+     "number": "17.4"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 166,
+     "number": "18.2"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 166,
+     "number": "18.3"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 167,
+     "number": "19.2"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 167,
+     "number": "19.3"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 167,
+     "number": "21.2"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 168,
+     "number": "22.2"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 168,
+     "number": "23.2"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 168,
+     "number": "24.2"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 168,
+     "number": "24.3"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 169,
+     "number": "25.2"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 169,
+     "number": "26.2"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 175,
+     "number": "2010"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 176,
+     "number": "2009"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 176,
+     "number": "2011"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 176,
+     "number": "28"
+    }
+   ],
+   "value": 245.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "262 of 278 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 0,
+     "heading": "Living Heritage Entity"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 0,
+     "heading": "Foreword"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 5,
+     "heading": "I GENERAL PROVISIONS"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 5,
+     "heading": "Article 1 Purposes of the Convention"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 5,
+     "heading": "Article 2 Definitions"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 6,
+     "heading": "Article 3 Relationship to other international instruments"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 7,
+     "heading": "Article 4 General Assembly of the States Parties"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 7,
+     "heading": "Article 5 Intergovernmental Committee for the Safeguarding of the Intangible Cultural Heritage"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 7,
+     "heading": "Article 6 Election and terms of office of States Members of the Committee"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 8,
+     "heading": "Article 7 Functions of the Committee"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 9,
+     "heading": "Article 8 Working methods of the Committee"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 9,
+     "heading": "Article 9 Accreditation of advisory organizations"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 9,
+     "heading": "Article 10 The Secretariat"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 10,
+     "heading": "III SAFEGUARDING OF THE INTANGIBLE CULTURAL HERITAGE AT THE NATIONAL LEVEL"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 10,
+     "heading": "Article 11 Role of States Parties"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 10,
+     "heading": "Article 12 Inventories"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 10,
+     "heading": "Article 13 Other measures for safeguarding"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 11,
+     "heading": "Article 14 Education, awareness-raising and capacity-building"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 12,
+     "heading": "Article 15 Participation of communities, groups and individuals"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 12,
+     "heading": "IV SAFEGUARDING OF THE INTANGIBLE CULTURAL HERITAGE AT THE INTERNATIONAL LEVEL"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 12,
+     "heading": "Article 16 Representative List of the Intangible Cultural Heritage of Humanity"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 12,
+     "heading": "Article 17 List of Intangible Cultural Heritage in Need of Urgent Safeguarding"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 13,
+     "heading": "Article 18 Programmes, projects and activities for the safeguarding of the intangible cultural heritage"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 13,
+     "heading": "V INTERNATIONAL COOPERATION AND ASSISTANCE"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 13,
+     "heading": "Article 19 Cooperation"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 13,
+     "heading": "Article 20 Purposes of international assistance"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 14,
+     "heading": "Article 21 Forms of international assistance"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 14,
+     "heading": "Article 22 Conditions governing international assistance"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 15,
+     "heading": "Article 23 Requests for international assistance"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 15,
+     "heading": "Article 24 Role of beneficiary States Parties"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 15,
+     "heading": "VI INTANGIBLE CULTURAL HERITAGE FUND"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 15,
+     "heading": "Article 25 Nature and resources of the Fund"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 16,
+     "heading": "Article 26 Contributions of States Parties to the Fund"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 17,
+     "heading": "Article 27 Voluntary supplementary contributions to the Fund"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 18,
+     "heading": "Article 28 International fund-raising campaigns"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 18,
+     "heading": "VII REPORTS"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 18,
+     "heading": "Article 29 Reports by the States Parties"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 18,
+     "heading": "Article 30 Reports by the Committee"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 18,
+     "heading": "VIII TRANSITIONAL CLAUSE"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 18,
+     "heading": "Article 31 Relationship to the Proclamation of Masterpieces of the Oral and Intangible Heritage of Humanity"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 19,
+     "heading": "IX FINAL CLAUSE"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 19,
+     "heading": "Article 32 Ratification, acceptance or approval"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 19,
+     "heading": "Article 33 Accession"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 19,
+     "heading": "Article 34 Entry into force"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 19,
+     "heading": "Article 35 Federal or non-unitary constitutional systems"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 20,
+     "heading": "Article 36 Denunciation"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 20,
+     "heading": "Article 37 Depositary functions"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 20,
+     "heading": "Article 38 Amendments"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 21,
+     "heading": "Article 39 Authoritative texts"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 22,
+     "heading": "Article 40 Registration"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 25,
+     "heading": "Operational Directives for the Implementation of the Convention for the Safeguarding of the Intangible Cultural Heritage"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 27,
+     "heading": "Paragraph(s)"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 28,
+     "heading": "Paragraph(s)"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 29,
+     "heading": "Paragraph(s)"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 30,
+     "heading": "I.1 Criteria for inscription on the List of Intangible Cultural Heritage in Need of Urgent Safeguarding"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 31,
+     "heading": "I.2 Criteria for inscription on the Representative List of the Intangible Cultural Heritage of Humanity"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 31,
+     "heading": "I.3 Criteria for selection of programmes, projects and activities that best reflect the principles and objectives of the Convention"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 32,
+     "heading": "I.4 Eligibility and selection criteria of International Assistance requests"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 34,
+     "heading": "I.5 Multi-national files"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 34,
+     "heading": "I.6 Inscription on an extended or reduced basis"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 36,
+     "heading": "I.7 Submission of files"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 37,
+     "heading": "I.8 Evaluation of files"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 40,
+     "heading": "I.9 Nominations to the List of Intangible Cultural Heritage in Need of Urgent Safeguarding to be processed on an extremely urgent basis"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 40,
+     "heading": "I.10 Examination of files by the Committee"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 42,
+     "heading": "I.11 Transfer of an element from one List to the other or removal of an element from a List"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 46,
+     "heading": "I.12 Modification of name of an inscribed element"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 46,
+     "heading": "I.13 Programmes, projects and activities selected as best reflecting the principles and objectives of the Convention"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 47,
+     "heading": "I.14 International Assistance"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 48,
+     "heading": "I.15 Timetable - Overview of procedures"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 50,
+     "heading": "I.16 Incorporation of items proclaimed 'Masterpieces of the Oral and Intangible Heritage of Humanity' in the Representative List of the Intangible Cultural Heritage of Humanity"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 52,
+     "heading": "II.1 Guidelines for the use of the resources of the Fund"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 53,
+     "heading": "II.2 The means to increase the resources of the Intangible Cultural Heritage Fund"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 53,
+     "heading": "II.2.1 Donors"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 54,
+     "heading": "II.2.2 Conditions"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 54,
+     "heading": "II.2.3 Benefits for donors"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 56,
+     "heading": "III.1 Participation of communities, groups and, where applicable, individuals, as well as experts, centres of expertise and research institutes"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 58,
+     "heading": "III.2 Non-governmental organizations and the Convention"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 58,
+     "heading": "III.2.1 Participation of non-governmental organizations at the national level"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 58,
+     "heading": "III.2.2 Participation of accredited non-governmental organizations"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 58,
+     "heading": "Criteria for the accreditation of non-governmental organizations"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 59,
+     "heading": "Modalities and review of accreditation"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 60,
+     "heading": "Advisory functions"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 60,
+     "heading": "Procedure for accreditation"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 61,
+     "heading": "CHAPTER IV RAISING AWARENESS ABOUT INTANGIBLE CULTURAL HERITAGE AND"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 61,
+     "heading": "IV.1 Raising awareness about intangible cultural heritage"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 61,
+     "heading": "IV.1.1 General provisions"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 63,
+     "heading": "IV.1.2 Local and national levels"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 64,
+     "heading": "Formal and non-formal education measures"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 65,
+     "heading": "Community centres and associations, museums, archives and other similar entities"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 66,
+     "heading": "Communications and media"
+    },
+    {
+     "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+     "page": 67,
+     "heading": "Commercial activities related to intangible heritage"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 70,
+     "heading": "IV.2 Use of the emblem of the Convention for the Safeguarding of the Intangible Cultural Heritage"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 70,
+     "heading": "IV.2.1 Definition"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 70,
+     "heading": "IV.2.2 Rules applicable to use of the emblem of UNESCO and the emblem of the Convention respectively"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 71,
+     "heading": "IV.2.3 Rights of use"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 71,
+     "heading": "IV.2.4 Authorization"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 72,
+     "heading": "IV.2.5 Criteria and conditions for the use of the emblem for the purpose of patronage"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 73,
+     "heading": "IV.2.6 Commercial use and contractual arrangements"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 74,
+     "heading": "IV.2.7 Graphical standards"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 74,
+     "heading": "IV.2.8 Protection"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 75,
+     "heading": "V.1 Reports by States Parties on the implementation of the Convention"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 78,
+     "heading": "V.2 Reports by States Parties on elements inscribed on the List of Intangible Cultural Heritage in Need of Urgent Safeguarding"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 79,
+     "heading": "V.3 Receipt and processing of reports"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 80,
+     "heading": "V.4 Reports by States non party to the Convention on elements inscribed on the Representative List of the Intangible Cultural Heritage of Humanity"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 80,
+     "heading": "CHAPTER VI SAFEGUARDING INTANGIBLE CULTURAL HERITAGE AND SUSTAINABLE DEVELOPMENT AT THE NATIONAL LEVEL"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 82,
+     "heading": "VI.1 Inclusive social development"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 83,
+     "heading": "VI.1.1 Food security"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 83,
+     "heading": "VI.1.2 Health care"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 84,
+     "heading": "VI.1.3 Quality education"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 86,
+     "heading": "VI.1.4 Gender equality"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 87,
+     "heading": "VI.1.5 Access to clean and safe water and sustainable water use"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 87,
+     "heading": "VI.2 Inclusive economic development"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 88,
+     "heading": "VI.2.1 Income generation and sustainable livelihoods"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 89,
+     "heading": "VI.2.2 Productive employment and decent work"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 89,
+     "heading": "VI.2.3 Impact of tourism on the safeguarding of intangible cultural heritage and vice versa"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 90,
+     "heading": "VI.3 Environmental sustainability"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 90,
+     "heading": "VI.3.1 Knowledge and practices concerning nature and the universe"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 91,
+     "heading": "VI.3.2 Environmental impacts in the safeguarding of intangible cultural heritage"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 92,
+     "heading": "VI.3.3 Community-based resilience to natural disasters and climate change"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 93,
+     "heading": "VI.4 Intangible cultural heritage and peace"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 93,
+     "heading": "VI.4.1 Social cohesion and equity"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 94,
+     "heading": "VI.4.2 Preventing and resolving disputes"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 94,
+     "heading": "VI.4.3 Restoring peace and security"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 95,
+     "heading": "VI.4.4 Achieving lasting peace"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 99,
+     "heading": "I FUNCTIONS OF THE ASSEMBLY"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 99,
+     "heading": "Rule 1 Functions of the Assembly"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 99,
+     "heading": "II PARTICIPATION"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 99,
+     "heading": "Rule 2 States Parties to the Convention"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 100,
+     "heading": "Rule 3 Observers"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 100,
+     "heading": "III ORGANIZATION OF THE ASSEMBLY"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 100,
+     "heading": "Rule 4 Ordinary and Extraordinary Sessions"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 100,
+     "heading": "Rule 5 Date and Place"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 101,
+     "heading": "Rule 6 Online sessions"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 101,
+     "heading": "Rule 7 Provisional Agenda"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 102,
+     "heading": "Rule 8 Adoption of the Agenda"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 102,
+     "heading": "Rule 9 Amendments, deletions and new items"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 102,
+     "heading": "IV BUREAU"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 102,
+     "heading": "Rule 10 Bureau"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 102,
+     "heading": "Rule 11 Election of officers"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 103,
+     "heading": "Rule 12 Powers and duties of the Chairperson"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 103,
+     "heading": "V CONDUCT OF BUSINESS"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 103,
+     "heading": "Rule 13 Quorum"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 103,
+     "heading": "Rule 14 Public nature of meetings"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 104,
+     "heading": "Rule 15 Subsidiary bodies"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 104,
+     "heading": "Rule 16 Order and time-limit of speeches"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 104,
+     "heading": "Rule 17 Draft resolutions and amendments"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 104,
+     "heading": "Rule 18 Points of order"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 105,
+     "heading": "Rule 19 Procedural motions"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 105,
+     "heading": "Rule 20 Suspension or adjournment of the meeting"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 105,
+     "heading": "Rule 21 Adjournment of the debate"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 105,
+     "heading": "Rule 22 Closure of the debate"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 106,
+     "heading": "Rule 23 Order of procedural motions"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 106,
+     "heading": "VI WORKING LANGUAGES"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 106,
+     "heading": "Rule 24 Working languages"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 106,
+     "heading": "Rule 25 Deadline for the distribution of documents"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 107,
+     "heading": "Rule 26 Summary records"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 107,
+     "heading": "VII VOTING"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 107,
+     "heading": "Rule 27 Voting rights"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 107,
+     "heading": "Rule 28 Consensus"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 107,
+     "heading": "Rule 29 Conduct during voting"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 107,
+     "heading": "Rule 30 Simple majority"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 108,
+     "heading": "Rule 31 Voting by show of hands and roll-all"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 108,
+     "heading": "Rule 32 Order of voting on proposals"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 108,
+     "heading": "Rule 33 Voting on amendments"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 109,
+     "heading": "Rule 34 Meaning of the expression 'States Parties present and voting'"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 109,
+     "heading": "VIII ELECTIONS AND TERM OF OFFICE OF THE COMMITTEE"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 109,
+     "heading": "Rule 35 Geographical distribution"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 109,
+     "heading": "Rule 36 Procedures for the presentation of candidatures to the Committee"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 110,
+     "heading": "Rule 37 Election of Members of the Committee"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 111,
+     "heading": "IX SECRETARIAT OF THE ASSEMBLY"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 111,
+     "heading": "Rule 38 Secretariat"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 112,
+     "heading": "X AMENDMENT AND SUSPENSION OF THE RULES OF PROCEDURE"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 112,
+     "heading": "Rule 39 Amendment"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 112,
+     "heading": "Rule 40 Suspension"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 115,
+     "heading": "Rules of Procedure of the Intergovernmental Committee for the Safeguarding of the Intangible Cultural Heritage"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 115,
+     "heading": "I MEMBERSHIP"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 115,
+     "heading": "Rule 1 The Intergovernmental Committee for the Safeguarding of the Intangible Cultural Heritage (Article 5 of the Convention)"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 115,
+     "heading": "II SESSIONS"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 115,
+     "heading": "Rule 2 Ordinary and extraordinary sessions"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 116,
+     "heading": "Rule 3 Convocation"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 116,
+     "heading": "Rule 4 Date and place of the session"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 116,
+     "heading": "III PARTICIPANTS"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 116,
+     "heading": "Rule 5 Delegations"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 117,
+     "heading": "Rule 6 Organizations acting in an advisory capacity to the Committee"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 117,
+     "heading": "Rule 7 Invitations for consultation"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 118,
+     "heading": "Rule 8 Other participants"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 118,
+     "heading": "IV AGENDA"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 118,
+     "heading": "Rule 9 Provisional agenda"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 119,
+     "heading": "Rule 10 Adoption of the agenda"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 119,
+     "heading": "Rule 11 Amendments, deletions and new items"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 119,
+     "heading": "V BUREAU"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 119,
+     "heading": "Rule 12 Bureau"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 120,
+     "heading": "Rule 13 Elections"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 120,
+     "heading": "Rule 14 Duties of the Chairperson"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 121,
+     "heading": "Rule 15 Replacement of Chairperson"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 121,
+     "heading": "Rule 16 Replacement of the Rapporteur"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 121,
+     "heading": "VI CONDUCT OF BUSINESS"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 121,
+     "heading": "Rule 17 Quorum"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 122,
+     "heading": "Rule 18 Public meetings"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 122,
+     "heading": "Rule 19 Private meetings"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 122,
+     "heading": "Rule 20 Ad hoc consultative bodies"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 123,
+     "heading": "Rule 21 Subsidiary bodies"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 123,
+     "heading": "Rule 22 Order and time-limit of speeches"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 124,
+     "heading": "Rule 23 Text of proposals"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 124,
+     "heading": "Rule 24 Division of proposals"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 124,
+     "heading": "Rule 25 Voting on amendments"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 124,
+     "heading": "Rule 26 Voting on proposals"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 125,
+     "heading": "Rule 27 Withdrawal of proposals"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 125,
+     "heading": "Rule 28 Points of order"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 125,
+     "heading": "Rule 29 Procedural motions"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 125,
+     "heading": "Rule 30 Suspension or adjournment of the meeting"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 125,
+     "heading": "Rule 31 Adjournment of debate"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 125,
+     "heading": "Rule 32 Closure of debate"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 126,
+     "heading": "Rule 33 Order of procedural motions"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 126,
+     "heading": "Rule 34 Decisions"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 127,
+     "heading": "Rule 37 Simple majority"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 127,
+     "heading": "Rule 38 Counting of votes"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 127,
+     "heading": "Rule 39 Conduct of voting"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 127,
+     "heading": "A A decision by secret ballot"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 128,
+     "heading": "B Elections of the members of ad hoc consultative bodies and subsidiary bodies by secret ballot"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 129,
+     "heading": "VIII SECRETARIAT OF THE COMMITTEE"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 129,
+     "heading": "Rule 40 The Secretariat"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 130,
+     "heading": "IX WORKING LANGUAGES AND REPORTS"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 130,
+     "heading": "Rule 41 Working languages"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 130,
+     "heading": "Rule 42 Deadline for distribution of documents"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 130,
+     "heading": "Rule 43 Reports of the sessions"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 131,
+     "heading": "Rule 44 Summary record"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 131,
+     "heading": "Rule 45 Communication of documentation"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 131,
+     "heading": "Rule 46 Reports to the General Assembly of the States Parties and to the General Conference of UNESCO"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 131,
+     "heading": "X ADOPTION, AMENDMENT AND SUSPENSION OF THE RULES OF"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 131,
+     "heading": "Rule 47 Adoption"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 131,
+     "heading": "Rule 48 Amendment"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 132,
+     "heading": "Rule 49 Suspension"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 135,
+     "heading": "Article 1 Creation of a Special Account"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 135,
+     "heading": "Article 2 Financial period"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 136,
+     "heading": "Article 3 Purpose"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 136,
+     "heading": "Article 4 Governance"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 136,
+     "heading": "Article 5 Income"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 137,
+     "heading": "Article 6 Expenditure"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 137,
+     "heading": "Article 7 Reserve Fund"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 138,
+     "heading": "Article 8 Accounts"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 138,
+     "heading": "Article 9 Investments"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 138,
+     "heading": "Article 10 Reporting"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 138,
+     "heading": "Article 11 Closure of the Special Account"
+    },
+    {
+     "section": "IV.1.3 International level (p. 68–143)",
+     "page": 139,
+     "heading": "Article 12 General provisions"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 151,
+     "heading": "Preparedness"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 152,
+     "heading": "Response"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 153,
+     "heading": "Recovery"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 157,
+     "heading": "Overall Results Framework for the Convention for the Safeguarding of the Intangible Cultural Heritage"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 173,
+     "heading": "Model Instrument of Ratification/Acceptance/Approval*"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 174,
+     "heading": "Voluntary contributions to the Fund for the Safeguarding of the Intangible Cultural Heritage"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 175,
+     "heading": "Sessions of the General Assembly of the States Parties to the Convention for the Safeguarding of the Intangible Cultural Heritage"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 176,
+     "heading": "Sessions of the Intergovernmental Committee for the Safeguarding of the Intangible Cultural Heritage"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 178,
+     "heading": "Forms"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 178,
+     "heading": "Representative List of the Intangible Cultural Heritage of Humanity"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 179,
+     "heading": "Deadline"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 179,
+     "heading": "Programmes, Projects and Activities that best reflect the principles and objectives of the Convention"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 179,
+     "heading": "Preparatory Assistance"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 179,
+     "heading": "International Assistance"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 179,
+     "heading": "Non-governmental organizations"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 180,
+     "heading": "Periodic reporting"
+    },
+    {
+     "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+     "page": 180,
+     "heading": "Deadline"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "19 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "19 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "5 quoted texts in 3 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Image 1",
+     "page": 0,
+     "image": "fig-001-p1.png",
+     "quotes": [
+      "\"UNESCO\"",
+      "\"unesco\""
+     ]
+    },
+    {
+     "figure": "Image 2",
+     "page": 0,
+     "image": "fig-002-p2.png",
+     "quotes": [
+      "\"UNESCO\"",
+      "\"unesco\""
+     ]
+    },
+    {
+     "figure": "Image 4",
+     "page": 0,
+     "image": "fig-004-p5.png",
+     "quotes": [
+      "\"A\""
+     ]
+    }
+   ],
+   "value": 5.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "69 page references valid (printed-labels pages 1–180)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "177 pages checked, 5 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "2 of 4 passages out of order not repairable, none breaks a sentence of the body text",
+   "findings": [
+    {
+     "page": 4,
+     "words": 6,
+     "text": "International level, cooperation and International Assistance",
+     "blocks": [
+      "#/tables/0",
+      "#/repaired/0"
+     ],
+     "problem": "layer passage (1629 letters) and blocks (3488) differ in length",
+     "fails": false,
+     "breaks": [
+      "passage cut out of '| Foreword by the Director-General of UN'"
+     ],
+     "section": "apparatus"
+    },
+    {
+     "page": 162,
+     "words": 4,
+     "text": "Safeguarding of the Intangible",
+     "blocks": [
+      "#/texts/1656"
+     ],
+     "problem": "layer passage (72 letters) and blocks (88) differ in length",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    }
+   ],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "unesco-basic-texts-of-the-2003-convention-for-the-safeguarding-of-the-intangible-cultural-heritage-2024-edition-2003",
+ "doc_type": "normative_text",
+ "analyzed_at": "2026-11-15T10:20:26.792069+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition)",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 67,
+   "chars": 114848,
+   "blocks": 610,
+   "inner_headings": 97,
+   "figures": 5
+  },
+  {
+   "index": 1,
+   "heading": "IV.1.3 International level",
+   "derived_heading": "",
+   "part": 1,
+   "parts": 1,
+   "page_from": 68,
+   "page_to": 143,
+   "chars": 110251,
+   "blocks": 636,
+   "inner_headings": 157,
+   "figures": 5
+  },
+  {
+   "index": 2,
+   "heading": "Ethical Principles for Safeguarding Intangible Cultural Heritage",
+   "derived_heading": "",
+   "part": 1,
+   "parts": 1,
+   "page_from": 143,
+   "page_to": 180,
+   "chars": 74633,
+   "blocks": 163,
+   "inner_headings": 22,
+   "figures": 9
+  }
+ ],
+ "skipped": [
+  "Contents",
+  "ABBREVIATIONS (p. 29)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 177,
+  "gaps": [
+   {
+    "page": 4,
+    "text": "International level, cooperation and International Assistance",
+    "words": 6,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/tables/0"
+   },
+   {
+    "page": 5,
+    "text": "Operational Directives . iv",
+    "words": 4,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/tables/0"
+   },
+   {
+    "page": 133,
+    "text": "after the Chairperson has announced the beginning of voting, no one shall interrupt the voting except",
+    "words": 16,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/tables/9"
+   },
+   {
+    "page": 133,
+    "text": "in connection with the actual CONDUCT of the voting.",
+    "words": 9,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/tables/9"
+   },
+   {
+    "page": 187,
+    "text": "after inscription of the element",
+    "words": 5,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/tables/28"
+   }
+  ],
+  "gaps_dismissed": [
+   {
+    "page": 3,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "Living Heritage Entity Culture Sector UNESCO"
+   },
+   {
+    "page": 4,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "147 Heritage in Emergencies 8"
+   },
+   {
+    "page": 8,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "– 7 . Operational Principles 8 . Overall Results"
+   },
+   {
+    "page": 8,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "9 . Annexes General Assembly and Modalities Framework"
+   },
+   {
+    "page": 12,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "1 . The Convention The Convention . 5"
+   },
+   {
+    "page": 14,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "1 . The Convention The Convention . 7"
+   },
+   {
+    "page": 15,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "The Convention . 8 4."
+   },
+   {
+    "page": 16,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "1 . The Convention The Convention . 9"
+   },
+   {
+    "page": 18,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "1 . The Convention The Convention . 11"
+   },
+   {
+    "page": 20,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "1 . The Convention The Convention . 13"
+   },
+   {
+    "page": 22,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "1 . The Convention The Convention . 15.3."
+   },
+   {
+    "page": 23,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "The Convention . 16.3."
+   },
+   {
+    "page": 24,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "1 . The Convention The Convention . 17"
+   },
+   {
+    "page": 28,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "1 . The Convention The Convention . 21"
+   },
+   {
+    "page": 30,
+    "words": 19,
+    "reason": "duplicate",
+    "text": "| – | 7 . Operational Principles | 8 . Overall Results |\n| 1 . The Convention | 2 . Operational Directives | General Assembly |"
+   },
+   {
+    "page": 30,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "and Modalities Framework 9 . Annexes"
+   },
+   {
+    "page": 39,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "32 . Operational Directives 5."
+   },
+   {
+    "page": 43,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "36 . Operational Directives 19."
+   },
+   {
+    "page": 49,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "42 . Operational Directives 37."
+   },
+   {
+    "page": 55,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "48 . Operational Directives 52."
+   },
+   {
+    "page": 55,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "year 0 15 December"
+   },
+   {
+    "page": 56,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "Phase 2: Evaluation December year 1"
+   },
+   {
+    "page": 73,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "66 . Operational Directives 109."
+   },
+   {
+    "page": 79,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "72 . Operational Directives 13.5."
+   },
+   {
+    "page": 104,
+    "words": 19,
+    "reason": "duplicate",
+    "text": "| – | 7 . Operational Principles | 8 . Overall Results |\n| 1 . The Convention | 2 . Operational Directives | General Assembly |"
+   },
+   {
+    "page": 104,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "and Modalities Framework 9 . Annexes"
+   },
+   {
+    "page": 104,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "Cultural Heritage 3"
+   },
+   {
+    "page": 106,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "– Heritage General Assembly"
+   },
+   {
+    "page": 120,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "– 7 . Operational Principles 8 . Overall Results"
+   },
+   {
+    "page": 120,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "and Modalities Framework 9 . Annexes"
+   },
+   {
+    "page": 122,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "4 . Rules of Procedure –"
+   },
+   {
+    "page": 124,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "4 . Rules of Procedure –"
+   },
+   {
+    "page": 128,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "4 . Rules of Procedure –"
+   },
+   {
+    "page": 130,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "4 . Rules of Procedure –"
+   },
+   {
+    "page": 132,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "4 . Rules of Procedure –"
+   },
+   {
+    "page": 134,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "4 . Rules of Procedure –"
+   },
+   {
+    "page": 140,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "– 7 . Operational Principles 8 . Overall Results"
+   },
+   {
+    "page": 140,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "and Modalities Framework 9 . Annexes"
+   },
+   {
+    "page": 140,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "Cultural Heritage 5"
+   },
+   {
+    "page": 142,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "5 . Financial Regulations"
+   },
+   {
+    "page": 144,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "Financial Regulations . 137"
+   },
+   {
+    "page": 144,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "5 . Financial Regulations"
+   },
+   {
+    "page": 146,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "Financial Regulations . 139"
+   },
+   {
+    "page": 148,
+    "words": 19,
+    "reason": "duplicate",
+    "text": "| – | 7 . Operational Principles | 8 . Overall Results |\n| 1 . The Convention | 2 . Operational Directives | General Assembly |"
+   },
+   {
+    "page": 148,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "and Modalities Framework 9 . Annexes"
+   },
+   {
+    "page": 150,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "6 . Ethical Principles"
+   },
+   {
+    "page": 151,
+    "words": 11,
+    "reason": "duplicate",
+    "text": "144 . Ethical Principles (4) (5) (6) (7) (8) (9) (10)"
+   },
+   {
+    "page": 152,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "Ethical Principles . 145 (11)"
+   },
+   {
+    "page": 154,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "– 7 . Operational Principles 8 . Overall Results"
+   },
+   {
+    "page": 154,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "and Modalities Framework 9 . Annexes"
+   },
+   {
+    "page": 154,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "Operational Principles in Emergencies 7"
+   },
+   {
+    "page": 156,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "7 . Operational Principles"
+   },
+   {
+    "page": 158,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "7 . Operational Principles"
+   },
+   {
+    "page": 160,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "7 . Operational Principles"
+   },
+   {
+    "page": 162,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "– 7 . Operational Principles 8 . Overall Results"
+   },
+   {
+    "page": 162,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "and Modalities Framework 9 . Annexes"
+   },
+   {
+    "page": 162,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "Cultural Heritage 8"
+   },
+   {
+    "page": 164,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "8 . Overall Results"
+   },
+   {
+    "page": 165,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "human capacities education"
+   },
+   {
+    "page": 165,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "4. education, both 7. Inventories reflect"
+   },
+   {
+    "page": 165,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "support practice formal and non-"
+   },
+   {
+    "page": 165,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "legal and administrative and transmission formal, strengthens"
+   },
+   {
+    "page": 165,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "measures reflect 2. programmes transmission and Safeguarding"
+   },
+   {
+    "page": 165,
+    "words": 15,
+    "reason": "duplicate",
+    "text": "are support promotes respect 8. Inventorying process implemented strengthening 5. ICH integrated is Inclusive, respects"
+   },
+   {
+    "page": 165,
+    "words": 25,
+    "reason": "duplicate",
+    "text": "| human capacities | into primary | diversity, and supports | legal and administrative |\n| for Safeguarding | and secondary | Safeguarding by | measures reflect |\n| 3. | training is | education | comm"
+   },
+   {
+    "page": 165,
+    "words": 14,
+    "reason": "duplicate",
+    "text": "are operated by or 6. Post-secondary 9. research and implemented addressed to education documentation"
+   },
+   {
+    "page": 165,
+    "words": 13,
+    "reason": "duplicate",
+    "text": "communities and supports contribute to administrative measures those Working in Safeguarding and Safeguarding"
+   },
+   {
+    "page": 165,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "Culture and education and Heritage accessible and utilized"
+   },
+   {
+    "page": 166,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "in society as other stakeholders"
+   },
+   {
+    "page": 166,
+    "words": 13,
+    "reason": "duplicate",
+    "text": "21. engagement for 23. Committee involves society widely recognized individuals participate Safeguarding ICH"
+   },
+   {
+    "page": 166,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "| widely in awareness | enhanced among | bodies, private persons1 |\n| programmes recognize | Raising | stakeholders |"
+   },
+   {
+    "page": 166,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "the importance of"
+   },
+   {
+    "page": 166,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "for Safeguarding Safeguarding ICH and awareness Raising to monitoring"
+   },
+   {
+    "page": 166,
+    "words": 23,
+    "reason": "duplicate",
+    "text": "foster self-respect and 19. public information Safeguarding International networking mutual respect measures raise awareness and institutional 20. Ethical Principles cooperation respected When Raising"
+   },
+   {
+    "page": 167,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "basis. Safeguarding and management"
+   },
+   {
+    "page": 167,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "communities, groups and"
+   },
+   {
+    "page": 168,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "education and non-formal education"
+   },
+   {
+    "page": 168,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "strengthen the transmission"
+   },
+   {
+    "page": 168,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "Safeguarding are integrated"
+   },
+   {
+    "page": 168,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "education supports the"
+   },
+   {
+    "page": 168,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "8 . Overall Results Framework"
+   },
+   {
+    "page": 170,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "8 . Overall Results"
+   },
+   {
+    "page": 171,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "and are implemented"
+   },
+   {
+    "page": 171,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "measures respect customary"
+   },
+   {
+    "page": 171,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "rights, practices and"
+   },
+   {
+    "page": 174,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "groups and enhanced among stakeholders"
+   },
+   {
+    "page": 178,
+    "words": 15,
+    "reason": "duplicate",
+    "text": "– 4 . Rules of Procedure – 7 . Operational Principles 8 . Overall Results"
+   },
+   {
+    "page": 178,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "General Assembly Committee"
+   },
+   {
+    "page": 182,
+    "words": 34,
+    "reason": "duplicate",
+    "text": "Annexes . 17.5 Location UNESCO Headquarters, Paris UNESCO Headquarters, Paris UNESCO Headquarters, Paris UNESCO Headquarters, Paris UNESCO Headquarters, Paris UNESCO Headquarters, Paris UNESCO Headqua"
+   },
+   {
+    "page": 184,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "Annexes . 177 Location"
+   },
+   {
+    "page": 184,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "online online online"
+   },
+   {
+    "page": 185,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "Urgent Safeguarding contact: ich.nominations@unesco.org"
+   },
+   {
+    "page": 185,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "(reduction) ICH-01 RL to"
+   },
+   {
+    "page": 185,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "15 December to RL of the year of"
+   },
+   {
+    "page": 186,
+    "words": 11,
+    "reason": "duplicate",
+    "text": "Annexes . 179 deadline 31 March 31 March at any time"
+   },
+   {
+    "page": 187,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "180 . Annexes deadline"
+   },
+   {
+    "page": 187,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "Timetable and budget"
+   }
+  ],
+  "captions_reclassified": [],
+  "headings_restored": [],
+  "lists_reunited": [
+   {
+    "page": 15,
+    "list": "#/groups/9",
+    "fragment": "#/groups/10",
+    "markers": "4-7",
+    "rule": "fragment continues numbering"
+   },
+   {
+    "page": 22,
+    "list": "#/groups/27",
+    "fragment": "#/groups/28",
+    "markers": "3-3",
+    "rule": "fragment continues numbering"
+   },
+   {
+    "page": 24,
+    "list": "#/groups/33",
+    "fragment": "#/groups/34",
+    "markers": "2-5",
+    "rule": "fragment continues numbering"
+   },
+   {
+    "page": 45,
+    "list": "#/groups/58",
+    "fragment": "#/groups/59",
+    "markers": "28-29",
+    "rule": "fragment continues numbering"
+   },
+   {
+    "page": 54,
+    "list": "#/groups/72",
+    "fragment": "#/groups/73",
+    "markers": "48-51",
+    "rule": "fragment continues numbering"
+   },
+   {
+    "page": 55,
+    "list": "#/groups/72",
+    "fragment": "#/groups/74",
+    "markers": "52-53",
+    "rule": "fragment continues numbering"
+   },
+   {
+    "page": 58,
+    "list": "#/groups/77",
+    "fragment": "#/groups/78",
+    "markers": "59-64",
+    "rule": "fragment continues numbering"
+   },
+   {
+    "page": 59,
+    "list": "#/groups/77",
+    "fragment": "#/groups/79",
+    "markers": "65-65",
+    "rule": "fragment continues numbering"
+   },
+   {
+    "page": 65,
+    "list": "#/groups/87",
+    "fragment": "#/groups/88",
+    "markers": "89-89",
+    "rule": "fragment continues numbering"
+   },
+   {
+    "page": 74,
+    "list": "#/groups/104",
+    "fragment": "#/groups/105",
+    "markers": "113-115",
+    "rule": "fragment continues numbering"
+   },
+   {
+    "page": 79,
+    "list": "#/groups/112",
+    "fragment": "#/groups/113",
+    "markers": "135-136",
+    "rule": "fragment continues numbering"
+   },
+   {
+    "page": 81,
+    "list": "#/groups/116",
+    "fragment": "#/groups/117",
+    "markers": "143-143",
+    "rule": "fragment continues numbering"
+   },
+   {
+    "page": 82,
+    "list": "#/groups/119",
+    "fragment": "#/groups/120",
+    "markers": "149-150",
+    "rule": "fragment continues numbering"
+   },
+   {
+    "page": 158,
+    "list": "#/groups/235",
+    "fragment": "#/groups/236",
+    "markers": "4-6",
+    "rule": "fragment continues numbering"
+   },
+   {
+    "page": 159,
+    "list": "#/groups/237",
+    "fragment": "#/groups/238",
+    "markers": "2-6",
+    "rule": "fragment continues numbering"
+   },
+   {
+    "page": 160,
+    "list": "#/groups/239",
+    "fragment": "#/groups/240",
+    "markers": "3-4",
+    "rule": "fragment continues numbering"
+   }
+  ],
+  "figures_screened": [
+   {
+    "page": 7,
+    "image": "fig-005-p7.png",
+    "w": 254,
+    "h": 69,
+    "reason": "strip"
+   },
+   {
+    "page": 147,
+    "image": "fig-012-p147.png",
+    "w": 395,
+    "h": 1132,
+    "reason": "repeated"
+   },
+   {
+    "page": 153,
+    "image": "fig-014-p153.png",
+    "w": 395,
+    "h": 1123,
+    "reason": "repeated"
+   }
+  ],
+  "superseded": [],
+  "replaced_pages": [
+   5
+  ],
+  "noise_dropped": 84,
+  "hyphens_restored": [
+   {
+    "page": 27,
+    "ref": "#/texts/287",
+    "word": "Director-General"
+   },
+   {
+    "page": 123,
+    "ref": "#/texts/1264",
+    "word": "Director-General"
+   },
+   {
+    "page": 123,
+    "ref": "#/texts/1268",
+    "word": "Director-General"
+   },
+   {
+    "page": 130,
+    "ref": "#/texts/1356",
+    "word": "Vice-Chairperson"
+   }
+  ],
+  "order": [
+   {
+    "page": 4,
+    "text": "International level, cooperation and International Assistance",
+    "words": 6,
+    "refs": [
+     "#/tables/0",
+     "#/repaired/0"
+    ],
+    "repaired": false,
+    "note": "layer passage (1629 letters) and blocks (3488) differ in length",
+    "breaks": [
+     "passage cut out of '| Foreword by the Director-General of UN'"
+    ],
+    "section": "apparatus"
+   },
+   {
+    "page": 33,
+    "text": "groups and, where applicable,",
+    "words": 4,
+    "refs": [
+     "#/tables/2"
+    ],
+    "repaired": true,
+    "note": "1 blocks replaced by the text layer's passage",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 57,
+    "text": "to the session",
+    "words": 3,
+    "refs": [
+     "#/texts/553",
+     "#/texts/556"
+    ],
+    "repaired": true,
+    "note": "4 blocks replaced by the text layer's passage",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 162,
+    "text": "Safeguarding of the Intangible",
+    "words": 4,
+    "refs": [
+     "#/texts/1656"
+    ],
+    "repaired": false,
+    "note": "layer passage (72 letters) and blocks (88) differ in length",
+    "breaks": [],
+    "section": ""
+   }
+  ],
+  "order_pages_checked": 165,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 2,
+  "order_breaking": 0,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 15 minor; distortions: 0 material, 9 minor; additions: 0 material, 1 minor; order: 0 material, 1 minor",
+  "at": "2026-11-15T10:25:10+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 15
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 9
+   },
+   "additions": {
+    "material": 0,
+    "minor": 1
+   },
+   "order": {
+    "material": 0,
+    "minor": 1
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "Basic Texts of the 2003 Convention for the Safeguarding of the Intangible Cultural Heritage (2024 Edition) (p. 1–67)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "Please verify that you are using the most recent version of the Operational Directives by checking the latest update on UNESCO's website",
+      "severity": "minor",
+      "page": 24
+     },
+     {
+      "source": "This decision of the General Assembly shall be taken by a majority of the States Parties present and voting which have not made the declaration referred to in paragraph 2",
+      "severity": "minor",
+      "page": 17
+     },
+     {
+      "source": "shall be considered: (a) as a Party to this Convention as so amended; and (b) as a Party to the unamended Convention in relation to any State Party not bound by the amendments",
+      "severity": "minor",
+      "page": 21
+     },
+     {
+      "source": "these items be placed on an equal footing with items inscribed in the future, in conformity with Article 16.2 of the Convention, and governed by the same legal regime for monitoring, transfer from one List to the other or withdrawal",
+      "severity": "minor",
+      "page": 51
+     },
+     {
+      "source": "Environmental impacts in the safeguarding of intangible cultural heritage ... Community-based resilience to natural disasters and climate change ... Intangible cultural heritage and peace",
+      "severity": "minor",
+      "page": 29
+     }
+    ],
+    "distortions": [
+     {
+      "source": "altering the status or diminishing the level of protection under the 1972 Convention ... of World Heritage properties with which an item of the intangible cultural heritage is directly associated",
+      "summary": "Nothing in the Convention alters the protection of World Heritage properties under the 1972 Convention",
+      "severity": "minor",
+      "page": 6
+     },
+     {
+      "source": "In order to reach a decision, the Committee shall undertake such studies and consultations as it deems necessary",
+      "summary": "the Committee may undertake studies and consultations as necessary",
+      "severity": "minor",
+      "page": 15
+     },
+     {
+      "source": "States Parties shall endeavour to ensure, in particular through the application of intellectual property rights, privacy rights and any other appropriate form of legal protection, that the rights ... are duly protected",
+      "summary": "States are encouraged to ... ensure — through intellectual property rights, privacy rights and other legal protection — that the rights of communities, groups and individuals that create, bear and transmit their heritage are protected",
+      "severity": "minor",
+      "page": 63
+     },
+     {
+      "source": "States Parties shall endeavour, by all appropriate means, to ensure recognition of, respect for and enhancement of intangible cultural heritage through educational and information programmes",
+      "summary": "States shall ensure recognition, respect and enhancement of ICH through educational and information programmes, capacity-building and non-formal transmission",
+      "severity": "minor",
+      "page": 64
+     }
+    ],
+    "additions": [],
+    "order": []
+   },
+   {
+    "index": 1,
+    "section": "IV.1.3 International level (p. 68–143)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "The Committee shall accompany the implementation of programmes, projects and activities that it considers best reflect the principles and objectives of the Convention by disseminating best practices using all possible means",
+      "severity": "minor",
+      "page": 69
+     },
+     {
+      "source": "The General Assembly and the Committee may authorize the National Commissions for UNESCO, or other duly designated authority, at the request of the State Party concerned, to use the emblem and to deal with questions relating to the use of the emblem at the national level.",
+      "severity": "minor",
+      "page": 71
+     },
+     {
+      "source": "To the extent that the emblem of the Convention has been notified and accepted by the Paris Union Member States under Article 6 ter of the Paris Convention for the Protection of Industrial Property, adopted in 1883 and revised at Stockholm in 1967, UNESCO has recourse to Paris Convention Member States' domestic systems",
+      "severity": "minor",
+      "page": 74
+     },
+     {
+      "source": "States Parties shall respond, in a timely manner, to specific requests addressed to them by the Committee for additional information, if needed and independently of the regional cycle set out by the Committee",
+      "severity": "minor",
+      "page": 78
+     },
+     {
+      "source": "States Parties shall acknowledge the dynamic nature of intangible cultural heritage in both urban and rural contexts and shall direct their safeguarding efforts solely on such intangible cultural heritage that is compatible with existing international human rights instruments",
+      "severity": "minor",
+      "page": 80
+     },
+     {
+      "source": "these goals should be underpinned by inclusive governance and the freedom for people to choose their own value systems.",
+      "severity": "minor",
+      "page": 82
+     },
+     {
+      "source": "States Parties should endeavor to recognize, promote and enhance those practices, representations and expressions of intangible cultural heritage that have peace-making and peace-building at their core, bring communities, groups and individuals together and ensure exchange, dialogue and understanding among them.",
+      "severity": "minor",
+      "page": 93
+     }
+    ],
+    "distortions": [
+     {
+      "source": "the Register of programmes, projects and activities that best reflect the principles and objectives of the Convention",
+      "summary": "the Register of good safeguarding practices (programmes, projects and activities)",
+      "severity": "minor",
+      "page": 68
+     },
+     {
+      "source": "the Director-General should ensure that the Intangible Cultural Heritage Fund receives a fair share of the revenues",
+      "summary": "the Intangible Cultural Heritage Fund must receive a fair share of revenues",
+      "severity": "minor",
+      "page": 74
+     },
+     {
+      "source": "as soon as possible, and preferably fifteen days before the opening of an extraordinary session",
+      "summary": "circulated at least sixty days before ordinary sessions (fifteen days for extraordinary)",
+      "severity": "minor",
+      "page": 101
+     }
+    ],
+    "additions": [
+     {
+      "summary": "its substantive content appears in Part 3 of the publication",
+      "severity": "minor"
+     }
+    ],
+    "order": []
+   },
+   {
+    "index": 2,
+    "section": "Ethical Principles for Safeguarding Intangible Cultural Heritage (p. 143–180)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "In conformity with Chapter VI of the Operational Directives, 'inclusive social development' comprises food security, health care, gender equality, access to clean and safe water and sustainable water use; quality education is included within indicator 12.",
+      "severity": "minor",
+      "page": 164
+     },
+     {
+      "source": "In conformity with Chapter VI of the Operational Directives, 'inclusive economic development' comprises income generation and sustainable livelihoods, productive employment and decent work, and impact of tourism on the safeguarding of ICH and vice versa.",
+      "severity": "minor",
+      "page": 164
+     },
+     {
+      "source": "Although the Convention consistently utilizes the expression, 'communities, groups and individuals', several assessment factors, like some Operational Directives, choose to refer to 'practitioners and bearers' to better identify certain of their members who play a specific role with regards to their ICH.",
+      "severity": "minor",
+      "page": 161
+     }
+    ],
+    "distortions": [
+     {
+      "source": "States opting for this modality are invited to inform the Secretariat through a letter of intent three months prior to the Committee meeting at which they wish their proposal to be examined.",
+      "summary": "States must notify the Secretariat by letter of intent three months before the Committee meeting at which the proposal is to be examined",
+      "severity": "minor",
+      "page": 174
+     },
+     {
+      "source": "communities, groups and, where applicable, individuals should never be alienated from their own intangible cultural heritage.",
+      "summary": "communities, groups and individuals must never be cut off from their own heritage",
+      "severity": "minor",
+      "page": 145
+     }
+    ],
+    "additions": [],
+    "order": [
+     {
+      "source": "9 Annexes . The Convention . Operational Directives Committee . Rules of Procedure -",
+      "summary": "",
+      "layer": "1 . The Convention 2 . Operational Directives 3 . Rules of Procedure – General Assembly 4 . Rules of Procedure – Committee 5 . Financial Regulations 6 . Ethical Principles 7 . Operational Principles and Modalities 8 . Overall Results Framework 9 . Annexes",
+      "severity": "minor",
+      "page": 171
+     }
+    ]
+   }
+  ]
+ },
+ "source": {
+  "source": "unesco-basic-texts-of-the-2003-convention-for-the-safeguarding-of-the-intangible-cultural-heritage-2024-edition-2003.pdf",
+  "bytes": 1587398,
+  "sha256": "492879024534acee551e8d88d9fa8fdec30a021ede2057dca2be2f4fa4a69df0",
+  "extracted_at": "2026-11-13T02:16:13+01:00"
+ }
+}

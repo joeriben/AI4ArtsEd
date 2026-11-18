@@ -470,7 +470,10 @@ const rows = computed<PerspectiveRow[]>(() => {
       label: p.configName || p.configId,
       // No model is named: the platform writes with the one it is configured
       // to intercept with, as it does everywhere a perspective is put to work.
-      request: { schema: p.configId },
+      // The wording the chooser handed over runs: the text the card shows. A
+      // pool preset draws at the pick; asked without it, the server would draw
+      // again on every press.
+      request: { schema: p.configId, contextPrompt: p.context || undefined },
       text: r?.text ?? '',
       segments: markTerms(r?.text ?? '', perspectiveTerms(p.context)),
       failedKey: r?.failedKey ?? '',

@@ -1,0 +1,4689 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 12.8% of 9474 words, ceiling 20%, longest run 52 words; not counted: 216 words from the source's lists; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 52,
+     "text": "acquire deepen create 1 human centred mindset human agency human accountability social responsibility 2 ethics of ai ethical principles safe and responsible use co creating ethical rules 3 ai foundations and applications basic ai techniques and applications application skills creating with ai 4 ai p"
+    },
+    {
+     "words": 29,
+     "text": "the ai competency framework for teachers presents the first global vision of how ai competencies can be defined and developed for the ethical and effective use of ai in"
+    },
+    {
+     "words": 23,
+     "text": "the european commission s 2022 ethical guidelines on the use of artificial intelligence ai and data in teaching and learning for educators and"
+    },
+    {
+     "words": 22,
+     "text": "transformation 5 ai for professional development ai enabling lifelong professional learning ai to enhance organizational learning ai to support professional transformation the"
+    },
+    {
+     "words": 22,
+     "text": "15 competencies across five dimensions human centred mindset ethics of ai ai foundations and applications ai pedagogy and ai for professional learning"
+    }
+   ],
+   "value": 0.1278,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "9 of 13 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 16,
+     "expected_items": 2,
+     "first_item": " Debunking AI hype: The design and use of AI is human led. Those who create AI ",
+     "output_lists": [
+      4,
+      4,
+      4,
+      4,
+      4,
+      5,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+     ]
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 16,
+     "expected_items": 2,
+     "first_item": " Ensuring human and social values prevail: Profit-driven algorithms also weaken",
+     "output_lists": [
+      4,
+      4,
+      4,
+      4,
+      4,
+      5,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+     ]
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 17,
+     "expected_items": 2,
+     "first_item": " Promoting inclusivity : Structural exclusion and discrimination are often embe",
+     "output_lists": [
+      4,
+      4,
+      4,
+      4,
+      4,
+      5,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+     ]
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 18,
+     "expected_items": 2,
+     "first_item": " Mandating the 'do no harm' principle : Validation should mandate the 'do no ha",
+     "output_lists": [
+      4,
+      4,
+      4,
+      4,
+      4,
+      5,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+     ]
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 19,
+     "expected_items": 2,
+     "first_item": " Validating trustworthy AI for educational purposes : A strict validation mecha",
+     "output_lists": [
+      4,
+      4,
+      4,
+      4,
+      4,
+      5,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+     ]
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 21,
+     "expected_items": 2,
+     "first_item": " The Human-centred mindset aspect defines the values and attitudinal orientatio",
+     "output_lists": [
+      4,
+      4,
+      4,
+      4,
+      4,
+      5,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+     ]
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 26,
+     "expected_items": 5,
+     "first_item": "1 . Demonstrate a deepened understanding of human accountability and human deter",
+     "output_lists": [
+      4,
+      4,
+      4,
+      4,
+      4,
+      5,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+     ]
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 27,
+     "expected_items": 6,
+     "first_item": "1 . Actively participate in and contribute to the building of inclusive AI socie",
+     "output_lists": [
+      4,
+      4,
+      4,
+      4,
+      4,
+      5,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+     ]
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 45,
+     "expected_items": 10,
+     "first_item": "security;",
+     "output_lists": []
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "13 of 135 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 3,
+     "number": "7"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 3,
+     "number": "75352"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 12,
+     "number": "12"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 23,
+     "number": "3.2.1"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 23,
+     "number": "3.2.2"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 23,
+     "number": "3.2.3"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 23,
+     "number": "3.2.4"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 24,
+     "number": "3.2.5"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 25,
+     "number": "3.3.1"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 26,
+     "number": "3.3.2"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 26,
+     "number": "3.3.3"
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 50,
+     "number": "1.1.2"
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 50,
+     "number": "1.1.3"
+    }
+   ],
+   "value": 13.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "78 of 91 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 3,
+     "heading": "UNESCO - a global leader in education"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 3,
+     "heading": "The Global Education 2030 Agenda"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 4,
+     "heading": "Guiding teachers on AI use and misuse in education"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 12,
+     "heading": "List of acronyms and abbreviations"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 13,
+     "heading": "1.1 Why an AI competency framework?"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 14,
+     "heading": "1.2 Purpose and target audience"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 14,
+     "heading": "1.3 Alignment with the ICT competency framework for teachers"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 15,
+     "heading": "1.4 Technological advances in AI and implications for teacher competencies"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 16,
+     "heading": "2.1 Ensuring inclusive digital futures"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 17,
+     "heading": "2.2 A human-centred approach to AI"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 18,
+     "heading": "2.3 Protecting teachers' rights and iteratively (re)defining teachers' roles"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 18,
+     "heading": "2.4 Promoting trustworthy and environmentally sustainable AI for education"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 19,
+     "heading": "2.5 Ensuring applicability for all teachers and reflecting digital evolution"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 20,
+     "heading": "2.6 Lifelong professional learning for teachers"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 21,
+     "heading": "Chapter 3: Structure of the AI competency framework for teachers"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 21,
+     "heading": "3.1 Dimensions of the AI CFT"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 23,
+     "heading": "3.2 Aspects of the AI CFT"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 23,
+     "heading": "3.2.1 Aspect 1: Human-centred mindset"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 23,
+     "heading": "3.2.2 Aspect 2: Ethics of AI"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 23,
+     "heading": "3.2.3 Aspect 3: AI foundations and applications"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 23,
+     "heading": "3.2.4 Aspect 4: AI pedagogy"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 24,
+     "heading": "3.2.5 Aspect 5: AI for professional development"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 24,
+     "heading": "3.3 Progression levels of the AI CFT"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 25,
+     "heading": "3.3.1 Progression level 1: Acquire"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 26,
+     "heading": "3.3.2 Progression level 2: Deepen"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 26,
+     "heading": "3.3.3 Progression level 3: Create"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 28,
+     "heading": "Chapter 4: The AI CFT specifications"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 28,
+     "heading": "4.1 Progression level 1: Acquire"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 30,
+     "heading": "AI foundations and applications"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 30,
+     "heading": "TEACHER COMPETENCY"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 30,
+     "heading": "3 .1 Basic AI techniques and applications:"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 30,
+     "heading": "CURRICULAR GOALS (CG) (Teacher training or support programmes should …)"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 30,
+     "heading": "LEARNING OBJECTIVES (LO) (Teachers can …)"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 30,
+     "heading": "CONTEXTUAL ACTIVITIES (Teachers can demonstrate the following attitudinal or behavioural changes)"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 32,
+     "heading": "AI for professional development"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 32,
+     "heading": "TEACHER COMPETENCY"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 32,
+     "heading": "5 .1 Enabling lifelong professional learning:"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 32,
+     "heading": "CURRICULAR GOALS (CG) (Teacher training or support programmes should …)"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 32,
+     "heading": "CG5.1.1 Nurture teachers'"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 32,
+     "heading": "LEARNING OBJECTIVES (LO) (Teachers can …)"
+    },
+    {
+     "section": "AI competency framework for teachers (p. 2–32)",
+     "page": 32,
+     "heading": "CONTEXTUAL ACTIVITIES (Teachers can demonstrate the following attitudinal or behavioural changes)"
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 37,
+     "heading": "AI for professional development"
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 37,
+     "heading": "TEACHER COMPETENCY"
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 37,
+     "heading": "CURRICULAR GOALS (CG) (Teacher training or support programmes should …)"
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 37,
+     "heading": "LEARNING OBJECTIVES (LO) (Teachers can …)"
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 37,
+     "heading": "CONTEXTUAL ACTIVITIES (Teachers can demonstrate the following attitudinal or behavioural changes)"
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 38,
+     "heading": "Table 4. Competency blocks, objectives and examples for progression level 3: Create"
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 40,
+     "heading": "AI foundations and applications"
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 40,
+     "heading": "TEACHER COMPETENCY"
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 40,
+     "heading": "CURRICULAR GOALS (Teacher training or support programmes should …)"
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 40,
+     "heading": "LEARNING OBJECTIVES (Teachers can …)"
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 40,
+     "heading": "CONTEXTUAL ACTIVITIES (Teachers can demonstrate the following attitudinal or behavioural changes)"
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 40,
+     "heading": "Driving the design of AI tools for inclusion:"
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 40,
+     "heading": "Promoting the co-creation of AI tools to support climate-friendly actions:"
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 40,
+     "heading": "Coordinating the building and use of repositories"
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 42,
+     "heading": "AI for professional development"
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 42,
+     "heading": "TEACHER COMPETENCY"
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 42,
+     "heading": "CURRICULAR GOALS (Teacher training or support programmes should …)"
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 42,
+     "heading": "LEARNING OBJECTIVES (Teachers can …)"
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 42,
+     "heading": "CONTEXTUAL ACTIVITIES (Teachers can demonstrate the following attitudinal or behavioural changes)"
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 42,
+     "heading": "Human-AI hybrid coach"
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 43,
+     "heading": "5.1 Regulate AI and ensure trustworthy AI tools for education"
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 44,
+     "heading": "Box 1: Regulations on AI: key elements of accountabilities for multiple stakeholders"
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 44,
+     "heading": "(1) Governmental regulatory agencies"
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 44,
+     "heading": "(2) Providers of AI systems and AI services"
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 44,
+     "heading": "(3) Institutional users"
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 44,
+     "heading": "(4) Individual users"
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 44,
+     "heading": "Source: UNESCO, 2023 b"
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 45,
+     "heading": "5.2 Build enabling policies and conditions for the use of AI in education"
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 46,
+     "heading": "Box 2: The Republic of Korea's National Strategy for Artificial Intelligence"
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 47,
+     "heading": "5.3 Formulate and adopt local AI competency frameworks for teachers"
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 47,
+     "heading": "Box 3: Examples of non-governmental AI competency frameworks for teachers"
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 48,
+     "heading": "5.4 Design and streamline training and support programmes on AI competencies"
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 48,
+     "heading": "Box 4: Examples of training and support programmes on AI for teachers"
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 49,
+     "heading": "5.5 Develop contextual performance-based assessment tools"
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 50,
+     "heading": "Table 5. An example of designing assessment tools based on the AI CFT"
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 51,
+     "heading": "5.6 Conclusion"
+    },
+    {
+     "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+     "page": 53,
+     "heading": "AI competency framework for teachers"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "4 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "4 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "2 quoted texts in 1 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Image 11",
+     "page": 53,
+     "image": "fig-011-p52.png",
+     "quotes": [
+      "\"unesco\"",
+      "\"United Nations Educational, Scientific and Cultural Organization.\""
+     ]
+    }
+   ],
+   "value": 2.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "39 page references valid (printed-folio pages 2–53)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "52 pages checked, 6 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "21 passages out of order break a sentence (55 of 56 not repairable; listed, not gated)",
+   "findings": [
+    {
+     "page": 31,
+     "words": 4,
+     "text": "their learning needs, and",
+     "blocks": [
+      "#/texts/265",
+      "#/texts/269",
+      "#/texts/270"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 31,
+     "words": 5,
+     "text": "following attitudinal or behavioural changes)",
+     "blocks": [
+      "#/texts/272",
+      "#/texts/274",
+      "#/texts/278"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 31,
+     "words": 9,
+     "text": "of teachers’ basic rights and obligations in the AI",
+     "blocks": [
+      "#/texts/272",
+      "#/texts/274",
+      "#/texts/279"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 31,
+     "words": 4,
+     "text": "era: Delineate the rights",
+     "blocks": [
+      "#/texts/274",
+      "#/texts/279"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'LO5.1.1 Describe the evolution of teache'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 31,
+     "words": 4,
+     "text": "that should be protected,",
+     "blocks": [
+      "#/texts/274",
+      "#/texts/279"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 31,
+     "words": 9,
+     "text": "that should be provided for–teachers in the AI",
+     "blocks": [
+      "#/texts/274",
+      "#/texts/275",
+      "#/texts/279"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 31,
+     "words": 6,
+     "text": "era, as well as their main",
+     "blocks": [
+      "#/texts/275",
+      "#/texts/279"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'LO5.1.2 Exemplify the new knowledge, ski'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 31,
+     "words": 4,
+     "text": "the ethical and effective",
+     "blocks": [
+      "#/texts/275",
+      "#/texts/279"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'LO5.1.2 Exemplify the new knowledge, ski'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 31,
+     "words": 5,
+     "text": "use of AI in education.",
+     "blocks": [
+      "#/texts/275",
+      "#/texts/279"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 31,
+     "words": 5,
+     "text": "in the AI era: Conduct",
+     "blocks": [
+      "#/texts/275",
+      "#/texts/276",
+      "#/texts/280"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 31,
+     "words": 4,
+     "text": "assessments of their own",
+     "blocks": [
+      "#/texts/275",
+      "#/texts/276",
+      "#/texts/280"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 31,
+     "words": 4,
+     "text": "gaps and devise possible",
+     "blocks": [
+      "#/texts/276",
+      "#/texts/280"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'LO5.1.3 List various AI tools including '"
+     ],
+     "section": ""
+    },
+    {
+     "page": 31,
+     "words": 4,
+     "text": "their capacity for ethical",
+     "blocks": [
+      "#/texts/276",
+      "#/texts/280"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 31,
+     "words": 4,
+     "text": "AI to Open professional",
+     "blocks": [
+      "#/texts/276",
+      "#/texts/277",
+      "#/texts/281"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 31,
+     "words": 5,
+     "text": "experience and skills to use",
+     "blocks": [
+      "#/texts/277",
+      "#/texts/281"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'LO5.1.4 Locate and apply teacher-facing '"
+     ],
+     "section": ""
+    },
+    {
+     "page": 31,
+     "words": 4,
+     "text": "to prompt new ideas",
+     "blocks": [
+      "#/texts/277",
+      "#/texts/281"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 36,
+     "words": 5,
+     "text": "learning objectives (LO) (teachers can",
+     "blocks": [
+      "#/texts/299",
+      "#/texts/300",
+      "#/texts/304"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 36,
+     "words": 6,
+     "text": "5.2 AI to enhance organizational learning:",
+     "blocks": [
+      "#/texts/297",
+      "#/texts/299",
+      "#/texts/300"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 36,
+     "words": 21,
+     "text": "LO5.2.1 critically analyse their roles in designing andfacilitating students’ use of AI in their own pedagogical practices, deepening their understanding",
+     "blocks": [
+      "#/texts/300",
+      "#/texts/301",
+      "#/texts/305"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 36,
+     "words": 45,
+     "text": "the balance between their fundamentally human role andthe obligations of continuously developing AI competencies. teachers are able to confidently utilize AI tools for tailored participation in collab",
+     "blocks": [
+      "#/texts/297",
+      "#/texts/300",
+      "#/texts/301",
+      "#/texts/305"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 39,
+     "words": 4,
+     "text": "3.3 Creating with AI:",
+     "blocks": [
+      "#/texts/325",
+      "#/texts/327",
+      "#/texts/328"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 39,
+     "words": 4,
+     "text": "modify AI tools in",
+     "blocks": [
+      "#/texts/325",
+      "#/texts/328"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 39,
+     "words": 3,
+     "text": "operational skills to",
+     "blocks": [
+      "#/texts/325",
+      "#/texts/328"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'CG3.3.1 Nurture adaptability and creativ'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 39,
+     "words": 4,
+     "text": "Create AI-assisted inclusive learning",
+     "blocks": [
+      "#/texts/325",
+      "#/texts/328",
+      "#/texts/329"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 39,
+     "words": 4,
+     "text": "contextual activities (teachers can",
+     "blocks": [
+      "#/texts/331",
+      "#/texts/334",
+      "#/texts/346"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 39,
+     "words": 5,
+     "text": "following attitudinal or behavioural changes)",
+     "blocks": [
+      "#/texts/331",
+      "#/texts/334",
+      "#/texts/346"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 39,
+     "words": 4,
+     "text": "driving the Design of",
+     "blocks": [
+      "#/texts/331",
+      "#/texts/334",
+      "#/texts/347"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 39,
+     "words": 3,
+     "text": "tools for Inclusion:",
+     "blocks": [
+      "#/texts/335",
+      "#/texts/347"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 39,
+     "words": 4,
+     "text": "the limitations of selected",
+     "blocks": [
+      "#/texts/339",
+      "#/texts/348"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'Collaborate with a community of co-creat'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 39,
+     "words": 5,
+     "text": "AI systems in solving real-",
+     "blocks": [
+      "#/texts/340",
+      "#/texts/348"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'Collaborate with a community of co-creat'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 39,
+     "words": 4,
+     "text": "world problems in local",
+     "blocks": [
+      "#/texts/341",
+      "#/texts/348"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'Collaborate with a community of co-creat'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 39,
+     "words": 4,
+     "text": "models to customize and/",
+     "blocks": [
+      "#/texts/343",
+      "#/texts/348",
+      "#/texts/349"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 39,
+     "words": 4,
+     "text": "or assemble existing AI",
+     "blocks": [
+      "#/texts/343",
+      "#/texts/349",
+      "#/texts/350"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 39,
+     "words": 4,
+     "text": "tools or semifinished AI",
+     "blocks": [
+      "#/texts/343",
+      "#/texts/349",
+      "#/texts/350"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 39,
+     "words": 5,
+     "text": "models to Create AI tools",
+     "blocks": [
+      "#/texts/343",
+      "#/texts/350"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 39,
+     "words": 5,
+     "text": "systems to Create solutions that",
+     "blocks": [
+      "#/texts/343",
+      "#/texts/350"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 39,
+     "words": 5,
+     "text": "that are both relevant and",
+     "blocks": [
+      "#/texts/343",
+      "#/texts/350"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'Co-create AI tools or organize hackathon'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 39,
+     "words": 4,
+     "text": "affordable for local settings",
+     "blocks": [
+      "#/texts/343",
+      "#/texts/350"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'Co-create AI tools or organize hackathon'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 39,
+     "words": 4,
+     "text": "and specific use cases.",
+     "blocks": [
+      "#/texts/343",
+      "#/texts/350"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'Co-create AI tools or organize hackathon'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 39,
+     "words": 4,
+     "text": "define criteria for the",
+     "blocks": [
+      "#/texts/344",
+      "#/texts/350"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'Co-create AI tools or organize hackathon'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 39,
+     "words": 5,
+     "text": "of a self-created AI tool",
+     "blocks": [
+      "#/texts/344",
+      "#/texts/350",
+      "#/texts/351"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 39,
+     "words": 4,
+     "text": "for the Purpose of",
+     "blocks": [
+      "#/texts/344",
+      "#/texts/351"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 39,
+     "words": 4,
+     "text": "iteration of the tool.",
+     "blocks": [
+      "#/texts/344",
+      "#/texts/351",
+      "#/texts/352"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'of educational AI tools: Support the cre'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 39,
+     "words": 4,
+     "text": "LO3.3.4 contribute to a",
+     "blocks": [
+      "#/texts/345",
+      "#/texts/352"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'of educational AI tools: Support the cre'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 39,
+     "words": 4,
+     "text": "new or existing Repository",
+     "blocks": [
+      "#/texts/345",
+      "#/texts/352"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'of educational AI tools: Support the cre'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 39,
+     "words": 4,
+     "text": "of user-created or tailored",
+     "blocks": [
+      "#/texts/345",
+      "#/texts/352"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'of educational AI tools: Support the cre'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 39,
+     "words": 5,
+     "text": "AI tools based on personal",
+     "blocks": [
+      "#/texts/345",
+      "#/texts/352"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'of educational AI tools: Support the cre'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 39,
+     "words": 5,
+     "text": "and promote a focus on",
+     "blocks": [
+      "#/texts/345",
+      "#/texts/352"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'of educational AI tools: Support the cre'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 39,
+     "words": 4,
+     "text": "only utilizing the most",
+     "blocks": [
+      "#/texts/345",
+      "#/texts/352"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'of educational AI tools: Support the cre'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 41,
+     "words": 4,
+     "text": "learning objectives (teachers can",
+     "blocks": [
+      "#/texts/362",
+      "#/texts/363",
+      "#/texts/367"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 41,
+     "words": 6,
+     "text": "5.3 AI to support professional development:",
+     "blocks": [
+      "#/texts/359",
+      "#/texts/362",
+      "#/texts/363"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 41,
+     "words": 39,
+     "text": "LO5.3.1 Show commitment and persistence in the co-creation and usage of AI tools and methods to full their professional andsocial responsibilities in AI societies, aiming at new iterations of ethical ",
+     "blocks": [
+      "#/texts/363",
+      "#/texts/364",
+      "#/texts/368"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 41,
+     "words": 66,
+     "text": "LO5.3.2 blend AI tools and human coaching to facilitate well-informed self-reflection and assessment, Goal setting andthe mobilization of knowledge and human mentors to support personal and collaborat",
+     "blocks": [
+      "#/texts/360",
+      "#/texts/364",
+      "#/texts/365",
+      "#/texts/369"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 41,
+     "words": 4,
+     "text": "programmes that are relevant",
+     "blocks": [
+      "#/texts/375",
+      "#/texts/376"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'Leverage AI tools to expand reviews of e'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 51,
+     "words": 9,
+     "text": "을 결집하여 AI 시대 미래 비전과 전략을 담은 ‘AI",
+     "blocks": [
+      "#/texts/468",
+      "#/texts/475"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [
+      "sentence cut: \"on Teachers' Digital Literacy]. Beijing,\" | 'Ministry of Science and ICT, Republic of'",
+      "passage cut out of '-. 2024. Laying down harmonised rules on'"
+     ],
+     "section": "bibliography"
+    }
+   ],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "unesco-ai-competency-framework-for-teachers-2024",
+ "doc_type": "framework_report",
+ "analyzed_at": "2026-11-15T10:08:00.601581+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "AI competency framework for teachers",
+   "part": 1,
+   "parts": 1,
+   "page_from": 2,
+   "page_to": 32,
+   "chars": 82424,
+   "blocks": 225,
+   "inner_headings": 48,
+   "figures": 3
+  },
+  {
+   "index": 1,
+   "heading": "4.2 Progression Level 2: Deepen",
+   "derived_heading": "",
+   "part": 1,
+   "parts": 1,
+   "page_from": 33,
+   "page_to": 53,
+   "chars": 107808,
+   "blocks": 161,
+   "inner_headings": 42,
+   "figures": 1
+  }
+ ],
+ "skipped": [
+  "Acknowledgements (p. 7)",
+  "Table of contents (p. 9)",
+  "List of tables (p. 11)",
+  "List of boxes (p. 11)",
+  "References (p. 52)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 52,
+  "gaps": [
+   {
+    "page": 10,
+    "text": "AI competency AI competency frameworkframework for teachers for–teachers – Listand List of tables of tables",
+    "words": 15,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "before #/texts/47"
+   },
+   {
+    "page": 34,
+    "text": "contextual activities Curricular Goals",
+    "words": 4,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/tables/10"
+   },
+   {
+    "page": 34,
+    "text": "programmes should …) behavioural changes)",
+    "words": 5,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/tables/10"
+   },
+   {
+    "page": 40,
+    "text": "andagile creativity. specific or",
+    "words": 5,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/tables/14"
+   },
+   {
+    "page": 40,
+    "text": "promote students’ higher-order pedagogical",
+    "words": 4,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/tables/14"
+   },
+   {
+    "page": 49,
+    "text": "group of teachers human agency:",
+    "words": 5,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/tables/15"
+   }
+  ],
+  "gaps_dismissed": [
+   {
+    "page": 2,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "across all actions."
+   },
+   {
+    "page": 21,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "and applications applications AI-enhanced pedagogical"
+   },
+   {
+    "page": 21,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "transformation AI to support"
+   },
+   {
+    "page": 21,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "AI enabling lifelong AI to enhance professional development professional learning organizational learning"
+   },
+   {
+    "page": 27,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "contextual activities teacher Curricular Goals (CG) (teachers can learning objectives (LO) competency"
+   },
+   {
+    "page": 27,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "demonstrate the (teachers can …) programmes should …)"
+   },
+   {
+    "page": 27,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "critically examine hype centred"
+   },
+   {
+    "page": 27,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "have a critical mindset understanding that"
+   },
+   {
+    "page": 27,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "through basic risk-benefit"
+   },
+   {
+    "page": 27,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "that corporate and diminishing human autonomy teach."
+   },
+   {
+    "page": 27,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "profound impact on"
+   },
+   {
+    "page": 27,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "demonstrate a basic and rights,"
+   },
+   {
+    "page": 27,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "importance of their own responsibilities."
+   },
+   {
+    "page": 27,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "human agency when"
+   },
+   {
+    "page": 27,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "evaluating and using"
+   },
+   {
+    "page": 27,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "threaten human rights. AI tools."
+   },
+   {
+    "page": 27,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "teachers’ andstudents’"
+   },
+   {
+    "page": 27,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "CG1.1.3 Highlight how"
+   },
+   {
+    "page": 27,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "promote human agency"
+   },
+   {
+    "page": 28,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "teacher Curricular Goals (CG) competency"
+   },
+   {
+    "page": 28,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "…) Ethics of 2.1 ethical CG2.1.1 Surface ethical principles:"
+   },
+   {
+    "page": 28,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "AI teachers have a"
+   },
+   {
+    "page": 28,
+    "words": 25,
+    "reason": "duplicate",
+    "text": "basic understanding tools in education. of ethical issues CG2.1.2 facilitate an surrounding AIand understanding of essential of the principles ethical principles through required for"
+   },
+   {
+    "page": 28,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "interactions ethical principles. guide including Protection"
+   },
+   {
+    "page": 28,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "| Inclusion and | harm’; proportionality; non- |\n| environmental | discrimination; sustainability; |"
+   },
+   {
+    "page": 28,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "contextual activities learning objectives (teachers can (LO) demonstrate the (teachers can …)"
+   },
+   {
+    "page": 28,
+    "words": 10,
+    "reason": "duplicate",
+    "text": "| LO2.1.1 Exemplify | ‘perspective taking’ in |\n| fundamental ethical | ethical dilemmas: adopt |"
+   },
+   {
+    "page": 28,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "of multiple dilemmas"
+   },
+   {
+    "page": 28,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "Cultural relevance. human agency, equity,"
+   },
+   {
+    "page": 28,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "Inclusion, local cultures"
+   },
+   {
+    "page": 28,
+    "words": 21,
+    "reason": "duplicate",
+    "text": "paper-based worksheets principles and understand or digital concepttheir implications for mapping applications) to education. visualize the connections LO2.1.4 Prioritize actions"
+   },
+   {
+    "page": 28,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "principles, responses to"
+   },
+   {
+    "page": 28,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "their correspondence with"
+   },
+   {
+    "page": 28,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "Regulations, and examples with particular attention"
+   },
+   {
+    "page": 28,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "of local Regulations: marginalized groups."
+   },
+   {
+    "page": 29,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "teacher competency AI"
+   },
+   {
+    "page": 29,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "foundations applications: and teachers are applications"
+   },
+   {
+    "page": 29,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "contextual activities (teacher training or"
+   },
+   {
+    "page": 29,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "demonstrate support programmes (teachers can …)"
+   },
+   {
+    "page": 29,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "should …) behavioural changes)"
+   },
+   {
+    "page": 29,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "LO3.1.1 demonstrate conceptual mapping"
+   },
+   {
+    "page": 29,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "appropriate to their"
+   },
+   {
+    "page": 29,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "to teachers’ responsibilities competencies and"
+   },
+   {
+    "page": 29,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "responsibilities on how"
+   },
+   {
+    "page": 29,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "of decision-making regarding"
+   },
+   {
+    "page": 29,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "Acquire relevant understanding education."
+   },
+   {
+    "page": 29,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "Extension and enhancement generate their outputs. and programming; and"
+   },
+   {
+    "page": 29,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "problem-scoping, Design, the teachers’ responsibilities."
+   },
+   {
+    "page": 29,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "training, testing, deployment,"
+   },
+   {
+    "page": 29,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "feedback and iteration."
+   },
+   {
+    "page": 29,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "LO3.1.2 Exemplify what"
+   },
+   {
+    "page": 29,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "Develop new skills. experience different types"
+   },
+   {
+    "page": 29,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "‘Navigation compass’ for"
+   },
+   {
+    "page": 29,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "understand the technological"
+   },
+   {
+    "page": 29,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "basic comparative advantages"
+   },
+   {
+    "page": 29,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "their accessibility, inclusivity,"
+   },
+   {
+    "page": 29,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "CG3.1.4 support teachers"
+   },
+   {
+    "page": 29,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "AI tools. from recommending basic"
+   },
+   {
+    "page": 29,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "consideration of open-source"
+   },
+   {
+    "page": 30,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "teacher Curricular Goals (CG) competency"
+   },
+   {
+    "page": 30,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "in pedagogy teachers are"
+   },
+   {
+    "page": 30,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "tools to facilitate implemented. subject-specific"
+   },
+   {
+    "page": 30,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "contextual activities learning objectives (teachers can (LO) demonstrate the (teachers can …)"
+   },
+   {
+    "page": 30,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "LO4.1.1 demonstrate starting from basic"
+   },
+   {
+    "page": 30,
+    "words": 10,
+    "reason": "duplicate",
+    "text": "teaching needs: centred mindset, ethical Delineate basic needs principles, domain-"
+   },
+   {
+    "page": 30,
+    "words": 15,
+    "reason": "duplicate",
+    "text": "| appropriate pedagogical | implementation of |\n| methodologies and | teaching andlearning |\n| conceptual knowledge on | assessment. Start from |"
+   },
+   {
+    "page": 30,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "principle to understand"
+   },
+   {
+    "page": 30,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "applications Designed to question?"
+   },
+   {
+    "page": 30,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "learning by assessment demonstrating"
+   },
+   {
+    "page": 30,
+    "words": 14,
+    "reason": "duplicate",
+    "text": "familiarity with their implementation– potential and limitations. reflection’: learn and LO4.1.3 demonstrate gradually improve"
+   },
+   {
+    "page": 30,
+    "words": 16,
+    "reason": "duplicate",
+    "text": "of analysing exemplar might be appropriate; lessons, designing and confidently prepare and implementing their implement AI-assisted"
+   },
+   {
+    "page": 30,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "teaching and assessment, assessing/reflecting on"
+   },
+   {
+    "page": 30,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "implementation. with special needs. evaluating effectiveness"
+   },
+   {
+    "page": 30,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "against needs: gain"
+   },
+   {
+    "page": 30,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "first-hand experience of or operate institutionally"
+   },
+   {
+    "page": 30,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "deployed AI systems."
+   },
+   {
+    "page": 31,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "teacher Curricular Goals (CG) competency"
+   },
+   {
+    "page": 31,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "…) AI for 5.1 enabling CG5.1.1 nurture teachers’ lifelong"
+   },
+   {
+    "page": 31,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "new expected to be"
+   },
+   {
+    "page": 31,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "practices, assess should be protected."
+   },
+   {
+    "page": 31,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "rapidly evolving instruments. Educational"
+   },
+   {
+    "page": 31,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "32 contextual activities"
+   },
+   {
+    "page": 31,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "(LO) demonstrate the (teachers can …)"
+   },
+   {
+    "page": 31,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "LO5.1.1 Describe the awareness of teachers’ evolution"
+   },
+   {
+    "page": 31,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "the basic working"
+   },
+   {
+    "page": 31,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "conditions and guidance"
+   },
+   {
+    "page": 31,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "its or training opportunities use in education."
+   },
+   {
+    "page": 31,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "responsibilities to ensure"
+   },
+   {
+    "page": 31,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "self-assessment of knowledge and experience readiness for teaching"
+   },
+   {
+    "page": 31,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "readiness and competency including locally relevant"
+   },
+   {
+    "page": 31,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "roadmaps for professional"
+   },
+   {
+    "page": 31,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "development to build support self-assessment,"
+   },
+   {
+    "page": 31,
+    "words": 10,
+    "reason": "duplicate",
+    "text": "| reflective practices and | and effective AI-assisted |\n| professional learning with | teaching. |"
+   },
+   {
+    "page": 31,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "Human-directed use of accessibility for teachers"
+   },
+   {
+    "page": 31,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "with disabilities. learning horizons: gain"
+   },
+   {
+    "page": 31,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "teacherfacing AI tools AI-assisted social media"
+   },
+   {
+    "page": 31,
+    "words": 11,
+    "reason": "duplicate",
+    "text": "recommend peers who needs of self-assessment share similar professional and personal"
+   },
+   {
+    "page": 31,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "learning on subject-matter"
+   },
+   {
+    "page": 31,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "skills and peer-learning."
+   },
+   {
+    "page": 32,
+    "words": 22,
+    "reason": "duplicate",
+    "text": "contextual activities teacher Curricular Goals (teachers can learning objectives competency (teacher training or demonstrate the (teachers can …) support programmes should …)"
+   },
+   {
+    "page": 32,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "or international regulatory"
+   },
+   {
+    "page": 32,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "frameworks to examine"
+   },
+   {
+    "page": 32,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "accountabilities. and human"
+   },
+   {
+    "page": 32,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "LO1.2.3 make reference"
+   },
+   {
+    "page": 32,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "relevant Regulations), as well as a"
+   },
+   {
+    "page": 32,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "| the | responsible institutions) |\n| critical capacity | education and demonstrate |"
+   },
+   {
+    "page": 32,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "protect teachers’ rights capabilities outputs and predictions"
+   },
+   {
+    "page": 32,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "and accountability when in facilitating"
+   },
+   {
+    "page": 32,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "decision loops, teachers’ accountability"
+   },
+   {
+    "page": 32,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "knowledge construction and"
+   },
+   {
+    "page": 32,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "era. LO1.2.4 demonstrate"
+   },
+   {
+    "page": 32,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "teachers’ accountability in"
+   },
+   {
+    "page": 32,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "when determining the Validating and selecting making high-"
+   },
+   {
+    "page": 32,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "appropriate AI tools, stakes decisions"
+   },
+   {
+    "page": 32,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "designing pedagogical in education."
+   },
+   {
+    "page": 32,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "appropriate pedagogical methodologies, driving"
+   },
+   {
+    "page": 32,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "methodologies and providing human interaction,"
+   },
+   {
+    "page": 32,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "to encourage autonomous"
+   },
+   {
+    "page": 32,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "with diverse abilities. learning processes with"
+   },
+   {
+    "page": 33,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "teacher Curricular Goals competency"
+   },
+   {
+    "page": 33,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "CG2.2.1 Deepen teachers’ use:"
+   },
+   {
+    "page": 33,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "of AI teachers are expected"
+   },
+   {
+    "page": 33,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "Data privacy, intellectual"
+   },
+   {
+    "page": 33,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "property rights and covering institutional"
+   },
+   {
+    "page": 33,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "personal AI safety. and habitually"
+   },
+   {
+    "page": 33,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "incorporate these Ethics"
+   },
+   {
+    "page": 33,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "into evaluations and"
+   },
+   {
+    "page": 33,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "Data and AI-generated"
+   },
+   {
+    "page": 33,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "content in education."
+   },
+   {
+    "page": 33,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "learning objectives demonstrate the (teachers can …)"
+   },
+   {
+    "page": 33,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "personal AI safety"
+   },
+   {
+    "page": 33,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "institutions and individuals,"
+   },
+   {
+    "page": 33,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "especially those with"
+   },
+   {
+    "page": 33,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "disabilities; and mitigation"
+   },
+   {
+    "page": 33,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "Whitelist the personal"
+   },
+   {
+    "page": 33,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "for education: review LO2.2.2 demonstrate familiarity"
+   },
+   {
+    "page": 33,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "personal collections of"
+   },
+   {
+    "page": 33,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "owners, Design Ethics,"
+   },
+   {
+    "page": 33,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "Data sources, algorithms,"
+   },
+   {
+    "page": 33,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "inclusive accessibility strategies."
+   },
+   {
+    "page": 33,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "LO2.2.3 implement measures its underlying purposes,"
+   },
+   {
+    "page": 33,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "high-risk and irresponsible"
+   },
+   {
+    "page": 34,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "teacher competency AI 3.2 application skills: foundations"
+   },
+   {
+    "page": 34,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "and able to Proficiently applications"
+   },
+   {
+    "page": 34,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "LO3.2.1 Proficiently operate"
+   },
+   {
+    "page": 34,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "deepened understanding of"
+   },
+   {
+    "page": 34,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "Exemplify the typical"
+   },
+   {
+    "page": 34,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "Technologies, skillfully operate"
+   },
+   {
+    "page": 34,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "implications for education."
+   },
+   {
+    "page": 34,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "LO3.2.2 Visually represent visualized ‘know-how’ on"
+   },
+   {
+    "page": 34,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "CG3.2.2 Scaffold deepened"
+   },
+   {
+    "page": 34,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "construction of conceptual algorithms, and datasets"
+   },
+   {
+    "page": 34,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "research-based learning, including"
+   },
+   {
+    "page": 34,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "coding: facilitate students transferable knowledge"
+   },
+   {
+    "page": 34,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "informed whistleblowing CG3.2.3 support problem-based"
+   },
+   {
+    "page": 34,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "biases and discrimination"
+   },
+   {
+    "page": 34,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "Design AI applications. report any evidence-based"
+   },
+   {
+    "page": 35,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "teacher Curricular Goals (CG) competency"
+   },
+   {
+    "page": 35,
+    "words": 10,
+    "reason": "duplicate",
+    "text": "learning processes, teacher-student and facilitation interactions, academic learning of student-"
+   },
+   {
+    "page": 35,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "practices to foster"
+   },
+   {
+    "page": 35,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "enhance or facilitated. teacher-student"
+   },
+   {
+    "page": 35,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "critical thinking and"
+   },
+   {
+    "page": 35,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "36 contextual activities"
+   },
+   {
+    "page": 35,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "demonstrate (teachers can …)"
+   },
+   {
+    "page": 35,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "pedagogical methodologies and"
+   },
+   {
+    "page": 35,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "insights into pedagogical"
+   },
+   {
+    "page": 35,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "student interactions and"
+   },
+   {
+    "page": 35,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "facilitation of learning."
+   },
+   {
+    "page": 35,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "LO4.2.2 critically evaluate"
+   },
+   {
+    "page": 35,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "whether various categories"
+   },
+   {
+    "page": 35,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "or courses, enhancing"
+   },
+   {
+    "page": 35,
+    "words": 15,
+    "reason": "duplicate",
+    "text": "assisting formative assessment, tool or system. monitoring learning processes, designing andfacilitating advising on personalized"
+   },
+   {
+    "page": 35,
+    "words": 11,
+    "reason": "duplicate",
+    "text": "for student engagement and higher-order thinking andfacilitating augmented social-emotional learning:"
+   },
+   {
+    "page": 35,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "Design student-centric teaching"
+   },
+   {
+    "page": 35,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "understanding, application emotional learning."
+   },
+   {
+    "page": 35,
+    "words": 11,
+    "reason": "duplicate",
+    "text": "humanaccountable AI-assisted appropriate social interactions assessments: Debunk myths and value orientation."
+   },
+   {
+    "page": 35,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "the Design, administration"
+   },
+   {
+    "page": 35,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "usurping human accountability"
+   },
+   {
+    "page": 35,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "formative learning assessment"
+   },
+   {
+    "page": 35,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "and high-stake examinations;"
+   },
+   {
+    "page": 35,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "system regarding assessment"
+   },
+   {
+    "page": 35,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "administration of AI-assisted trade-offs between potential formative assessments and"
+   },
+   {
+    "page": 35,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "learning outcomes, intellectual"
+   },
+   {
+    "page": 35,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "development and psychometric"
+   },
+   {
+    "page": 36,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "teacher Curricular Goals (CG) competency"
+   },
+   {
+    "page": 36,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "professional learning: collaboration, supporting teachers development"
+   },
+   {
+    "page": 36,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "collaborative between teachers’ fundamentally professional"
+   },
+   {
+    "page": 36,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "learning Develop AI competencies. communities, CG5.2.2 facilitate knowledge leveraging"
+   },
+   {
+    "page": 36,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "them to share development, introducing locally Resources, engage"
+   },
+   {
+    "page": 36,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "to dynamic who do. adaptation."
+   },
+   {
+    "page": 36,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "(LO) demonstrate the (teachers can …)"
+   },
+   {
+    "page": 36,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "LO5.2.1 critically analyse autonomous upskilling"
+   },
+   {
+    "page": 36,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "Technologies and their practices, deepening"
+   },
+   {
+    "page": 36,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "local contexts, autonomously between their fundamentally upskilling and reskilling"
+   },
+   {
+    "page": 36,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "themselves and coaching obligations of continuously"
+   },
+   {
+    "page": 36,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "same. developing AI competencies."
+   },
+   {
+    "page": 36,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "LO5.2.2 apply foundational self-regulated"
+   },
+   {
+    "page": 36,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "development: apply their"
+   },
+   {
+    "page": 36,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "own professional knowledge knowledge, pedagogical"
+   },
+   {
+    "page": 36,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "knowledge and practical"
+   },
+   {
+    "page": 36,
+    "words": 17,
+    "reason": "duplicate",
+    "text": "their own professional informed selfdiagnoses and development activities. autonomous planning of generative AI simulations their professional trajectory."
+   },
+   {
+    "page": 36,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "LO5.2.3 Expand knowledge existing generative AI"
+   },
+   {
+    "page": 36,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "especially Emerging tools,"
+   },
+   {
+    "page": 36,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "that simulates specific development; promote professional development"
+   },
+   {
+    "page": 36,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "– examples could include"
+   },
+   {
+    "page": 36,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "using locally relevant"
+   },
+   {
+    "page": 36,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "having difficulties. teachers’ professional development."
+   },
+   {
+    "page": 36,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "social media platforms AI-manipulated"
+   },
+   {
+    "page": 36,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "and implement preventive"
+   },
+   {
+    "page": 36,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "impacts. Design humanand professional learning; controlled activities to Develop and implement"
+   },
+   {
+    "page": 36,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "relevant Resources and of collaborative professional"
+   },
+   {
+    "page": 36,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "development. facilitate peer learning. 37"
+   },
+   {
+    "page": 37,
+    "words": 10,
+    "reason": "duplicate",
+    "text": "contextual activities teacher Curricular Goals learning (teachers can demonstrate competency"
+   },
+   {
+    "page": 37,
+    "words": 11,
+    "reason": "duplicate",
+    "text": "programmes should …) (teachers can …) behavioural changes) human- 1.3 social"
+   },
+   {
+    "page": 37,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "evaluate and reflect and planetary well-being centred"
+   },
+   {
+    "page": 37,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "particularly how it"
+   },
+   {
+    "page": 37,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "in, and contribute"
+   },
+   {
+    "page": 37,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "might affect education,"
+   },
+   {
+    "page": 37,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "inclusive AI societies"
+   },
+   {
+    "page": 37,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "interaction and human"
+   },
+   {
+    "page": 37,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "connections with each"
+   },
+   {
+    "page": 37,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "the implications of"
+   },
+   {
+    "page": 37,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "for education. promoting the LO1.3.2 actively"
+   },
+   {
+    "page": 37,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "AI contribute to the"
+   },
+   {
+    "page": 37,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "of human-centric social for the enhancement"
+   },
+   {
+    "page": 37,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "formation of Policies relations andsocial of human welfare,"
+   },
+   {
+    "page": 37,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "Inclusion andsocial"
+   },
+   {
+    "page": 37,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "and/or national level"
+   },
+   {
+    "page": 37,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "social and Educational"
+   },
+   {
+    "page": 37,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "LO1.3.3 personalize and"
+   },
+   {
+    "page": 37,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "developed. actualize social and"
+   },
+   {
+    "page": 37,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "civic responsibilities rights, obligations, and"
+   },
+   {
+    "page": 37,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "responsibilities of citizenship"
+   },
+   {
+    "page": 37,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "development of such"
+   },
+   {
+    "page": 38,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "teacher Curricular Goals (CG) competency"
+   },
+   {
+    "page": 38,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "…) Ethics 2.3 Co-creating"
+   },
+   {
+    "page": 38,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "teachers’ research-based reviews"
+   },
+   {
+    "page": 38,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "actions that address"
+   },
+   {
+    "page": 38,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "AIand contributing"
+   },
+   {
+    "page": 38,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "to the co-creation"
+   },
+   {
+    "page": 38,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "of ethical rules CG2.3.2 enhance critical"
+   },
+   {
+    "page": 38,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "(teachers can …) behavioural changes) LO2.3.1 critically analyse"
+   },
+   {
+    "page": 38,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "development, economic activity,"
+   },
+   {
+    "page": 38,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "Technologies on social"
+   },
+   {
+    "page": 38,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "equity, Inclusion, linguistic"
+   },
+   {
+    "page": 38,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "andcultural diversity,"
+   },
+   {
+    "page": 38,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "institutional and individual"
+   },
+   {
+    "page": 38,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "development of children"
+   },
+   {
+    "page": 38,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "sufficiency of guidance"
+   },
+   {
+    "page": 38,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "responsibility for reporting"
+   },
+   {
+    "page": 38,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "controversies caused Data Protection authorities)."
+   },
+   {
+    "page": 38,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "remedying or improving"
+   },
+   {
+    "page": 38,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "the guidance accordingly."
+   },
+   {
+    "page": 38,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "interpreting ethical principles,"
+   },
+   {
+    "page": 38,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "Regulations, promoting dialogues"
+   },
+   {
+    "page": 38,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "dialogues, development ethical standards."
+   },
+   {
+    "page": 38,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "Co-designing ethical or institutional regulatory"
+   },
+   {
+    "page": 38,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "frameworks or guidelines"
+   },
+   {
+    "page": 38,
+    "words": 17,
+    "reason": "duplicate",
+    "text": "hypothetical AI development the Design, validation, Project and invite adoption, deployment and interdisciplinary collaboration application of AI."
+   },
+   {
+    "page": 39,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "teacher Curricular Goals competency"
+   },
+   {
+    "page": 39,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "foundations teachers are able"
+   },
+   {
+    "page": 39,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "to customize or and"
+   },
+   {
+    "page": 39,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "a applications proficient manner,"
+   },
+   {
+    "page": 39,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "learning objectives demonstrate the (teachers can …)"
+   },
+   {
+    "page": 39,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "Collaborate with a"
+   },
+   {
+    "page": 39,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "community of co-creators"
+   },
+   {
+    "page": 39,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "competencies to analyse"
+   },
+   {
+    "page": 39,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "to facilitate accessibility,"
+   },
+   {
+    "page": 39,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "learning platforms for Educational contexts."
+   },
+   {
+    "page": 39,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "LO3.3.2 apply appropriate"
+   },
+   {
+    "page": 39,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "knowledge and skills accessibility among widely on Data, algorithms, used AI platforms."
+   },
+   {
+    "page": 39,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "hackathons to facilitate fine-tune open-source AI"
+   },
+   {
+    "page": 39,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "education or climate-friendly"
+   },
+   {
+    "page": 39,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "carbon emissions caused LO3.3.3 revise or"
+   },
+   {
+    "page": 39,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "comprehensive testing schools)."
+   },
+   {
+    "page": 39,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "optimization and further"
+   },
+   {
+    "page": 39,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "trustable and self-created"
+   },
+   {
+    "page": 39,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "and institutional needs"
+   },
+   {
+    "page": 39,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "where appropriate, assume appropriate tools for"
+   },
+   {
+    "page": 40,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "teacher Curricular Goals learning objectives competency"
+   },
+   {
+    "page": 40,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "(teachers can …) programmes should …) AI 4.3 AI-enhanced"
+   },
+   {
+    "page": 40,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "dynamic interaction between pedagogy Innovation:"
+   },
+   {
+    "page": 40,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "age-appropriate inquiry based to support"
+   },
+   {
+    "page": 40,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "learning, knowledge creation, students’"
+   },
+   {
+    "page": 40,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "collaborative project-based learning subject-"
+   },
+   {
+    "page": 40,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "relevance, ability-appropriate solving; and"
+   },
+   {
+    "page": 40,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "andfeedback intellectual development, nurturing learning. to continuously"
+   },
+   {
+    "page": 40,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "Innovation. pedagogical methodologies."
+   },
+   {
+    "page": 40,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "creativity, Innovation, etc."
+   },
+   {
+    "page": 40,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "by curriculum developers."
+   },
+   {
+    "page": 41,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "teacher competency AI for"
+   },
+   {
+    "page": 41,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "42 Create contextual activities Curricular Goals"
+   },
+   {
+    "page": 41,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "programmes should …) behavioural changes)"
+   },
+   {
+    "page": 41,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "LO5.3.1 Show commitment human-AI hybrid coach"
+   },
+   {
+    "page": 41,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "professional development to"
+   },
+   {
+    "page": 41,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "solutions and transformative"
+   },
+   {
+    "page": 41,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "interesting exercises. pedagogical approaches."
+   },
+   {
+    "page": 41,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "support institutional professional"
+   },
+   {
+    "page": 41,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "learning; provide opportunities"
+   },
+   {
+    "page": 41,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "track professional development"
+   },
+   {
+    "page": 41,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "as well. knowledge and human"
+   },
+   {
+    "page": 41,
+    "words": 17,
+    "reason": "duplicate",
+    "text": "AI-enhanced Design of mentors to support informed monitoring, diagnosis training programmes: personal and collaborative and recommendations on"
+   },
+   {
+    "page": 41,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "transformation. organizational learning."
+   },
+   {
+    "page": 41,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "LO5.3.3 where possible,"
+   },
+   {
+    "page": 41,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "development opportunities for"
+   },
+   {
+    "page": 41,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "needs. and synthesize constructive accessible training courses"
+   },
+   {
+    "page": 41,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "feedback and actionable"
+   },
+   {
+    "page": 41,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "recommendations. master-trainers or facilitators. to foster self-actualization"
+   },
+   {
+    "page": 41,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "communities for the and transformation; convene"
+   },
+   {
+    "page": 41,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "practical workshops where"
+   },
+   {
+    "page": 41,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "pedagogical innovations, or"
+   },
+   {
+    "page": 41,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "in collaborative research"
+   },
+   {
+    "page": 41,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "contribute to Educational"
+   },
+   {
+    "page": 41,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "communities’ co-creation of pedagogical methodologies,"
+   },
+   {
+    "page": 41,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "actualization and professional co-creation of trustable, transformation."
+   },
+   {
+    "page": 41,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "accessible, and inclusive the era of AI."
+   },
+   {
+    "page": 45,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "outweigh the risks."
+   },
+   {
+    "page": 47,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "training and support"
+   },
+   {
+    "page": 49,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "Design assessment methods"
+   },
+   {
+    "page": 49,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "grading criteria for teacher competency"
+   },
+   {
+    "page": 49,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "performance and latent"
+   },
+   {
+    "page": 49,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "the benefits, limitations"
+   },
+   {
+    "page": 49,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "accordance with the"
+   },
+   {
+    "page": 49,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "adapted learning objectives understanding that AI"
+   },
+   {
+    "page": 49,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "the auto-correct function assessment items)"
+   },
+   {
+    "page": 49,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "teaching grade levels."
+   },
+   {
+    "page": 49,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "LO1.1.2 demonstrate an"
+   },
+   {
+    "page": 49,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "whether corporate education."
+   },
+   {
+    "page": 49,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "profound impact on individual decisions of"
+   },
+   {
+    "page": 49,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "human autonomy and"
+   },
+   {
+    "page": 49,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "individual and corporate human rights, human"
+   },
+   {
+    "page": 49,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "rights; teachers are"
+   },
+   {
+    "page": 49,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "the and explain why."
+   },
+   {
+    "page": 49,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "to promote teachers’"
+   },
+   {
+    "page": 49,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "LO1.1.4 understand the agency."
+   },
+   {
+    "page": 52,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "9 789231 007071 sustainable development 54 Goals"
+   }
+  ],
+  "captions_reclassified": [
+   {
+    "page": 5,
+    "figure": "#/pictures/8",
+    "text": "© UNESCO"
+   }
+  ],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [
+   {
+    "page": 1,
+    "image": "fig-001-p1.png",
+    "w": 256,
+    "h": 57,
+    "reason": "repeated"
+   },
+   {
+    "page": 1,
+    "image": "fig-003-p1.png",
+    "w": 141,
+    "h": 61,
+    "reason": "strip"
+   },
+   {
+    "page": 2,
+    "image": "fig-005-p2.png",
+    "w": 161,
+    "h": 70,
+    "reason": "strip"
+   },
+   {
+    "page": 2,
+    "image": "fig-006-p2.png",
+    "w": 106,
+    "h": 40,
+    "reason": "strip"
+   },
+   {
+    "page": 3,
+    "image": "fig-007-p3.png",
+    "w": 303,
+    "h": 66,
+    "reason": "strip"
+   },
+   {
+    "page": 4,
+    "image": "fig-008-p4.png",
+    "w": 254,
+    "h": 56,
+    "reason": "repeated"
+   },
+   {
+    "page": 5,
+    "image": "fig-010-p5.png",
+    "w": 154,
+    "h": 34,
+    "reason": "strip"
+   },
+   {
+    "page": 52,
+    "image": "fig-013-p52.png",
+    "w": 149,
+    "h": 64,
+    "reason": "strip"
+   },
+   {
+    "page": 52,
+    "image": "fig-014-p52.png",
+    "w": 108,
+    "h": 31,
+    "reason": "strip"
+   },
+   {
+    "page": 52,
+    "image": "fig-015-p52.png",
+    "w": 87,
+    "h": 88,
+    "reason": "small"
+   }
+  ],
+  "superseded": [],
+  "replaced_pages": [],
+  "noise_dropped": 0,
+  "hyphens_restored": [
+   {
+    "page": 6,
+    "ref": "#/texts/38",
+    "word": "Capacity-Building"
+   }
+  ],
+  "order": [
+   {
+    "page": 31,
+    "text": "their learning needs, and",
+    "words": 4,
+    "refs": [
+     "#/texts/265",
+     "#/texts/269",
+     "#/texts/270"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 31,
+    "text": "following attitudinal or behavioural changes)",
+    "words": 5,
+    "refs": [
+     "#/texts/272",
+     "#/texts/274",
+     "#/texts/278"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 31,
+    "text": "of teachers’ basic rights and obligations in the AI",
+    "words": 9,
+    "refs": [
+     "#/texts/272",
+     "#/texts/274",
+     "#/texts/279"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 31,
+    "text": "era: Delineate the rights",
+    "words": 4,
+    "refs": [
+     "#/texts/274",
+     "#/texts/279"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "passage cut out of 'LO5.1.1 Describe the evolution of teache'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 31,
+    "text": "that should be protected,",
+    "words": 4,
+    "refs": [
+     "#/texts/274",
+     "#/texts/279"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 31,
+    "text": "that should be provided for–teachers in the AI",
+    "words": 9,
+    "refs": [
+     "#/texts/274",
+     "#/texts/275",
+     "#/texts/279"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 31,
+    "text": "era, as well as their main",
+    "words": 6,
+    "refs": [
+     "#/texts/275",
+     "#/texts/279"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "passage cut out of 'LO5.1.2 Exemplify the new knowledge, ski'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 31,
+    "text": "the ethical and effective",
+    "words": 4,
+    "refs": [
+     "#/texts/275",
+     "#/texts/279"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "passage cut out of 'LO5.1.2 Exemplify the new knowledge, ski'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 31,
+    "text": "use of AI in education.",
+    "words": 5,
+    "refs": [
+     "#/texts/275",
+     "#/texts/279"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 31,
+    "text": "in the AI era: Conduct",
+    "words": 5,
+    "refs": [
+     "#/texts/275",
+     "#/texts/276",
+     "#/texts/280"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 31,
+    "text": "assessments of their own",
+    "words": 4,
+    "refs": [
+     "#/texts/275",
+     "#/texts/276",
+     "#/texts/280"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 31,
+    "text": "gaps and devise possible",
+    "words": 4,
+    "refs": [
+     "#/texts/276",
+     "#/texts/280"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "passage cut out of 'LO5.1.3 List various AI tools including '"
+    ],
+    "section": ""
+   },
+   {
+    "page": 31,
+    "text": "their capacity for ethical",
+    "words": 4,
+    "refs": [
+     "#/texts/276",
+     "#/texts/280"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 31,
+    "text": "AI to Open professional",
+    "words": 4,
+    "refs": [
+     "#/texts/276",
+     "#/texts/277",
+     "#/texts/281"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 31,
+    "text": "experience and skills to use",
+    "words": 5,
+    "refs": [
+     "#/texts/277",
+     "#/texts/281"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "passage cut out of 'LO5.1.4 Locate and apply teacher-facing '"
+    ],
+    "section": ""
+   },
+   {
+    "page": 31,
+    "text": "to prompt new ideas",
+    "words": 4,
+    "refs": [
+     "#/texts/277",
+     "#/texts/281"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 36,
+    "text": "learning objectives (LO) (teachers can",
+    "words": 5,
+    "refs": [
+     "#/texts/299",
+     "#/texts/300",
+     "#/texts/304"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 36,
+    "text": "5.2 AI to enhance organizational learning:",
+    "words": 6,
+    "refs": [
+     "#/texts/297",
+     "#/texts/299",
+     "#/texts/300"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 36,
+    "text": "LO5.2.1 critically analyse their roles in designing andfacilitating students’ use of AI in their own pedagogical practices, deepening their understanding",
+    "words": 21,
+    "refs": [
+     "#/texts/300",
+     "#/texts/301",
+     "#/texts/305"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 36,
+    "text": "the balance between their fundamentally human role andthe obligations of continuously developing AI competencies. teachers are able to confidently utilize AI tools for tailored participation in collaborative professional learning communities, leveraging them to share Resources, engage in peer-to-peer learning and contribute to dynamic adaptation.",
+    "words": 45,
+    "refs": [
+     "#/texts/297",
+     "#/texts/300",
+     "#/texts/301",
+     "#/texts/305"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 37,
+    "text": "teaching andlearning practices. The",
+    "words": 5,
+    "refs": [
+     "#/texts/317"
+    ],
+    "repaired": true,
+    "note": "1 blocks replaced by the text layer's passage",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 39,
+    "text": "3.3 Creating with AI:",
+    "words": 4,
+    "refs": [
+     "#/texts/325",
+     "#/texts/327",
+     "#/texts/328"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 39,
+    "text": "modify AI tools in",
+    "words": 4,
+    "refs": [
+     "#/texts/325",
+     "#/texts/328"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 39,
+    "text": "operational skills to",
+    "words": 3,
+    "refs": [
+     "#/texts/325",
+     "#/texts/328"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "passage cut out of 'CG3.3.1 Nurture adaptability and creativ'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 39,
+    "text": "Create AI-assisted inclusive learning",
+    "words": 4,
+    "refs": [
+     "#/texts/325",
+     "#/texts/328",
+     "#/texts/329"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 39,
+    "text": "contextual activities (teachers can",
+    "words": 4,
+    "refs": [
+     "#/texts/331",
+     "#/texts/334",
+     "#/texts/346"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 39,
+    "text": "following attitudinal or behavioural changes)",
+    "words": 5,
+    "refs": [
+     "#/texts/331",
+     "#/texts/334",
+     "#/texts/346"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 39,
+    "text": "driving the Design of",
+    "words": 4,
+    "refs": [
+     "#/texts/331",
+     "#/texts/334",
+     "#/texts/347"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 39,
+    "text": "tools for Inclusion:",
+    "words": 3,
+    "refs": [
+     "#/texts/335",
+     "#/texts/347"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 39,
+    "text": "the limitations of selected",
+    "words": 4,
+    "refs": [
+     "#/texts/339",
+     "#/texts/348"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "passage cut out of 'Collaborate with a community of co-creat'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 39,
+    "text": "AI systems in solving real-",
+    "words": 5,
+    "refs": [
+     "#/texts/340",
+     "#/texts/348"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "passage cut out of 'Collaborate with a community of co-creat'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 39,
+    "text": "world problems in local",
+    "words": 4,
+    "refs": [
+     "#/texts/341",
+     "#/texts/348"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "passage cut out of 'Collaborate with a community of co-creat'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 39,
+    "text": "models to customize and/",
+    "words": 4,
+    "refs": [
+     "#/texts/343",
+     "#/texts/348",
+     "#/texts/349"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 39,
+    "text": "or assemble existing AI",
+    "words": 4,
+    "refs": [
+     "#/texts/343",
+     "#/texts/349",
+     "#/texts/350"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 39,
+    "text": "tools or semifinished AI",
+    "words": 4,
+    "refs": [
+     "#/texts/343",
+     "#/texts/349",
+     "#/texts/350"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 39,
+    "text": "models to Create AI tools",
+    "words": 5,
+    "refs": [
+     "#/texts/343",
+     "#/texts/350"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 39,
+    "text": "systems to Create solutions that",
+    "words": 5,
+    "refs": [
+     "#/texts/343",
+     "#/texts/350"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 39,
+    "text": "that are both relevant and",
+    "words": 5,
+    "refs": [
+     "#/texts/343",
+     "#/texts/350"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "passage cut out of 'Co-create AI tools or organize hackathon'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 39,
+    "text": "affordable for local settings",
+    "words": 4,
+    "refs": [
+     "#/texts/343",
+     "#/texts/350"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "passage cut out of 'Co-create AI tools or organize hackathon'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 39,
+    "text": "and specific use cases.",
+    "words": 4,
+    "refs": [
+     "#/texts/343",
+     "#/texts/350"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "passage cut out of 'Co-create AI tools or organize hackathon'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 39,
+    "text": "define criteria for the",
+    "words": 4,
+    "refs": [
+     "#/texts/344",
+     "#/texts/350"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "passage cut out of 'Co-create AI tools or organize hackathon'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 39,
+    "text": "of a self-created AI tool",
+    "words": 5,
+    "refs": [
+     "#/texts/344",
+     "#/texts/350",
+     "#/texts/351"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 39,
+    "text": "for the Purpose of",
+    "words": 4,
+    "refs": [
+     "#/texts/344",
+     "#/texts/351"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 39,
+    "text": "iteration of the tool.",
+    "words": 4,
+    "refs": [
+     "#/texts/344",
+     "#/texts/351",
+     "#/texts/352"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "passage cut out of 'of educational AI tools: Support the cre'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 39,
+    "text": "LO3.3.4 contribute to a",
+    "words": 4,
+    "refs": [
+     "#/texts/345",
+     "#/texts/352"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "passage cut out of 'of educational AI tools: Support the cre'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 39,
+    "text": "new or existing Repository",
+    "words": 4,
+    "refs": [
+     "#/texts/345",
+     "#/texts/352"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "passage cut out of 'of educational AI tools: Support the cre'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 39,
+    "text": "of user-created or tailored",
+    "words": 4,
+    "refs": [
+     "#/texts/345",
+     "#/texts/352"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "passage cut out of 'of educational AI tools: Support the cre'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 39,
+    "text": "AI tools based on personal",
+    "words": 5,
+    "refs": [
+     "#/texts/345",
+     "#/texts/352"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "passage cut out of 'of educational AI tools: Support the cre'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 39,
+    "text": "and promote a focus on",
+    "words": 5,
+    "refs": [
+     "#/texts/345",
+     "#/texts/352"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "passage cut out of 'of educational AI tools: Support the cre'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 39,
+    "text": "only utilizing the most",
+    "words": 4,
+    "refs": [
+     "#/texts/345",
+     "#/texts/352"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "passage cut out of 'of educational AI tools: Support the cre'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 41,
+    "text": "learning objectives (teachers can",
+    "words": 4,
+    "refs": [
+     "#/texts/362",
+     "#/texts/363",
+     "#/texts/367"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 41,
+    "text": "5.3 AI to support professional development:",
+    "words": 6,
+    "refs": [
+     "#/texts/359",
+     "#/texts/362",
+     "#/texts/363"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 41,
+    "text": "LO5.3.1 Show commitment and persistence in the co-creation and usage of AI tools and methods to full their professional andsocial responsibilities in AI societies, aiming at new iterations of ethical rules, customized AI solutions and transformative pedagogical approaches.",
+    "words": 39,
+    "refs": [
+     "#/texts/363",
+     "#/texts/364",
+     "#/texts/368"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 41,
+    "text": "LO5.3.2 blend AI tools and human coaching to facilitate well-informed self-reflection and assessment, Goal setting andthe mobilization of knowledge and human mentors to support personal and collaborative transformation. teachers are able to customize and modify AI tools to enhance their professional development and to continuously test and validate strategies on the effective use of AI to meet their own, and their communities’, professional development needs.",
+    "words": 66,
+    "refs": [
+     "#/texts/360",
+     "#/texts/364",
+     "#/texts/365",
+     "#/texts/369"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 41,
+    "text": "programmes that are relevant",
+    "words": 4,
+    "refs": [
+     "#/texts/375",
+     "#/texts/376"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [
+     "passage cut out of 'Leverage AI tools to expand reviews of e'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 51,
+    "text": "을 결집하여 AI 시대 미래 비전과 전략을 담은 ‘AI",
+    "words": 9,
+    "refs": [
+     "#/texts/468",
+     "#/texts/475"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [
+     "sentence cut: \"on Teachers' Digital Literacy]. Beijing,\" | 'Ministry of Science and ICT, Republic of'",
+     "passage cut out of '-. 2024. Laying down harmonised rules on'"
+    ],
+    "section": "bibliography"
+   }
+  ],
+  "order_pages_checked": 47,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 55,
+  "order_breaking": 21,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 8 minor; distortions: 0 material, 6 minor; additions: 0 material, 0 minor; order: 0 material, 1 minor",
+  "at": "2026-11-15T10:09:01+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 8
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 6
+   },
+   "additions": {
+    "material": 0,
+    "minor": 0
+   },
+   "order": {
+    "material": 0,
+    "minor": 1
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "AI competency framework for teachers (p. 2–32)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "it has been designed to inform the development of national AI competency frameworks and professional training programmes for teachers, ensuring that they advance education as a public good.",
+      "severity": "minor",
+      "page": 6
+     },
+     {
+      "source": "This can be largely explained by the lack of knowledge on how to define teachers' roles and competencies in the context of growing human-AI interactions in educational and pedagogical practices.",
+      "severity": "minor",
+      "page": 13
+     },
+     {
+      "source": "policy-makers should urgently review and iteratively (re)define teachers' roles and required competencies. Appropriate capacity-building programmes are needed to prepare teachers to work in increasingly AI-rich settings.",
+      "severity": "minor",
+      "page": 18
+     },
+     {
+      "source": "Teachers are expected to champion equity, inclusion and diversity, and understand how AI design decisions impact ethical use.",
+      "severity": "minor",
+      "page": 26
+     }
+    ],
+    "distortions": [
+     {
+      "source": "the framework is designed for policy-makers, teacher education providers, teachers' unions, school leaders, teachers and educational experts",
+      "summary": "ministries and policy-makers, providers of teacher education, unions, school leadership, teachers themselves, and educational researchers",
+      "severity": "minor",
+      "page": 14
+     },
+     {
+      "source": "AI tools tend to replace human decision-making based on predictions of patterns drawn from the analysis of extensive data of past examples",
+      "summary": "AI imitates human behaviour and displaces human judgement with predictions derived from large datasets of past cases",
+      "severity": "minor",
+      "page": 15
+     },
+     {
+      "source": "The AI-generated content is thus potentially less trustworthy, especially for the teaching of factual and conceptual knowledge.",
+      "summary": "making generated content less reliable, particularly for factual and conceptual teaching",
+      "severity": "minor",
+      "page": 15
+     },
+     {
+      "source": "the interaction between teachers and students is arguably becoming triangular, as AI systems are increasingly mediating preparation, teaching, learning and assessment",
+      "summary": "the teacher-student relationship is becoming effectively three-sided",
+      "severity": "minor",
+      "page": 18
+     },
+     {
+      "source": "An 'ethics by design' principle should be mandated through strict validation of AI tools at the national and/or institutional levels before they are adopted in educational settings. This prior validation, and the legal whitelisting of trustable AI tools for education, can relieve teachers from being held accountable",
+      "summary": "an \"ethics by design\" requirement, enforced through strict national or institutional validation (and whitelisting of trustworthy tools) prior to adoption, shields teachers from accountability beyond their remit",
+      "severity": "minor",
+      "page": 18
+     }
+    ],
+    "additions": [],
+    "order": []
+   },
+   {
+    "index": 1,
+    "section": "4.2 Progression Level 2: Deepen (p. 33–53)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "The parallel Revamping Teacher Training System initiative aims to make rigid qualification requirements for elementary and secondary teachers more flexible. In doing so, the initiative hopes to incentivize teachers to explore future-proofing innovative practices in their schools and beyond.",
+      "severity": "minor",
+      "page": 46
+     },
+     {
+      "source": "As part and parcel of their AI competency, teachers should be able to choose to apply affordable AI tools or co-create relevant solutions only after determining that benefits clearly outweigh the risks.",
+      "severity": "minor",
+      "page": 45
+     },
+     {
+      "source": "While the main focus of the MOOC is AI foundations, it also addresses issues of human agency by covering the risks of AI-based decisionmaking, the importance of keeping teachers in the loop, as well as ethical issues.",
+      "severity": "minor",
+      "page": 48
+     },
+     {
+      "source": "To prevent AI from causing irreversible harm to students, it is imperative to ensure mechanisms are in place for the validation of these AI systems for use in education. This is particularly true of AI services targeting younger children.",
+      "severity": "minor",
+      "page": 43
+     }
+    ],
+    "distortions": [
+     {
+      "source": "They should be able to innovatively use AI for education and engage with communities to explore how it might drive the desired transformation of teaching and learning practices.",
+      "summary": "engage with communities to drive transformation of teaching and learning practices",
+      "severity": "minor",
+      "page": 38
+     }
+    ],
+    "additions": [],
+    "order": [
+     {
+      "source": "AI-enhanced design of training programmes: programmes that are relevant Leverage AI tools to expand reviews of existing to the needs of a specific group of teachers, extend ideas on training content and training methods",
+      "summary": "",
+      "layer": "AI-enhanced design of training programmes: Leverage AI tools to expand reviews of existing programmes that are relevant to the needs of a specific group of teachers, extend ideas on training content and training methods",
+      "severity": "minor",
+      "page": 42
+     }
+    ]
+   }
+  ]
+ },
+ "source": {
+  "source": "unesco-ai-competency-framework-for-teachers-2024.pdf",
+  "bytes": 1203971,
+  "sha256": "83de1071587769436b3f8c8d26510582fc436c5cf0546aeb965da732edfc93bd",
+  "extracted_at": "2026-11-13T02:02:56+01:00"
+ }
+}

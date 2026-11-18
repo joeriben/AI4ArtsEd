@@ -5,7 +5,7 @@ media, if need be only as memory anchors. A small square card, a name on the
 front, and on the back an excerpt from the data, in whatever form Resona itself
 remembers what the workflow or the object is.
 
-Four kinds, and each one's back is written from a record that already exists:
+Five kinds, and each one's back is written from a record that already exists:
 
   apparatus — a strategy kept in the repertoire (canvas_graph_library). Title,
       what it is for, the memo of this version, and the chain of steps.
@@ -19,6 +19,14 @@ Four kinds, and each one's back is written from a record that already exists:
   page      — a page opened on the curated external sites (read_webpage). Its
       title and its link, and nothing of its body: that text belongs to whoever
       wrote it, and a card is a way back to it, not a copy of it.
+  scenario  — a teaching scenario of the use reports opened in full
+      (read_scenario). Its title, and on the back the scenario in the
+      report's wording: setting, text, sequence, subject link; under it the
+      instrument as the page names it in the conversation language, with its
+      route, and as `source` the report's version and the scenario's number,
+      which the board words in its own language. Whole, because no page of
+      the platform shows the scenarios: the card is the one place the
+      educator can read the scenario a proposal rests on (2026-11-15).
 
 What a person brought in themselves already stands on the board as its own node
 (resona.vue: a media box with no stream), and a run Resona opens is usually a
@@ -63,21 +71,23 @@ def _page_head(result: str) -> Dict[str, str]:
 
 
 def from_tool_call(tool_name: str, tool_args: Dict[str, Any],
-                   tool_result: Any) -> Optional[Dict[str, Any]]:
+                   tool_result: Any,
+                   language: Optional[str] = None) -> Optional[Dict[str, Any]]:
     """One card's worth of an entity this turn worked with, or None.
 
     Called for tool calls that did NOT return an error. Never raises: a card
-    that cannot be written is a card the board does without.
+    that cannot be written is a card the board does without. `language` is
+    the conversation's; a scenario card names its instrument in it.
     """
     try:
-        return _build(tool_name, tool_args or {}, tool_result)
+        return _build(tool_name, tool_args or {}, tool_result, language)
     except Exception as e:  # noqa: BLE001 - a card must never break a turn
         logger.warning("[RESONA-ENTITY] could not write a card for %s: %s", tool_name, e)
         return None
 
 
 def _build(tool_name: str, args: Dict[str, Any],
-           result: Any) -> Optional[Dict[str, Any]]:
+           result: Any, language: Optional[str] = None) -> Optional[Dict[str, Any]]:
     if tool_name == "canvas_graph_library":
         from my_app.services.tool_registry import take_kept_strategy
         rec = take_kept_strategy()
@@ -131,6 +141,34 @@ def _build(tool_name: str, args: Dict[str, Any],
             "name": _clip(card.get("title") or doc_id, NAME_CHARS),
             "detail": _clip(result, EXCERPT_CHARS),
             "facts": [_clip(f, 200) for f in facts],
+        }
+
+    if tool_name == "read_scenario":
+        from my_app.services import platform_items as pi
+        found = pi.scenario_by_id(args.get("id"))
+        if not found:
+            return None
+        rec, scen = found
+        num, sid = str(rec.get("number") or ""), str(scen.get("id") or "")
+        detail = pi.scenario_card_text(scen)
+        if not detail:
+            return None
+        version = pi.USE_REPORTS.get("version") or "unknown"
+        route = str(rec.get("route") or "")
+        # The instrument as its page names it in the conversation language;
+        # a page without a catalogue item by the report's name.
+        names = (pi.item_for_route(route) or {}).get("names") or {}
+        instrument = (names.get(language or "en") or names.get("en")
+                      or rec.get("name") or "")
+        return {
+            "kind": "scenario",
+            "key": f"scenario:{num}/{sid}",
+            "name": _clip(scen.get("title") or f"{num}/{sid}", NAME_CHARS),
+            # Not clipped: there is no other place to read it.
+            "detail": detail,
+            "facts": [_clip(f"{instrument} ({route})" if route else instrument, 200)],
+            # Worded by the board (resonaEntityCard.scenarioSource).
+            "source": {"version": str(version), "scenario": f"{num}/{sid}"},
         }
 
     if tool_name == "read_webpage":

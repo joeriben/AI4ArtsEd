@@ -1,0 +1,5976 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 4.0% of 2819 words, ceiling 20%, longest run 15 words; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 15,
+     "text": "striped pleated leather faux square neckline lattice denim attribute bias shift in different generative models"
+    },
+    {
+     "words": 15,
+     "text": "5 o clock shadow bangs eyeglasses bald wearing hat male blond hair gray hair mustache"
+    },
+    {
+     "words": 13,
+     "text": "in the observed distribution and its expected proportion in an ideal reference distribution"
+    },
+    {
+     "words": 12,
+     "text": "shifts are sensitive to the attribute classifier used to label generated images"
+    },
+    {
+     "words": 9,
+     "text": "the socially complex nature of attributes when evaluating bias"
+    }
+   ],
+   "value": 0.0401,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "4 of 4 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 15,
+     "table_cells": 14,
+     "missing_cells": [
+      "bsz"
+     ]
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "table_cells": 238,
+     "missing_cells": [
+      "Precision",
+      "Recall",
+      "99.58",
+      "96.90",
+      "97.11",
+      "97.00",
+      "98.74",
+      "99.10",
+      "87.95",
+      "93.94",
+      "90.84",
+      "94.94",
+      "98.86",
+      "70.98",
+      "76.16",
+      "73.47",
+      "78.84",
+      "98.40",
+      "97.88",
+      "98.37"
+     ]
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "table_cells": 246,
+     "missing_cells": [
+      "Precision",
+      "Recall",
+      "99.52",
+      "95.87",
+      "97.32",
+      "96.59",
+      "98.84",
+      "99.16",
+      "87.71",
+      "95.64",
+      "91.50",
+      "96.27",
+      "98.83",
+      "66.98",
+      "85.40",
+      "75.08",
+      "82.05",
+      "98.68",
+      "98.21",
+      "98.69"
+     ]
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "table_cells": 162,
+     "missing_cells": [
+      "Precision",
+      "Recall",
+      "99.48",
+      "66.67",
+      "50.52",
+      "98.97",
+      "1.03",
+      "98.45",
+      "33.33",
+      "40.00",
+      "17.70",
+      "97.94",
+      "1.03",
+      "97.42",
+      "40.00",
+      "44.45",
+      "21.03",
+      "96.91",
+      "96.00",
+      "82.76"
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "538 of 599 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 2,
+     "number": "31"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 3,
+     "number": "3.1"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 3,
+     "number": "33"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 3,
+     "number": "34"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 3,
+     "number": "35"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 3,
+     "number": "37"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 3,
+     "number": "38"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 4,
+     "number": "4.1"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 5,
+     "number": "39"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 5,
+     "number": "4.2"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 5,
+     "number": "41"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 5,
+     "number": "42"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 5,
+     "number": "43"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 5,
+     "number": "44"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 5,
+     "number": "45"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 5,
+     "number": "46"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 6,
+     "number": "4.3"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 6,
+     "number": "90"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 6,
+     "number": "91"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 7,
+     "number": "4.5"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 7,
+     "number": "4.6"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 7,
+     "number": "47"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 7,
+     "number": "71"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 7,
+     "number": "73"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 7,
+     "number": "98"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 8,
+     "number": "48"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 9,
+     "number": "49"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 9,
+     "number": "51"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 9,
+     "number": "52"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 9,
+     "number": "53"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 9,
+     "number": "54"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 15,
+     "number": "55"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 15,
+     "number": "56"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 16,
+     "number": "57"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 16,
+     "number": "58"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 17,
+     "number": "59"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 18,
+     "number": "0.00"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 18,
+     "number": "0.05"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 18,
+     "number": "0.10"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 18,
+     "number": "0.15"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 19,
+     "number": "125"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 19,
+     "number": "150"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 19,
+     "number": "75"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 20,
+     "number": "0.20"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "31.35"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "34.41"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "35.80"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "36.70"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "37.10"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "37.76"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "38.43"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "42.38"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "44.25"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "46.18"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "47.07"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "47.99"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "48.00"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "49.30"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "50.47"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "51.99"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "53.33"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "54.73"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "55.87"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "55.88"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "56.03"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "56.99"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "57.18"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "57.47"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "57.75"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "58.16"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "58.31"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "58.43"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "58.69"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "58.72"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "58.89"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "58.91"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "59.05"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "59.06"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "59.49"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "59.62"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "59.65"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "59.81"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "60.08"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "60.28"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "60.53"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "60.75"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "61.02"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "61.03"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "61.39"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "61.44"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "61.69"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "61.72"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "61.80"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "62.13"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "62.35"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "62.38"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "62.52"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "62.67"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "63.40"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "63.69"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "64.12"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "65.00"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "65.17"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "65.53"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "65.54"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "65.67"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "66.28"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "66.81"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "67.43"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "67.57"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "68.13"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "68.16"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "69.49"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "69.83"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "69.87"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "70.27"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "70.71"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "70.91"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "70.98"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "71.44"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "71.82"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "72.15"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "72.32"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "72.71"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "73.02"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "73.47"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "73.51"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "73.61"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "74.67"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "75.01"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "75.38"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "75.42"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "75.75"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "76.08"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "76.16"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "76.57"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "76.61"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "77.06"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "77.32"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "77.72"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "78.84"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "79.15"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "79.32"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "79.65"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "80.00"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "80.04"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "80.32"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "80.35"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "80.96"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "80.99"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "81.05"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "81.11"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "81.23"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "81.54"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "81.57"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "81.95"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "82.27"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "82.31"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "82.48"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "82.91"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "83.19"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "83.24"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "83.49"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "83.77"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "83.88"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "84.29"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "84.64"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "84.89"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "85.13"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "85.25"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "85.27"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "85.37"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "85.58"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "86.60"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "86.91"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "87.41"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "87.94"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "87.95"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "88.20"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "88.30"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "88.54"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "89.51"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "89.94"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "90.11"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "90.56"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "90.75"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "90.79"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "90.84"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "90.90"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "91.16"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "91.28"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "91.58"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "91.59"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "91.70"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "91.79"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "91.85"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "92.17"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "92.37"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "92.38"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "92.42"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "92.56"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "92.83"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "93.11"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "93.49"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "93.79"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "93.84"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "93.94"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "94.54"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "94.94"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "95.02"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "95.14"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "95.15"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "95.29"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "95.51"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "95.57"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "95.69"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "95.98"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "96.10"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "96.18"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "96.43"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "96.50"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "96.52"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "96.90"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "96.98"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "97.00"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "97.11"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "97.27"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "97.72"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "97.73"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "97.88"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "97.90"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "97.99"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "98.12"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "98.37"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "98.40"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "98.54"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "98.74"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "98.86"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "99.10"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "99.58"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "99.69"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 21,
+     "number": "99.82"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "29.46"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "32.65"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "34.05"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "38.58"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "39.86"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "40.62"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "42.84"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "46.29"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "46.86"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "48.40"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "48.71"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "50.46"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "50.55"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "50.68"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "51.94"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "52.26"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "52.96"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "53.01"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "53.42"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "53.67"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "54.52"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "55.90"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "56.70"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "57.64"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "58.64"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "58.66"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "60.14"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "60.32"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "60.81"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "61.08"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "61.10"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "61.23"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "61.66"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "61.89"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "61.98"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "62.04"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "62.08"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "62.24"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "62.27"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "62.53"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "62.81"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "63.11"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "63.20"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "63.34"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "63.85"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "64.42"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "64.65"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "64.76"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "64.94"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "65.21"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "65.41"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "65.73"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "65.96"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "66.06"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "66.98"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "67.65"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "68.34"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "69.10"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "69.12"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "69.61"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "69.63"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "70.17"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "70.26"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "70.34"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "71.24"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "71.30"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "71.40"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "71.45"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "71.69"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "72.23"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "72.34"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "72.82"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "73.15"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "73.94"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "74.77"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "74.79"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "75.08"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "75.13"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "75.17"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "75.45"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "75.62"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "75.86"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "75.91"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "77.02"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "77.49"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "78.02"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "78.04"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "78.19"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "78.53"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "79.60"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "79.76"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "79.96"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "80.36"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "80.60"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "81.02"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "81.17"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "81.34"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "81.38"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "81.47"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "81.88"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "81.96"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "82.05"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "82.13"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "82.47"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "83.25"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "83.42"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "83.71"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "84.31"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "84.35"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "84.44"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "84.49"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "84.73"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "84.76"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "85.01"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "85.30"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "85.40"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "85.63"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "85.72"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "86.18"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "86.28"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "86.65"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "86.79"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "87.16"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "87.20"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "87.51"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "87.71"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "87.77"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "88.28"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "88.36"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "89.08"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "89.23"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "89.46"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "89.47"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "89.48"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "89.58"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "89.86"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "89.87"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "90.05"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "90.58"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "91.50"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "91.74"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "91.93"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "92.02"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "92.08"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "92.32"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "92.35"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "92.50"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "92.51"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "92.67"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "92.75"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "92.87"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "92.90"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "92.92"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "92.99"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "93.13"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "93.16"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "93.21"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "93.24"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "93.39"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "93.40"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "93.87"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "93.96"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "94.44"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "94.67"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "94.93"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "94.95"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "94.96"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "95.17"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "95.58"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "95.64"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "95.77"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "95.87"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "96.17"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "96.27"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "96.59"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "96.83"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "96.86"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "96.96"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "97.02"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "97.32"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "97.65"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "98.08"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "98.21"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "98.30"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "98.45"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "98.68"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "98.69"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "98.83"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "98.84"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "98.88"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "99.16"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "99.52"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "99.72"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 22,
+     "number": "99.89"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "1.03"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "100.00"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "15.37"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "17.70"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "19.64"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "21.03"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "25.00"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "26.67"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "30.77"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "33.33"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "35.29"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "35.99"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "36.27"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "36.36"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "37.06"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "40.00"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "43.24"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "43.75"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "44.45"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "47.22"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "50.00"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "50.52"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "51.46"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "51.72"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "52.63"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "52.91"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "53.62"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "54.55"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "55.56"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "55.83"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "56.67"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "57.14"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "57.69"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "58.33"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "58.82"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "59.30"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "60.00"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "61.29"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "61.90"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "62.50"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "63.84"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "64.97"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "65.29"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "66.67"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "68.42"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "69.70"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "69.84"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "70.00"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "70.83"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "71.26"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "71.65"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "71.83"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "71.88"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "72.09"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "72.94"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "73.33"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "74.19"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "75.26"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "75.61"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "76.36"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "76.47"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "78.48"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "79.03"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "80.93"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "81.58"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "82.03"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "82.54"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "82.58"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "82.75"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "82.76"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "85.62"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "86.08"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "86.54"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "87.11"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "87.50"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "87.62"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "87.63"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "88.00"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "88.14"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "88.41"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "88.44"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "88.89"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "89.40"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "90.21"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "90.72"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "90.91"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "91.24"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "92.27"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "92.66"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "94.33"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "94.49"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "96.00"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "96.39"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "96.91"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "97.42"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "97.94"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "98.97"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 23,
+     "number": "99.48"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 24,
+     "number": "0.2"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 24,
+     "number": "0.4"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 24,
+     "number": "0.6"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 26,
+     "number": "500"
+    }
+   ],
+   "value": 538.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "19 of 23 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 1,
+     "heading": "1 Introduction"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 3,
+     "heading": "3.1 Bias Definition"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 4,
+     "heading": "3.2 Bias Shift Evaluation Framework"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 4,
+     "heading": "4.1 Experimental setup"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 5,
+     "heading": "4.2 Backbone models performance"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 6,
+     "heading": "4.3 Average attribute bias shift evaluation"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 7,
+     "heading": "4.4 Attribute bias shifts' sensitivity relates to decision boundary"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 7,
+     "heading": "4.5 Attribute bias shift in different generative models"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 9,
+     "heading": "4.6 Per-attribute bias shift"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 9,
+     "heading": "5 Conclusion"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 14,
+     "heading": "A Proof of bias shift in translation distribution changes"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 14,
+     "heading": "B Datasets"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 15,
+     "heading": "C Licenses for existing assets"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 15,
+     "heading": "D Training Details"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 15,
+     "heading": "D.1 Diffusion Models"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 16,
+     "heading": "D.2 Classifiers"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 17,
+     "heading": "E Threshold Selection Informed by Human Labeling Consistency"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 24,
+     "heading": "F Bias Shift Analysis Per Attribute"
+    },
+    {
+     "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+     "page": 27,
+     "heading": "G Samples of generated images"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "22 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "18 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "1 quoted texts in 1 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Fig. 22",
+     "page": 29,
+     "image": "fig-338-p29.png",
+     "quotes": [
+      "“BLACK GIRLS”"
+     ]
+    }
+   ],
+   "value": 1.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "33 page references valid (printed-folio pages 1–29)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "29 pages checked, 6 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "3 of 3 passages out of order not repairable, none breaks a sentence of the body text",
+   "findings": [
+    {
+     "page": 5,
+     "words": 14,
+     "text": "showing the good quality of generated images and good coverage of modes of the",
+     "blocks": [
+      "#/texts/207",
+      "#/texts/210"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 5,
+     "words": 4,
+     "text": "3c, the positive or",
+     "blocks": [
+      "#/texts/207",
+      "#/texts/210"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 7,
+     "text": "a similar FLD as the large Diffusion",
+     "blocks": [
+      "#/texts/401",
+      "#/texts/409"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    }
+   ],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "zhang-et-al-2025-bias-analysis-in-unconditional-image-generative-models",
+ "doc_type": "scholarly_article",
+ "analyzed_at": "2026-11-15T11:51:07.926812+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "Bias Analysis in Unconditional Image Generative Models",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 29,
+   "chars": 81236,
+   "blocks": 132,
+   "inner_headings": 23,
+   "figures": 22
+  }
+ ],
+ "skipped": [
+  "References (p. 10)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 29,
+  "gaps": [
+   {
+    "page": 18,
+    "text": "5-o-Clock_Shadow Prob. of samples in each bin Prob. of samples in each bin 0.15 training generation sampled_val 0.10 low-density decision 0.05 0.00 20 10 0 10 20 pre-sigmoid logits (a) 5-o-Clock Shadow Bangs Prob. of samples in each bin Prob. of samples in each bin 0.15 0.10 0.05 0.00 20 10 0 10 20 pre-sigmoid logits (f) Bangs Brown_Hair Prob. of samples in each bin Prob. of samples in each bin 0.15 0.10 0.05 0.00 20 10 0 10 20 pre-sigmoid logits (k) brown hair (l) Bushy Eyebrows (m) Chubby (n) Double Chin (o) Eyeglasses Goatee Prob. of samples in each bin Prob. of samples in each bin 0.15 0.10 0.05 0.00 20 10 0 10 20 pre-sigmoid logits (p) Goatee Mouth_Slightly_Open Prob. of samples in each bin Prob. of samples in each bin 0.15 0.10 0.05 0.00 20 10 0 10 20 pre-sigmoid logits (u) Mouth slightly Open Pale_Skin Prob. of samples in each bin Prob. of samples in each bin 0.15 0.10 0.05 0.00 20 10 0 10 20 pre-sigmoid logits (z) Pale Skin Smiling Prob. of samples in each bin Prob. of samples in each bin 0.15 0.10 0.05 0.00 20 10 0 10 20 pre-sigmoid logits (ae) Smiling Figure 12: The pre-sigmoid logits distribution of each attribute in CelebA (ResNeXtbased classifier). Arched_Eyebrows Attractive Bags_Under_Eyes Bald Prob. of samples in each bin Prob. of samples in each bin Prob. of samples in each bin 0.15 0.15 0.15 0.15 0.10 0.10 0.10 0.10 0.05 0.05 0.05 0.05 0.00 20 10 0 10 20 0.00 20 10 0 10 20 0.00 20 10 0 10 20 0.00 20 10 0 10 20 pre-sigmoid logits pre-sigmoid logits pre-sigmoid logits pre-sigmoid logits (b) Arched Eyebrows (c) Attractive (d) Bags Under Eyes (e) Bald Big_Lips Big_Nose Black_Hair Blond_Hair Prob. of samples in each bin Prob. of samples in each bin Prob. of samples in each bin 0.15 0.15 0.15 0.15 0.10 0.10 0.10 0.10 0.05 0.05 0.05 0.05 0.00 20 10 0 10 20 0.00 20 10 0 10 20 0.00 20 10 0 10 20 0.00 20 10 0 10 20 pre-sigmoid logits pre-sigmoid logits pre-sigmoid logits pre-sigmoid logits (g) Big Lips (h) Big nose (i) Black hair (j) Blond hair Bushy_Eyebrows Chubby Double_Chin Eyeglasses Prob. of samples in each bin Prob. of samples in each bin Prob. of samples in each bin 0.15 0.15 0.15 0.15 0.10 0.10 0.10 0.10 0.05 0.05 0.05 0.05 0.00 20 10 0 10 20 0.00 20 10 0 10 20 0.00 20 10 0 10 20 0.00 20 10 0 10 20 pre-sigmoid logits pre-sigmoid logits pre-sigmoid logits pre-sigmoid logits Gray_Hair Heavy_Makeup High_Cheekbones Male Prob. of samples in each bin Prob. of samples in each bin Prob. of samples in each bin 0.15 0.15 0.15 0.15 0.10 0.10 0.10 0.10 0.05 0.05 0.05 0.05 0.00 20 10 0 10 20 0.00 20 10 0 10 20 0.00 20 10 0 10 20 0.00 20 10 0 10 20 pre-sigmoid logits pre-sigmoid logits pre-sigmoid logits pre-sigmoid logits (q) Gray hair (r) Heavy Makeup (s) High Cheekbones (t) Male Mustache Narrow_Eyes No_Beard Oval_Face Prob. of samples in each bin Prob. of samples in each bin Prob. of samples in each bin 0.15 0.15 0.15 0.15 0.10 0.10 0.10 0.10 0.05 0.05 0.05 0.05 0.00 20 10 0 10 20 0.00 20 10 0 10 20 0.00 20 10 0 10 20 0.00 20 10 0 10 20 pre-sigmoid logits pre-sigmoid logits pre-sigmoid logits pre-sigmoid logits (v) Mustache (w) Narrow Eyes (x) No Beard (y) Oval Face Pointy_Nose Receding_Hairline Rosy_Cheeks Sideburns Prob. of samples in each bin Prob. of samples in each bin Prob. of samples in each bin 0.15 0.15 0.15 0.15 0.10 0.10 0.10 0.10 0.05 0.05 0.05 0.05 0.00 20 10 0 10 20 0.00 20 10 0 10 20 0.00 20 10 0 10 20 0.00 20 10 0 10 20 pre-sigmoid logits pre-sigmoid logits pre-sigmoid logits pre-sigmoid logits (aa) pointy nose (ab) Receding Hairline (ac) Rosy Cheeks (ad) Sideburns Straight_Hair Wavy_Hair Wearing_Hat Wearing_Lipstick Prob. of samples in each bin Prob. of samples in each bin Prob. of samples in each bin 0.15 0.15 0.15 0.15 0.10 0.10 0.10 0.10 0.05 0.05 0.05 0.05 0.00 20 10 0 10 20 0.00 20 10 0 10 20 0.00 20 10 0 10 20 0.00 20 10 0 10 20 pre-sigmoid logits pre-sigmoid logits pre-sigmoid logits pre-sigmoid logits (af) Straight hair (ag) Wavy hair (ah) Wearing Hat (ai) Wearing Lipstick Young Prob. of samples in each bin 0.15 0.10 0.05 0.00 20 10 0 10 20 pre-sigmoid logits (aj) Young 18",
+    "words": 769,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/724"
+   },
+   {
+    "page": 19,
+    "text": "5_o_Clock_Shadow 0.150 generation Prob. of samples in each bin Prob. of samples in each bin training 0.125 sampled_eval low-density 0.100 decision 0.075 0.050 0.025 0.000 30 20 10 0 10 20 30 pre-sigmoid logits (a) 5-o-Clock Shadow Bangs 0.150 Prob. of samples in each bin Prob. of samples in each bin 0.125 0.100 0.075 0.050 0.025 0.000 30 20 10 0 10 20 30 pre-sigmoid logits (f) Bangs Brown_Hair 0.150 Prob. of samples in each bin Prob. of samples in each bin 0.125 0.100 0.075 0.050 0.025 0.000 30 20 10 0 10 20 30 pre-sigmoid logits (k) brown hair (l) Bushy Eyebrows (m) Chubby (n) Double Chin (o) Eyeglasses Goatee 0.150 Prob. of samples in each bin Prob. of samples in each bin 0.125 0.100 0.075 0.050 0.025 0.000 30 20 10 0 10 20 30 pre-sigmoid logits (p) Goatee Mouth_Slightly_Open 0.150 Prob. of samples in each bin Prob. of samples in each bin 0.125 0.100 0.075 0.050 0.025 0.000 30 20 10 0 10 20 30 pre-sigmoid logits (u) Mouth slightly Open Pale_Skin 0.150 Prob. of samples in each bin Prob. of samples in each bin 0.125 0.100 0.075 0.050 0.025 0.000 30 20 10 0 10 20 30 pre-sigmoid logits (z) Pale Skin Smiling 0.150 Prob. of samples in each bin Prob. of samples in each bin 0.125 0.100 0.075 0.050 0.025 0.000 30 20 10 0 10 20 30 pre-sigmoid logits (ae) Smiling Figure 13: The pre-sigmoid logits distribution of each attribute in CelebA (SwinTransformer-based classifier). Arched_Eyebrows Attractive Bags_Under_Eyes Bald 0.150 0.150 0.150 0.150 Prob. of samples in each bin Prob. of samples in each bin Prob. of samples in each bin 0.125 0.125 0.125 0.125 0.100 0.100 0.100 0.100 0.075 0.075 0.075 0.075 0.050 0.050 0.050 0.050 0.025 0.025 0.025 0.025 0.000 0.000 0.000 0.000 30 20 10 0 10 20 30 30 20 10 0 10 20 30 30 20 10 0 10 20 30 30 20 10 0 10 20 30 pre-sigmoid logits pre-sigmoid logits pre-sigmoid logits pre-sigmoid logits (b) Arched Eyebrows (c) Attractive (d) Bags Under Eyes (e) Bald Big_Lips Big_Nose Black_Hair Blond_Hair 0.150 0.150 0.150 0.150 Prob. of samples in each bin Prob. of samples in each bin Prob. of samples in each bin 0.125 0.125 0.125 0.125 0.100 0.100 0.100 0.100 0.075 0.075 0.075 0.075 0.050 0.050 0.050 0.050 0.025 0.025 0.025 0.025 0.000 0.000 0.000 0.000 30 20 10 0 10 20 30 30 20 10 0 10 20 30 30 20 10 0 10 20 30 30 20 10 0 10 20 30 pre-sigmoid logits pre-sigmoid logits pre-sigmoid logits pre-sigmoid logits (g) Big Lips (h) Big nose (i) Black hair (j) Blond hair Bushy_Eyebrows Chubby Double_Chin Eyeglasses 0.150 0.150 0.150 0.150 Prob. of samples in each bin Prob. of samples in each bin Prob. of samples in each bin 0.125 0.125 0.125 0.125 0.100 0.100 0.100 0.100 0.075 0.075 0.075 0.075 0.050 0.050 0.050 0.050 0.025 0.025 0.025 0.025 0.000 0.000 0.000 0.000 30 20 10 0 10 20 30 30 20 10 0 10 20 30 30 20 10 0 10 20 30 30 20 10 0 10 20 30 pre-sigmoid logits pre-sigmoid logits pre-sigmoid logits pre-sigmoid logits Gray_Hair Heavy_Makeup High_Cheekbones Male 0.150 0.150 0.150 0.150 Prob. of samples in each bin Prob. of samples in each bin Prob. of samples in each bin 0.125 0.125 0.125 0.125 0.100 0.100 0.100 0.100 0.075 0.075 0.075 0.075 0.050 0.050 0.050 0.050 0.025 0.025 0.025 0.025 0.000 0.000 0.000 0.000 30 20 10 0 10 20 30 30 20 10 0 10 20 30 30 20 10 0 10 20 30 30 20 10 0 10 20 30 pre-sigmoid logits pre-sigmoid logits pre-sigmoid logits pre-sigmoid logits (q) Gray hair (r) Heavy Makeup (s) High Cheekbones (t) Male Mustache Narrow_Eyes No_Beard Oval_Face 0.150 0.150 0.150 0.150 Prob. of samples in each bin Prob. of samples in each bin Prob. of samples in each bin 0.125 0.125 0.125 0.125 0.100 0.100 0.100 0.100 0.075 0.075 0.075 0.075 0.050 0.050 0.050 0.050 0.025 0.025 0.025 0.025 0.000 0.000 0.000 0.000 30 20 10 0 10 20 30 30 20 10 0 10 20 30 30 20 10 0 10 20 30 30 20 10 0 10 20 30 pre-sigmoid logits pre-sigmoid logits pre-sigmoid logits pre-sigmoid logits (v) Mustache (w) Narrow Eyes (x) No Beard (y) Oval Face Pointy_Nose Receding_Hairline Rosy_Cheeks Sideburns 0.150 0.150 0.150 0.150 Prob. of samples in each bin Prob. of samples in each bin Prob. of samples in each bin 0.125 0.125 0.125 0.125 0.100 0.100 0.100 0.100 0.075 0.075 0.075 0.075 0.050 0.050 0.050 0.050 0.025 0.025 0.025 0.025 0.000 0.000 0.000 0.000 30 20 10 0 10 20 30 30 20 10 0 10 20 30 30 20 10 0 10 20 30 30 20 10 0 10 20 30 pre-sigmoid logits pre-sigmoid logits pre-sigmoid logits pre-sigmoid logits (aa) pointy nose (ab) Receding Hairline (ac) Rosy Cheeks (ad) Sideburns Straight_Hair Wavy_Hair Wearing_Hat Wearing_Lipstick 0.150 0.150 0.150 0.150 Prob. of samples in each bin Prob. of samples in each bin Prob. of samples in each bin 0.125 0.125 0.125 0.125 0.100 0.100 0.100 0.100 0.075 0.075 0.075 0.075 0.050 0.050 0.050 0.050 0.025 0.025 0.025 0.025 0.000 0.000 0.000 0.000 30 20 10 0 10 20 30 30 20 10 0 10 20 30 30 20 10 0 10 20 30 30 20 10 0 10 20 30 pre-sigmoid logits pre-sigmoid logits pre-sigmoid logits pre-sigmoid logits (af) Straight hair (ag) Wavy hair (ah) Wearing Hat (ai) Wearing Lipstick Young 0.150 Prob. of samples in each bin 0.125 0.100 0.075 0.050 0.025 0.000 30 20 10 0 10 20 30 pre-sigmoid logits (aj) Young 19",
+    "words": 948,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/1203"
+   },
+   {
+    "page": 20,
+    "text": "floral_Distribution 0.20 Prob. of samples in each bin Prob. of samples in each bin training generation 0.15 sampled_eval low-density 0.10 decision 0.05 0.00 20 10 0 10 20 pre-sigmoid logits (a) Floral solid_Distribution 0.20 Prob. of samples in each bin Prob. of samples in each bin 0.15 0.10 0.05 0.00 20 10 0 10 20 pre-sigmoid logits (f) solid maxi_length_Distribution 0.20 Prob. of samples in each bin Prob. of samples in each bin 0.15 0.10 0.05 0.00 20 10 0 10 20 pre-sigmoid logits (k) Maxi length square_neckline_Distribution 0.20 Prob. of samples in each bin Prob. of samples in each bin 0.15 0.10 0.05 0.00 20 10 0 10 20 pre-sigmoid logits (p) Square neckline leather_Distribution 0.20 Prob. of samples in each bin Prob. of samples in each bin 0.15 0.10 0.05 0.00 20 10 0 10 20 pre-sigmoid logits (u) Leather Figure 14: The pre-sigmoid logits distribution of each attribute in DeepFashion. graphic_Distribution striped_Distribution embroidered_Distribution pleated_Distribution 0.20 0.20 0.20 0.20 Prob. of samples in each bin Prob. of samples in each bin Prob. of samples in each bin 0.15 0.15 0.15 0.15 0.10 0.10 0.10 0.10 0.05 0.05 0.05 0.05 0.00 20 10 0 10 20 0.00 20 10 0 10 20 0.00 20 10 0 10 20 0.00 20 10 0 10 20 pre-sigmoid logits pre-sigmoid logits pre-sigmoid logits pre-sigmoid logits (b) Graphic (c) Striped (d) Embroidered (e) Pleated lattice_Distribution long_sleeve_Distribution short_sleeve_Distribution sleeveless_Distribution 0.20 0.20 0.20 0.20 Prob. of samples in each bin Prob. of samples in each bin Prob. of samples in each bin 0.15 0.15 0.15 0.15 0.10 0.10 0.10 0.10 0.05 0.05 0.05 0.05 0.00 20 10 0 10 20 0.00 20 10 0 10 20 0.00 20 10 0 10 20 0.00 20 10 0 10 20 pre-sigmoid logits pre-sigmoid logits pre-sigmoid logits pre-sigmoid logits (g) Lattice (h) Long sleeve (i) Short sleeve (j) Sleeveless mini_length_Distribution no_dress_Distribution crew_neckline_Distribution v_neckline_Distribution 0.20 0.20 0.20 0.20 Prob. of samples in each bin Prob. of samples in each bin Prob. of samples in each bin 0.15 0.15 0.15 0.15 0.10 0.10 0.10 0.10 0.05 0.05 0.05 0.05 0.00 20 10 0 10 20 0.00 20 10 0 10 20 0.00 20 10 0 10 20 0.00 20 10 0 10 20 pre-sigmoid logits pre-sigmoid logits pre-sigmoid logits pre-sigmoid logits (l) Mini length (m) No dress (n) Crew neckline (o) V neckline no_neckline_Distribution denim_Distribution chiffon_Distribution cotton_Distribution 0.20 0.20 0.20 0.20 Prob. of samples in each bin Prob. of samples in each bin Prob. of samples in each bin 0.15 0.15 0.15 0.15 0.10 0.10 0.10 0.10 0.05 0.05 0.05 0.05 0.00 20 10 0 10 20 0.00 20 10 0 10 20 0.00 20 10 0 10 20 0.00 20 10 0 10 20 pre-sigmoid logits pre-sigmoid logits pre-sigmoid logits pre-sigmoid logits (q) No neckline (r) Denim (s) Chiffon (t) Cotton faux_Distribution knit_Distribution tight_Distribution loose_Distribution 0.20 0.20 0.20 0.20 Prob. of samples in each bin Prob. of samples in each bin Prob. of samples in each bin 0.15 0.15 0.15 0.15 0.10 0.10 0.10 0.10 0.05 0.05 0.05 0.05 0.00 20 10 0 10 20 0.00 20 10 0 10 20 0.00 20 10 0 10 20 0.00 20 10 0 10 20 pre-sigmoid logits pre-sigmoid logits pre-sigmoid logits pre-sigmoid logits (v) Faux (w) Knit (x) Tight (y) Loose conventional_Distribution 0.20 Prob. of samples in each bin 0.15 0.10 0.05 0.00 20 10 0 10 20 pre-sigmoid logits (z) conventional 20",
+    "words": 573,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/1862"
+   },
+   {
+    "page": 24,
+    "text": "F Bias shift Analysis Per-attribute Fig. 15 show the Bias probability for each attribute in DeepFashion dataset. Figs. 16 and 17 show the Bias probability for each attribute in CelebA dataset using ResNeXtbased and SwinTransformer-based classifiers respectively. 1.0 Floral 1.0 Graphic train cls prob train cls prob 0.8 eval cls prob 0.8 eval cls prob generation prob generation prob probability probability 0.6 0.6 0.4 0.4 0.2 0.2 0.00 10 20 30 40.00 0 10 20 30 40 steps (K) steps (K) (a) Floral (b) Graphic 1.0 solid 1.0 Lattice train cls prob 0.8 0.8 eval cls prob generation prob probability probability 0.6 0.6 0.4 0.4 train cls prob 0.2 eval cls prob 0.2 generation prob 0.00 10 20 30 40.00 0 10 20 30 40 steps (K) steps (K) (f) solid (g) Lattice 1.0 maxi_length 1.0 mini_length train cls prob train cls prob 0.8 eval cls prob 0.8 eval cls prob generation prob generation prob probability probability 0.6 0.6 0.4 0.4 0.2 0.2 0.00 10 20 30 40.00 0 10 20 30 40 steps (K) steps (K) (k) Maxi length (l) Mini length 1.0 square_neckline 1.0 no_neckline train cls prob train cls prob 0.8 eval cls prob 0.8 eval cls prob generation prob generation prob probability probability 0.6 0.6 0.4 0.4 0.2 0.2 0.00 10 20 30 40.00 0 10 20 30 40 steps (K) steps (K) (p) Square neckline (q) No neckline 1.0 Leather 1.0 Faux train cls prob train cls prob 0.8 eval cls prob 0.8 eval cls prob generation prob generation prob probability probability 0.6 0.6 0.4 0.4 0.2 0.2 0.00 10 20 30 40.00 0 10 20 30 40 steps (K) steps (K) (u) Leather (v) Faux Figure 15: probabilities of attributes for DeepFashion dataset during training. Please note that it might seem like Some of the subplots are missing the probability lines; They are actually very close to the x-axis, especially for Square neckline and Faux. 1.0 Striped 1.0 Embroidered 1.0 Pleated train cls prob train cls prob train cls prob 0.8 eval cls prob 0.8 eval cls prob 0.8 eval cls prob generation prob generation prob generation prob probability probability probability 0.6 0.6 0.6 0.4 0.4 0.4 0.2 0.2 0.2 0.00 10 20 30 40.00 0 10 20 30 40.00 0 10 20 30 40 steps (K) steps (K) steps (K) (c) Striped (d) Embroidered (e) Pleated 1.0 long_sleeve 1.0 short_sleeve 1.0 Sleeveless train cls prob train cls prob train cls prob 0.8 eval cls prob 0.8 eval cls prob 0.8 eval cls prob generation prob generation prob generation prob probability probability probability 0.6 0.6 0.6 0.4 0.4 0.4 0.2 0.2 0.2 0.00 10 20 30 40.00 0 10 20 30 40.00 0 10 20 30 40 steps (K) steps (K) steps (K) (h) Long sleeve (i) Short sleeve (j) Sleeveless 1.0 no_dress 1.0 crew_neckline 1.0 v_neckline train cls prob train cls prob 0.8 0.8 eval cls prob 0.8 eval cls prob generation prob generation prob probability probability probability 0.6 0.6 0.6 0.4 0.4 0.4 train cls prob 0.2 eval cls prob 0.2 0.2 generation prob 0.00 10 20 30 40.00 0 10 20 30 40.00 0 10 20 30 40 steps (K) steps (K) steps (K) (m) No dress (n) Crew neckline (o) V neckline 1.0 Denim 1.0 Chiffon 1.0 Cotton train cls prob train cls prob 0.8 eval cls prob 0.8 eval cls prob 0.8 generation prob generation prob probability probability probability 0.6 0.6 0.6 0.4 0.4 0.4 train cls prob 0.2 0.2 0.2 eval cls prob generation prob 0.00 10 20 30 40.00 0 10 20 30 40.00 0 10 20 30 40 steps (K) steps (K) steps (K) (r) Denim (s) Chiffon (t) Cotton 1.0 Knit 1.0 Tight 1.0 Loose train cls prob train cls prob train cls prob 0.8 eval cls prob 0.8 eval cls prob 0.8 eval cls prob generation prob generation prob generation prob probability probability probability 0.6 0.6 0.6 0.4 0.4 0.4 0.2 0.2 0.2 0.00 10 20 30 40.00 0 10 20 30 40.00 0 10 20 30 40 steps (K) steps (K) steps (K) (w) Knit (x) Tight (y) Loose 1.0 conventional 0.8 probability 0.6 0.4 train cls prob 0.2 eval cls prob generation prob 0.00 10 20 30 40 steps (K) (z) conventional 24",
+    "words": 739,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/2239"
+   },
+   {
+    "page": 25,
+    "text": "1.0 5-o-Clock_Shadow 1.0 Arched_Eyebrows train cls gen rd2 train cls 0.8 valid cls gen rd3 0.8 valid cls gen rd1 gen rd1 probability probability 0.6 0.6 0.4 0.4 0.2 0.2 0.0 200 400 600 0.0 200 400 steps (K) steps (K) (a) 5-o-Clock Shadow (b) Arched Eyebrows 1.0 Bangs 1.0 Big_Lips train cls gen rd2 train cls 0.8 valid cls gen rd3 0.8 valid cls gen rd1 gen rd1 probability probability 0.6 0.6 0.4 0.4 0.2 0.2 0.0 200 400 600 0.0 200 400 steps (K) steps (K) (f) Bangs (g) Big Lips 1.0 Brown_Hair 1.0 Bushy_Eyebrows train cls gen rd2 train cls 0.8 valid cls gen rd3 0.8 valid cls gen rd1 gen rd1 probability probability 0.6 0.6 0.4 0.4 0.2 0.2 0.0 200 400 600 0.0 200 400 steps (K) steps (K) (k) brown hair (l) Bushy Eyebrows 1.0 Goatee 1.0 Gray_Hair train cls gen rd2 train cls 0.8 valid cls gen rd3 0.8 valid cls gen rd1 gen rd1 probability probability 0.6 0.6 0.4 0.4 0.2 0.2 0.0 200 400 600 0.0 200 400 steps (K) steps (K) (p) Goatee (q) Gray hair 1.0 Mouth_Slightly_Open 1.0 Mustache train cls gen rd2 train cls 0.8 valid cls gen rd3 0.8 valid cls gen rd1 gen rd1 probability probability 0.6 0.6 0.4 0.4 0.2 0.2 0.0 200 400 600 0.0 200 400 steps (K) steps (K) (u) Mouth slightly Open (v) Mustache 1.0 Pale_Skin 1.0 Pointy_Nose train cls gen rd2 train cls 0.8 valid cls gen rd3 0.8 valid cls gen rd1 gen rd1 probability probability 0.6 0.6 0.4 0.4 0.2 0.2 0.0 200 400 600 0.0 200 400 steps (K) steps (K) (z) Pale Skin (aa) pointy nose 1.0 Smiling 1.0 Straight_Hair train cls gen rd2 train cls 0.8 valid cls gen rd3 0.8 valid cls gen rd1 gen rd1 probability probability 0.6 0.6 0.4 0.4 0.2 0.2 0.0 200 400 600 0.0 200 400 steps (K) steps (K) (ae) Smiling (af) Straight hair Figure 16: The probabilities of attributes in CelebA during training (ResNeXtbased 1.0 Attractive 1.0 Bags_Under_Eyes 1.0 Bald gen rd2 train cls gen rd2 train cls gen rd2 gen rd3 0.8 0.8 valid cls gen rd3 0.8 valid cls gen rd3 gen rd1 gen rd1 probability probability probability 0.6 0.6 0.6 0.4 0.4 0.4 train cls gen rd2 0.2 valid cls gen rd3 0.2 0.2 gen rd1 600 0.0 200 400 600 0.0 200 400 600 0.0 200 400 600 steps (K) steps (K) steps (K) (c) Attractive (d) Bags Under Eyes (e) Bald 1.0 Big_Nose 1.0 Black_Hair 1.0 Blond_Hair gen rd2 train cls gen rd2 train cls gen rd2 train cls gen rd2 gen rd3 0.8 valid cls gen rd3 0.8 valid cls gen rd3 0.8 valid cls gen rd3 gen rd1 gen rd1 gen rd1 probability probability probability 0.6 0.6 0.6 0.4 0.4 0.4 0.2 0.2 0.2 600 0.0 200 400 600 0.0 200 400 600 0.0 200 400 600 steps (K) steps (K) steps (K) (h) Big nose (i) Black hair (j) Blond hair 1.0 Chubby 1.0 Double_Chin 1.0 Eyeglasses gen rd2 train cls gen rd2 train cls gen rd2 train cls gen rd2 gen rd3 0.8 valid cls gen rd3 0.8 valid cls gen rd3 0.8 valid cls gen rd3 gen rd1 gen rd1 gen rd1 probability probability probability 0.6 0.6 0.6 0.4 0.4 0.4 0.2 0.2 0.2 600 0.0 200 400 600 0.0 200 400 600 0.0 200 400 600 steps (K) steps (K) steps (K) (m) Chubby (n) Double Chin (o) Eyeglasses 1.0 Heavy_Makeup 1.0 High_Cheekbones 1.0 Male gen rd2 train cls gen rd2 train cls gen rd2 train cls gen rd2 gen rd3 0.8 valid cls gen rd3 0.8 valid cls gen rd3 0.8 valid cls gen rd3 gen rd1 gen rd1 gen rd1 probability probability probability 0.6 0.6 0.6 0.4 0.4 0.4 0.2 0.2 0.2 600 0.0 200 400 600 0.0 200 400 600 0.0 200 400 600 steps (K) steps (K) steps (K) (r) Heavy Makeup (s) High Cheekbones (t) Male 1.0 Narrow_Eyes 1.0 No_Beard 1.0 Oval_Face gen rd2 train cls gen rd2 train cls gen rd2 gen rd3 0.8 valid cls gen rd3 0.8 0.8 valid cls gen rd3 gen rd1 gen rd1 probability probability probability 0.6 0.6 0.6 0.4 0.4 0.4 train cls gen rd2 0.2 0.2 valid cls gen rd3 0.2 gen rd1 600 0.0 200 400 600 0.0 200 400 600 0.0 200 400 600 steps (K) steps (K) steps (K) (w) Narrow Eyes (x) No Beard (y) Oval Face 1.0 Receding_Hairline 1.0 Rosy_Cheeks 1.0 Sideburns gen rd2 train cls gen rd2 train cls gen rd2 train cls gen rd2 gen rd3 0.8 valid cls gen rd3 0.8 valid cls gen rd3 0.8 valid cls gen rd3 gen rd1 gen rd1 gen rd1 probability probability probability 0.6 0.6 0.6 0.4 0.4 0.4 0.2 0.2 0.2 600 0.0 200 400 600 0.0 200 400 600 0.0 200 400 600 steps (K) steps (K) steps (K) (ab) Receding Hairline (ac) Rosy Cheeks (ad) Sideburns 1.0 Wavy_Hair 1.0 Wearing_Hat 1.0 Wearing_Lipstick gen rd2 train cls gen rd2 train cls gen rd2 train cls gen rd2 gen rd3 0.8 valid cls gen rd3 0.8 valid cls gen rd3 0.8 valid cls gen rd3 gen rd1 gen rd1 gen rd1 probability probability probability 0.6 0.6 0.6 0.4 0.4 0.4 0.2 0.2 0.2 600 0.0 200 400 600 0.0 200 400 600 0.0 200 400 600 steps (K) steps (K) steps (K) (ag) Wavy hair (ah) Wearing Hat (ai) Wearing Lipstick 1.0 Young 0.8 probability 0.6 0.4 train cls gen rd2 0.2 valid cls gen rd3 gen rd1 0.0 200 400 600 steps (K) (aj) Young classifier). 25",
+    "words": 941,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/2711"
+   },
+   {
+    "page": 26,
+    "text": "1.0 5_o_Clock_Shadow 1.0 Arched_Eyebrows train cls gen rd2 train cls gen rd2 0.8 eval cls gen rd3 0.8 eval cls gen rd3 gen rd1 gen rd1 0.6 0.6 probability probability 0.4 0.4 0.2 0.2 0.0 100 200 300 400 500 600 0.0 100 200 300 400 500 600 steps (K) steps (K) (a) 5-o-Clock Shadow (b) Arched Eyebrows 1.0 Bangs 1.0 Big_Lips train cls gen rd2 train cls gen rd2 0.8 eval cls gen rd3 0.8 eval cls gen rd3 gen rd1 gen rd1 0.6 0.6 probability probability 0.4 0.4 0.2 0.2 0.0 100 200 300 400 500 600 0.0 100 200 300 400 500 600 steps (K) steps (K) (f) Bangs (g) Big Lips 1.0 Brown_Hair 1.0 Bushy_Eyebrows train cls gen rd2 train cls gen rd2 0.8 eval cls gen rd3 0.8 eval cls gen rd3 gen rd1 gen rd1 0.6 0.6 probability probability 0.4 0.4 0.2 0.2 0.0 100 200 300 400 500 600 0.0 100 200 300 400 500 600 steps (K) steps (K) (k) brown hair (l) Bushy Eyebrows 1.0 Goatee 1.0 Gray_Hair train cls gen rd2 train cls gen rd2 0.8 eval cls gen rd3 0.8 eval cls gen rd3 gen rd1 gen rd1 0.6 0.6 probability probability 0.4 0.4 0.2 0.2 0.0 100 200 300 400 500 600 0.0 100 200 300 400 500 600 steps (K) steps (K) (p) Goatee (q) Gray hair 1.0 Mouth_Slightly_Open 1.0 Mustache train cls gen rd2 train cls gen rd2 0.8 eval cls gen rd3 0.8 eval cls gen rd3 gen rd1 gen rd1 0.6 0.6 probability probability 0.4 0.4 0.2 0.2 0.0 100 200 300 400 500 600 0.0 100 200 300 400 500 600 steps (K) steps (K) (u) Mouth slightly Open (v) Mustache 1.0 Pale_Skin 1.0 Pointy_Nose train cls gen rd2 train cls gen rd2 0.8 eval cls gen rd3 0.8 eval cls gen rd3 gen rd1 gen rd1 0.6 0.6 probability probability 0.4 0.4 0.2 0.2 0.0 100 200 300 400 500 600 0.0 100 200 300 400 500 600 steps (K) steps (K) (z) Pale Skin (aa) pointy nose 1.0 Smiling 1.0 Straight_Hair train cls gen rd2 train cls gen rd2 0.8 eval cls gen rd3 0.8 eval cls gen rd3 gen rd1 gen rd1 0.6 0.6 probability probability 0.4 0.4 0.2 0.2 0.0 100 200 300 400 500 600 0.0 100 200 300 400 500 600 steps (K) steps (K) (ae) Smiling (af) Straight hair Figure 17: The probabilities of attributes in CelebA during training (SwinTransformer-based classi- 26 fier). 1.0 Attractive 1.0 Bags_Under_Eyes 1.0 Bald train cls gen rd2 train cls gen rd2 0.8 0.8 eval cls gen rd3 0.8 eval cls gen rd3 gen rd1 gen rd1 0.6 0.6 0.6 probability probability probability 0.4 0.4 0.4 train cls gen rd2 0.2 eval cls gen rd3 0.2 0.2 gen rd1 0.0 100 200 300 400 500 600 0.0 100 200 300 400 500 600 0.0 100 200 300 400 500 600 steps (K) steps (K) steps (K) (c) Attractive (d) Bags Under Eyes (e) Bald 1.0 Bushy_Eyebrows 1.0 Black_Hair 1.0 Blond_Hair train cls gen rd2 train cls gen rd2 train cls gen rd2 0.8 eval cls gen rd3 0.8 eval cls gen rd3 0.8 eval cls gen rd3 gen rd1 gen rd1 gen rd1 0.6 0.6 0.6 probability probability probability 0.4 0.4 0.4 0.2 0.2 0.2 0.0 100 200 300 400 500 600 0.0 100 200 300 400 500 600 0.0 100 200 300 400 500 600 steps (K) steps (K) steps (K) (h) Big nose (i) Black hair (j) Blond hair 1.0 Chubby 1.0 Double_Chin 1.0 Eyeglasses train cls gen rd2 train cls gen rd2 train cls gen rd2 0.8 eval cls gen rd3 0.8 eval cls gen rd3 0.8 eval cls gen rd3 gen rd1 gen rd1 gen rd1 0.6 0.6 0.6 probability probability probability 0.4 0.4 0.4 0.2 0.2 0.2 0.0 100 200 300 400 500 600 0.0 100 200 300 400 500 600 0.0 100 200 300 400 500 600 steps (K) steps (K) steps (K) (m) Chubby (n) Double Chin (o) Eyeglasses 1.0 Heavy_Makeup 1.0 High_Cheekbones 1.0 Male train cls gen rd2 train cls gen rd2 train cls gen rd2 0.8 eval cls gen rd3 0.8 eval cls gen rd3 0.8 eval cls gen rd3 gen rd1 gen rd1 gen rd1 0.6 0.6 0.6 probability probability probability 0.4 0.4 0.4 0.2 0.2 0.2 0.0 100 200 300 400 500 600 0.0 100 200 300 400 500 600 0.0 100 200 300 400 500 600 steps (K) steps (K) steps (K) (r) Heavy Makeup (s) High Cheekbones (t) Male 1.0 Narrow_Eyes 1.0 No_Beard 1.0 Oval_Face train cls gen rd2 train cls gen rd2 0.8 eval cls gen rd3 0.8 0.8 eval cls gen rd3 gen rd1 gen rd1 0.6 0.6 0.6 probability probability probability 0.4 0.4 0.4 train cls gen rd2 0.2 0.2 eval cls gen rd3 0.2 gen rd1 0.0 100 200 300 400 500 600 0.0 100 200 300 400 500 600 0.0 100 200 300 400 500 600 steps (K) steps (K) steps (K) (w) Narrow Eyes (x) No Beard (y) Oval Face 1.0 Receding_Hairline 1.0 Rosy_Cheeks 1.0 Sideburns train cls gen rd2 train cls gen rd2 train cls gen rd2 0.8 eval cls gen rd3 0.8 eval cls gen rd3 0.8 eval cls gen rd3 gen rd1 gen rd1 gen rd1 0.6 0.6 0.6 probability probability probability 0.4 0.4 0.4 0.2 0.2 0.2 0.0 100 200 300 400 500 600 0.0 100 200 300 400 500 600 0.0 100 200 300 400 500 600 steps (K) steps (K) steps (K) (ab) Receding Hairline (ac) Rosy Cheeks (ad) Sideburns 1.0 Wavy_Hair 1.0 Wearing_Hat 1.0 Wearing_Lipstick train cls gen rd2 train cls gen rd2 train cls gen rd2 0.8 eval cls gen rd3 0.8 eval cls gen rd3 0.8 eval cls gen rd3 gen rd1 gen rd1 gen rd1 0.6 0.6 0.6 probability probability probability 0.4 0.4 0.4 0.2 0.2 0.2 0.0 100 200 300 400 500 600 0.0 100 200 300 400 500 600 0.0 100 200 300 400 500 600 steps (K) steps (K) steps (K) (ag) Wavy hair (ah) Wearing Hat (ai) Wearing Lipstick 1.0 Young 0.8 0.6 probability 0.4 train cls gen rd2 0.2 eval cls gen rd3 gen rd1 0.0 100 200 300 400 500 600 steps (K) (aj) Young",
+    "words": 1050,
+    "kind": "missing",
+    "repaired": true,
+    "anchor": "after #/texts/3365"
+   }
+  ],
+  "gaps_dismissed": [
+   {
+    "page": 2,
+    "words": 26,
+    "reason": "duplicate",
+    "text": "in +ve samples negative positive gen decision in +ve samples negative positive train negative positive negative positive (a) spectrum-based (b) spectrum-based (c) non-spectrum-based (d) non-spectrum-b"
+   },
+   {
+    "page": 3,
+    "words": 60,
+    "reason": "duplicate",
+    "text": "Bias Analysis Pipeline train Set valid Set (noisy ground truth (noisy ground truth labels) labels) train Set (classifier-predicted labels) apply evaluation valid Set metrics Diffusion comparing classi"
+   },
+   {
+    "page": 3,
+    "words": 14,
+    "reason": "duplicate",
+    "text": "(C) as B data (C) = P data (C) − P ideal (C). (1)"
+   },
+   {
+    "page": 3,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "B gen (C) = P gen (C) − P ideal (C). (2)"
+   },
+   {
+    "page": 4,
+    "words": 19,
+    "reason": "debris",
+    "text": "gen Bshift (C) = |B gen (C) − B data (C)| = |Pcls val (C) − Pcls (C)|. (3)"
+   },
+   {
+    "page": 5,
+    "words": 96,
+    "reason": "duplicate",
+    "text": "Image generation metrics of CelebA Image generation metrics of DeepFashion generalization Gap of two datasets 25.00 25.00 FID FLD DINO 60 FLD, KID DINO / FID generalization Gap 60 FID DINO 2000 KID DI"
+   },
+   {
+    "page": 5,
+    "words": 71,
+    "reason": "duplicate",
+    "text": "ABS evaluated on CelebA ABS evaluated on DeepFashion ABS comparing with the entire valid set 1000 ABS 8.00 3 ABS_spectrum Bias metrics (%) 8.00 ABS_non_spectrum 6.00 Bias metrics (%) 2 6.00 4.00 ABS 4"
+   },
+   {
+    "page": 6,
+    "words": 47,
+    "reason": "duplicate",
+    "text": "Smiling Young Prob. of samples in each bin Prob. of samples in each bin 0.15 training 0.15 generation sampled_val 0.10 low-density 0.10 decision 0.05 0.05 0.00 20 10 0 10 20 0.00 20 10 0 10 pre-sigmoi"
+   },
+   {
+    "page": 6,
+    "words": 29,
+    "reason": "duplicate",
+    "text": "no_dress_Distribution 0.20 Prob. of samples in each bin Prob. of samples in each bin 0.15 0.10 0.05 0.00 20 10 0 10 20 pre-sigmoid logits (a) spectrum: No dress"
+   },
+   {
+    "page": 6,
+    "words": 89,
+    "reason": "duplicate",
+    "text": "and Bangs Eyeglasses Prob. of samples in each bin Prob. of samples in each bin 0.15 0.15 0.10 0.10 0.05 0.05 20 0.00 20 10 0 10 20 0.00 20 10 0 10 20 pre-sigmoid logits pre-sigmoid logits (c) non-spec"
+   },
+   {
+    "page": 7,
+    "words": 83,
+    "reason": "duplicate",
+    "text": "FLD DINO small large Diffusion large Diffusion large Diffusion 60 FLD DINO large 20.00 small Diffusion 20.00 20.00 Bias metrics (%) small Diffusion Bias metrics (%) small Diffusion Bias metrics (%) FL"
+   },
+   {
+    "page": 8,
+    "words": 53,
+    "reason": "duplicate",
+    "text": "1.0 Smiling 1.0 Young 1.0 train cls gen rd2 0.8 valid cls gen rd3 0.8 0.8 gen rd1 probability probability probability 0.6 0.6 0.6 0.4 0.4 0.4 0.2 0.2 0.2 0.0 200 400 600 0.0 200 400 600 0.0 steps (K) "
+   },
+   {
+    "page": 8,
+    "words": 36,
+    "reason": "duplicate",
+    "text": "1.0 no_dress 1.0 solid 0.8 0.8 probability probability 0.6 0.6 0.4 0.4 0.2 0.2 0.00 10 20 30 40.00 0 10 20 30 steps (K) steps (K) (a) spectrum: (b) spectrum: No dress solid"
+   },
+   {
+    "page": 8,
+    "words": 48,
+    "reason": "duplicate",
+    "text": "Bangs 1.0 Eyeglasses 0.8 probability 0.6 0.4 0.2 200 400 600 0.0 200 400 600 steps (K) steps (K) Bangs Eyeglasses 1.0 Pleated train cls prob 0.8 eval cls prob generation prob probability 0.6 0.4 0.2 4"
+   },
+   {
+    "page": 14,
+    "words": 19,
+    "reason": "debris",
+    "text": "Z +∞ Z +∞ P̃ (C ≥ t) = fC (x − δ)dx = fC (x)dx. (6) t t−δ"
+   },
+   {
+    "page": 14,
+    "words": 20,
+    "reason": "debris",
+    "text": "Z t Bshift (C) = |P̃ (C ≥ t) − P (C ≥ t)| = fC (x)dx . (7) t−δ"
+   },
+   {
+    "page": 15,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "DeepFashion [29] dataset"
+   },
+   {
+    "page": 15,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "ADM[39] Codebase MIT License BigGAN [22] 5 Codebase"
+   },
+   {
+    "page": 16,
+    "words": 45,
+    "reason": "duplicate",
+    "text": "for Different inference methods on CelebA 7 ABS ABS_subj ABS_non_subj FLD DINO 250 KID DINO 6 FID DINO 200 Bias metrics (%) / FLD / KID 5 4 150 FID 3 100 2 50 1 0 0 25 ddim25 50 ddim50 100 ddim100 250"
+   },
+   {
+    "page": 17,
+    "words": 28,
+    "reason": "duplicate",
+    "text": "ABS evaluated on CelebA 1000 ABS ABS_spectrum 8.00 ABS_non_spectrum Bias metrics (%) Bias metrics (%) 6.00 4.00 2.00 100 200 300 400 500 600 steps (K) (a) ResNeXtbased"
+   },
+   {
+    "page": 17,
+    "words": 24,
+    "reason": "duplicate",
+    "text": "ABS evaluated on CelebA ABS 1000 ABS_spectrum ABS_non_spectrum 8.00 6.00 4.00 2.00 100 200 300 400 500 600 steps (K) (b) SwinTransformer-based non-spectrum-based attributes"
+   },
+   {
+    "page": 21,
+    "words": 27,
+    "reason": "duplicate",
+    "text": "Eyeglasses Wearing Hat Bald Male Gray hair Sideburns Goatee Pale Skin Blurry Double Chin Mustache Bangs Chubby Blond hair No Beard Wearing Necktie Rosy Cheeks Receding Hairline"
+   },
+   {
+    "page": 21,
+    "words": 25,
+    "reason": "duplicate",
+    "text": "Mouth slightly Open Wearing Lipstick Smiling Heavy Makeup Bushy Eyebrows Narrow Eyes Wearing Earings Black hair High Cheekbones Young Wearing Necklace brown hair Arched Eyebrows"
+   },
+   {
+    "page": 21,
+    "words": 11,
+    "reason": "duplicate",
+    "text": "Straight hair Big nose Attractive Big Lips pointy nose Oval Face"
+   },
+   {
+    "page": 21,
+    "words": 20,
+    "reason": "duplicate",
+    "text": "| 84.29 | 68.13 | 65.53 | 66.81 | 71.82 |\n| 83.88 | 67.57 | 72.32 | 69.87 | 76.08 |\n| 82.91 | 65.67 | 80.04 | 72.15 | 79.15 |\n| 82.27 | 57.18 | 57.75 | 57.47 | 58.43 |"
+   },
+   {
+    "page": 21,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "72.71 51.99 54.73 53.33 55.88"
+   },
+   {
+    "page": 22,
+    "words": 83,
+    "reason": "duplicate",
+    "text": "22 F1 AUPR 96.59 98.84 91.50 96.27 75.08 82.05 98.45 99.89 78.04 84.49 79.65 89.08 77.49 85.30 58.66 62.08 63.20 65.21 61.23 64.76 60.32 64.65 84.76 92.90 96.86 99.72 84.31 93.24 61.08 63.34 65.73 72."
+   },
+   {
+    "page": 23,
+    "words": 35,
+    "reason": "duplicate",
+    "text": "Lattice Square neckline Faux Leather Pleated Maxi length Denim Striped Loose Knit Mini length Graphic Embroidered Long sleeve Short sleeve no dress solid Floral Tight Chiffon v neckline Sleeveless con"
+   }
+  ],
+  "captions_reclassified": [
+   {
+    "page": 3,
+    "figure": "#/pictures/1",
+    "text": "6 Figure 2: Bias shift evaluation framework. Unconditional generative models are trained on the training set. The pre-tr"
+   }
+  ],
+  "captions_reassigned": [],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [
+   {
+    "page": 27,
+    "image": "fig-018-p27.png",
+    "w": 52,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-019-p27.png",
+    "w": 52,
+    "h": 55,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-020-p27.png",
+    "w": 52,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-021-p27.png",
+    "w": 52,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-022-p27.png",
+    "w": 52,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-023-p27.png",
+    "w": 52,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-025-p27.png",
+    "w": 51,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-026-p27.png",
+    "w": 52,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-027-p27.png",
+    "w": 52,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-028-p27.png",
+    "w": 49,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-029-p27.png",
+    "w": 49,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-030-p27.png",
+    "w": 49,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-031-p27.png",
+    "w": 49,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-032-p27.png",
+    "w": 50,
+    "h": 50,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-033-p27.png",
+    "w": 49,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-034-p27.png",
+    "w": 49,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-035-p27.png",
+    "w": 49,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-036-p27.png",
+    "w": 50,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-037-p27.png",
+    "w": 49,
+    "h": 54,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-038-p27.png",
+    "w": 52,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-039-p27.png",
+    "w": 42,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-040-p27.png",
+    "w": 52,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-041-p27.png",
+    "w": 51,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-042-p27.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-043-p27.png",
+    "w": 51,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-044-p27.png",
+    "w": 51,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-045-p27.png",
+    "w": 51,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-046-p27.png",
+    "w": 51,
+    "h": 50,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-047-p27.png",
+    "w": 51,
+    "h": 54,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-048-p27.png",
+    "w": 52,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-049-p27.png",
+    "w": 49,
+    "h": 54,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-050-p27.png",
+    "w": 50,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-051-p27.png",
+    "w": 49,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-052-p27.png",
+    "w": 49,
+    "h": 50,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-053-p27.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-054-p27.png",
+    "w": 51,
+    "h": 50,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-055-p27.png",
+    "w": 50,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-056-p27.png",
+    "w": 50,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-057-p27.png",
+    "w": 51,
+    "h": 55,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-058-p27.png",
+    "w": 50,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-059-p27.png",
+    "w": 50,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-060-p27.png",
+    "w": 50,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-061-p27.png",
+    "w": 50,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-062-p27.png",
+    "w": 51,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-063-p27.png",
+    "w": 52,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-064-p27.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-065-p27.png",
+    "w": 50,
+    "h": 50,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-066-p27.png",
+    "w": 52,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-067-p27.png",
+    "w": 50,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-068-p27.png",
+    "w": 50,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-069-p27.png",
+    "w": 50,
+    "h": 54,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-070-p27.png",
+    "w": 50,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-071-p27.png",
+    "w": 50,
+    "h": 50,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-072-p27.png",
+    "w": 50,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-073-p27.png",
+    "w": 49,
+    "h": 50,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-074-p27.png",
+    "w": 50,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-075-p27.png",
+    "w": 50,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-076-p27.png",
+    "w": 50,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-077-p27.png",
+    "w": 49,
+    "h": 54,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-078-p27.png",
+    "w": 51,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-079-p27.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-080-p27.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-081-p27.png",
+    "w": 51,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-082-p27.png",
+    "w": 51,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-083-p27.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-084-p27.png",
+    "w": 52,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-085-p27.png",
+    "w": 51,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-086-p27.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-087-p27.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-088-p27.png",
+    "w": 51,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-089-p27.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-090-p27.png",
+    "w": 51,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-091-p27.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-092-p27.png",
+    "w": 52,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-093-p27.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-094-p27.png",
+    "w": 51,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-095-p27.png",
+    "w": 51,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-096-p27.png",
+    "w": 51,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 27,
+    "image": "fig-097-p27.png",
+    "w": 50,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/23"
+   },
+   {
+    "page": 28,
+    "image": "fig-098-p28.png",
+    "w": 50,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-099-p28.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-100-p28.png",
+    "w": 51,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-101-p28.png",
+    "w": 52,
+    "h": 55,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-102-p28.png",
+    "w": 50,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-103-p28.png",
+    "w": 52,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-104-p28.png",
+    "w": 51,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-105-p28.png",
+    "w": 52,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-106-p28.png",
+    "w": 50,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-107-p28.png",
+    "w": 52,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-108-p28.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-109-p28.png",
+    "w": 52,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-110-p28.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-111-p28.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-112-p28.png",
+    "w": 51,
+    "h": 54,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-113-p28.png",
+    "w": 39,
+    "h": 48,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-114-p28.png",
+    "w": 50,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-115-p28.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-116-p28.png",
+    "w": 50,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-117-p28.png",
+    "w": 52,
+    "h": 50,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-118-p28.png",
+    "w": 52,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-119-p28.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-120-p28.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-121-p28.png",
+    "w": 51,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-122-p28.png",
+    "w": 51,
+    "h": 55,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-123-p28.png",
+    "w": 51,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-124-p28.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-125-p28.png",
+    "w": 48,
+    "h": 54,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-126-p28.png",
+    "w": 51,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-127-p28.png",
+    "w": 51,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-128-p28.png",
+    "w": 52,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-129-p28.png",
+    "w": 50,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-130-p28.png",
+    "w": 51,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-131-p28.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-132-p28.png",
+    "w": 50,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-133-p28.png",
+    "w": 50,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-134-p28.png",
+    "w": 50,
+    "h": 50,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-135-p28.png",
+    "w": 50,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-136-p28.png",
+    "w": 49,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-137-p28.png",
+    "w": 49,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-138-p28.png",
+    "w": 53,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-139-p28.png",
+    "w": 51,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-140-p28.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-141-p28.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-142-p28.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-143-p28.png",
+    "w": 50,
+    "h": 54,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-144-p28.png",
+    "w": 50,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-145-p28.png",
+    "w": 50,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-146-p28.png",
+    "w": 51,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-147-p28.png",
+    "w": 51,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-148-p28.png",
+    "w": 50,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-149-p28.png",
+    "w": 50,
+    "h": 50,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-150-p28.png",
+    "w": 49,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-151-p28.png",
+    "w": 49,
+    "h": 54,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-152-p28.png",
+    "w": 50,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-153-p28.png",
+    "w": 50,
+    "h": 50,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-154-p28.png",
+    "w": 50,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-155-p28.png",
+    "w": 50,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-156-p28.png",
+    "w": 50,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-157-p28.png",
+    "w": 50,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-158-p28.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-159-p28.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-160-p28.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-161-p28.png",
+    "w": 49,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-162-p28.png",
+    "w": 50,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-163-p28.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-164-p28.png",
+    "w": 50,
+    "h": 50,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-165-p28.png",
+    "w": 50,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-166-p28.png",
+    "w": 50,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-167-p28.png",
+    "w": 51,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-168-p28.png",
+    "w": 49,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-169-p28.png",
+    "w": 49,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-170-p28.png",
+    "w": 50,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-171-p28.png",
+    "w": 50,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-172-p28.png",
+    "w": 50,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-174-p28.png",
+    "w": 50,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-175-p28.png",
+    "w": 49,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-176-p28.png",
+    "w": 50,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-177-p28.png",
+    "w": 49,
+    "h": 54,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-178-p28.png",
+    "w": 52,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-180-p28.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-181-p28.png",
+    "w": 52,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-182-p28.png",
+    "w": 52,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-183-p28.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-184-p28.png",
+    "w": 52,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-185-p28.png",
+    "w": 52,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-186-p28.png",
+    "w": 50,
+    "h": 54,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-187-p28.png",
+    "w": 52,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-188-p28.png",
+    "w": 51,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-189-p28.png",
+    "w": 50,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-190-p28.png",
+    "w": 49,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-191-p28.png",
+    "w": 50,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-192-p28.png",
+    "w": 50,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-193-p28.png",
+    "w": 48,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-194-p28.png",
+    "w": 50,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-195-p28.png",
+    "w": 49,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-196-p28.png",
+    "w": 49,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-197-p28.png",
+    "w": 48,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-198-p28.png",
+    "w": 52,
+    "h": 54,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-199-p28.png",
+    "w": 51,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-200-p28.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-201-p28.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-202-p28.png",
+    "w": 50,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-203-p28.png",
+    "w": 51,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-204-p28.png",
+    "w": 50,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-205-p28.png",
+    "w": 52,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-206-p28.png",
+    "w": 50,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-207-p28.png",
+    "w": 51,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-208-p28.png",
+    "w": 51,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-209-p28.png",
+    "w": 50,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-210-p28.png",
+    "w": 50,
+    "h": 54,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-211-p28.png",
+    "w": 51,
+    "h": 50,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-212-p28.png",
+    "w": 51,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-213-p28.png",
+    "w": 51,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-214-p28.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-215-p28.png",
+    "w": 50,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-216-p28.png",
+    "w": 49,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-217-p28.png",
+    "w": 51,
+    "h": 54,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-218-p28.png",
+    "w": 52,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-219-p28.png",
+    "w": 51,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-220-p28.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-221-p28.png",
+    "w": 50,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-222-p28.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-223-p28.png",
+    "w": 51,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-224-p28.png",
+    "w": 51,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-225-p28.png",
+    "w": 51,
+    "h": 54,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-226-p28.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-227-p28.png",
+    "w": 52,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-228-p28.png",
+    "w": 50,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-229-p28.png",
+    "w": 52,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-230-p28.png",
+    "w": 51,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-231-p28.png",
+    "w": 50,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-232-p28.png",
+    "w": 49,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-233-p28.png",
+    "w": 50,
+    "h": 50,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-234-p28.png",
+    "w": 51,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-235-p28.png",
+    "w": 50,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-236-p28.png",
+    "w": 50,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-237-p28.png",
+    "w": 50,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-238-p28.png",
+    "w": 51,
+    "h": 54,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-239-p28.png",
+    "w": 51,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-240-p28.png",
+    "w": 49,
+    "h": 49,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-241-p28.png",
+    "w": 50,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-242-p28.png",
+    "w": 49,
+    "h": 49,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-243-p28.png",
+    "w": 49,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-244-p28.png",
+    "w": 49,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-245-p28.png",
+    "w": 50,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-246-p28.png",
+    "w": 50,
+    "h": 54,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-247-p28.png",
+    "w": 50,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-248-p28.png",
+    "w": 52,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-249-p28.png",
+    "w": 52,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-250-p28.png",
+    "w": 53,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-251-p28.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-252-p28.png",
+    "w": 49,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-253-p28.png",
+    "w": 51,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-254-p28.png",
+    "w": 45,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-255-p28.png",
+    "w": 51,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-256-p28.png",
+    "w": 51,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 28,
+    "image": "fig-257-p28.png",
+    "w": 46,
+    "h": 49,
+    "reason": "small",
+    "figure": "#/pictures/172"
+   },
+   {
+    "page": 29,
+    "image": "fig-258-p29.png",
+    "w": 52,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-259-p29.png",
+    "w": 51,
+    "h": 50,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-260-p29.png",
+    "w": 50,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-261-p29.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-262-p29.png",
+    "w": 51,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-264-p29.png",
+    "w": 52,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-265-p29.png",
+    "w": 52,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-266-p29.png",
+    "w": 52,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-267-p29.png",
+    "w": 51,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-268-p29.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-269-p29.png",
+    "w": 49,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-270-p29.png",
+    "w": 48,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-271-p29.png",
+    "w": 49,
+    "h": 55,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-272-p29.png",
+    "w": 49,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-273-p29.png",
+    "w": 49,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-274-p29.png",
+    "w": 49,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-275-p29.png",
+    "w": 49,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-276-p29.png",
+    "w": 49,
+    "h": 54,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-277-p29.png",
+    "w": 50,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-278-p29.png",
+    "w": 51,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-279-p29.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-280-p29.png",
+    "w": 51,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-281-p29.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-282-p29.png",
+    "w": 51,
+    "h": 54,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-283-p29.png",
+    "w": 51,
+    "h": 50,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-284-p29.png",
+    "w": 51,
+    "h": 50,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-285-p29.png",
+    "w": 51,
+    "h": 54,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-286-p29.png",
+    "w": 51,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-287-p29.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-288-p29.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-289-p29.png",
+    "w": 51,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-290-p29.png",
+    "w": 51,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-291-p29.png",
+    "w": 51,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-292-p29.png",
+    "w": 51,
+    "h": 54,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-293-p29.png",
+    "w": 51,
+    "h": 50,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-294-p29.png",
+    "w": 51,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-295-p29.png",
+    "w": 51,
+    "h": 54,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-296-p29.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-297-p29.png",
+    "w": 53,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-298-p29.png",
+    "w": 53,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-299-p29.png",
+    "w": 53,
+    "h": 54,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-300-p29.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-301-p29.png",
+    "w": 51,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-302-p29.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-303-p29.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-304-p29.png",
+    "w": 51,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-305-p29.png",
+    "w": 51,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-306-p29.png",
+    "w": 51,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-307-p29.png",
+    "w": 52,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-308-p29.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-309-p29.png",
+    "w": 52,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-310-p29.png",
+    "w": 52,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-311-p29.png",
+    "w": 51,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-312-p29.png",
+    "w": 51,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-313-p29.png",
+    "w": 49,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-314-p29.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-315-p29.png",
+    "w": 51,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-316-p29.png",
+    "w": 52,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-317-p29.png",
+    "w": 52,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-318-p29.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-319-p29.png",
+    "w": 51,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-320-p29.png",
+    "w": 50,
+    "h": 50,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-321-p29.png",
+    "w": 51,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-322-p29.png",
+    "w": 51,
+    "h": 54,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-323-p29.png",
+    "w": 51,
+    "h": 50,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-324-p29.png",
+    "w": 50,
+    "h": 49,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-325-p29.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-326-p29.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-327-p29.png",
+    "w": 51,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-328-p29.png",
+    "w": 51,
+    "h": 54,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-329-p29.png",
+    "w": 50,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-330-p29.png",
+    "w": 50,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-331-p29.png",
+    "w": 50,
+    "h": 55,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-332-p29.png",
+    "w": 50,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-333-p29.png",
+    "w": 50,
+    "h": 53,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-334-p29.png",
+    "w": 50,
+    "h": 51,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-335-p29.png",
+    "w": 50,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-336-p29.png",
+    "w": 51,
+    "h": 54,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   },
+   {
+    "page": 29,
+    "image": "fig-337-p29.png",
+    "w": 50,
+    "h": 52,
+    "reason": "small",
+    "figure": "#/pictures/262"
+   }
+  ],
+  "superseded": [],
+  "replaced_pages": [
+   18,
+   19,
+   20,
+   24,
+   25,
+   26
+  ],
+  "noise_dropped": 0,
+  "hyphens_restored": [],
+  "order": [
+   {
+    "page": 5,
+    "text": "showing the good quality of generated images and good coverage of modes of the",
+    "words": 14,
+    "refs": [
+     "#/texts/207",
+     "#/texts/210"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 5,
+    "text": "3c, the positive or",
+    "words": 4,
+    "refs": [
+     "#/texts/207",
+     "#/texts/210"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "a similar FLD as the large Diffusion",
+    "words": 7,
+    "refs": [
+     "#/texts/401",
+     "#/texts/409"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   }
+  ],
+  "order_pages_checked": 18,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 3,
+  "order_breaking": 0,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 3 minor; distortions: 0 material, 4 minor; additions: 0 material, 1 minor; order: 0 material, 0 minor",
+  "at": "2026-11-15T11:53:35+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 3
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 4
+   },
+   "additions": {
+    "material": 0,
+    "minor": 1
+   },
+   "order": {
+    "material": 0,
+    "minor": 0
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "Bias Analysis in Unconditional Image Generative Models (p. 1–29)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "While diversity metrics typically assess the coverage of modes in the generated distribution, bias evaluation should focus on the relative proportions of these modes.",
+      "severity": "minor",
+      "page": 6
+     },
+     {
+      "source": "In CelebA dataset, the training and validation sets contain the faces of distinct sets of celebrities. In DeepFashion dataset, the training and validation samples are split randomly. The distribution difference between training and validation sets of CelebA is larger than that of DeepFashion.",
+      "severity": "minor",
+      "page": 15
+     },
+     {
+      "source": "We don't see the discriminative biases being amplified for most attributes according to Figs. 16 and 15 comparing the training ground truth probability and the validation classifier-predicted probability.",
+      "severity": "minor",
+      "page": 16
+     }
+    ],
+    "distortions": [
+     {
+      "source": "While the probabilities for many attributes converge before 300K steps, young (Fig. 8b) still has fluctuations. A similar pattern is also witnessed in DeepFashion, where solid (Fig. 9b)... also exhibits perceivable fluctuations.",
+      "summary": "Young on CelebA and Solid on DeepFashion still fluctuate after 300K steps",
+      "severity": "minor",
+      "page": 9
+     },
+     {
+      "source": "we present ABS between sampled subsets of the validation set and the full validation set on CelebA dataset in Fig. 4c",
+      "summary": "the authors compare ABS between 10K-image validation subsets and the entire validation set (CelebA)",
+      "severity": "minor",
+      "page": 6
+     },
+     {
+      "source": "There is randomness across different random seeds as the curves for each random seed vary. However, the probabilities of each attribute from distinct random seeds generally converge to the same value.",
+      "summary": "Training runs with three random seeds on CelebA show randomness across seeds but convergence to the same attribute probabilities",
+      "severity": "minor",
+      "page": 9
+     },
+     {
+      "source": "we observe similar bias shifts in both cases. This comparison indicates that our findings are not overly dependent on the specific classifier architecture used.",
+      "summary": "Both classifier backbones yield similar bias shifts, showing the findings are not architecture-dependent.",
+      "severity": "minor",
+      "page": 16
+     }
+    ],
+    "additions": [
+     {
+      "summary": "Following Dhariwal and Nichol's setup, unconditional ablated diffusion models (ADMs) are trained at varying sizes",
+      "severity": "minor"
+     }
+    ],
+    "order": []
+   }
+  ]
+ },
+ "source": {
+  "source": "zhang-et-al-2025-bias-analysis-in-unconditional-image-generative-models.pdf",
+  "bytes": 39101726,
+  "sha256": "b2822cfdeb2ed7f14cedd1b516e252397db0cc44d0d129de157357e3487f6ae2",
+  "extracted_at": "2026-11-13T03:18:13+01:00"
+ }
+}

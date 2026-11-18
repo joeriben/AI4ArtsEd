@@ -96,6 +96,10 @@ def discover_configs() -> list:
             continue
         if "context" not in cfg:
             continue
+        # A pool (a list) draws another stance on every call; a comparison
+        # across models needs one fixed text per config.
+        if isinstance(cfg["context"], list):
+            continue
         configs.append(f.stem)
     return configs
 

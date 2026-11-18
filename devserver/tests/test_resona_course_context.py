@@ -48,6 +48,7 @@ from flask import Flask, request, jsonify
 from my_app.lab.db import Base, engine, SessionLocal
 from my_app.lab import models as M
 from my_app.lab.auth_service import hash_password
+from my_app.lab.terms import TERMS_VERSION
 from my_app.lab.place_codes import issue_code
 from my_app.routes.auth_routes import auth_bp
 from my_app.routes.admin_users_routes import admin_users_bp
@@ -144,7 +145,10 @@ def _add_place(course_id):
 
 
 def _login_educator(client, email, password="secret12"):
-    r = client.post("/api/auth/login", json={"identifier": email, "password": password})
+    # An account with a password signs in with its agreement to the
+    # conditions of use (lab/terms.py, 2026-11-15).
+    r = client.post("/api/auth/login", json={"identifier": email, "password": password,
+                                             "accept_terms": TERMS_VERSION, "language": "en"})
     assert r.status_code == 200, r.get_json()
 
 

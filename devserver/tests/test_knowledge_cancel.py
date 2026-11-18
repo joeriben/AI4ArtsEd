@@ -118,6 +118,9 @@ def app_client(tmp_path, monkeypatch):
     app = create_app()
     app.config.update(TESTING=True)
     client = app.test_client()
+    # Every route needs a sign-in since 2026-11-15 (lab_sign_in.py).
+    from lab_sign_in import sign_in_admin
+    sign_in_admin(client)
     yield client, kp, jobs, kl, config
 
     # Teardown: drain any job THIS test left queued/running to a terminal

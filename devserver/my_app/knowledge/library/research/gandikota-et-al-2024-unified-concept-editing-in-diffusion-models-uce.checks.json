@@ -1,0 +1,1812 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 9.5% of 2691 words, ceiling 20%, longest run 19 words; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 19,
+     "text": "a black person has near equal gender ratios 48 male out of 100 images while a native american person"
+    },
+    {
+     "words": 17,
+     "text": "nudity bodily fluids blood obscene gestures illegal activity drug use theft vandalism weapons child abuse brutality cruelty"
+    },
+    {
+     "words": 15,
+     "text": "removing undesired content can expose other undesired content removing toxic content can introduce new biases"
+    },
+    {
+     "words": 14,
+     "text": "predominantly male 88 of 100 versus the gender balanced person 50 male of 100"
+    },
+    {
+     "words": 13,
+     "text": "gender ratio deviation of 0 27 versus 0 22 for the gender debiasing"
+    }
+   ],
+   "value": 0.0951,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "6 of 6 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 5,
+     "table_cells": 36,
+     "missing_cells": [
+      "31.25",
+      "14.30",
+      "0.13",
+      "15.56",
+      "31.22",
+      "15.10",
+      "15.09",
+      "0.47"
+     ]
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "table_cells": 90,
+     "missing_cells": [
+      "Class name",
+      "15.6",
+      "0.60",
+      "85.1",
+      "90.3",
+      "64.5",
+      "Chain Saw",
+      "66.0",
+      "6.0",
+      "76.1",
+      "68.2",
+      "73.8",
+      "8.4",
+      "54.2",
+      "78.7",
+      "80.2",
+      "71.6",
+      "75.4",
+      "78.5",
+      "80.7"
+     ]
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 8,
+     "table_cells": 49,
+     "missing_cells": [
+      "0.86 ± 0.06",
+      "0.66 ± 0.07",
+      "0.34 ± 0.06",
+      "0.26 ± 0.05",
+      "0.35 ± 0.01",
+      "0.07 ± 0.07",
+      "0.42 ± 0.01",
+      "0.46 ± 0.00",
+      "0.11 ± 0.05",
+      "0.34 ± 0.06",
+      "0.07 ± 0.06",
+      "0.06 ± 0.02",
+      "0.99 ± 0.01",
+      "0.38 ± 0.22",
+      "0.82 ± 0.08",
+      "0.22 ± 0.05",
+      "0.10 ± 0.05",
+      "0.10 ± 0.03",
+      "0.58 ± 0.12",
+      "0.24 ± 0.18"
+     ]
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 8,
+     "table_cells": 30,
+     "missing_cells": [
+      "FID-Real ↓",
+      "30.41",
+      "14.16",
+      "14.45",
+      "14.84"
+     ]
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 12,
+     "table_cells": 35,
+     "missing_cells": [
+      "Ours Debiased",
+      "Ours Unified",
+      "Assistant",
+      "0.19",
+      "0.57",
+      "0.14",
+      "Cook",
+      "0.82",
+      "0.15",
+      "0.14",
+      "0.15",
+      "0.58",
+      "0.13",
+      "0.78",
+      "0.41"
+     ]
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "table_cells": 266,
+     "missing_cells": [
+      "Attendant",
+      "0.13 ± 0.06",
+      "0.23 ± 0.08",
+      "0.30 ± 0.04",
+      "0.50 ± 0.01",
+      "0.38 ± 0.11",
+      "0.09 ± 0.04",
+      "0.67 ± 0.04",
+      "0.71 ± 0.10",
+      "0.23 ± 0.07",
+      "0.46 ± 0.01",
+      "0.23 ± 0.15",
+      "0.16 ± 0.06",
+      "0.42 ± 0.01",
+      "0.46 ± 0.00",
+      "0.11 ± 0.05",
+      "0.34 ± 0.06",
+      "0.07 ± 0.06",
+      "0.06 ± 0.02",
+      "0.99 ± 0.01"
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "164 of 248 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 1,
+     "number": "25"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 1,
+     "number": "29"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 1,
+     "number": "34"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 1,
+     "number": "44"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 1,
+     "number": "9.14.22.36.46"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 2,
+     "number": "1.38"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 2,
+     "number": "13.28"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 2,
+     "number": "2.31"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 2,
+     "number": "26.27"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 2,
+     "number": "27"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 2,
+     "number": "31"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 2,
+     "number": "35.39"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 2,
+     "number": "4.23.33"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 2,
+     "number": "40"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 2,
+     "number": "41"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 2,
+     "number": "42"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 2,
+     "number": "43"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 2,
+     "number": "46"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 2,
+     "number": "47"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 2,
+     "number": "5.12"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 2,
+     "number": "8.25.44"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 3,
+     "number": "45"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 4,
+     "number": "23"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 5,
+     "number": "0.08"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 5,
+     "number": "0.13"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 5,
+     "number": "0.47"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 5,
+     "number": "14.30"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 5,
+     "number": "15.09"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 5,
+     "number": "15.10"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 5,
+     "number": "15.56"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 5,
+     "number": "1800"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 5,
+     "number": "24"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 5,
+     "number": "31.22"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 5,
+     "number": "31.25"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 5,
+     "number": "5.1"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 5,
+     "number": "5.1.1"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 5,
+     "number": "5.1.2"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "0.0"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "0.2"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "0.60"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "0.8"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "10.4"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "14.8"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "15.6"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "23.8"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "49.4"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "5.2"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "5.2.1"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "5.8"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "51.5"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "54.2"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "6.0"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "6.2"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "62.6"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "64.5"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "65.4"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "65.6"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "66.0"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "66.5"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "66.6"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "68.2"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "71.6"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "73.8"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "75.4"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "75.8"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "76.0"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "76.1"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "76.6"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "77.0"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "77.4"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "78.4"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "78.5"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "78.7"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "78.9"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "79.0"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "79.3"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "79.6"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "8.4"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "8.6"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "80.2"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "80.7"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "85.1"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "85.4"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "9.6"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "90.3"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "92.5"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "97.4"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "98.0"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "number": "99.6"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 7,
+     "number": "5.2.2"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 7,
+     "number": "5.3"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 7,
+     "number": "5.4"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 8,
+     "number": "0.00"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 8,
+     "number": "0.01"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 8,
+     "number": "0.02"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 8,
+     "number": "0.03"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 8,
+     "number": "0.04"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 8,
+     "number": "0.11"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 8,
+     "number": "0.24"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 8,
+     "number": "0.26"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 8,
+     "number": "0.34"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 8,
+     "number": "0.35"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 8,
+     "number": "0.38"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 8,
+     "number": "0.40"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 8,
+     "number": "0.41"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 8,
+     "number": "0.42"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 8,
+     "number": "0.46"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 8,
+     "number": "0.50"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 8,
+     "number": "0.52"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 8,
+     "number": "0.58"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 8,
+     "number": "0.66"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 8,
+     "number": "0.71"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 8,
+     "number": "0.78"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 8,
+     "number": "0.82"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 8,
+     "number": "0.99"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 8,
+     "number": "14.16"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 8,
+     "number": "14.45"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 8,
+     "number": "14.84"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 8,
+     "number": "30.41"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 12,
+     "number": "0.14"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 12,
+     "number": "0.15"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 12,
+     "number": "0.19"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 12,
+     "number": "0.57"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 12,
+     "number": "1.00"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.16"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.17"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.21"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.25"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.28"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.29"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.32"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.33"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.36"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.37"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.39"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.45"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.48"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.49"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.51"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.54"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.56"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.61"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.62"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.64"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.65"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.68"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.70"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.72"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.74"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.75"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.76"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.79"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.80"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.81"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.84"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.87"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.88"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.90"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.91"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.92"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.93"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.95"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.97"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 17,
+     "number": "0.98"
+    }
+   ],
+   "value": 164.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "21 of 24 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 1,
+     "heading": "Abstract"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 1,
+     "heading": "1. Introduction"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 2,
+     "heading": "3. Background"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 5,
+     "heading": "5.1. Erasing"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 5,
+     "heading": "5.1.1 Artist erasure"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 5,
+     "heading": "5.1.2 Erasing Objects"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "heading": "5.2. Debiasing"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 6,
+     "heading": "5.2.1 Gender bias"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 7,
+     "heading": "5.2.2 Racial bias"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 7,
+     "heading": "5.3. Moderation"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 7,
+     "heading": "5.4. Unified Editing"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 8,
+     "heading": "6. Limitations"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 8,
+     "heading": "7. Conclusion"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 11,
+     "heading": "A. Deriving the Closed Form Solution for UCE"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 11,
+     "heading": "B. UCE Generalizes to TIME"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 11,
+     "heading": "C. UCE Generalizes to MEMIT"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 12,
+     "heading": "D. Extended Experimental Results"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 12,
+     "heading": "D.1. Erasing Style"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 12,
+     "heading": "D.2. Debiasing"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 13,
+     "heading": "D.3. Moderating NSFW"
+    },
+    {
+     "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+     "page": 13,
+     "heading": "D.4. Erasing Objects"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "21 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "21 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "38 quoted texts in 9 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Fig. 2",
+     "page": 3,
+     "image": "fig-002-p3.png",
+     "quotes": [
+      "\"Concepts to Edit $c_i \\in E$\"",
+      "\"Concepts to Preserve $c_j \\in P$\"",
+      "\"$Wc_i$\"",
+      "\"$v_i^*$\"",
+      "\"$\\min_W \\sum_{i=0}^m ||Wc_i - v_i^*||_2^2$\"",
+      "\"$Wc_j$\"",
+      "\"$\\min_W \\sum_{j=0}^n ||Wc_j - W_v^{old}c_j||_2^2$\""
+     ]
+    },
+    {
+     "figure": "Fig. 4",
+     "page": 6,
+     "image": "fig-004-p6.png",
+     "quotes": [
+      "\"LPIPS (Holdout)*\"",
+      "\"* Lower LPIPS → More Similar\"",
+      "\"CLIP (COCO-30k)\""
+     ]
+    },
+    {
+     "figure": "Fig. 7",
+     "page": 8,
+     "image": "fig-007-p8.png",
+     "quotes": [
+      "\"ESD-u-1 (I2P)\"",
+      "\"ESD-u-1 (nudity)\"",
+      "\"ESD-x-1 (nudity)\"",
+      "\"Our Method (I2P)\"",
+      "\"Our Method (nudity)\"",
+      "\"Our Method (unified)\"",
+      "\"SLD Medium\"",
+      "\"Stable Diffusion V2.1\"",
+      "\"% Change from SD (796)\"",
+      "\"Our Method (I2P)\"",
+      "\"Stable Diffusion V2.1\""
+     ]
+    },
+    {
+     "figure": "Image 8",
+     "page": 12,
+     "image": "fig-008-p12.png",
+     "quotes": [
+      "“* Lower LPIPS → Less Different.”"
+     ]
+    },
+    {
+     "figure": "Image 9",
+     "page": 13,
+     "image": "fig-009-p13.png",
+     "quotes": [
+      "'% Change'",
+      "'Stable Diffusion V2.1'",
+      "'SLD Medium'",
+      "'ESD-u-1 (I2P)'",
+      "'ESD-u-1 (nudity)'",
+      "'ESD-x-1 (nudity)'",
+      "'Our Method (I2P)'",
+      "'Our Method (nudity)'",
+      "'Our Method (unified)'",
+      "'Exposed Body Parts (# in SD1.4)'"
+     ]
+    },
+    {
+     "figure": "Image 10",
+     "page": 13,
+     "image": "fig-010-p13.png",
+     "quotes": [
+      "\"* Lower LPIPS → Less Different\""
+     ]
+    },
+    {
+     "figure": "Image 13",
+     "page": 15,
+     "image": "fig-013-p15.png",
+     "quotes": [
+      "\"John Whitecomb\"",
+      "\"Andre Derain\""
+     ]
+    },
+    {
+     "figure": "Image 16",
+     "page": 16,
+     "image": "fig-016-p16.png",
+     "quotes": [
+      "\"SEERCE\"",
+      "\"SEERIFE\""
+     ]
+    },
+    {
+     "figure": "Image 20",
+     "page": 19,
+     "image": "fig-020-p19.png",
+     "quotes": [
+      "“GAS”"
+     ]
+    }
+   ],
+   "value": 38.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "40 page references valid (pdf pages 1–19)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "19 pages checked, 1 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "2 of 3 passages out of order not repairable, none breaks a sentence of the body text",
+   "findings": [
+    {
+     "page": 4,
+     "words": 6,
+     "text": "reducing extreme attributes of that Concept.",
+     "blocks": [
+      "#/texts/114",
+      "#/texts/116",
+      "#/texts/123"
+     ],
+     "problem": "blocks of kind code are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 8,
+     "words": 63,
+     "text": "6. limitations when Debiasing across multiple attributes, we find interdependencies that exhibit compounding biases. For example, generating images of \"a black person\" has near equal gender ratios (48",
+     "blocks": [
+      "#/texts/249",
+      "#/texts/250",
+      "#/texts/251",
+      "#/texts/252"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    }
+   ],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "gandikota-et-al-2024-unified-concept-editing-in-diffusion-models-uce",
+ "doc_type": "scholarly_article",
+ "analyzed_at": "2026-11-15T10:46:44.137280+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "Unified Concept Editing in Diffusion Models",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 19,
+   "chars": 54213,
+   "blocks": 140,
+   "inner_headings": 24,
+   "figures": 21
+  }
+ ],
+ "skipped": [
+  "Acknowledgments (p. 8)",
+  "References (p. 9)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 19,
+  "gaps": [
+   {
+    "page": 15,
+    "text": "erased artists - 10 unerased artists original SD Our method ESD-x-1 SDD ablation original SD Our method ESD-x-1 SDD ablation Apollinary Vasnetsov Amanda Sage Constable Norton Andre John Shinkawa Johannes Vermeer Yoji Jessie Willcox Mignard Nicolas Smith Whitcomb Alexandre Antigna John Figure D.6. Our method demonstrates strong multi-concept erasure of intended artistic styles and the least interference with the holdout artists that were neither erased nor preserved. Previous methods start showing interference effects when Erasing 10 artists erased artists - 50 unerased artists original SD Our method ESD-x-1 SDD ablation original SD Our method ESD-x-1 SDD ablation Kobayashi Kiyochika Gonsalves Rob Modigliani John Howe Amedeo Eugene von Inceoglu Guerard Ismail Russ Mills Ravi Zupa Avercamp Hendrick Grimmer Jordan Figure D.7. Our method demonstrates strong multi-concept erasure of intended artistic styles and the least interference with the holdout artists that were neither erased nor preserved. Previous methods start showing interference effects when Erasing 50 artists",
+    "words": 154,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/499"
+   }
+  ],
+  "gaps_dismissed": [
+   {
+    "page": 1,
+    "words": 4,
+    "reason": "debris",
+    "text": "Rohit Gandikota1 Hadas Orgad2"
+   },
+   {
+    "page": 1,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "1 2 3 Northeastern University Technion"
+   },
+   {
+    "page": 1,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "original model Unified edited model diverse"
+   },
+   {
+    "page": 1,
+    "words": 37,
+    "reason": "duplicate",
+    "text": "Mimicked style biased unsafe erased style representation safe Erasing 1.00 artistic styles + * Debiasing 35 professions + * Moderating NSFW + * preserving remaining concepts * Closed form edit * Masks"
+   },
+   {
+    "page": 1,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "able at unified.baulab.info."
+   },
+   {
+    "page": 3,
+    "words": 17,
+    "reason": "debris",
+    "text": "transition probability. 1 Y pθ (xT :0 ) = p(xT ) pθ (xt−1 |xt ) (1) t=T"
+   },
+   {
+    "page": 3,
+    "words": 48,
+    "reason": "duplicate",
+    "text": "min | | Wci − v* | |22 concepts to W ∑ i i=0 edit ci ∈ E Wci v* i W cj ∈ P cross attention Wcj concepts to n min | | Wcj − Wvoldcj | |22 ∑ preserve W + j=0 minimizing in Closed form"
+   },
+   {
+    "page": 3,
+    "words": 22,
+    "reason": "duplicate",
+    "text": "m X min ||W ci − vi∗ ||22 + λ||W − W old ||2F (4) W |{z} i=0 W old c∗ i"
+   },
+   {
+    "page": 3,
+    "words": 21,
+    "reason": "debris",
+    "text": "m ! m !−1 X X W = vi∗ cTi + λW old ci cTi + λI (5) i=0 i=0 m"
+   },
+   {
+    "page": 4,
+    "words": 22,
+    "reason": "duplicate",
+    "text": "X X min ||W ci − vi∗ ||22 + ||W cj − W old cj ||22 (6) W ci ∈E cj ∈P"
+   },
+   {
+    "page": 4,
+    "words": 36,
+    "reason": "duplicate",
+    "text": "  −1 X X X X W = vi∗ cT i + W old cj cT j  ci cT i + cj cT j  ci ∈E cj ∈P ci ∈E cj ∈P (7)"
+   },
+   {
+    "page": 4,
+    "words": 18,
+    "reason": "duplicate",
+    "text": "vi∗ ← W old [ci + α1 a1 + α2 a2 + ... + αp ap ] (9)"
+   },
+   {
+    "page": 5,
+    "words": 21,
+    "reason": "duplicate",
+    "text": "# of original SD Our method ESD-x-1 SDD ablation artists erased Andrew Ferez 1 Manzanedo Antonio J. 5 Thomas Cole 50"
+   },
+   {
+    "page": 6,
+    "words": 20,
+    "reason": "duplicate",
+    "text": "# of original SD Our method SDD ablation artists erased Alemany Alex 1 Martiniere Stephan 5 Eugene von Guerard 50"
+   },
+   {
+    "page": 7,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "original SD gender diverse SD Mechanic Cashier Nurse Farmer"
+   },
+   {
+    "page": 7,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "original SD Racially diverse SD doctor Counselor Supervisor Secretary"
+   },
+   {
+    "page": 8,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "6. limitations Acknowledgments"
+   },
+   {
+    "page": 11,
+    "words": 21,
+    "reason": "duplicate",
+    "text": "X X L= ||W ci − vi∗ ||22 + ||W cj − W old cj ||22 ci ∈E cj ∈P (A.1)"
+   },
+   {
+    "page": 11,
+    "words": 108,
+    "reason": "debris",
+    "text": "X X 2(W ci − vi∗ )cTi + 2(W cj − W old cj )cTj = 0 ci ∈E cj ∈P X X X X W ci cTi − vi∗ cTi + W cj cTj − W old cj cTj = ci ∈E ci ∈E cj ∈P cj ∈P X X X X W ci cTi + W cj cTj = vi∗ cTi + W old cj cTj ci ∈E"
+   },
+   {
+    "page": 11,
+    "words": 35,
+    "reason": "duplicate",
+    "text": ".   −1 W = X vi∗ cT i + X W old cj cT j  X ci cT i + X cj cT j  ci ∈E cj ∈P ci ∈E cj"
+   },
+   {
+    "page": 11,
+    "words": 33,
+    "reason": "duplicate",
+    "text": "−1   X Xd X Xd W = vi∗ cT i +λ W old ej eT j  ci cT i +λ ej eT j  ci ∈E j=0 ci ∈E j=0"
+   },
+   {
+    "page": 11,
+    "words": 27,
+    "reason": "duplicate",
+    "text": "  −1 X X W =  vi∗ cT i + λW old   .I ci cT i + λI  ci ∈E ci ∈E"
+   },
+   {
+    "page": 11,
+    "words": 20,
+    "reason": "duplicate",
+    "text": "X X L= ||W ci − vi∗ ||22 + ||W cj − W old cj ||22 ci ∈E cj ∈P"
+   },
+   {
+    "page": 11,
+    "words": 21,
+    "reason": "debris",
+    "text": "| X | X |\n| 2(W ci − vi∗ )cTi + | 2(W cj − W old cj )cTj = 0 |\n| ci ∈E | cj ∈P |"
+   },
+   {
+    "page": 12,
+    "words": 44,
+    "reason": "debris",
+    "text": "old + ∆W : (W old + ∆W )(Ci CiT + Cj CjT ) = Vi CiT + Vj CjT W old Ci CiT + W old Cj CjT + ∆W Ci CiT + ∆W Cj CjT = Vi CiT + Vj CjT (C.1)"
+   },
+   {
+    "page": 12,
+    "words": 36,
+    "reason": "debris",
+    "text": "(Ci CiT + Cj CjT ) = Vi CiT − W old Ci CiT with R = Vi − W old Ci and C0 = Cj CjT ∆W = RCiT (Ci CiT + Cj CjT )−1"
+   },
+   {
+    "page": 12,
+    "words": 11,
+    "reason": "duplicate",
+    "text": "# of artists erased 5 10 50 1.00 1000 original SD"
+   },
+   {
+    "page": 12,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "profession SD TIME + Ours Ours preserve debiased"
+   },
+   {
+    "page": 13,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "# of artists preserved 0 1.00 500 1000 1500"
+   },
+   {
+    "page": 13,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "D.3. Moderating NSFW"
+   },
+   {
+    "page": 13,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "D.4. Erasing objects"
+   },
+   {
+    "page": 14,
+    "words": 40,
+    "reason": "duplicate",
+    "text": "erased artists - 1 unerased artists original SD Our method ESD-x-1 SDD ablation original SD Our method ESD-x-1 SDD ablation John Howe Alemany Alex Alemany Gonsalves Alex Rob Chris Mars Alemany Alex Pa"
+   },
+   {
+    "page": 14,
+    "words": 41,
+    "reason": "duplicate",
+    "text": "erased artists - 5 unerased artists original SD Our method ESD-x-1 SDD ablation original SD Our method ESD-x-1 SDD ablation Cuno Amiet Manzanedo Antonio J. Alpo Jaakola Beatrix Potter Roz Chast Mintch"
+   },
+   {
+    "page": 16,
+    "words": 24,
+    "reason": "duplicate",
+    "text": "original SD Erasing 1 Erasing 10 Erasing 1.00 Erasing 200 Erasing 300 Erasing 400 Erasing 500 Erasing 1000 Erasing 1500 Amanda Sage Alfred Sisley"
+   },
+   {
+    "page": 16,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "Martiniere Yoji Shinkawa Filip Hodas"
+   },
+   {
+    "page": 16,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "original SD gender diverse SD Driver Carpenter Analyst Sheriff"
+   },
+   {
+    "page": 18,
+    "words": 10,
+    "reason": "duplicate",
+    "text": "original SD gender diverse SD CEO Physician Hairdresser Secretary"
+   },
+   {
+    "page": 18,
+    "words": 10,
+    "reason": "duplicate",
+    "text": "original SD Racially diverse SD Housekeeper Manager Baker Librarian"
+   },
+   {
+    "page": 19,
+    "words": 10,
+    "reason": "duplicate",
+    "text": "original SD French Horn Erasing original SD Golf Ball Erasing"
+   },
+   {
+    "page": 19,
+    "words": 10,
+    "reason": "duplicate",
+    "text": "original SD Gas Pump Erasing original SD Cassette Player Erasing"
+   },
+   {
+    "page": 19,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "original SD Erasing Church original SD garbage Truck Erasing"
+   }
+  ],
+  "captions_reclassified": [
+   {
+    "page": 12,
+    "figure": "#/pictures/7",
+    "text": "Figure D.1. The samples demonstrate model performance on erased artists after editing. We observed that erasing over 100"
+   },
+   {
+    "page": 13,
+    "figure": "#/pictures/8",
+    "text": "Figure D.2. Our method erases nudity content from pre-trained SD and has an advantage of erasing multiple concepts in I2"
+   },
+   {
+    "page": 13,
+    "figure": "#/pictures/9",
+    "text": "Figure D.3. The samples show the performance of edited models on holdout artist. We observe that preserving more artists"
+   },
+   {
+    "page": 14,
+    "figure": "#/pictures/10",
+    "text": "Figure D.4. Our method demonstrates a complete erasure of the intended artistic style and the least interference with th"
+   },
+   {
+    "page": 14,
+    "figure": "#/pictures/11",
+    "text": "Figure D.5. Our method demonstrates strong multi concept erasure of intended artistic styles and the least interference "
+   },
+   {
+    "page": 15,
+    "figure": "#/pictures/12",
+    "text": "Figure D.6. Our method demonstrates strong multi-concept erasure of intended artistic styles and the least interference "
+   },
+   {
+    "page": 15,
+    "figure": "#/pictures/13",
+    "text": "Figure D.7. Our method demonstrates strong multi-concept erasure of intended artistic styles and the least interference "
+   },
+   {
+    "page": 16,
+    "figure": "#/pictures/14",
+    "text": "Figure D.8. The samples demonstrate edited model performance on holdout artists. We observed changes in output quality f"
+   },
+   {
+    "page": 16,
+    "figure": "#/pictures/15",
+    "text": "Figure D.9. Our method improves the gender representation of professions in the stable diffusion generated images. We fi"
+   },
+   {
+    "page": 18,
+    "figure": "#/pictures/16",
+    "text": "Figure D.10. Our method improves the gender representation of professions in the stable diffusion generated images. We f"
+   },
+   {
+    "page": 18,
+    "figure": "#/pictures/17",
+    "text": "Figure D.11. Our method improves the racial diversity of professions in the pre-trained stable diffusion. We show images"
+   },
+   {
+    "page": 19,
+    "figure": "#/pictures/19",
+    "text": "Figure D.13. Our method demonstrates a complete erasure of the intended object and the least interference with unerased "
+   },
+   {
+    "page": 19,
+    "figure": "#/pictures/20",
+    "text": "Figure D.14. Our method demonstrates a complete erasure of the intended object and the least interference with unerased "
+   }
+  ],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [],
+  "superseded": [
+   {
+    "page": 15,
+    "ref": "#/pictures/12/caption",
+    "text": "Figure D.6. Our method demonstrates strong multi-concept erasure of intended artistic styles and the least interference "
+   },
+   {
+    "page": 15,
+    "ref": "#/pictures/13/caption",
+    "text": "Figure D.7. Our method demonstrates strong multi-concept erasure of intended artistic styles and the least interference "
+   }
+  ],
+  "replaced_pages": [
+   15
+  ],
+  "noise_dropped": 1,
+  "hyphens_restored": [
+   {
+    "page": 3,
+    "ref": "#/texts/38",
+    "word": "Key-Value"
+   },
+   {
+    "page": 9,
+    "ref": "#/texts/270",
+    "word": "Fiotto-Kaufman"
+   }
+  ],
+  "order": [
+   {
+    "page": 3,
+    "text": "ci cTi , is the co-",
+    "words": 6,
+    "refs": [
+     "#/texts/102",
+     "#/texts/104"
+    ],
+    "repaired": true,
+    "note": "2 blocks replaced by the text layer's passage",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 4,
+    "text": "reducing extreme attributes of that Concept.",
+    "words": 6,
+    "refs": [
+     "#/texts/114",
+     "#/texts/116",
+     "#/texts/123"
+    ],
+    "repaired": false,
+    "note": "blocks of kind code are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 8,
+    "text": "6. limitations when Debiasing across multiple attributes, we find interdependencies that exhibit compounding biases. For example, generating images of \"a black person\" has near equal gender ratios (48% male out of 1.00 images), While \"a Native American person\" displays strong male bias (96% male of 1.00). Debiasing in isolation can thus perpetuate biases along other dimensions. this highlights the need for joint at-",
+    "words": 63,
+    "refs": [
+     "#/texts/249",
+     "#/texts/250",
+     "#/texts/251",
+     "#/texts/252"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   }
+  ],
+  "order_pages_checked": 17,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 2,
+  "order_breaking": 0,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 3 minor; distortions: 0 material, 2 minor; additions: 0 material, 0 minor; order: 0 material, 0 minor",
+  "at": "2026-11-15T10:47:34+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 3
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 2
+   },
+   "additions": {
+    "material": 0,
+    "minor": 0
+   },
+   "order": {
+    "material": 0,
+    "minor": 0
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "Unified Concept Editing in Diffusion Models (p. 1–19)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "reducing offensive content can result in incomplete removal [29]; these examples highlight the limitations of relying solely on data curation.",
+      "severity": "minor",
+      "page": 1
+     },
+     {
+      "source": "Diffusion models were shown to mimic more than 1800 artistic styles [20].",
+      "severity": "minor",
+      "page": 5
+     },
+     {
+      "source": "We recognize that editing for visual features of non-binary genders risks introducing other unwanted stereotypical behavior.",
+      "severity": "minor",
+      "page": 6
+     }
+    ],
+    "distortions": [
+     {
+      "source": "We found ESD and SDD tend to damage the model more when erased sequentially (at 1000 iterations per concept), so we limited those techniques to random sampling-based erasure for a fixed 1000 iterations.",
+      "summary": "ESD and SDD damage the model when erasing sequentially (1000 iterations per concept), so they were limited to sampling-based erasure for 1000 iterations",
+      "severity": "minor",
+      "page": 5
+     },
+     {
+      "source": "For Ablation, the authors suggest 100 iterations per concept, however we found the model deteriorates after 1000 total iterations. Therefore, we restricted Ablation to 1000 total iterations when erasing multiple concepts.",
+      "summary": "SDD was limited to 700 iterations for multi-concept erasure and Ablation to 1000 total iterations, per the authors' notes on overfitting.",
+      "severity": "minor",
+      "page": 5
+     }
+    ],
+    "additions": [],
+    "order": []
+   }
+  ]
+ },
+ "source": {
+  "source": "gandikota-et-al-2024-unified-concept-editing-in-diffusion-models-uce.pdf",
+  "bytes": 22742004,
+  "sha256": "9942ceb9ba1d78f9ed665fd15f71c8249132842912123b071b16f5ae8102acd2",
+  "extracted_at": "2026-11-13T02:38:23+01:00"
+ }
+}

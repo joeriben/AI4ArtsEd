@@ -94,6 +94,42 @@ _TERM_STOPLIST = {
 
 _lexicon_cache: Tuple[float, Optional[Dict]] = (0.0, None)
 
+# The names of this platform's pages are working vocabulary too: "Stereotype
+# Analysis", "Stereotypen-Analyse", "Bias Research 1" name a page, and naming
+# the page a proposal runs on invokes no discourse. They are taken out of the
+# text before the discourse signals are matched; a signal outside a name
+# ("the pictures repeat a stereotype") still counts (2026-11-15).
+_page_names_cache: Optional[List[str]] = None
+
+
+def _page_names() -> List[str]:
+    global _page_names_cache
+    if _page_names_cache is None:
+        names = set()
+        try:
+            from my_app.services import platform_items as pi
+            for item in pi.ITEMS.values():
+                names.update(n for n in [item.get("name"), *(item.get("names") or {}).values()]
+                             if isinstance(n, str))
+            records = list((pi.USE_REPORTS.get("by_route") or {}).values())
+            records += list(pi.USE_REPORTS.get("places") or [])
+            for rec in records:
+                names.update(n for n in [rec.get("name"), *(rec.get("aliases") or [])]
+                             if isinstance(n, str))
+        except Exception as e:  # noqa: BLE001 - the duty runs without them
+            logger.warning("[EVIDENCE] page names unavailable: %s", e)
+        _page_names_cache = sorted((n.lower() for n in names
+                                    if len(n.strip()) > 3 and not n.startswith("/")),
+                                   key=len, reverse=True)
+    return _page_names_cache
+
+
+def _without_page_names(low: str) -> str:
+    for name in _page_names():
+        if name in low:
+            low = re.sub(r"(?<![\wà-ÿ])" + re.escape(name) + r"(?![\wà-ÿ])", " ", low)
+    return low
+
 
 def build_lexicon(docs: Iterable[Tuple[str, str, str]],
                   glossary: Iterable[Tuple[str, str]]) -> Dict:
@@ -255,7 +291,7 @@ def validate(reply: str, ledger: Sequence[Tuple[str, str]],
         )
 
     if not scholarly_opened:
-        low = stripped.lower()
+        low = _without_page_names(stripped.lower())
         user_low = (user_text or "").lower()
         triggers = [t for t in lex.get("terms", {})
                     if _term_hit(t, low) and not _term_hit(t, user_low)]

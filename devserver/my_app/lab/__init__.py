@@ -24,11 +24,12 @@ def init_lab(app) -> bool:
     """
     try:
         from .db import init_db, register_teardown
-        from .seed import seed_admin
+        from .seed import report_copied_settings_hash, seed_admin
 
         init_db()                 # create tables (idempotent)
         register_teardown(app)    # SessionLocal.remove() per request
-        seed_admin()              # admin from settings_password.key (idempotent)
+        seed_admin()              # admin account without a password (idempotent)
+        report_copied_settings_hash()  # warns where the admin kept a copied hash
         logger.info("[LAB] user/course system initialised")
         return True
     except Exception as e:  # noqa: BLE001 — fail-safe by design

@@ -37,6 +37,11 @@ from pathlib import Path
 from typing import Optional
 
 import requests
+# Every route of the DevServer needs a sign-in (2026-11-15); the sign-in of a
+# script reads the account or the code of a place from the environment
+# (devserver_sign_in.py, beside this file).
+sys.path.append(str(Path(__file__).resolve().parent))
+from devserver_sign_in import devserver
 
 logger = logging.getLogger("measure_workshop_footprints")
 logging.basicConfig(
@@ -128,7 +133,7 @@ def delta_for_path(
 
 
 def clear_all(devserver_url: str) -> None:
-    requests.post(f"{devserver_url}/api/settings/workshop/clear-all", timeout=60)
+    devserver(devserver_url).post(f"{devserver_url}/api/settings/workshop/clear-all", timeout=60)
 
 
 def preload_via_chunk(comfyui_url: str, chunk_path: Path, timeout: int) -> tuple[bool, Optional[str]]:
@@ -193,7 +198,7 @@ def preload_via_chunk(comfyui_url: str, chunk_path: Path, timeout: int) -> tuple
 def preload_one(devserver_url: str, model_id: str, timeout: int) -> tuple[bool, Optional[str]]:
     """Run the workshop preload SSE stream for a single model. Returns (success, error)."""
     try:
-        with requests.post(
+        with devserver(devserver_url).post(
             f"{devserver_url}/api/settings/workshop/preload",
             json={"models": [model_id]},
             stream=True,

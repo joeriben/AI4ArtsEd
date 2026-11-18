@@ -64,6 +64,12 @@ def serve_exports(path):
         run_id, filename = parts[-3], f"prompting_process/{parts[-1]}"
     elif len(parts) >= 2 and parts[-1].count('.') and parts[-2].startswith('run_'):
         run_id, filename = parts[-2], parts[-1]
+    if not run_id:
+        # Only the files of a run come out here. The directory holds more:
+        # the favourites of every account (favorites.json), the knowledge
+        # areas, the stores beside the runs; until 2026-11-15 this route gave
+        # each of them to whoever asked for its name.
+        return "File not found", 404
     if run_id:
         from my_app.services.pipeline_recorder import load_recorder, SafetyRefusal
         from config import JSON_STORAGE_DIR

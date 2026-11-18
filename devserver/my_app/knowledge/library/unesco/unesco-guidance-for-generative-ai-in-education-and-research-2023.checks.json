@@ -1,0 +1,1886 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 12.8% of 10666 words, ceiling 20%, longest run 29 words; not counted: 472 words from the source's lists; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 29,
+     "text": "on unesco s 2021 recommendation on the ethics of artificial intelligence the 2019 beijing consensus on artificial intelligence ai and education ai and education guidance for policy makers unesco"
+    },
+    {
+     "words": 25,
+     "text": "but will not touch the root cause of data poverty and therefore cannot decolonize ai tools 6 genai and the future of education and research"
+    },
+    {
+     "words": 23,
+     "text": "and formats example prompt write 10 potential research questions for topic x and rank them in importance for the field of research y"
+    },
+    {
+     "words": 22,
+     "text": "imagination and creativity which genai cannot replace example prompt suggest some ideas to inspire me to create an image on topics ideas"
+    },
+    {
+     "words": 20,
+     "text": "for children 5 3 3 generative ai as a 1 1 coach for the self paced acquisition of foundational skills"
+    }
+   ],
+   "value": 0.1282,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "25 of 27 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 9,
+     "expected_items": 8,
+     "first_item": "The prompt is broken down into smaller units (called tokens) that are inputted i",
+     "output_lists": [
+      8,
+      7
+     ]
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 10,
+     "expected_items": 10,
+     "first_item": "Alpaca: 7 A fine-tuned version of Meta's Llama, from Stanford University, which ",
+     "output_lists": [
+      8,
+      7
+     ]
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 10,
+     "expected_items": 3,
+     "first_item": "ChatPDF: 17 Summarizes and answers questions about submitted PDF documents.",
+     "output_lists": [
+      8,
+      7
+     ]
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 10,
+     "expected_items": 4,
+     "first_item": "WebChatGPT: 20 Gives ChatGPT internet access to enable more accurate and up-to-d",
+     "output_lists": [
+      8,
+      7
+     ]
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 11,
+     "expected_items": 7,
+     "first_item": "Craiyon: 25 Previously known as DALL ·E mini.",
+     "output_lists": [
+      8,
+      7
+     ]
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 11,
+     "expected_items": 4,
+     "first_item": "Elai: 32 Can convert presentations, websites and text into videos.",
+     "output_lists": [
+      8,
+      7
+     ]
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 11,
+     "expected_items": 2,
+     "first_item": "Aiva: 36 Can automatically create personalized soundtracks.",
+     "output_lists": [
+      8,
+      7
+     ]
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 12,
+     "expected_items": 5,
+     "first_item": "Use simple , clear and straightforward language that can be easily understood, a",
+     "output_lists": [
+      8,
+      7
+     ]
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 20,
+     "expected_items": 3,
+     "first_item": "Intersectoral coordination : Establish a national body to lead on the wholeof-go",
+     "output_lists": [
+      8,
+      7
+     ]
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 21,
+     "expected_items": 3,
+     "first_item": "Assessment and classification of the potential risks of AI : Establish principle",
+     "output_lists": [
+      8,
+      7
+     ]
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 22,
+     "expected_items": 10,
+     "first_item": "Human accountabilities : GenAI providers should be held responsible for ensuring",
+     "output_lists": [
+      8,
+      7
+     ]
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 23,
+     "expected_items": 4,
+     "first_item": "Institutional auditing of GenAI algorithms, data and outputs : Implement mechani",
+     "output_lists": [
+      8,
+      7
+     ]
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 23,
+     "expected_items": 3,
+     "first_item": "Awareness of terms of reference on the use of GenAI : Upon signing or expressing",
+     "output_lists": [
+      8,
+      7
+     ]
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 24,
+     "expected_items": 2,
+     "first_item": "Develop criteria for the validation of GenAI systems to ensure that there is no ",
+     "output_lists": [
+      8,
+      7
+     ]
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 25,
+     "expected_items": 5,
+     "first_item": "Build validation mechanisms to test whether GenAI systems used in education and ",
+     "output_lists": [
+      8,
+      7
+     ]
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 26,
+     "expected_items": 5,
+     "first_item": "Commit to the provision of governmentsanctioned AI curricula for school educatio",
+     "output_lists": [
+      8,
+      7
+     ]
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 26,
+     "expected_items": 4,
+     "first_item": "Formulate or adjust guidance based on local tests to help researchers and teache",
+     "output_lists": [
+      8,
+      7
+     ]
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 27,
+     "expected_items": 3,
+     "first_item": "Understand the role of GenAI as a fast but frequently unreliable source of infor",
+     "output_lists": [
+      8,
+      7
+     ]
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 27,
+     "expected_items": 8,
+     "first_item": "Ensure the design and adoption of GenAI are strategically planned rather than fa",
+     "output_lists": [
+      8,
+      7
+     ],
+     "unanswered_items": [
+      {
+       "item": 3,
+       "source": "Test and scale up evidence-based use cases of applying AI in education and resea",
+       "output": "**Use of content without consent.** GenAI models are assembled from vast troves "
+      }
+     ]
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 27,
+     "expected_items": 3,
+     "first_item": "Collaborate with AI providers, educators, researchers, and representatives of pa",
+     "output_lists": [
+      8,
+      7
+     ]
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 28,
+     "expected_items": 4,
+     "first_item": "Institutional implementation of ethical principles : Ensure that researchers, te",
+     "output_lists": [
+      8,
+      7
+     ]
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 29,
+     "expected_items": 5,
+     "first_item": "the use of the tool(s) should contribute to humans' needs and make learning or r",
+     "output_lists": [
+      8,
+      7
+     ]
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 29,
+     "expected_items": 6,
+     "first_item": "appropriate domains of knowledge or problems;",
+     "output_lists": [
+      8,
+      7
+     ]
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 9,
+     "table_cells": 24,
+     "missing_cells": [
+      "Launched",
+      "Amount of training data",
+      "Number of parameters",
+      "Capable of natural-language-processing tasks such as completing and answering questions.",
+      "Capable of more complex natural-language-processing machine translation and summarizing.",
+      "writing coherent paragraphs and generating entire articles.",
+      "1,000,000 GB (reported but not confirmed)",
+      "170,000,000 million (reported but not confirmed)",
+      "GPT-4 Enhanced reliability and is capable of processing more complex instructions."
+     ]
+    },
+    {
+     "section": "5.3.1 Generative AI for research (p. 29–45)",
+     "page": 41,
+     "expected_items": 3,
+     "first_item": "---. 2023 a . Artificial Intelligence: UNESCO calls on all Governments to implem",
+     "output_lists": [
+      2,
+      2,
+      3,
+      2,
+      3,
+      5,
+      4
+     ],
+     "unanswered_items": [
+      {
+       "item": 1,
+       "source": "---. 2023 a . Artificial Intelligence: UNESCO calls on all Governments to implem",
+       "output": "**1:1 language skills coach** – conversational practice that improves listening,"
+      },
+      {
+       "item": 3,
+       "source": "---. 2023 c . Survey for the governmental use of AI as a public good for educati",
+       "output": "**1:1 coach for coding or arithmetic** – introductory programming concepts, poss"
+      }
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "82 of 172 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 0,
+     "number": "2030"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 0,
+     "number": "75352"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 8,
+     "number": "1.1"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 8,
+     "number": "1.2"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 9,
+     "number": "1.2.1"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 10,
+     "number": "11"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 10,
+     "number": "12"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 10,
+     "number": "19"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 10,
+     "number": "21"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 10,
+     "number": "22"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 11,
+     "number": "1.2.2"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 11,
+     "number": "1.3"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 11,
+     "number": "25"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 11,
+     "number": "26"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 11,
+     "number": "30"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 11,
+     "number": "31"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 11,
+     "number": "32"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 11,
+     "number": "33"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 11,
+     "number": "34"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 11,
+     "number": "35"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 11,
+     "number": "36"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 11,
+     "number": "37"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 11,
+     "number": "38"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 11,
+     "number": "39"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 13,
+     "number": "1.4"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 13,
+     "number": "41"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 13,
+     "number": "42"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 13,
+     "number": "43"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 14,
+     "number": "2.1"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 14,
+     "number": "2.2"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 14,
+     "number": "44"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 14,
+     "number": "46"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 15,
+     "number": "2.3"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 15,
+     "number": "2.4"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 16,
+     "number": "2.5"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 16,
+     "number": "2.6"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 17,
+     "number": "2.7"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 17,
+     "number": "2.8"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 18,
+     "number": "3.1"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 18,
+     "number": "3.2"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 18,
+     "number": "47"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 18,
+     "number": "48"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 19,
+     "number": "49"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 19,
+     "number": "50"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 19,
+     "number": "51"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 20,
+     "number": "3.3"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 20,
+     "number": "3.3.1"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 21,
+     "number": "3.3.2"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 21,
+     "number": "52"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 23,
+     "number": "3.3.3"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 23,
+     "number": "3.3.4"
+    },
+    {
+     "section": "5.3.1 Generative AI for research (p. 29–45)",
+     "page": 30,
+     "number": "53"
+    },
+    {
+     "section": "5.3.1 Generative AI for research (p. 29–45)",
+     "page": 32,
+     "number": "1.3"
+    },
+    {
+     "section": "5.3.1 Generative AI for research (p. 29–45)",
+     "page": 39,
+     "number": "11"
+    },
+    {
+     "section": "5.3.1 Generative AI for research (p. 29–45)",
+     "page": 39,
+     "number": "1682854275475410"
+    },
+    {
+     "section": "5.3.1 Generative AI for research (p. 29–45)",
+     "page": 39,
+     "number": "2023.102642"
+    },
+    {
+     "section": "5.3.1 Generative AI for research (p. 29–45)",
+     "page": 39,
+     "number": "71"
+    },
+    {
+     "section": "5.3.1 Generative AI for research (p. 29–45)",
+     "page": 40,
+     "number": "2305.10403"
+    },
+    {
+     "section": "5.3.1 Generative AI for research (p. 29–45)",
+     "page": 40,
+     "number": "27"
+    },
+    {
+     "section": "5.3.1 Generative AI for research (p. 29–45)",
+     "page": 40,
+     "number": "365"
+    },
+    {
+     "section": "5.3.1 Generative AI for research (p. 29–45)",
+     "page": 40,
+     "number": "385877"
+    },
+    {
+     "section": "5.3.1 Generative AI for research (p. 29–45)",
+     "page": 40,
+     "number": "46"
+    },
+    {
+     "section": "5.3.1 Generative AI for research (p. 29–45)",
+     "page": 40,
+     "number": "48223"
+    },
+    {
+     "section": "5.3.1 Generative AI for research (p. 29–45)",
+     "page": 40,
+     "number": "66"
+    },
+    {
+     "section": "5.3.1 Generative AI for research (p. 29–45)",
+     "page": 40,
+     "number": "679"
+    },
+    {
+     "section": "5.3.1 Generative AI for research (p. 29–45)",
+     "page": 40,
+     "number": "95"
+    },
+    {
+     "section": "5.3.1 Generative AI for research (p. 29–45)",
+     "page": 41,
+     "number": "15"
+    },
+    {
+     "section": "5.3.1 Generative AI for research (p. 29–45)",
+     "page": 41,
+     "number": "2018"
+    },
+    {
+     "section": "5.3.1 Generative AI for research (p. 29–45)",
+     "page": 41,
+     "number": "23560328"
+    },
+    {
+     "section": "5.3.1 Generative AI for research (p. 29–45)",
+     "page": 41,
+     "number": "23640180"
+    },
+    {
+     "section": "5.3.1 Generative AI for research (p. 29–45)",
+     "page": 41,
+     "number": "335"
+    },
+    {
+     "section": "5.3.1 Generative AI for research (p. 29–45)",
+     "page": 41,
+     "number": "368303"
+    },
+    {
+     "section": "5.3.1 Generative AI for research (p. 29–45)",
+     "page": 41,
+     "number": "376709"
+    },
+    {
+     "section": "5.3.1 Generative AI for research (p. 29–45)",
+     "page": 41,
+     "number": "380602"
+    },
+    {
+     "section": "5.3.1 Generative AI for research (p. 29–45)",
+     "page": 41,
+     "number": "380926"
+    },
+    {
+     "section": "5.3.1 Generative AI for research (p. 29–45)",
+     "page": 41,
+     "number": "381137"
+    },
+    {
+     "section": "5.3.1 Generative AI for research (p. 29–45)",
+     "page": 41,
+     "number": "6137"
+    },
+    {
+     "section": "5.3.1 Generative AI for research (p. 29–45)",
+     "page": 41,
+     "number": "6272103"
+    },
+    {
+     "section": "5.3.1 Generative AI for research (p. 29–45)",
+     "page": 42,
+     "number": "385146"
+    },
+    {
+     "section": "5.3.1 Generative AI for research (p. 29–45)",
+     "page": 42,
+     "number": "385723"
+    },
+    {
+     "section": "5.3.1 Generative AI for research (p. 29–45)",
+     "page": 42,
+     "number": "51"
+    },
+    {
+     "section": "5.3.1 Generative AI for research (p. 29–45)",
+     "page": 42,
+     "number": "88"
+    }
+   ],
+   "value": 82.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "60 of 79 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 0,
+     "heading": "UNESCO - a global leader in education"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 0,
+     "heading": "The Global Education 2030 Agenda"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 0,
+     "heading": "S H O R T S U M M A R Y"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 0,
+     "heading": "Towards a human-centred approach to the use of generative AI"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 1,
+     "heading": "Guidance for generative AI in education and research"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 2,
+     "heading": "Foreword"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 6,
+     "heading": "List of acronyms and abbreviations"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 6,
+     "heading": "Concepts and technologies"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 6,
+     "heading": "Organizations"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 8,
+     "heading": "1.1 What is generative AI?"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 8,
+     "heading": "1.2 How does generative AI works?"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 9,
+     "heading": "1.2.1. How text GenAI models work"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 9,
+     "heading": "Once the GPT has been trained, generating a text response to a prompt involves the following steps:"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 11,
+     "heading": "1.2.2. How image GenAI models work"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 11,
+     "heading": "1.3 Prompt-engineering to generate desired outputs"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 12,
+     "heading": "Implications for education and research"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 13,
+     "heading": "1.4 Emerging EdGPT and its implications"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 14,
+     "heading": "2.1 Worsening digital poverty"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 14,
+     "heading": "Implications for education and research"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 14,
+     "heading": "2.2 Outpacing national regulatory adaptation"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 15,
+     "heading": "Implications for education and research"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 15,
+     "heading": "2.3 Use of content without consent"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 15,
+     "heading": "Implications for education and research"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 15,
+     "heading": "2.4 Unexplainable models used to generate outputs"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 15,
+     "heading": "Implications for education and research"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 16,
+     "heading": "2.5 AI-generated content polluting the internet"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 16,
+     "heading": "Implications for education and research"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 16,
+     "heading": "2.6 Lack of understanding of the real world"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 17,
+     "heading": "Implications for education and research"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 17,
+     "heading": "2.7 Reducing the diversity of opinions and further marginalizing already marginalized voices"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 17,
+     "heading": "Implications for education and research"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 17,
+     "heading": "2.8 Generating deeper deepfakes"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 17,
+     "heading": "Implications for education and research"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 18,
+     "heading": "3.1 A human-centred approach to AI"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 18,
+     "heading": "3.2 Steps to regulate GenAI in education"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 18,
+     "heading": "Step 1: Endorse international or regional general data protection regulations or develop national ones"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 19,
+     "heading": "Step 2: Adopt/revise and fund whole-ofgovernment strategies on AI"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 19,
+     "heading": "Step 3: Solidify and implement specific regulations on the ethics of AI"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 19,
+     "heading": "Step 4: Adjust or enforce existing copyright laws to regulate AI-generated content"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 20,
+     "heading": "Step 5: Elaborate regulatory frameworks on generative AI"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 20,
+     "heading": "Step 6: Build capacity for proper use of GenAI in education and research"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 20,
+     "heading": "Step 7: Reflect on the long-term implications of GenAI for education and research"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 20,
+     "heading": "3.3 Regulations on GenAI: Key elements"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 20,
+     "heading": "3.3.1. Governmental regulatory agencies"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 21,
+     "heading": "3.3.2. Providers of GenAI tools"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 23,
+     "heading": "3.3.3. Institutional users"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 23,
+     "heading": "3.3.4. Individual users"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 24,
+     "heading": "4.1 Promote inclusion, equity, and linguistic and cultural diversity"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 24,
+     "heading": "4.2 Protect human agency"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 25,
+     "heading": "4.3 Monitor and validate GenAI systems for education"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 25,
+     "heading": "4.4 Develop AI competencies including GenAI-related skills for learners"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 26,
+     "heading": "4.5 Build capacity for teachers and researchers to make proper use of GenAI"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 26,
+     "heading": "4.6 Promote plural opinions and plural expressions of ideas"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 27,
+     "heading": "4.7 Test locally relevant application models and build a cumulative evidence base"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 27,
+     "heading": "4.8 Review long-term implications in an intersectoral and interdisciplinary manner"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 28,
+     "heading": "5.1 Institutional strategies to facilitate responsible and creative use of GenAI"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 29,
+     "heading": "5.2 A 'human-centred and pedagogically appropriate interaction' approach"
+    },
+    {
+     "section": "Guidance for generative AI in education and research (p. 1–29)",
+     "page": 29,
+     "heading": "5.3 Co-designing the use of GenAI in education and research"
+    },
+    {
+     "section": "5.3.1 Generative AI for research (p. 29–45)",
+     "page": 39,
+     "heading": "Cyberspace Administration of China. 2023 a . 国 家互联网信息办公室关于《生成式人工智能服务 管理办法（征求意见稿）》公开征求意见的通知"
+    },
+    {
+     "section": "5.3.1 Generative AI for research (p. 29–45)",
+     "page": 45,
+     "heading": "Guidance for generative AI in education and research"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "6 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "6 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "7 quoted texts in 3 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Image 8",
+     "page": 0,
+     "image": "fig-008-p3.png",
+     "quotes": [
+      "\"While ChatGPT reached 100 million monthly active users in January 2023, only one country had released regulations on generative AI as of July 2023\"",
+      "\"gulate the\""
+     ]
+    },
+    {
+     "figure": "Image 18",
+     "page": 45,
+     "image": "fig-018-p48.png",
+     "quotes": [
+      "\"UNESCO\"",
+      "\"unesco\"",
+      "\"United Nations Educational, Scientific and Cultural Organization\""
+     ]
+    },
+    {
+     "figure": "Image 22",
+     "page": 45,
+     "image": "fig-022-p48.png",
+     "quotes": [
+      "\"4\"",
+      "\"QUALITY EDUCATION\""
+     ]
+    }
+   ],
+   "value": 7.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "28 page references valid (printed-folio pages 1–45)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "48 pages checked, 6 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "5 passages out of order break a sentence (5 of 5 not repairable; listed, not gated)",
+   "findings": [
+    {
+     "page": 12,
+     "words": 12,
+     "text": "also capable of adapting to new tasks with just a few examples.",
+     "blocks": [
+      "#/repaired/1",
+      "#/texts/135"
+     ],
+     "problem": "blocks of kind heading, list_item are involved",
+     "fails": true,
+     "breaks": [
+      "sentence start detached: 't or meets predefined stopping criteria.' | 'continuous progress is the use of growin'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 12,
+     "words": 23,
+     "text": "¾ Beginning with a random prediction, the GPT uses these estimated probabilities to predict the next likely word or phrase in its response.",
+     "blocks": [
+      "#/texts/130",
+      "#/texts/135"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": true,
+     "breaks": [
+      "sentence start detached: 't or meets predefined stopping criteria.' | 'continuous progress is the use of growin'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 12,
+     "words": 10,
+     "text": "The predicted words or phrases are converted into readable text.",
+     "blocks": [
+      "#/texts/131",
+      "#/texts/135"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": true,
+     "breaks": [
+      "sentence start detached: 't or meets predefined stopping criteria.' | 'continuous progress is the use of growin'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 12,
+     "words": 16,
+     "text": "The readable text is filtered through what are known as ‘guardrails’ to remove any offensive content.",
+     "blocks": [
+      "#/texts/132",
+      "#/texts/135"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": true,
+     "breaks": [
+      "sentence start detached: 't or meets predefined stopping criteria.' | 'continuous progress is the use of growin'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 12,
+     "words": 28,
+     "text": "steps 2 to 4 are repeated until a response is finished. The response is considered finished when it reaches a maximum token limit or meets predefined stopping criteria.",
+     "blocks": [
+      "#/texts/133",
+      "#/texts/135"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": true,
+     "breaks": [
+      "sentence start detached: 't or meets predefined stopping criteria.' | 'continuous progress is the use of growin'"
+     ],
+     "section": ""
+    }
+   ],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "unesco-guidance-for-generative-ai-in-education-and-research-2023",
+ "doc_type": "framework_report",
+ "analyzed_at": "2026-11-15T10:27:59.982837+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "Guidance for generative AI in education and research",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 29,
+   "chars": 92981,
+   "blocks": 376,
+   "inner_headings": 64,
+   "figures": 4
+  },
+  {
+   "index": 1,
+   "heading": "5.3.1 Generative AI for research",
+   "derived_heading": "",
+   "part": 1,
+   "parts": 1,
+   "page_from": 29,
+   "page_to": 45,
+   "chars": 72793,
+   "blocks": 96,
+   "inner_headings": 14,
+   "figures": 2
+  }
+ ],
+ "skipped": [
+  "Acknowledgements (p. 3)",
+  "Table of contents (p. 4)",
+  "References (p. 39)",
+  "Endnotes (p. 43)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 48,
+  "gaps": [
+   {
+    "page": 12,
+    "text": "capable of advanced",
+    "words": 3,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/tables/3"
+   },
+   {
+    "page": 12,
+    "text": "also capable of adapting to new tasks with just a few examples.",
+    "words": 12,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/tables/3"
+   },
+   {
+    "page": 34,
+    "text": "Guidance for generative AI in education and research 5. Facilitating creative use of GenAI in education and research Table 4. Co-designing uses of GenAI to support teachers and teaching potential appropriate appropriate required human but domains of expected GenAI tools and requirements pedagogical possible risks unproven knowledge or outcomes comparative for the users methods and uses problems advantages example prompts curriculum conceptual knowledge Assisting with starting with the List The teachers must questions to GenAI on The risk of GenAI or course on certain teaching the curriculum in Section 1.2, assess understand and suggesting the structure imposing Dominant co-designer topics and procedural and lesson design whether the GenAI tools carefully specify and examples of factual norms and pedagogical knowledge on teaching process, including are locally accessible, what they want the knowledge on topics), methods is high. methodologies. outlining or Open source, rigorously curriculum, courses, suggesting teaching extending views tested or validated by lessons, or tests to methods and processes It may inadvertently on key areas of authorities. Cover and achieve, for topics or problems, or perpetuate the target topic whether they want creating course packages exclusionary practices and defining further consider to address procedural or lesson plans based on in favour of the already the curriculum the advantages and/or conceptual topics) and formatting. data-rich groups and structure. It may challenges of any knowledge, and what Reinforce inequalities also help teachers Particular GenAI tool, teaching theory they human curriculum in Access to relevant prepare tests and ensure that it wish to apply. designers need to and highquality and exams by properly addresses verify the factual Educational offering examples specific human needs. knowledge and check opportunities, of questions the appropriateness disadvantaging and rubrics of the suggested data-poor groups. for evaluation. course packages. potential Transformation: AI-generated curriculum generative conceptual knowledge providing starting with the List It supports teachers requires the teachers to based on the current chatbot as across multiple individualized in Section 1.2, assess but targets learners understand the problems capabilities of GenAI teaching Assistant domains in wellsupport, answering whether the GenAI tools directly, so this clearly, to Monitor the models, Educational structured problems. questions and are locally accessible, requires learners to conversation and help institutions need to identifying Resources. Open source, rigorously have sufficient prior learners to verify dubious guarantee human tested or validated by knowledge, abilities answers provided supervision of the potential authorities. and metacognitive by GenAI. responses provided Transformation: Skills to the verify by GenAI tools, being generative further consider the outputs of alert to the risk twins of teachers’ the advantages and GenAI and notice of misinformation. assistants challenges of any the misinformation. Particular GenAI tool, thus it might be It may also limit and ensure that it more appropriate learners’ Access to properly addresses for learners in human Guidance and specific human needs. Higher education. support, hindering the development of a strong teacher-student relationship, which is especially concerning for children. 5.3.3 generative AI as a 1:1 coach for the mother tongue or foreign Language, as well as basic self-paced acquisition of foundational Skills numeracy, art, and coding. ‘Drill and practice’ should not be considered as an obsolete pedagogical method; While higher-order thinking and creativity have been Instead, it should be reinvigorated and upgraded drawing increasing attention when defining learning with GenAI technologies to foster learners’ self-paced outcomes, There is still no doubting the importance rehearsal of foundational Skills. If guided by ethical and of foundational Skills in children's psychological pedagogical principles, GenAI tools have the potential development and competency progression. among to become 1:1 coaches for such self-paced practice, as a Large spectrum of abilities, these foundational illustrated in Table 5. Skills include listening, pronouncing, and writing a 31",
+    "words": 614,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/445"
+   },
+   {
+    "page": 35,
+    "text": "5. Facilitating creative use of GenAI in education and research Guidance for generative AI in education and research Table 5. Co-designing uses of GenAI as a 1:1 coach for the self-paced acquisition of foundational Skills in languages and the arts potential appropriate appropriate but domains of expected GenAI tools and requirements unproven knowledge or outcomes comparative for the users uses problems advantages 1:1 Language Language Engaging learners starting with the List An age limit may Skills coach learning, including in conversational in Section 1.2, assess be set for the conversational practice. practice to help whether the GenAI tools independent them improve are locally accessible, conversations in listening, speaking Open source, rigorously view of the culturally and writing Skills by insensitive or agetested or validated by offering feedback, inappropriate output authorities. corrections and provided by GenAI modelling of the systems. further consider mother tongue or foreign Language. the advantages and The learner must have Helping learners challenges of any the initial intrinsic motivation to engage improve their Particular GenAI tool, writing Skills. and ensure that it in a conversation with an AI system. properly addresses potential specific human needs. The learner should be Transformation: able to take a critical 1:1 Language tutorials at approach to the beginner level GenAI's suggestions and check whether they are accurate. 1:1 art coach technical Skills in providing starting with the List learners must have areas of art such as suggestions for art in Section 1.2, assess some initial aims music and drawing. Techniques (e.g. whether the GenAI tools for creating art or tips on perspective are locally accessible, music, a foundational and colour), or Open source, rigorously understanding of tested or validated by the key elements of musical composition authorities. the domain of art (e.g. melody and/or music, and basic chord progression). abilities to analyse the further consider artworks or musical potential the advantages and compositions. Transformation: challenges of any 1:1 art Teacher at Particular GenAI tool, introductory levels and ensure that it properly addresses specific human needs. 1:1 coach conceptual supporting self-Starting with the List finding and for coding programming paced learning in Section 1.3, assess defining a problem, or arithmetic knowledge and Skills at of basic coding whether the GenAI tools and designing the introductory level. knowledge and are locally accessible, algorithms to solve It might also apply to Skills, finding bugs Open source, rigorously the problem, remain the learning of basic in learners’ codingtested or validated by the core aspects mathematics. and providing authorities. of learning coding immediate and programming. feedback, and further consider learners must have the advantages and tailoring answers to intrinsic motivation questions. challenges of any to use the coding, Particular GenAI tool, along with some potential and ensure that it basic knowledge Transformation: properly addresses and Skills in using 1:1 coding Teacher specific human needs. the programming at introductory Language. level 32 required human pedagogical possible risks methods and example prompts when using general need to be alert to GenAI platforms, human culturally insensitive teachers can guide or contextually learners to engage inaccurate Language, with GenAI tools to and the inadvertent request feedback for perpetuation of improvement, correction stereotypes or Cultural of pronunciation or biases. examples of writing. without proper For instance: pedagogical strategies to simulate learners’ engage mein a conversation intrinsic motivations, in the [x] Language, Helping it may limit children's me to continuously improve. creativity and originality, leading to Suggest some ideas to help formulaic writing. me write about [topic x]. It may also limit opportunities for real-life interactions, plural opinions, plural expression, and critical thinking. human teachers should May expose children ask learners to compare to inappropriate or AI tools’ art Techniques offensive content, with their own artwork. which may violate their human teachers or right to safeguarding coaches must encourage and wellbeing. learners to develop and apply their imagination GenAI tools and creativity, which raise the risk of GenAI cannot replace. stopping learners from developing example prompt: their imagination and creativity. Suggest some ideas to inspire me to create an image on [topics/ideas]. human teachers and The accuracy of coaches should teach basic feedback and knowledge and Skills, and suggestions remains inspire learners to use a problematic issue as Computational thinking GenAI will not always and programming to be right. solve problems including through collaborative There is a high risk coding. that GenAI tools will prevent learners example prompt: from developing Computational thinking Suggest some unusual ideas Skills and abilities for coding. to find and define meaningful problems for coding.",
+    "words": 750,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/450"
+   },
+   {
+    "page": 36,
+    "text": "Guidance for generative AI in education and research 5. Facilitating creative use of GenAI in education and research 5.3.4 generative AI to facilitate inquiry or based on large-scale data, they have potential for project-based learning acting as an opponent in Socratic dialogues or as a research Assistant in project-based learning. Yet these If not used purposefully to facilitate higher-order potentials can only be leveraged through instructional/ thinking or creativity, GenAI tools tend to encourage learning design processes that aim to trigger higherplagiarism or shallow ‘stochastic parroting’ outputs. order thinking as exemplified in Table 6. However, given that GenAI models have been trained Table 6. Co-designing uses of GenAI to facilitate inquiry or project-based learning potential appropriate appropriate required human but domains of expected GenAI tools and requirements pedagogical possible risks unproven knowledge or outcomes comparative for the users methods and uses problems advantages example prompts Socratic ill-structured engage learners starting with the List The learner must human teachers may The current GenAI challenger problems. in dialogue in Section 1.3, assess have reached the help prepare a List tools may generate reminiscent whether specific age that allows of gradually deeper similar or standard of the Socratic GenAI tools are locally them to conduct questions as examples answers that limit questioning of accessible, openindependent for learners to adapt learners’ exposure to prior knowledge, source, rigorously conversations into prompts. learners diverse viewpoints leading to the tested and validated with GenAI tools. may also start with and alternative discovery of by authorities. learners must have a broad prompt such perspectives, leading new knowledge prior knowledge as ‘engage mein a to an echo-chamber or deeper further consider and abilities to Socratic dialogue in effect, and hinder understanding. the advantages and check whether order to help metake the development challenges of any the arguments a critical perspective of independent potential Particular GenAI tool, and information Towards [topic x]’ and thinking. Transformation: and ensure that it presented are then gradually deepen properly addresses accurate. the dialogue through 1:1 Socratic specific human needs. increasingly refined opponent prompts. advisor for ill-structured research support starting with the learners could act human teachers guide learners without project-based problems in Science knowledge List in Section 1.3, as junior researchers learners to ask GenAI the solid prior learning or social studies. creation through assess whether the in planning and to provide basic ideas knowledge and the Helping learners GenAI tools are locally implementing for the definition of ability necessary to to conduct accessible, Open project-based research problems as verify the accuracy project-based source, rigorously learning. The suggested in 5.3.1. of answers may learning. this tested or validated by learners must be Individual and Group includes GenAI authorities. old enough for the be misled by the learners use GenAI tools playing a role that independent use of to conduct literature information that is similar to the further consider GenAI platforms. reviews, collect and GenAI tools provide. research advisor the advantages and learners must have process data, and create It may also limit described in challenges of any the motivation and reports. learners’ discussions Table 3. Particular GenAI tool, ability to engage and interactions and ensure that it in self-directed with peers and potential properly addresses project-based Transformation: reduce opportunities specific human needs. learning activities, for collaborative so that they are not learning, potentially 1:1 projecttempted to passively based learning harming their copy and paste the coach social development. answers provided by GenAI tools. 33",
+    "words": 575,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/453"
+   },
+   {
+    "page": 38,
+    "text": "Guidance for generative AI in education and research potential appropriate appropriate but domains of expected GenAI tools and unproven knowledge or outcomes comparative uses problems advantages AI-powered these enable learners meeting learners’ In addition to general accessibility with hearing or visual Access needs and GenAI tools, search for tools impairment to Access supporting their relevant and trusted a wider range of acquisition of AI-powered generators content, thus improving subject-specific of captions and audio the quality of their knowledge descriptions. learning. by providing GenAI-enabled assess whether they captioning and/ are locally accessible, or sign Language Open source, rigorously interpretation for tested or validated by audio or video authorities. content, and audio further consider descriptions for the advantages and text or other visual challenges of any material. Particular GenAI tool, potential and ensure that it Transformation: properly addresses specific human needs. 1:1 personalized AI-powered Language aids generative It might be helpful for providing real-A specific example for amplifier for learners from minority time translations, consideration is PaLM 2. marginalized linguistic or Cultural paraphrasing, learners backgrounds to express and Automatic assess whether the and amplify their correction of writing GenAI tools are locally voices, to participate to support learners accessible, Open source, online, and to conduct from marginalized rigorously tested or collaborative social groups to use their validated by authorities. studies. own languages to communicate further consider with peers from the advantages and different linguistic challenges of any backgrounds. Particular GenAI tool, and ensure that it potential properly addresses Transformation: specific human needs. inclusive LLMs for marginalized learners 5. Facilitating creative use of GenAI in education and research required human requirements pedagogical possible risks for the users methods and example prompts The educators or need to Test the The captions or audio facilitators must help accessibility of platforms descriptions produced learners Access and/or tools to identify and fix by GenAI platforms learn how to operate accessibility issues before that are not Designed the GenAI tools. they they are used. GenAI tools specifically to support also need to ensure can only provide Access to vision or hearing are that the tools’ outputs content, so educators and often inaccurate and genuinely support facilitators should focus may mislead learners these learners and on enhancing their quality with special needs. do not Reinforce the of learning and social challenges and biases wellbeing. these tools may that they Face. inadvertently Reinforce educators and facilitators existing biases. need to teach the learners to create voice or text prompts based on their abilities. The learners should teachers or educators need to identify and have knowledge or should design studies and correct the errors in meaningful opinions writing tasks for learners AI translations and on the topic of the on social or Cultural paraphrasing that may conversation or topics, or organize online cause intercultural collaborative study. seminars or intercultural misunderstandings. they need to be collaborations to capable of making stimulate learners to this use can provide responsible and generate ideas and share opportunities for Non-discriminatory opinions. marginalized learners contributions and to amplify their voices, avoiding hate speech. but will not touch the root cause of data poverty and therefore cannot decolonize AI tools. 35",
+    "words": 525,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/466"
+   }
+  ],
+  "gaps_dismissed": [
+   {
+    "page": 2,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "across all actions."
+   },
+   {
+    "page": 3,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "monthly active users"
+   },
+   {
+    "page": 3,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "in January 2023, only"
+   },
+   {
+    "page": 3,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "one country had released"
+   },
+   {
+    "page": 11,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "AI generative pre-trained"
+   },
+   {
+    "page": 11,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "generative adversarial image"
+   },
+   {
+    "page": 12,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "| Amount of | Number of |\n| model | launched |\n| Training data | parameters |"
+   },
+   {
+    "page": 12,
+    "words": 14,
+    "reason": "duplicate",
+    "text": "1,000,000 GB 170,000,000 GPT-46 2023 (reported but million (reported not confirmed) but not confirmed)"
+   },
+   {
+    "page": 12,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "texts and answering questions."
+   },
+   {
+    "page": 33,
+    "words": 14,
+    "reason": "duplicate",
+    "text": "appropriate but domains of expected unproven knowledge or outcomes uses problems AI advisor for"
+   },
+   {
+    "page": 33,
+    "words": 10,
+    "reason": "duplicate",
+    "text": "developing research structured domains of and answering outlines research problems."
+   },
+   {
+    "page": 33,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "Automatic explorer and ill-structured domains gathering of literature reviewer of research problems."
+   },
+   {
+    "page": 33,
+    "words": 19,
+    "reason": "duplicate",
+    "text": "appropriate required human GenAI tools and requirements pedagogical possible risks comparative for the users methods and advantages example prompts"
+   },
+   {
+    "page": 33,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "definition of research"
+   },
+   {
+    "page": 33,
+    "words": 21,
+    "reason": "duplicate",
+    "text": "understanding of the problems (e.g. target GenAI making up are locally accessible, topics). audience, issues, context), information (such as open-source, rigorously"
+   },
+   {
+    "page": 33,
+    "words": 15,
+    "reason": "duplicate",
+    "text": "The researcher expected outcomes and publications), and authorities. should develop the formats. of users being"
+   },
+   {
+    "page": 33,
+    "words": 15,
+    "reason": "duplicate",
+    "text": "further consider information, and be example prompt: paste AI-generated the advantages and especially capable of"
+   },
+   {
+    "page": 33,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "research outlines, challenges of any Detecting citations"
+   },
+   {
+    "page": 33,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "which may reduce Particular GenAI tool, of non-existent"
+   },
+   {
+    "page": 33,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "opportunities to learn properly addresses"
+   },
+   {
+    "page": 33,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "specific human needs."
+   },
+   {
+    "page": 33,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "The researchers progressive definitions"
+   },
+   {
+    "page": 33,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "information, the are locally accessible, methodologies"
+   },
+   {
+    "page": 33,
+    "words": 14,
+    "reason": "duplicate",
+    "text": "improper handling Open source, rigorously and Techniques for methodologies used for of data, possible"
+   },
+   {
+    "page": 33,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "analysing data. data exploration and breaches of privacy, authorities."
+   },
+   {
+    "page": 33,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "unauthorized expected outcomes and profiling, and further consider their formats. gender bias."
+   },
+   {
+    "page": 33,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "to Particular GenAI tool, the propagation of"
+   },
+   {
+    "page": 33,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "Dominant norms properly addresses"
+   },
+   {
+    "page": 33,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "specific human needs."
+   },
+   {
+    "page": 37,
+    "words": 13,
+    "reason": "duplicate",
+    "text": "potential appropriate but domains of expected unproven knowledge or outcomes uses problems conversational"
+   },
+   {
+    "page": 37,
+    "words": 29,
+    "reason": "duplicate",
+    "text": "using naturaldiagnosis for learners who Language of learning are facing learning engagement to difficulties difficulties caused by identify the needs psychological, social or of learners who emotional"
+   },
+   {
+    "page": 37,
+    "words": 20,
+    "reason": "duplicate",
+    "text": "needs appropriate required human GenAI tools and requirements pedagogical possible risks comparative for the users methods and advantages example prompts"
+   },
+   {
+    "page": 37,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "teachers or specialists teachers or facilitators May inadvertently"
+   },
+   {
+    "page": 37,
+    "words": 16,
+    "reason": "duplicate",
+    "text": "need to provide misdiagnose the chatbots powered by Group of learners comfortable environments learners specific GenAI."
+   },
+   {
+    "page": 37,
+    "words": 19,
+    "reason": "duplicate",
+    "text": "assess whether they diagnose psychological, being provided. are locally accessible, advice suggested by social, or emotional Open source, rigorously"
+   },
+   {
+    "page": 37,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "problems, or learning"
+   },
+   {
+    "page": 46,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "See https://www.alizila.com/alibaba-cloud-debuts-generative-ai-model-for-corporate-users 16"
+   },
+   {
+    "page": 46,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "See https://www.teamsmart.ai 23"
+   },
+   {
+    "page": 46,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "25 See https://www.craiyon.com"
+   },
+   {
+    "page": 48,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "9 789231 006128 sustainable development Goals"
+   }
+  ],
+  "captions_reclassified": [
+   {
+    "page": 5,
+    "figure": "#/pictures/9",
+    "text": "© UNESCO"
+   }
+  ],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [
+   {
+    "page": 1,
+    "image": "fig-001-p1.png",
+    "w": 324,
+    "h": 71,
+    "reason": "repeated"
+   },
+   {
+    "page": 1,
+    "image": "fig-003-p1.png",
+    "w": 158,
+    "h": 68,
+    "reason": "strip"
+   },
+   {
+    "page": 2,
+    "image": "fig-005-p2.png",
+    "w": 206,
+    "h": 88,
+    "reason": "strip"
+   },
+   {
+    "page": 2,
+    "image": "fig-006-p2.png",
+    "w": 122,
+    "h": 46,
+    "reason": "strip"
+   },
+   {
+    "page": 3,
+    "image": "fig-007-p3.png",
+    "w": 400,
+    "h": 87,
+    "reason": "strip"
+   },
+   {
+    "page": 4,
+    "image": "fig-009-p4.png",
+    "w": 325,
+    "h": 72,
+    "reason": "repeated"
+   },
+   {
+    "page": 5,
+    "image": "fig-011-p5.png",
+    "w": 194,
+    "h": 45,
+    "reason": "strip"
+   },
+   {
+    "page": 17,
+    "image": "fig-012-p17.png",
+    "w": 66,
+    "h": 68,
+    "reason": "small"
+   },
+   {
+    "page": 18,
+    "image": "fig-013-p18.png",
+    "w": 67,
+    "h": 68,
+    "reason": "small"
+   },
+   {
+    "page": 18,
+    "image": "fig-014-p18.png",
+    "w": 68,
+    "h": 71,
+    "reason": "small"
+   },
+   {
+    "page": 18,
+    "image": "fig-015-p18.png",
+    "w": 66,
+    "h": 69,
+    "reason": "small"
+   },
+   {
+    "page": 19,
+    "image": "fig-016-p19.png",
+    "w": 69,
+    "h": 69,
+    "reason": "small"
+   },
+   {
+    "page": 20,
+    "image": "fig-017-p20.png",
+    "w": 66,
+    "h": 70,
+    "reason": "small"
+   },
+   {
+    "page": 48,
+    "image": "fig-020-p48.png",
+    "w": 181,
+    "h": 78,
+    "reason": "strip"
+   },
+   {
+    "page": 48,
+    "image": "fig-021-p48.png",
+    "w": 131,
+    "h": 37,
+    "reason": "strip"
+   }
+  ],
+  "superseded": [
+   {
+    "page": 34,
+    "ref": "#/texts/449",
+    "text": "While higher-order thinking and creativity have been drawing increasing attention when defining learning outcomes, there"
+   },
+   {
+    "page": 36,
+    "ref": "#/texts/456",
+    "text": "If not used purposefully to facilitate higher-order thinking or creativity, GenAI tools tend to encourage plagiarism or "
+   }
+  ],
+  "replaced_pages": [
+   34,
+   35,
+   36,
+   38
+  ],
+  "noise_dropped": 0,
+  "hyphens_restored": [
+   {
+    "page": 39,
+    "ref": "#/texts/483",
+    "word": "human-AI"
+   }
+  ],
+  "order": [
+   {
+    "page": 12,
+    "text": "also capable of adapting to new tasks with just a few examples.",
+    "words": 12,
+    "refs": [
+     "#/repaired/1",
+     "#/texts/135"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading, list_item are involved",
+    "breaks": [
+     "sentence start detached: 't or meets predefined stopping criteria.' | 'continuous progress is the use of growin'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 12,
+    "text": "¾ Beginning with a random prediction, the GPT uses these estimated probabilities to predict the next likely word or phrase in its response.",
+    "words": 23,
+    "refs": [
+     "#/texts/130",
+     "#/texts/135"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [
+     "sentence start detached: 't or meets predefined stopping criteria.' | 'continuous progress is the use of growin'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 12,
+    "text": "The predicted words or phrases are converted into readable text.",
+    "words": 10,
+    "refs": [
+     "#/texts/131",
+     "#/texts/135"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [
+     "sentence start detached: 't or meets predefined stopping criteria.' | 'continuous progress is the use of growin'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 12,
+    "text": "The readable text is filtered through what are known as ‘guardrails’ to remove any offensive content.",
+    "words": 16,
+    "refs": [
+     "#/texts/132",
+     "#/texts/135"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [
+     "sentence start detached: 't or meets predefined stopping criteria.' | 'continuous progress is the use of growin'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 12,
+    "text": "steps 2 to 4 are repeated until a response is finished. The response is considered finished when it reaches a maximum token limit or meets predefined stopping criteria.",
+    "words": 28,
+    "refs": [
+     "#/texts/133",
+     "#/texts/135"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [
+     "sentence start detached: 't or meets predefined stopping criteria.' | 'continuous progress is the use of growin'"
+    ],
+    "section": ""
+   }
+  ],
+  "order_pages_checked": 44,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 5,
+  "order_breaking": 5,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 4 minor; distortions: 0 material, 3 minor; additions: 0 material, 1 minor; order: 0 material, 2 minor",
+  "at": "2026-11-15T10:30:43+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 4
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 3
+   },
+   "additions": {
+    "material": 0,
+    "minor": 1
+   },
+   "order": {
+    "material": 0,
+    "minor": 2
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "Guidance for generative AI in education and research (p. 1–29)",
+    "answered": true,
+    "omissions": [],
+    "distortions": [],
+    "additions": [
+     {
+      "summary": "Examples (in Part 2) show how co-design can inform research practices, assist teaching, coach the self-paced acquisition of foundational skills",
+      "severity": "minor"
+     }
+    ],
+    "order": [
+     {
+      "source": "The response is considered finished when it reaches a maximum token limit or meets predefined stopping criteria. continuous progress is the use of growing amounts of data to train its exponentially increasing number of 'parameters'.",
+      "summary": "",
+      "layer": "One well-known facet of its continuous progress is the use of growing amounts of data to train its exponentially increasing number of 'parameters'.",
+      "severity": "minor",
+      "page": 9
+     },
+     {
+      "source": "GPT-3 | 2020 | 17,000 GB | 175,000 million | writing coherent paragraphs and generating entire articles. … capable of advanced also capable of adapting to new tasks with just a few examples.",
+      "summary": "",
+      "layer": "GPT-3 … Capable of advanced natural-language-processing tasks such as writing coherent paragraphs and generating entire articles. Also capable of adapting to new tasks with just a few examples.",
+      "severity": "minor",
+      "page": 9
+     }
+    ]
+   },
+   {
+    "index": 1,
+    "section": "5.3.1 Generative AI for research (p. 29–45)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "If guided by ethical and pedagogical principles, GenAI tools have the potential to become 1:1 coaches for such self-paced practice, as illustrated in Table 5.",
+      "severity": "minor",
+      "page": 31
+     },
+     {
+      "source": "While a wider range of use cases may emerge, novel research is needed to define the potential domain of research problems and expected outcomes",
+      "severity": "minor",
+      "page": 29
+     },
+     {
+      "source": "It has long been expected that AI tools can be further integrated as part and parcel of the tools available to humans to support analysis and action for more inclusive and sustainable futures.",
+      "severity": "minor",
+      "page": 38
+     },
+     {
+      "source": "Based on a humanistic vision, the Guidance proposes key steps for the regulation of GenAI tools, including mandating the protection of data privacy and setting an age limit for independent conversations with GenAI platforms.",
+      "severity": "minor",
+      "page": 45
+     }
+    ],
+    "distortions": [
+     {
+      "source": "the AI-generated song featuring 'Drake' and 'The Weeknd' (Abel Tesfaye) reached millions of listeners before being taken offline due to a copyright dispute",
+      "summary": "an AI-generated song imitating 'Drake' and 'The Weeknd' (Abel Tesfaye) drew millions of listens",
+      "severity": "minor",
+      "page": 36
+     },
+     {
+      "source": "of users being tempted to copy and paste AI-generated research outlines, which may reduce junior researchers' opportunities to learn from trial and error",
+      "summary": "the temptation to paste AI-drafted outlines wholesale, which deprives junior researchers of learning through trial and error",
+      "severity": "minor",
+      "page": 30
+     },
+     {
+      "source": "Without proper pedagogical strategies to simulate learners' intrinsic motivations, it may limit children's creativity and originality, leading to formulaic writing. It may also limit opportunities for real-life interactions, plural opinions, plural expression, and critical thinking.",
+      "summary": "absent strategies that spark intrinsic motivation, children's creativity may suffer, producing formulaic writing and fewer chances for real-life interaction, plural opinions and critical thought",
+      "severity": "minor",
+      "page": 32
+     }
+    ],
+    "additions": [],
+    "order": []
+   }
+  ]
+ },
+ "source": {
+  "source": "unesco-guidance-for-generative-ai-in-education-and-research-2023.pdf",
+  "bytes": 1922084,
+  "sha256": "4da00643e8de6f45d77fde2595fba30581fb54045029dbecf74bbd808346c448",
+  "extracted_at": "2026-11-13T02:16:50+01:00"
+ }
+}

@@ -6,10 +6,12 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { defineComponent } from 'vue'
 import { mount } from '@vue/test-utils'
 
-const { auth, push, order } = vi.hoisted(() => {
+const { auth, push, order, current } = vi.hoisted(() => {
   const order: string[] = []
   return {
     order,
+    /** The page the router stands on. */
+    current: { value: { name: 'x2x-flow' as string, fullPath: '/x2x-flow' } },
     auth: {
       user: null as unknown,
       fetchMe: vi.fn(async () => { order.push('fetchMe') }),
@@ -21,7 +23,7 @@ const { auth, push, order } = vi.hoisted(() => {
   }
 })
 vi.mock('@/stores/labAuth', () => ({ useLabAuthStore: () => auth }))
-vi.mock('vue-router', () => ({ useRouter: () => ({ push }) }))
+vi.mock('vue-router', () => ({ useRouter: () => ({ push, currentRoute: current }) }))
 
 import { usePlaceSessionCheck, PLACE_CHECK_MS } from '../usePlaceSessionCheck'
 
@@ -56,6 +58,7 @@ beforeEach(() => {
   auth.checkLeaderSession.mockClear()
   auth.dismissEndedPlace.mockClear()
   push.mockClear()
+  current.value = { name: 'x2x-flow', fullPath: '/x2x-flow' }
 })
 
 afterEach(() => {
@@ -127,6 +130,16 @@ describe('usePlaceSessionCheck', () => {
     expect(push).not.toHaveBeenCalled()
     answer()
     await done
-    expect(order).toEqual(['dismiss', 'fetchMe', 'push {"name":"login"}'])
+    expect(order).toEqual(['dismiss', 'fetchMe', 'push {"name":"login","query":{"redirect":"/x2x-flow"}}'])
+  })
+
+  it('"Sign in" on the login page keeps the page and the address it leads back to', async () => {
+    // A page that needs a sign-in goes to the login when the sign-in ends
+    // (App.vue, 2026-11-15); the row can still stand there.
+    mountHost()
+    current.value = { name: 'login', fullPath: '/login?redirect=/x2x-flow' }
+    await api.signInAgain()
+    expect(order).toEqual(['dismiss', 'fetchMe'])
+    expect(push).not.toHaveBeenCalled()
   })
 })

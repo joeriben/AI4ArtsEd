@@ -1,0 +1,1220 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 14.3% of 2246 words, ceiling 20%, longest run 14 words; not counted: 55 words from the source's lists; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 14,
+     "text": "to multiple layers of a transformer without causing its outputs to collapse into gibberish"
+    },
+    {
+     "words": 14,
+     "text": "to multiple layers of a transformer without causing its outputs to collapse into gibberish"
+    },
+    {
+     "words": 13,
+     "text": "ordinary least squares residuals from regressing x on z plus a constant shift"
+    },
+    {
+     "words": 13,
+     "text": "guards z if and only if the columns of the cross covariance matrix"
+    },
+    {
+     "words": 13,
+     "text": "if and only if every class has exactly the same mean feature vector"
+    }
+   ],
+   "value": 0.1429,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "4 of 4 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 2,
+     "expected_items": 5,
+     "first_item": "The data X linearly guards the labels Z . (Definition 2.3)",
+     "output_lists": [
+      3,
+      5,
+      9
+     ],
+     "unanswered_items": [
+      {
+       "item": 3,
+       "source": "Every component of X has zero covariance with every component of Z .",
+       "output": "The class-conditional mean vectors E[X | Z = i] are equal to the unconditional m"
+      },
+      {
+       "item": 4,
+       "source": "The class-conditional mean vectors E [X | Z = i ] are equal to the unconditional",
+       "output": "Every component of X has zero covariance with every component of Z."
+      }
+     ]
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 9,
+     "expected_items": 8,
+     "first_item": "2: L ← list()",
+     "output_lists": [
+      3,
+      5,
+      9
+     ]
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 21,
+     "expected_items": 13,
+     "first_item": "Z The space of one-hot labels { ( z 1 , . . . z k ) ∈ { 0 , 1 } k ∣ ∣ ∑ k j =1 z",
+     "output_lists": [
+      3,
+      5,
+      9
+     ]
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 9,
+     "table_cells": 55,
+     "missing_cells": [
+      "0.66",
+      "0.62",
+      "0.90",
+      "0.70",
+      "0.62",
+      "Random erasure",
+      "0.66",
+      "0.62",
+      "0.99",
+      "0.72",
+      "0.66",
+      "0.63",
+      "1.84",
+      "1.96",
+      "2.79",
+      "2.25",
+      "3.20",
+      "3.26",
+      "3.16",
+      "3.53"
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "48 of 97 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 1,
+     "number": "24"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 1,
+     "number": "25"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 1,
+     "number": "26"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 1,
+     "number": "41"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 1,
+     "number": "43"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 2,
+     "number": "2.1"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 2,
+     "number": "2.3"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 2,
+     "number": "33"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 2,
+     "number": "5.2"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 5,
+     "number": "36"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 6,
+     "number": "29"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 6,
+     "number": "31"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 6,
+     "number": "5.1"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 8,
+     "number": "27"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 8,
+     "number": "38"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 8,
+     "number": "5.3"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 9,
+     "number": "0.62"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 9,
+     "number": "0.63"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 9,
+     "number": "0.64"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 9,
+     "number": "0.66"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 9,
+     "number": "0.70"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 9,
+     "number": "0.72"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 9,
+     "number": "0.90"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 9,
+     "number": "0.99"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 9,
+     "number": "1.84"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 9,
+     "number": "1.96"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 9,
+     "number": "19"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 9,
+     "number": "2.25"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 9,
+     "number": "2.79"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 9,
+     "number": "21"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 9,
+     "number": "23"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 9,
+     "number": "3.16"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 9,
+     "number": "3.20"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 9,
+     "number": "3.26"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 9,
+     "number": "3.44"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 9,
+     "number": "3.53"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 9,
+     "number": "39"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 9,
+     "number": "4.17"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 9,
+     "number": "4.69"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 9,
+     "number": "6.1"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 10,
+     "number": "14"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 10,
+     "number": "40"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 10,
+     "number": "6.2"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 15,
+     "number": "34"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 15,
+     "number": "35"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 15,
+     "number": "37"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 15,
+     "number": "42"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 15,
+     "number": "44"
+    }
+   ],
+   "value": 48.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "31 of 32 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 1,
+     "heading": "Abstract"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 1,
+     "heading": "1 Introduction"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 2,
+     "heading": "3 Theoretical Results"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 3,
+     "heading": "3.1 Equality of Class Centroids Implies Linear Guardedness"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 3,
+     "heading": "3.2 Linear Guardedness Implies Equality of Class Centroids"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 4,
+     "heading": "3.3 Linearly Guarded Labels Have Zero Covariance with the Features"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 4,
+     "heading": "4 Least-Squares Concept Erasure"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 5,
+     "heading": "4.1 Derivation of LEACE"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 6,
+     "heading": "4.2 Oblique Projections are Least-Squares Optimal"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 6,
+     "heading": "4.3 Extension to Continuous Z"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 6,
+     "heading": "5 Evaluation"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 6,
+     "heading": "5.1 Intrinsic Evaluation"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 7,
+     "heading": "5.2 Downstream Fairness"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 8,
+     "heading": "5.3 Revisiting Amnesic Probing"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 9,
+     "heading": "6 Concept Scrubbing"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 9,
+     "heading": "Algorithm 1 Concept scrubbing"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 9,
+     "heading": "6.1 Experimental Details"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 10,
+     "heading": "6.2 Results"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 10,
+     "heading": "7 Limitations and Future Work"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 15,
+     "heading": "A Additional Related Work"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 15,
+     "heading": "B Equivalence of Guardedness with the Optimality of Constant Predictors"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 16,
+     "heading": "C Linear Guardedness is Equivalent to Linear Statistical Parity"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 16,
+     "heading": "D Implications for Prior Work"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 17,
+     "heading": "E Derivation of LEACE"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 17,
+     "heading": "E.1 Algebraic Proof"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 18,
+     "heading": "E.2 Covector Proof"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 19,
+     "heading": "F The Optimality of Oblique Projections"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 19,
+     "heading": "G Equivalence of Guardedness Definitions"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 19,
+     "heading": "H Constraining Norm Growth"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 20,
+     "heading": "I Oracle LEACE"
+    },
+    {
+     "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+     "page": 21,
+     "heading": "J Notation Key"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "8 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "8 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "6 quoted texts in 1 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Fig. 5",
+     "page": 20,
+     "image": "fig-005-p20.png",
+     "quotes": [
+      "\"Z_1\"",
+      "\"Z_2\"",
+      "\"X_i\"",
+      "\"X_i\"",
+      "\"proj_Z X_i\"",
+      "\"X'_i = X_i - proj_Z X_i\""
+     ]
+    }
+   ],
+   "value": 6.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "23 page references valid (printed-folio pages 1–22)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "22 pages checked, 0 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "1 passages out of order break a sentence (6 of 9 not repairable; listed, not gated)",
+   "findings": [
+    {
+     "page": 2,
+     "words": 12,
+     "text": "every component of X has zero covariance with every component of Z.",
+     "blocks": [
+      "#/texts/31",
+      "#/texts/32",
+      "#/texts/33"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 8,
+     "text": "4: Fit (P, b) on Hl and Z",
+     "blocks": [
+      "#/texts/318",
+      "#/texts/322",
+      "#/texts/323"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": true,
+     "breaks": [
+      "sentence cut: 're: LEACE parameters for each layer in f' | '2: L ← list()'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 21,
+     "words": 14,
+     "text": "The ith and j th components thereof, themselves scalar random variables (or their realized",
+     "blocks": [
+      "#/texts/534",
+      "#/texts/535",
+      "#/texts/536"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 21,
+     "words": 14,
+     "text": "A predictor function Rd → Z (or it's value η(X) when inside an expectation).",
+     "blocks": [
+      "#/texts/536",
+      "#/texts/537",
+      "#/texts/538"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 21,
+     "words": 4,
+     "text": "matrix with entries in",
+     "blocks": [
+      "#/texts/540",
+      "#/texts/542"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 21,
+     "words": 5,
+     "text": "The Moore-Penrose pseudoinverse of A.",
+     "blocks": [
+      "#/texts/542",
+      "#/texts/543",
+      "#/texts/544"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    }
+   ],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "belrose-et-al-2023-leace-perfect-linear-concept-erasure-in-closed-form",
+ "doc_type": "scholarly_article",
+ "analyzed_at": "2026-11-15T11:17:50.348684+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "LEACE: Perfect linear concept erasure in closed form",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 22,
+   "chars": 55361,
+   "blocks": 226,
+   "inner_headings": 32,
+   "figures": 8
+  }
+ ],
+ "skipped": [
+  "8 Acknowledgements (p. 10)",
+  "References (p. 11)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 22,
+  "gaps": [],
+  "gaps_dismissed": [
+   {
+    "page": 2,
+    "words": 15,
+    "reason": "debris",
+    "text": "h i X ∈ argmax inf E L(η(X′ ; θ), Z) . X′ ∈χ θ∈Θ"
+   },
+   {
+    "page": 3,
+    "words": 69,
+    "reason": "debris",
+    "text": "E X : h i h h ii E L(η, Z) = EZ E L(η, Z) Z h \u0010 \u0002 \u0003 \u0011i ≥ EZ L E η Z , Z (Jensen's inequality) h \u0010 \u0002 \u0003 \u0011i = EZ L b + WE X Z , Z (linearity of η) h \u0010 \u0002 \u0003 \u0011i = EZ L b + WE X , Z . (by assumption) \u0002 \u0003"
+   },
+   {
+    "page": 3,
+    "words": 24,
+    "reason": "duplicate",
+    "text": "\" # \" # ∂L(η, Z) ∂ηi ∂L(η, Z) ∂ηi E · = 0 and E · = 0, (1) ∂ηi ∂bi ∂ηi ∂Wi"
+   },
+   {
+    "page": 3,
+    "words": 21,
+    "reason": "duplicate",
+    "text": "i ∂L(η, i) ∂L(η, ̸= i) P(Z = i) + P(Z ̸= i) = 0, (2) ∂ηi ∂ηi where ∂L(η,̸ ∂ηi"
+   },
+   {
+    "page": 4,
+    "words": 33,
+    "reason": "duplicate",
+    "text": "∂L(η, i) \u0002 \u0003 ∂L(η, ̸= i) \u0002 \u0003 P(Z = i) · E X Z = i + P(Z ̸= i) · E X Z ̸= i = 0. (3) ∂ηi ∂ηi"
+   },
+   {
+    "page": 4,
+    "words": 28,
+    "reason": "duplicate",
+    "text": "us: ! ∂L(η, ̸= i) \u0002 \u0003 \u0002 \u0003 P(Z = ̸ i) · E X Z ̸= i − E X Z = i = 0. ∂ηi"
+   },
+   {
+    "page": 4,
+    "words": 47,
+    "reason": "debris",
+    "text": "\u0010 \u0011 E[Xi Zj ] − E[Xi ]E[Zj ] = P(Z = j) E[Xi |Z = j] − E[Xi ] . As P(Z = j) > 0, it follows that E[Xi |Z = j] = E[Xi ] if and only if Cov(Xi , Zj ) = 0."
+   },
+   {
+    "page": 4,
+    "words": 13,
+    "reason": "debris",
+    "text": "Cov(r(X), Z) = Cov(PX + b, Z) = PCov(X, Z) = PΣXZ ."
+   },
+   {
+    "page": 5,
+    "words": 8,
+    "reason": "debris",
+    "text": "(ΣXX )+ and PWΣXZ = (WΣXZ )(WΣXZ )+"
+   },
+   {
+    "page": 5,
+    "words": 45,
+    "reason": "debris",
+    "text": "2 2 E PX + b − X M = E (PX̃ − X̃) + c M 2 \u0002 \u0003T = E PX̃ − X̃ M + 2E PX̃ − X̃ Mc + cT Mc 2 = E PX̃ − X̃ M + cT Mc,"
+   },
+   {
+    "page": 6,
+    "words": 54,
+    "reason": "duplicate",
+    "text": "original data whitening erasure Unwhitening 6 6 6 6 concept 4 4 4 4 subspace 2 2 2 orthogonal 2 subspace 0 0 0 0 output −2 subspace −2 −2 −2 −4 class 1 −4 −4 −4 class 2 −6 −6 −6 −6 −5 0 5 −5 0 5 −5 0 "
+   },
+   {
+    "page": 6,
+    "words": 13,
+    "reason": "debris",
+    "text": "\u0001 rLEACE (x) = x − W+ PWΣXZ W x − E[X] (1)"
+   },
+   {
+    "page": 6,
+    "words": 12,
+    "reason": "debris",
+    "text": ")2 = I − 2WPWΣXZ W+ + W+ PWΣXZ\u0018 WW + PWΣXZ"
+   },
+   {
+    "page": 7,
+    "words": 38,
+    "reason": "duplicate",
+    "text": "0.4 paralegal interior_designer yoga_teacher nurse TPR-GAP TPR-GAP 0.2 teacher dietitian psychologist 0.0 painter architect photographer journalist djsoftware_engineerdentist professor poet attorney a"
+   },
+   {
+    "page": 7,
+    "words": 8,
+    "reason": "debris",
+    "text": "GAPTPR,RMS z = (GAPTPR z,y ) 2 |C|"
+   },
+   {
+    "page": 7,
+    "words": 58,
+    "reason": "duplicate",
+    "text": "7 0.4 paralegal 0.2 yoga_teacher architect teacher 0.0 composer software_engineer photographer professor attorney poet dietitian interior_designer rapper comedian pastor filmmaker dentist accountant j"
+   },
+   {
+    "page": 8,
+    "words": 40,
+    "reason": "duplicate",
+    "text": "5 0.8 4 MLM accuracy 0.6 ours MLM loss random 3 INLP (20 iterations) 0.4 No intervention 2 0.2 1 0 2 4 6 8 10 12 0 2 4 6 8 10 12 layer of intervention layer of intervention"
+   },
+   {
+    "page": 9,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "6 concept scrubbing"
+   },
+   {
+    "page": 9,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "8: return L into gibberish."
+   },
+   {
+    "page": 15,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "(Z,L) Trivially Attainable loss"
+   },
+   {
+    "page": 15,
+    "words": 13,
+    "reason": "debris",
+    "text": "| inf E[L(η(X′ ; θ), Z)] ≤ inf E[L(η(X; θ), Z)] | (5) |\n| θ | θ |"
+   },
+   {
+    "page": 16,
+    "words": 23,
+    "reason": "debris",
+    "text": "E[f (X)|Z = z] = E[WX + b|Z = z] = WE[X|Z = z] + b = WE[X] + b = E[f (X)]."
+   },
+   {
+    "page": 16,
+    "words": 11,
+    "reason": "debris",
+    "text": "E[X|Z = z] = E[id(X)|Z = z] = E[id(X)] = E[X]."
+   },
+   {
+    "page": 17,
+    "words": 15,
+    "reason": "debris",
+    "text": "i 2 argmin E PX − X M subject to Cov(PX, Z) = 0 P∈Rd×d"
+   },
+   {
+    "page": 17,
+    "words": 8,
+    "reason": "debris",
+    "text": "(ΣXX )+ and PWΣXZ = (WΣXZ )(WΣXZ )+"
+   },
+   {
+    "page": 17,
+    "words": 31,
+    "reason": "debris",
+    "text": "∈ R of P as a d separate optimization problem, h \u00012 i argmin E αi Pi T X − Xi subject to Cov(Pi T X, Z) = 0, Pi ∈Rd"
+   },
+   {
+    "page": 17,
+    "words": 12,
+    "reason": "debris",
+    "text": "X Xi = (W+ WX)i = Wij+ (WX)j . (Almost surely) j=1"
+   },
+   {
+    "page": 17,
+    "words": 14,
+    "reason": "debris",
+    "text": "m X d X (PX)i = Aij (WX)j + Bij Xj , j=1 j=m+1"
+   },
+   {
+    "page": 18,
+    "words": 28,
+    "reason": "debris",
+    "text": "\" m #2 m \u00012 X X T + E P i X − Xi =E (Aij − Wij )(WX)j = (Aij − Wij+ )2 , j=1 j=1"
+   },
+   {
+    "page": 18,
+    "words": 21,
+    "reason": "debris",
+    "text": "h \u00012 i argmin E mi Pi T X − Xi subject to Cov(Pi T X, Z) = 0. Pi ∈Rd"
+   },
+   {
+    "page": 18,
+    "words": 27,
+    "reason": "debris",
+    "text": "⟨ξ, ζ⟩ = Cov(u′T WX, u′T WX) = u′T ( WΣ ((( ( ′ = u′T u′ . Wu Cov ξ ζ ξ XX ζ ξ ζ"
+   },
+   {
+    "page": 18,
+    "words": 12,
+    "reason": "debris",
+    "text": "colsp(WΣXZ )⊥ : X̂i = (W+ )Ti (I − PWΣXZ )(WX) (6)"
+   },
+   {
+    "page": 19,
+    "words": 16,
+    "reason": "debris",
+    "text": "([1, 2]T , 1), ([1, 0]T , −1), ([−1, 0]T , 1), ([−1, −2]T , −1)"
+   },
+   {
+    "page": 19,
+    "words": 12,
+    "reason": "debris",
+    "text": "E∥Portho X − X∥2 = 2, E∥Poblique X − X∥2 = 1"
+   },
+   {
+    "page": 19,
+    "words": 20,
+    "reason": "debris",
+    "text": "HV (Z | X) = inf E[L(η(X; θ), Z)], θ∈Θ where L(η, z) = − log Pkexp(η z) exp(η )"
+   },
+   {
+    "page": 20,
+    "words": 18,
+    "reason": "debris",
+    "text": "2 argmin E X′ − X M subject to Cov(X′ , Z) = 0 ′ d X ∈H"
+   },
+   {
+    "page": 20,
+    "words": 12,
+    "reason": "debris",
+    "text": "\u0001 X′LEACE = X − ΣXZ Σ+ ZZ Z − E[Z] ."
+   },
+   {
+    "page": 20,
+    "words": 19,
+    "reason": "debris",
+    "text": "d X 2 \u0002 \u0003 E X′ − X M = mi E (X′i − Xi )2 , i=1"
+   },
+   {
+    "page": 20,
+    "words": 19,
+    "reason": "debris",
+    "text": "2 2 2 X′i − Xi H = µ′i − µi H + X̃′i − X̃i H . (7)"
+   },
+   {
+    "page": 21,
+    "words": 24,
+    "reason": "debris",
+    "text": "2 argmin X̃′i − X̃i H s.t. ∀j ∈ {1 . . . k} : ⟨X̃′i , Z̃j ⟩H = 0, (8) X̃′i ∈H"
+   },
+   {
+    "page": 21,
+    "words": 23,
+    "reason": "debris",
+    "text": "\u0001 X̃′i = X̃i − proj X̃i , Z = Xi − (ΣXZ )i Σ+ ZZ (Z − E[Z]) − E[Xi ]. (9)"
+   },
+   {
+    "page": 21,
+    "words": 11,
+    "reason": "debris",
+    "text": "X′LEACE = X − ΣXZ Σ+ ZZ (Z − E[Z]), (10)"
+   },
+   {
+    "page": 22,
+    "words": 31,
+    "reason": "duplicate",
+    "text": "original data whitening 6 6 6 4 4 4 2 2 2 0 0 0 −2 −2 −2 −4 −4 −4 −6 −6 −6 −5 0 5 −5 0 5 −5"
+   },
+   {
+    "page": 22,
+    "words": 19,
+    "reason": "duplicate",
+    "text": "0.9 majority RLACE gender accuracy 0.8 INLP ours 0.7 0.6 0.5 2 3 4 5 6 mean squared error"
+   },
+   {
+    "page": 22,
+    "words": 48,
+    "reason": "duplicate",
+    "text": "1 erasure Unwhitening 6 concept 4 subspace 2 orthogonal subspace 0 output subspace −2 class 1 −4 class 2 −6 0 5 −5 0 5 0.8 MLM accuracy 0.6 ours random INLP (20 iterations) 0.4 No intervention 0.2 0 2"
+   }
+  ],
+  "captions_reclassified": [],
+  "captions_reassigned": [],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [],
+  "superseded": [],
+  "replaced_pages": [],
+  "noise_dropped": 15,
+  "hyphens_restored": [],
+  "order": [
+   {
+    "page": 2,
+    "text": "every component of X has zero covariance with every component of Z.",
+    "words": 12,
+    "refs": [
+     "#/texts/31",
+     "#/texts/32",
+     "#/texts/33"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 3,
+    "text": "Proof. The first-order optimality condition on the ith component of our parameters b and W yields the equations:",
+    "words": 18,
+    "refs": [
+     "#/texts/48",
+     "#/texts/49",
+     "#/texts/51"
+    ],
+    "repaired": true,
+    "note": "3 blocks replaced by the text layer's passage",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "require: Design matrix X ∈ Rn×d",
+    "words": 6,
+    "refs": [
+     "#/texts/315",
+     "#/texts/316",
+     "#/texts/317"
+    ],
+    "repaired": true,
+    "note": "3 blocks replaced by the text layer's passage",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "4: Fit (P, b) on Hl and Z",
+    "words": 8,
+    "refs": [
+     "#/texts/318",
+     "#/texts/322",
+     "#/texts/323"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [
+     "sentence cut: 're: LEACE parameters for each layer in f' | '2: L ← list()'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 19,
+    "text": "using these notions, Ravfogel et al. [33] say that X is ϵ-guarded",
+    "words": 12,
+    "refs": [
+     "#/texts/489",
+     "#/texts/491",
+     "#/texts/492"
+    ],
+    "repaired": true,
+    "note": "3 blocks replaced by the text layer's passage",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 21,
+    "text": "The ith and j th components thereof, themselves scalar random variables (or their realized",
+    "words": 14,
+    "refs": [
+     "#/texts/534",
+     "#/texts/535",
+     "#/texts/536"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 21,
+    "text": "A predictor function Rd → Z (or it's value η(X) when inside an expectation).",
+    "words": 14,
+    "refs": [
+     "#/texts/536",
+     "#/texts/537",
+     "#/texts/538"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 21,
+    "text": "matrix with entries in",
+    "words": 4,
+    "refs": [
+     "#/texts/540",
+     "#/texts/542"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 21,
+    "text": "The Moore-Penrose pseudoinverse of A.",
+    "words": 5,
+    "refs": [
+     "#/texts/542",
+     "#/texts/543",
+     "#/texts/544"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": ""
+   }
+  ],
+  "order_pages_checked": 21,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 6,
+  "order_breaking": 1,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 4 minor; distortions: 0 material, 4 minor; additions: 0 material, 0 minor; order: 0 material, 0 minor",
+  "at": "2026-11-15T11:19:59+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 4
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 4
+   },
+   "additions": {
+    "material": 0,
+    "minor": 0
+   },
+   "order": {
+    "material": 0,
+    "minor": 0
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "LEACE: Perfect linear concept erasure in closed form (p. 1–22)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "we edit the input or hidden states X used by M to minimize the predictive V-information I_V(X → Z) [43], a tractable lower bound on the mutual information I(X; Z)",
+      "severity": "minor",
+      "page": 1
+     },
+     {
+      "source": "even after 20 iterations, classification accuracy is above majority accuracy",
+      "severity": "minor",
+      "page": 8
+     },
+     {
+      "source": "We compare with a baseline intervention of a random orthogonal projection whose null space has the same rank as the label space (18).",
+      "severity": "minor",
+      "page": 8
+     },
+     {
+      "source": "we isolate the effect of the concept erasure by comparing it to a control condition in which we orthogonally project onto a random linear subspace of the same rank as the cross-covariance matrix",
+      "severity": "minor",
+      "page": 10
+     }
+    ],
+    "distortions": [
+     {
+      "source": "Definition 2.1 (Guardedness) ... Definition 2.2 (Trivially Attainable Loss) ... Definition 2.3 (Linear Guardedness)",
+      "summary": "Two central definitions:",
+      "severity": "minor",
+      "page": 2
+     },
+     {
+      "source": "For INLP, we perform 20 iterations. This is needed because INLP does not effectively remove the concept; even after 20 iterations, classification accuracy is above majority accuracy.",
+      "summary": "INLP requires 20 iterations and reduces embedding rank by 360",
+      "severity": "minor",
+      "page": 8
+     },
+     {
+      "source": "For INLP and RLACE, each point corresponds to a different setting of the rank hyperparameter ... Our method is rank 1.",
+      "summary": "The \"Ours\" series (red line with error bars) is positioned near the bottom at approximately 0.52.",
+      "severity": "minor",
+      "page": 22
+     },
+     {
+      "source": "P′ is guaranteed to be in the feasible set. Furthermore, since our mean squared error objective is convex, P′ is guaranteed to have no worse MSE than Q.",
+      "summary": "preserving both guardedness and MSE guarantees",
+      "severity": "minor",
+      "page": 19
+     }
+    ],
+    "additions": [],
+    "order": []
+   }
+  ]
+ },
+ "source": {
+  "source": "belrose-et-al-2023-leace-perfect-linear-concept-erasure-in-closed-form.pdf",
+  "bytes": 766987,
+  "sha256": "0e748cfc8d0a9d630d18b63d8126bcc0346dc339ca8a690b9322803fc9a78d86",
+  "extracted_at": "2026-11-13T02:24:18+01:00"
+ }
+}

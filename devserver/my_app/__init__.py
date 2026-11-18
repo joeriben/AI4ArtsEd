@@ -377,6 +377,13 @@ def create_app():
         if response.headers.pop('X-Immutable-Asset', None):
             return response
 
+        # A response may declare that it holds a random draw: the wording of a
+        # pool perspective (config_loader.draw_from_pool). Kept by a cache, the
+        # next pick would be handed the same entry, so it is never stored.
+        if response.headers.pop('X-Drawn', None):
+            response.headers['Cache-Control'] = 'no-store'
+            return response
+
         # Only add headers to API routes (not static assets)
         if request.path.startswith('/api/') or request.path.startswith('/pipeline_configs_'):
             if DISABLE_API_CACHE:
@@ -384,8 +391,10 @@ def create_app():
                 response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate, max-age=0'
                 response.headers['Pragma'] = 'no-cache'
                 response.headers['Expires'] = '0'
-            else:
-                # Production: Enable intelligent caching for GET requests
+            elif response.status_code == 200:
+                # Production: Enable intelligent caching for GET requests.
+                # Only an answer is kept: a refusal (the sign-in gate's 401)
+                # kept for five minutes outlasts the sign-in that follows it.
                 for route_prefix, cache_header in CACHE_STRATEGY.items():
                     if request.path.startswith(route_prefix):
                         response.headers['Cache-Control'] = cache_header
@@ -452,8 +461,10 @@ def create_app():
 
     # Lab user/course system (Phase 0 + P1): DB + seed admin + /api/auth/*,
     # /api/admin/users/* and /api/courses/* blueprints.
-    # FAIL-SAFE — a DB/import error degrades ONLY the lab feature and must NOT
-    # prevent server start; the existing platform stays fully usable without login.
+    # FAIL-SAFE — a DB/import error must NOT prevent server start. Since
+    # 2026-11-15 nothing behind the sign-in is reachable without it
+    # (lab/sign_in_gate.py): with the lab down, the start page stands and
+    # every other route answers 401.
     try:
         from my_app.lab import init_lab
         from my_app.routes.auth_routes import auth_bp
@@ -491,6 +502,12 @@ def create_app():
 
     # Register static blueprint LAST (catch-all for SPA routing)
     app.register_blueprint(static_bp)
+
+    # Nothing without a sign-in (2026-11-15): every route but the few named in
+    # lab/sign_in_gate.py answers 401 to a session that is not signed in.
+    # Outside the lab's try: the gate closes whether or not the lab started.
+    from my_app.lab.sign_in_gate import install as install_sign_in_gate
+    install_sign_in_gate(app)
 
     # Run legacy folder migration on startup if enabled
     _run_startup_migration()

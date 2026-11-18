@@ -862,7 +862,14 @@ const rows = computed<WriterRow[]>(() => {
       requested: m.id,
       wrote: ran || m.id,
       label: ran ? labelOf(ran) : modelLabel(m),
-      request: { schema: preset.value.configId, interceptionModel: m.id },
+      // The wording the chooser handed over runs, so that every model writes
+      // under the text the card shows. A pool preset draws at the pick; asked
+      // without it, the server would draw again for every row.
+      request: {
+        schema: preset.value.configId,
+        interceptionModel: m.id,
+        contextPrompt: preset.value.context || undefined,
+      },
       text: r?.text ?? '',
       segments: markTerms(r?.text ?? '', presetTerms.value),
       failedKey: r?.failedKey ?? '',

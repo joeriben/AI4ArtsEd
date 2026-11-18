@@ -1,0 +1,1194 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 15.7% of 2822 words, ceiling 20%, longest run 43 words; not counted: 273 words from the source's lists; not counted: figure descriptions",
+   "findings": [
+    {
+     "words": 43,
+     "text": "die symbolische bedeutung die künstlerische dimension und die kulturellen werte die aus kulturellen identitäten entstehen oder diese zum ausdruck bringen kulturelle ausdrucksformen ausdrucksformen die durch die kreativität von einzelpersonen gruppen und gesellschaften entstehen und einen kulturellen"
+    },
+    {
+     "words": 25,
+     "text": "übereinkommen findet anwendung auf die politik und die maßnahmen die die vertragsparteien im zusammenhang mit dem schutz und der förderung der vielfalt kultureller ausdrucksformen beschließen"
+    },
+    {
+     "words": 23,
+     "text": "der schutz die förderung und der erhalt der kulturellen vielfalt sind eine entscheidende voraussetzung für nachhaltige entwicklung zu gunsten gegenwärtiger und künftiger generationen"
+    },
+    {
+     "words": 22,
+     "text": "das beschließen von maßnahmen die auf die erhaltung sicherung und erhöhung der vielfalt kultureller ausdrucksformen abzielen schützen bedeutet derartige maßnahmen zu beschließen"
+    },
+    {
+     "words": 22,
+     "text": "zugang zu einem reichen und vielfältigen spektrum kultureller ausdrucksformen und der zugang der kulturen zu den mitteln des ausdrucks und der verbreitung"
+    }
+   ],
+   "value": 0.157,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "30 of 31 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 6,
+     "expected_items": 6,
+     "first_item": "die Vielfalt kultureller Ausdrucksformen zu schützen und zu fördern;",
+     "output_lists": [
+      8,
+      4,
+      7,
+      4,
+      3,
+      7
+     ]
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 7,
+     "expected_items": 3,
+     "first_item": "die besondere Natur von kulturellen Aktivitäten, Gütern und Dienstleistungen als",
+     "output_lists": [
+      8,
+      4,
+      7,
+      4,
+      3,
+      7
+     ]
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 16,
+     "expected_items": 2,
+     "first_item": "Die Vertragsparteien bekräftigen in Übereinstimmung mit der Satzung der Vereinte",
+     "output_lists": [
+      8,
+      4,
+      7,
+      4,
+      3,
+      7
+     ]
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 17,
+     "expected_items": 6,
+     "first_item": "Derartige Maßnahmen können Folgendes umfassen: 2",
+     "output_lists": [
+      8,
+      4,
+      7,
+      4,
+      3,
+      7
+     ]
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 18,
+     "expected_items": 3,
+     "first_item": "Maßnahmen, die darauf abzielen, öffentliche Einrichtungen auf geeignete Weise zu",
+     "output_lists": [
+      8,
+      4,
+      7,
+      4,
+      3,
+      7
+     ],
+     "unanswered_items": [
+      {
+       "item": 3,
+       "source": "Maßnahmen, die darauf abzielen, die Medienvielfalt zu erhöhen, und zwar auch dur",
+       "output": "**Sekretariat (Art. 24)**: Die UNESCO-Organe werden vom Sekretariat unterstützt,"
+      }
+     ]
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 18,
+     "expected_items": 3,
+     "first_item": "Die Vertragsparteien bemühen sich, in ihrem Hoheitsgebiet ein Umfeld zu schaffen",
+     "output_lists": [
+      8,
+      4,
+      7,
+      4,
+      3,
+      7
+     ]
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 19,
+     "expected_items": 3,
+     "first_item": "Unbeschadet der Artikel 5 und 6 kann eine Vertragspartei das Vorliegen einer bes",
+     "output_lists": [
+      8,
+      4,
+      7,
+      4,
+      3,
+      7
+     ]
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 20,
+     "expected_items": 3,
+     "first_item": "legen alle vier Jahre in ihren Berichten an die UNESCO geeignete Informationen ü",
+     "output_lists": [
+      8,
+      4,
+      7,
+      4,
+      3,
+      7
+     ]
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 21,
+     "expected_items": 3,
+     "first_item": "Ausdrucksformen zukommt, unter anderem durch Bildungsprogramme und Programme zur",
+     "output_lists": [
+      8,
+      4,
+      7,
+      4,
+      3,
+      7
+     ]
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 22,
+     "expected_items": 5,
+     "first_item": "den Dialog zwischen den Vertragsparteien über die Kulturpolitik zu erleichtern;",
+     "output_lists": [
+      8,
+      4,
+      7,
+      4,
+      3,
+      7
+     ]
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 23,
+     "expected_items": 2,
+     "first_item": "Stärkung der Kulturwirtschaft in Entwicklungsländern, indem",
+     "output_lists": [
+      8,
+      4,
+      7,
+      4,
+      3,
+      7
+     ]
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 24,
+     "expected_items": 7,
+     "first_item": "ii) ihren kulturellen Aktivitäten, Gütern und Dienstleistungen ein breiterer Zug",
+     "output_lists": [
+      8,
+      4,
+      7,
+      4,
+      3,
+      7
+     ],
+     "unanswered_items": [
+      {
+       "item": 4,
+       "source": "die kreative Arbeit unterstützt und die Mobilität der Künstler aus den Entwicklu",
+       "output": "**Art. 12 (internationale Zusammenarbeit)**: Zu verstärken sind: a) der Dialog ü"
+      },
+      {
+       "item": 7,
+       "source": "Weitergabe von Technologie durch die Einführung geeigneter Anreizmaßnahmen für d",
+       "output": "**Art. 15 (Modalitäten der Zusammenarbeit)**: Angeregt werden innovative Partner"
+      }
+     ]
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 25,
+     "expected_items": 5,
+     "first_item": "geeigneter Anreizmaßnahmen, insbesondere im Bereich der Kulturwirtschaft und -un",
+     "output_lists": [
+      8,
+      4,
+      7,
+      4,
+      3,
+      7
+     ]
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 27,
+     "expected_items": 9,
+     "first_item": "Hiermit wird ein Internationaler Fonds für kulturelle Vielfalt, im Folgenden als",
+     "output_lists": [
+      8,
+      4,
+      7,
+      4,
+      3,
+      7
+     ]
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 29,
+     "expected_items": 4,
+     "first_item": "Die UNESCO erleichtert die Sammlung, Analyse und Verbreitung aller einschlägigen",
+     "output_lists": [
+      8,
+      4,
+      7,
+      4,
+      3,
+      7
+     ],
+     "unanswered_items": [
+      {
+       "item": 2,
+       "source": "Die UNESCO richtet ferner eine Datenbank zu verschiedenen Sektoren und staatlich",
+       "output": "**Art. 17**: In den in Artikel 8 bezeichneten Situationen ernsthafter Gefährdung"
+      }
+     ]
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 31,
+     "expected_items": 4,
+     "first_item": "Die Vertragsparteien erkennen an, dass sie ihre Verpflichtungen aus diesem Übere",
+     "output_lists": [
+      8,
+      4,
+      7,
+      4,
+      3,
+      7
+     ]
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 34,
+     "expected_items": 8,
+     "first_item": "Eine Konferenz der Vertragsparteien wird eingesetzt. Die Konferenz der Vertragsp",
+     "output_lists": [
+      8,
+      4,
+      7,
+      4,
+      3,
+      7
+     ]
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 35,
+     "expected_items": 5,
+     "first_item": "Ein Zwischenstaatlicher Ausschuss für den Schutz und die Förderung der Vielfalt ",
+     "output_lists": [
+      8,
+      4,
+      7,
+      4,
+      3,
+      7
+     ]
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 36,
+     "expected_items": 8,
+     "first_item": "Unbeschadet der sonstigen ihm durch dieses Übereinkommen zugewiesenen Verpflicht",
+     "output_lists": [
+      8,
+      4,
+      7,
+      4,
+      3,
+      7
+     ],
+     "unanswered_items": [
+      {
+       "item": 3,
+       "source": "die Richtlinien zur Durchführung und Anwendung des Übereinkommens auf Ersuchen d",
+       "output": "**Gleiche Würde und Achtung aller Kulturen**: einschließlich der Kulturen von Pe"
+      },
+      {
+       "item": 5,
+       "source": "geeignete Empfehlungen für Situationen abzugeben, auf die er von Vertragsparteie",
+       "output": "**Komplementarität der wirtschaftlichen und kulturellen Aspekte der Entwicklung*"
+      },
+      {
+       "item": 7,
+       "source": "alle sonstigen Aufgaben, die ihm von der Konferenz der Vertragsparteien zugewies",
+       "output": "**Gleichberechtigter Zugang**: Der Zugang zu einem reichen und vielfältigen Spek"
+      }
+     ]
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 37,
+     "expected_items": 2,
+     "first_item": "Die Organe des Übereinkommens werden vom Sekretariat der UNESCO unterstützt. 1",
+     "output_lists": [
+      8,
+      4,
+      7,
+      4,
+      3,
+      7
+     ]
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 39,
+     "expected_items": 4,
+     "first_item": "Im Fall einer Streitigkeit zwischen Vertragsparteien dieses Übereinkommens über ",
+     "output_lists": [
+      8,
+      4,
+      7,
+      4,
+      3,
+      7
+     ]
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 40,
+     "expected_items": 2,
+     "first_item": "Dieses Übereinkommen bedarf der Ratifikation, der Annahme, der Genehmigung oder ",
+     "output_lists": [
+      8,
+      4,
+      7,
+      4,
+      3,
+      7
+     ]
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 40,
+     "expected_items": 2,
+     "first_item": "Dieses Übereinkommen liegt für alle Staaten, die nicht Mitglieder der UNESCO, ab",
+     "output_lists": [
+      8,
+      4,
+      7,
+      4,
+      3,
+      7
+     ]
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 41,
+     "expected_items": 3,
+     "first_item": "Die folgenden Bestimmungen gelten für Organisationen der regionalen Wirtschaftsi",
+     "output_lists": [
+      8,
+      4,
+      7,
+      4,
+      3,
+      7
+     ]
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 42,
+     "expected_items": 5,
+     "first_item": "haben eine Organisation der regionalen Wirtschaftsintegration und ihr Mitgliedst",
+     "output_lists": [
+      8,
+      4,
+      7,
+      4,
+      3,
+      7
+     ]
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 43,
+     "expected_items": 2,
+     "first_item": "Dieses Übereinkommen tritt drei Monate nach Hinterlegung der dreißigsten Ratifik",
+     "output_lists": [
+      8,
+      4,
+      7,
+      4,
+      3,
+      7
+     ]
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 44,
+     "expected_items": 2,
+     "first_item": "Hinsichtlich derjenigen Bestimmungen dieses Übereinkommens, deren Durchführung i",
+     "output_lists": [
+      8,
+      4,
+      7,
+      4,
+      3,
+      7
+     ]
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 45,
+     "expected_items": 3,
+     "first_item": "Jede Vertragspartei kann dieses Übereinkommen kündigen. 1",
+     "output_lists": [
+      8,
+      4,
+      7,
+      4,
+      3,
+      7
+     ]
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 46,
+     "expected_items": 4,
+     "first_item": "Jede Vertragspartei dieses Übereinkommens kann Änderungen dieses Übereinkommens ",
+     "output_lists": [
+      8,
+      4,
+      7,
+      4,
+      3,
+      7
+     ]
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 47,
+     "expected_items": 4,
+     "first_item": "Das in den Absätzen 3 und 4 festgelegte Verfahren findet keine Anwendung auf Änd",
+     "output_lists": [
+      8,
+      4,
+      7,
+      4,
+      3,
+      7
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "2 of 46 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 0,
+     "number": "43"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 0,
+     "number": "526"
+    }
+   ],
+   "value": 2.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "59 of 60 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 0,
+     "heading": "UNESCO-Konvention über den Schutz und die Förderung der Vielfalt kultureller Ausdrucksformen"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 0,
+     "heading": "Österreichische Kontaktstelle für die 2005er UNESCO-Konvention"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 1,
+     "heading": "ÜBEREINKOMMEN ÜBER DEN SCHUTZ UND DIE FÖRDERUNG DER VIELFALT KULTURELLER AUSDRUCKSFORMEN"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 6,
+     "heading": "ARTIKEL 1 ZIELE"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 6,
+     "heading": "Die Ziele dieses Übereinkommens sind,"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 7,
+     "heading": "ARTIKEL 2 LEITENDE GRUNDSÄTZE"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 7,
+     "heading": "Grundsatz der Achtung der Menschenrechte und Grundfreiheiten 1"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 8,
+     "heading": "Grundsatz der Souveränität 2"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 8,
+     "heading": "Grundsatz der gleichen Würde und der Achtung aller Kulturen 3"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 8,
+     "heading": "Grundsatz der internationalen Solidarität und Zusammenarbeit 4"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 8,
+     "heading": "Grundsatz der Komplementarität der wirtschaftlichen und kulturellen Aspekte der Entwicklung 5"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 9,
+     "heading": "Grundsatz der nachhaltigen Entwicklung 6"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 9,
+     "heading": "Grundsatz des gleichberechtigten Zugangs 7"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 9,
+     "heading": "Grundsatz der Offenheit und Ausgewogenheit 8"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 11,
+     "heading": "ARTIKEL 3 GELTUNGSBEREICH"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 13,
+     "heading": "ARTIKEL 4 BEGRIFFSBESTIMMUNGEN"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 13,
+     "heading": "Kulturelle Vielfalt 1"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 13,
+     "heading": "Kultureller Inhalt 2"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 13,
+     "heading": "Kulturelle Ausdrucksformen 3"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 13,
+     "heading": "Kulturelle Aktivitäten, Güter und Dienstleistungen 4"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 16,
+     "heading": "ARTIKEL 5 GRUNDREGEL ZU RECHTEN UND PFLICHTEN"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 16,
+     "heading": "ARTIKEL 6 RECHTE DER VERTRAGSPARTEIEN AUF NATIONALER EBENE"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 18,
+     "heading": "ARTIKEL 7 MASSNAHMEN ZUR FÖRDERUNG KULTURELLER AUSDRUCKSFORMEN"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 19,
+     "heading": "ARTIKEL 8 MASSNAHMEN ZUM SCHUTZ KULTURELLER AUSDRUCKSFORMEN"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 20,
+     "heading": "ARTIKEL 9 INFORMATIONSAUSTAUSCH UND TRANSPARENZ"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 20,
+     "heading": "Die Vertragsparteien"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 20,
+     "heading": "ARTIKEL 10 BILDUNG UND BEWUSSTSEINS-BILDUNG IN DER ÖFFENTLICHKEIT"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 20,
+     "heading": "Die Vertragsparteien"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 21,
+     "heading": "ARTIKEL 11 BETEILIGUNG DER ZIVILGESELLSCHAFT"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 22,
+     "heading": "ARTIKEL 12 FÖRDERUNG DER INTER-NATIONALEN ZUSAMMENARBEIT"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 23,
+     "heading": "ARTIKEL 13 INTEGRATION DER KULTUR IN DIE NACHHALTIGE ENTWICKLUNG"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 23,
+     "heading": "ARTIKEL 14 ZUSAMMENARBEIT ZU GUNSTEN DER ENTWICKLUNG"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 25,
+     "heading": "ARTIKEL 15 MODALITÄTEN DER ZUSAMMENARBEIT"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 26,
+     "heading": "ARTIKEL 16 VORZUGSBEHANDLUNG FÜR ENTWICKLUNGSLÄNDER"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 26,
+     "heading": "ARTIKEL 17 INTERNATIONALE ZUSAMMENARBEIT IN SITUATIONEN ERNSTHAFTER GEFÄHRDUNG KULTURELLER AUSDRUCKSFORMEN"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 27,
+     "heading": "ARTIKEL 18 INTERNATIONALER FONDS FÜR KULTURELLE VIELFALT"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 28,
+     "heading": "ARTIKEL 19 AUSTAUSCH, ANALYSE UND VER-BREITUNG VON INFORMATIONEN"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 31,
+     "heading": "ARTIKEL 20 VERHÄLTNIS ZU ANDEREN VERTRÄGEN: WECHSELSEITIGE UNTERSTÜTZUNG, KOMPLEMENTARITÄT UND NICHT-UNTERORDNUNG"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 32,
+     "heading": "ARTIKEL 21 INTERNATIONALE KONSULTATIONEN UND KOORDINIERUNG"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 34,
+     "heading": "ARTIKEL 22 KONFERENZ DER VERTRAGSPARTEIEN"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 35,
+     "heading": "ARTIKEL 23 ZWISCHENSTAATLICHER AUSSCHUSS"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 37,
+     "heading": "ARTIKEL 24 SEKRETARIAT DER UNESCO"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 39,
+     "heading": "ARTIKEL 25 BEILEGUNG VON STREITIGKEITEN"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 40,
+     "heading": "ARTIKEL 26 RATIFIKATION, ANNAHME, GENEHMIGUNG ODER BEITRITT DURCH DIE MITGLIEDSTAATEN"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 40,
+     "heading": "ARTIKEL 27 BEITRITT"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 43,
+     "heading": "ARTIKEL 28 KONTAKTSTELLE"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 43,
+     "heading": "ARTIKEL 29 INKRAFTTRETEN"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 44,
+     "heading": "ARTIKEL 30 BUNDESSTAATLICHE ODER NICHT EINHEITSSTAATLICHE VERFASSUNGSSYSTEME"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 45,
+     "heading": "ARTIKEL 31 KÜNDIGUNG"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 45,
+     "heading": "ARTIKEL 32 AUFGABEN DES VERWAHRERS"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 46,
+     "heading": "ARTIKEL 33 ÄNDERUNGEN"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 47,
+     "heading": "ARTIKEL 34 VERBINDLICHE WORTLAUTE"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 48,
+     "heading": "ARTIKEL 35 REGISTRIERUNG"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 50,
+     "heading": "ARTIKEL 1 VERGLEICHSKOMMISSION"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 50,
+     "heading": "ARTIKEL 2 MITGLIEDER DER KOMMISSION"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 51,
+     "heading": "ARTIKEL 3 BESTELLUNGEN"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 51,
+     "heading": "ARTIKEL 4 PRÄSIDENT DER KOMMISSION"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 52,
+     "heading": "ARTIKEL 5 ENTSCHEIDUNGEN"
+    },
+    {
+     "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+     "page": 52,
+     "heading": "ARTIKEL 6 UNEINIGKEITEN"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "11 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "11 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "9 quoted texts in 5 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Bild 1",
+     "page": 0,
+     "image": "fig-001-p1.png",
+     "quotes": [
+      "„UNESCO“",
+      "„United Nations Educational, Scientific and Cultural Organization“",
+      "„Diversity of Cultural Expressions“"
+     ]
+    },
+    {
+     "figure": "Bild 2",
+     "page": 0,
+     "image": "fig-002-p2.png",
+     "quotes": [
+      "„United Nations Educational, Scientific and Cultural Organization“"
+     ]
+    },
+    {
+     "figure": "Bild 5",
+     "page": 12,
+     "image": "fig-005-p14.png",
+     "quotes": [
+      "„BEGRIFFS-BESTIMMUNGEN“"
+     ]
+    },
+    {
+     "figure": "Bild 8",
+     "page": 30,
+     "image": "fig-008-p32.png",
+     "quotes": [
+      "„VERHÄLTNIS ZU ANDEREN ÜBEREINKÜNFTE“"
+     ]
+    },
+    {
+     "figure": "Bild 10",
+     "page": 38,
+     "image": "fig-010-p40.png",
+     "quotes": [
+      "„SCHLUSS-BESTIMMUNGEN“",
+      "„SCHLUSS-“",
+      "„BESTIMMUNGEN“"
+     ]
+    }
+   ],
+   "value": 9.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "13 page references valid (printed-folio pages 1–54)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "56 pages checked, 3 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "48 pages checked, 0 passages put back in order",
+   "findings": [],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "unesco-uebereinkommen-ueber-den-schutz-und-die-foerderung-der-vielfalt-kultureller-ausdrucksformen-2005-deutsche-uebersetzung-2005",
+ "doc_type": "normative_text",
+ "analyzed_at": "2026-11-15T11:45:45.016718+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung)",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 52,
+   "chars": 48990,
+   "blocks": 273,
+   "inner_headings": 60,
+   "figures": 11
+  }
+ ],
+ "skipped": [
+  "IMPRESSUM (p. 53)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 56,
+  "gaps": [
+   {
+    "page": 16,
+    "text": "Merkmals, einer besonderen Verwendung oder eines besonderen Zwecks betrachtet werden, kulturelle AUSDRUCKSFORMEN verkörpern oder übermitteln, und zwar unabhängig vom kommerziellen Wert, den sie möglicherweise haben. kulturelle Aktivitäten können ein Zweck an sich sein oder zur Herstellung von kulturellen Gütern und Dienstleistungen Beiträgen. 5 Kulturwirtschaft „Kulturwirtschaft“ bezieht sich auf die Wirtschaftszweige, die kulturelle Güter oder Dienstleistungen im Sinne des Absatzes 4 herstellen und vertreiben. 6 Kulturpolitik und kulturpolitische Maßnahmen „Kulturpolitik und kulturpolitische Maßnahmen” bezieht sich auf die Politik und die Maßnahmen im Zusammenhang mit Kultur auf lokaler, nationaler, regionaler oder internationaler Ebene, die entweder Kultur als solche zum Gegenstand haben oder darauf abzielen, sich unmittelbar auf die kulturellen AUSDRUCKSFORMEN von Einzelpersonen, Gruppen oder Gesellschaften auszuwirken, einschließlich des Schaffens, der Herstellung, der Verbreitung und des Vertriebs KULTURELLER Aktivitäten, Güter oder Dienstleistungen sowie des Zugangs zu ihnen. 7 SCHUTZ „SCHUTZ” bedeutet das beschließen von Maßnahmen, die auf die Erhaltung, Sicherung und Erhöhung der VIELFALT KULTURELLER AUSDRUCKSFORMEN abzielen. „schützen” bedeutet, derartige Maßnahmen zu beschließen. 8 Interkulturalität „Interkulturalität” bezieht sich auf die Existenz verschiedener Kulturen und die gleichberechtigte Interaktion zwischen ihnen sowie die Möglichkeit, durch den Dialog und die gegenseitige Achtung gemeinsame kulturelle AUSDRUCKSFORMEN zu schaffen. 14 \\ UNESCO-Konvention 2005",
+    "words": 198,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/88"
+   },
+   {
+    "page": 32,
+    "text": "V VERHÄLTNIS ZU anderen Übereinkünften",
+    "words": 5,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/201"
+   },
+   {
+    "page": 40,
+    "text": "VII SCHLUSS-BESTIMMUNGEN",
+    "words": 3,
+    "kind": "missing",
+    "repaired": true,
+    "anchor": "after #/texts/245"
+   }
+  ],
+  "gaps_dismissed": [
+   {
+    "page": 10,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "2 Grundsatz der Souveränität"
+   },
+   {
+    "page": 15,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "1 kulturelle VIELFALT"
+   },
+   {
+    "page": 15,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "2 KULTURELLER Inhalt"
+   },
+   {
+    "page": 15,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "3 kulturelle AUSDRUCKSFORMEN"
+   },
+   {
+    "page": 17,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "IV Rechte UND PFLICHTEN"
+   },
+   {
+    "page": 27,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "d) finanzielle Unterstützung durch i)"
+   },
+   {
+    "page": 42,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "Artikel 27 Beitritt"
+   },
+   {
+    "page": 47,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "Artikel 31 KÜNDIGUNG 1"
+   },
+   {
+    "page": 48,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "Artikel 33 Änderungen 1"
+   }
+  ],
+  "captions_reclassified": [],
+  "captions_reassigned": [],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [
+   {
+    "page": 55,
+    "image": "fig-012-p55.png",
+    "w": 12,
+    "h": 26,
+    "reason": "small"
+   }
+  ],
+  "superseded": [],
+  "replaced_pages": [
+   16,
+   32,
+   40
+  ],
+  "noise_dropped": 0,
+  "hyphens_restored": [
+   {
+    "page": 22,
+    "ref": "#/texts/133",
+    "word": "BEWUSSTSEINS-BILDUNG"
+   },
+   {
+    "page": 24,
+    "ref": "#/texts/143",
+    "word": "INTER-NATIONALEN"
+   },
+   {
+    "page": 30,
+    "ref": "#/texts/194",
+    "word": "VER-BREITUNG"
+   }
+  ],
+  "order": [],
+  "order_pages_checked": 48,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 0,
+  "order_breaking": 0,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 7 minor; distortions: 0 material, 4 minor; additions: 0 material, 1 minor; order: 0 material, 0 minor",
+  "at": "2026-11-15T11:46:11+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 7
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 4
+   },
+   "additions": {
+    "material": 0,
+    "minor": 1
+   },
+   "order": {
+    "material": 0,
+    "minor": 0
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "Uebereinkommen ueber den Schutz und die Foerderung der Vielfalt kultureller Ausdrucksformen (2005, deutsche Uebersetzung) (p. 1–52)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "Der Zwischenstaatliche Ausschuss kann Beiträge und andere Formen der Unterstützung für allgemeine oder bestimmte Zwecke in Zusammenhang mit bestimmten Projekten entgegennehmen, sofern diese Projekte von ihm genehmigt worden sind.",
+      "severity": "minor",
+      "page": 28
+     },
+     {
+      "source": "Die in diesem Artikel beschriebene Sammlung von Informationen ergänzt die nach Artikel 9 gesammelten Informationen.",
+      "severity": "minor",
+      "page": 29
+     },
+     {
+      "source": "Staaten oder in Artikel 27 bezeichnete Organisationen der regionalen Wirtschaftsintegration, die nach dem Inkrafttreten von Änderungen nach Absatz 4 Vertragspartei dieses Übereinkommens werden, gelten, sofern sie keine andere Absicht zum Ausdruck bringen, als Vertragsparteien dieses Übereinkommens in seiner geänderten Fassung",
+      "severity": "minor",
+      "page": 47
+     },
+     {
+      "source": "es wird davon ausgegangen, dass Mitgliedstaaten einer Organisation der regionalen Wirtschaftsintegration, die Vertragsparteien dieses Übereinkommens werden, die Zuständigkeit über alle Angelegenheiten behalten, die nicht Gegenstand einer Übertragung von Zuständigkeiten an die Organisation gewesen sind",
+      "severity": "minor",
+      "page": 42
+     },
+     {
+      "source": "um Voraussetzungen zu schaffen, die der Förderung der Vielfalt kultureller Ausdrucksformen dienen, wobei sie die in den Artikeln 8 und 17 bezeichneten Situationen besonders berücksichtigen",
+      "severity": "minor",
+      "page": 22
+     },
+     {
+      "source": "Die Vertragsparteien bemühen sich, die Zusammenarbeit zu Gunsten der nachhaltigen Entwicklung und der Bekämpfung der Armut zu unterstützen",
+      "severity": "minor",
+      "page": 23
+     },
+     {
+      "source": "ihre eigenen kulturellen Ausdrucksformen zu schaffen, herzustellen, zu verbreiten, zu vertreiben und Zugang zu ihnen zu haben",
+      "severity": "minor",
+      "page": 18
+     }
+    ],
+    "distortions": [
+     {
+      "source": "Die entwickelten Länder erleichtern den Kulturaustausch mit Entwicklungsländern, indem sie in geeigneten institutionellen und rechtlichen Rahmen Künstlern, Kulturschaffenden und anderen im Kulturbereich Tätigen sowie kulturellen Gütern und Dienstleistungen aus Entwicklungsländern eine Vorzugsbehandlung gewähren.",
+      "summary": "Entwickelte Länder gewähren Künstlern, Kulturschaffenden und kulturellen Gütern und Dienstleistungen aus Entwicklungsländern eine Vorzugsbehandlung, um den Kulturaustausch zu erleichtern.",
+      "severity": "minor",
+      "page": 26
+     },
+     {
+      "source": "in den entwickelten Ländern, soweit möglich, geeignete Maßnahmen ergriffen werden, um kulturellen Aktivitäten, Gütern und Dienstleistungen aus den Entwicklungsländern den Zugang zu ihrem Hoheitsgebiet zu erleichtern",
+      "summary": "iv) geeignete Maßnahmen in entwickelten Ländern zur Erleichterung des Zugangs",
+      "severity": "minor",
+      "page": 24
+     },
+     {
+      "source": "insbesondere verfolgen sie die Absicht, a) den Dialog zwischen den Vertragsparteien über die Kulturpolitik zu erleichtern",
+      "summary": "Zu verstärken sind: a) der Dialog über Kulturpolitik",
+      "severity": "minor",
+      "page": 22
+     },
+     {
+      "source": "Die Vertragsparteien können alle geeigneten Maßnahmen ergreifen, um kulturelle Ausdrucksformen in den in Absatz 1 bezeichneten Situationen in einer Art und Weise zu schützen und zu erhalten, die mit diesem Übereinkommen vereinbar ist.",
+      "summary": "kann sie geeignete Schutzmaßnahmen ergreifen",
+      "severity": "minor",
+      "page": 19
+     }
+    ],
+    "additions": [
+     {
+      "summary": "Der Artikel definiert die Schlüsselbegriffe des Übereinkommens (siehe Abschnitt TERMS)",
+      "severity": "minor"
+     }
+    ],
+    "order": []
+   }
+  ]
+ },
+ "source": {
+  "source": "unesco-uebereinkommen-ueber-den-schutz-und-die-foerderung-der-vielfalt-kultureller-ausdrucksformen-2005-deutsche-uebersetzung-2005.pdf",
+  "bytes": 386148,
+  "sha256": "ef4f2cd23e033f8dff4c2f1efb4941e893d663f9f1f5dfd30265581cdf91c15e",
+  "extracted_at": "2026-11-13T02:20:26+01:00"
+ }
+}

@@ -32,6 +32,17 @@ import { useSafetyLevelStore } from './stores/safetyLevel'
 import { getLanguageDir } from './i18n'
 import { installExampleAccept } from './composables/exampleAccept'
 import { watch } from 'vue'
+import axios from 'axios'
+import { onSignInLapse, watchAxios, watchFetch } from './lib/signInLapse'
+import { useLabAuthStore } from './stores/labAuth'
+
+// A request refused for want of a sign-in asks who is signed in; where nobody
+// is, App.vue sends the page to the sign-in (lib/signInLapse.ts). The stores
+// and the views call the API through axios itself, through services/api.ts,
+// or through fetch.
+watchAxios(axios)
+watchFetch()
+onSignInLapse(() => { void useLabAuthStore().checkSignIn() })
 
 const userPreferences = useUserPreferencesStore()
 

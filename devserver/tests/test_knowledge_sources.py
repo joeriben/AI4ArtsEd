@@ -114,7 +114,7 @@ def test_text_placed_out_of_order_is_repaired_from_the_text_layer():
     assert rep.passed
 
 
-def test_an_order_finding_on_a_list_stays_unrepaired_and_fails_the_check():
+def test_an_order_finding_on_a_list_stays_unrepaired_and_is_listed_not_gated():
     ext = Extraction(blocks=[_para(f"{_A} {_C}", 2, "#/texts/18"),
                              Block("list_item", text=_B, page=2, ref="#/texts/30")],
                      pages=2, source="docling")
@@ -123,7 +123,7 @@ def test_an_order_finding_on_a_list_stays_unrepaired_and_fails_the_check():
     assert "list_item" in findings[0].note
     assert [b.ref for b in ext.blocks] == ["#/texts/18", "#/texts/30"]       # untouched
     res = kc.check_reading_order(ext.integrity, "docling")
-    assert not res.passed and res.findings[0]["page"] == 2
+    assert res.passed and "not gated" in res.summary and res.findings[0]["page"] == 2
     assert res.findings[0]["fails"] and "cut out" in res.findings[0]["breaks"][0]
 
 
@@ -140,7 +140,7 @@ def test_list_items_in_another_order_with_every_sentence_whole_do_not_fail_the_c
     assert res.findings and not res.findings[0]["fails"]
 
 
-def test_a_sentence_cut_by_a_heading_fails_the_check():
+def test_a_sentence_cut_by_a_heading_is_listed_as_breaking():
     # UNESCO Recommendation p. 30: "… including" / "POLICY AREA 5" / item 84 /
     # "the continuation of item 81".
     a = "Member States should support research and innovation, including"
@@ -155,7 +155,9 @@ def test_a_sentence_cut_by_a_heading_fails_the_check():
     kx.check_reading_order(ext, [f"{a} {rest} Policy area five environment {other}"])
     left = ext.integrity.order_unrepaired
     assert left and any(o.breaks_text for o in left)
-    assert not kc.check_reading_order(ext.integrity, "docling").passed
+    res = kc.check_reading_order(ext.integrity, "docling")
+    assert res.passed and "break a sentence" in res.summary
+    assert any(f["fails"] for f in res.findings)
 
 
 def test_an_order_finding_in_the_bibliography_does_not_fail_the_check():
@@ -219,7 +221,7 @@ def test_a_passage_no_reading_supports_stays_a_finding():
     assert ext.blocks[0].text == f"{_A} {_B} {_C}"
 
 
-def test_a_sentence_start_cut_out_of_the_middle_of_the_block_before_fails_the_check():
+def test_a_sentence_start_cut_out_of_the_middle_of_the_block_before_is_listed_as_breaking():
     # Jörissen and Klepacki 2026, p. 5: the layer has "three interrelated
     # core elements …" inside the sentence "derives a model in which …";
     # Docling ends that sentence and sets the cut-out words after it.
@@ -235,7 +237,9 @@ def test_a_sentence_start_cut_out_of_the_middle_of_the_block_before_fails_the_ch
     kx.check_reading_order(ext, [""] * 4 + [whole])
     breaks = [b for o in ext.integrity.order_unrepaired for b in o.breaks]
     assert any(b.startswith("sentence start cut out of the block before") for b in breaks)
-    assert not kc.check_reading_order(ext.integrity, "docling").passed
+    res = kc.check_reading_order(ext.integrity, "docling")
+    assert res.passed and "break a sentence" in res.summary
+    assert any(f["fails"] for f in res.findings)
 
 
 def test_a_phrase_in_two_blocks_does_not_hide_where_a_cut_sentence_goes_on():
@@ -254,7 +258,9 @@ def test_a_phrase_in_two_blocks_does_not_hide_where_a_cut_sentence_goes_on():
     kx.check_reading_order(ext, [""] * 17 + [f"{a} {rest} Values of the recommendation {item}"])
     breaks = [b for o in ext.integrity.order_unrepaired for b in o.breaks]
     assert any(b.startswith("sentence cut") for b in breaks)
-    assert not kc.check_reading_order(ext.integrity, "docling").passed
+    res = kc.check_reading_order(ext.integrity, "docling")
+    assert res.passed and "break a sentence" in res.summary
+    assert any(f["fails"] for f in res.findings)
 
 
 def test_blocks_of_a_later_page_move_back_behind_their_page():

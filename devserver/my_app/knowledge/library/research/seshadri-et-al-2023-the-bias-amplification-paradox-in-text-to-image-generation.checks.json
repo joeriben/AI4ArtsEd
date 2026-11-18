@@ -1,0 +1,2824 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 14.5% of 2145 words, ceiling 20%, longest run 26 words; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 26,
+     "text": "1 a photo of the face of a an occupation 2 a portrait photo of a an occupation 3 a photo of a an occupation smiling"
+    },
+    {
+     "words": 21,
+     "text": "geographical disparities basu et al 2023 naik and nushi 2023 intersectional biases fraser et al 2023 luccioni et al 2023 and"
+    },
+    {
+     "words": 19,
+     "text": "a portrait photo of an attorney skews heavily male while a photo of an attorney at work skews female"
+    },
+    {
+     "words": 18,
+     "text": "portrait of smiling young female mechanic inspecting a cv joint on a car in an auto repair shop"
+    },
+    {
+     "words": 13,
+     "text": "phenomenon in which models exacerbate biases or stereotypes present in the training data"
+    }
+   ],
+   "value": 0.1445,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "3 of 4 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 6,
+     "table_cells": 62,
+     "missing_cells": [
+      "Prompt #3",
+      "Prompt #4",
+      "17.57",
+      "10.77",
+      "11.68",
+      "10.87",
+      "16.36",
+      "11.15",
+      "9.91",
+      "12.07",
+      "No Gender Indicators",
+      "6.49",
+      "13.58",
+      "7.09",
+      "7.49",
+      "No Gender Indicators",
+      "12.41",
+      "6.82",
+      "5.87",
+      "7.97"
+     ]
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "table_cells": 406,
+     "missing_cells": [
+      "Prompt 3",
+      "Prompt 4",
+      "SD (Prompts)",
+      "accountant",
+      "29.8",
+      "29.5",
+      "43.8",
+      "35.7",
+      "15.1",
+      "architect",
+      "31.4",
+      "4.2",
+      "44.6",
+      "67.1",
+      "56.3",
+      "71.9",
+      "75.6",
+      "7.3",
+      "athlete",
+      "44.8"
+     ]
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "table_cells": 414,
+     "missing_cells": [
+      "Prompt 3",
+      "Prompt 4",
+      "SD (Prompts)",
+      "accountant",
+      "29.8",
+      "34.9",
+      "5.4",
+      "42.1",
+      "45.2",
+      "15.8",
+      "architect",
+      "31.4",
+      "10.0",
+      "44.6",
+      "69.2",
+      "58.6",
+      "77.8",
+      "athlete",
+      "44.8",
+      "76.6"
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "423 of 480 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 2,
+     "number": "2.1"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 2,
+     "number": "2.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 3,
+     "number": "3.1"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 3,
+     "number": "3.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 3,
+     "number": "3.3"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 4,
+     "number": "5.1"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 5,
+     "number": "0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 5,
+     "number": "5.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 5,
+     "number": "80"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 6,
+     "number": "1.55"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 6,
+     "number": "10.77"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 6,
+     "number": "10.87"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 6,
+     "number": "11.14"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 6,
+     "number": "11.15"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 6,
+     "number": "11.68"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 6,
+     "number": "12.07"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 6,
+     "number": "12.41"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 6,
+     "number": "12.62"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 6,
+     "number": "13.58"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 6,
+     "number": "16.36"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 6,
+     "number": "17.57"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 6,
+     "number": "2.72"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 6,
+     "number": "2.78"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 6,
+     "number": "3.06"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 6,
+     "number": "3.65"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 6,
+     "number": "4.01"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 6,
+     "number": "4.05"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 6,
+     "number": "5.21"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 6,
+     "number": "5.27"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 6,
+     "number": "5.3"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 6,
+     "number": "5.58"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 6,
+     "number": "5.87"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 6,
+     "number": "6.01"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 6,
+     "number": "6.49"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 6,
+     "number": "6.82"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 6,
+     "number": "7.09"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 6,
+     "number": "7.29"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 6,
+     "number": "7.49"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 6,
+     "number": "7.97"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 6,
+     "number": "8.72"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 6,
+     "number": "9.91"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 9,
+     "number": "14"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 9,
+     "number": "95"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "0.1"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "0.3"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "1.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "1.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "1.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "10.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "100.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "11.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "11.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "11.9"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "12.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "12.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "12.5"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "12.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "12.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "12.9"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "13.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "13.1"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "13.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "13.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "13.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "14.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "14.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "14.5"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "14.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "14.7"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "14.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "14.9"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "15.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "15.1"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "15.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "15.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "15.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "15.7"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "15.9"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "16.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "16.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "16.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "16.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "17.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "17.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "17.7"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "18.3"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "19.5"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "19.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "19.9"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "2.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "2.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "2.5"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "2.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "2.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "20.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "20.5"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "20.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "21.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "21.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "21.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "22.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "22.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "22.9"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "23.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "23.1"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "23.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "24.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "25.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "25.7"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "26.5"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "26.9"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "27.5"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "27.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "28.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "28.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "29.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "29.3"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "29.5"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "29.7"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "29.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "3.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "3.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "3.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "3.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "30.1"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "30.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "30.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "30.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "31.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "31.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "31.5"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "32.7"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "32.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "33.1"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "33.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "33.7"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "34.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "34.7"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "35.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "35.3"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "35.5"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "35.7"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "36.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "36.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "37.5"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "38.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "39.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "39.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "39.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "4.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "4.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "4.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "4.5"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "4.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "4.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "40.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "41.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "41.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "41.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "42.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "43.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "43.1"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "43.3"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "43.5"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "43.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "43.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "44.3"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "44.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "44.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "44.7"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "44.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "46.5"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "47.7"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "48.1"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "48.5"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "49.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "49.9"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "5.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "5.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "5.5"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "5.7"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "5.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "50.9"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "51.9"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "52.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "52.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "52.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "52.9"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "53.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "53.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "54.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "54.9"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "55.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "55.1"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "55.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "55.3"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "55.7"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "56.3"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "57.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "57.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "58.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "58.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "59.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "59.3"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "59.9"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "6.1"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "60.1"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "60.3"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "61.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "62.1"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "63.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "63.3"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "63.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "64.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "64.1"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "65.1"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "65.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "65.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "66.3"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "66.7"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "67.1"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "67.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "67.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "68.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "68.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "69.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "69.3"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "7.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "7.1"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "7.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "7.3"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "7.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "7.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "71.9"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "73.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "73.3"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "74.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "74.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "75.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "75.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "76.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "77.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "77.3"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "79.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "8.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "8.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "8.3"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "8.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "80.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "80.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "80.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "81.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "81.1"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "81.5"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "82.5"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "82.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "83.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "84.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "87.5"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "88.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "88.1"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "88.7"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "88.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "89.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "89.9"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "9.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "9.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "9.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "9.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "9.7"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "91.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "91.7"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "92.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "93.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "93.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "94.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "94.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "94.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "95.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "95.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "96.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "97.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "97.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "97.5"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "97.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "98.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "99.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 14,
+     "number": "99.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "10.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "10.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "10.7"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "11.1"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "11.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "11.3"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "11.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "11.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "11.7"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "12.3"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "12.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "12.7"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "15.3"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "15.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "16.7"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "16.9"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "17.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "17.9"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "18.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "18.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "18.5"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "2.7"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "20.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "20.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "20.9"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "21.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "22.1"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "22.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "22.7"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "24.1"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "24.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "24.9"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "25.3"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "25.5"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "26.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "26.1"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "28.7"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "3.5"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "3.7"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "30.5"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "32.3"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "32.5"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "33.9"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "34.1"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "34.9"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "36.5"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "37.1"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "37.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "38.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "4.3"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "4.9"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "40.5"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "41.3"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "41.9"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "42.1"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "42.9"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "43.7"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "44.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "45.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "45.3"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "46.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "46.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "47.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "48.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "48.7"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "48.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "48.9"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "49.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "5.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "50.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "50.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "50.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "51.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "51.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "52.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "52.5"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "53.3"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "53.7"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "54.1"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "56.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "57.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "58.1"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "58.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "59.7"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "6.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "6.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "6.9"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "60.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "60.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "60.7"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "60.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "61.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "62.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "65.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "66.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "68.3"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "69.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "69.1"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "7.5"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "7.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "72.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "74.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "74.3"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "75.1"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "75.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "76.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "77.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "78.7"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "8.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "8.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "8.9"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "81.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "82.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "82.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "82.3"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "83.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "84.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "85.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "87.3"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "87.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "87.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "88.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "88.5"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "89.5"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "9.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "90.3"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "92.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "95.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "97.3"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "97.4"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "97.8"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "98.0"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "98.6"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "99.2"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 15,
+     "number": "99.6"
+    }
+   ],
+   "value": 423.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "24 of 30 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 1,
+     "heading": "Sameer Singh"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 1,
+     "heading": "Abstract"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 1,
+     "heading": "1 Introduction"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 1,
+     "heading": "Yanai Elazar"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 2,
+     "heading": "2.1 Dataset and Models"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 2,
+     "heading": "2.2 Gender Classification"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 3,
+     "heading": "# Prompt"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 3,
+     "heading": "2.3 Occupations"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 3,
+     "heading": "3.1 Measuring Model Bias"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 3,
+     "heading": "3.2 Measuring Data Bias"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 3,
+     "heading": "3.3 Evaluating Bias Amplification"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 3,
+     "heading": "4 Naive Approach"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 4,
+     "heading": "5 Reducing Discrepancies"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 4,
+     "heading": "5.1 Captions Without Explicit Gender Indicators"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 5,
+     "heading": "President"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 5,
+     "heading": "5.2 Nearest Neighbors (NN)"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 6,
+     "heading": "5.3 Combining Approaches"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 7,
+     "heading": "6 Removing Distributional Differences: A Lower Bound"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 7,
+     "heading": "Relating pretraining data to model behavior"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 9,
+     "heading": "Ethics Statement"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 12,
+     "heading": "A Appendix"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 12,
+     "heading": "A.1 List of Occupations"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 12,
+     "heading": "A.2 Image Gender Classification"
+    },
+    {
+     "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+     "page": 12,
+     "heading": "A.3 Explicit Gender Indicators"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "14 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "14 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "24 quoted texts in 8 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Fig. 1",
+     "page": 1,
+     "image": "fig-001-p1.png",
+     "quotes": [
+      "“A photo of the face of an engineer”",
+      "“Observed gender ratio is 1/10 = 10% female.”",
+      "“Observed gender ratio is 5/20 = 25% female”",
+      "“With Gender Indicators (40% female)”",
+      "“Without Gender Indicators (10% female),”"
+     ]
+    },
+    {
+     "figure": "Fig. 2",
+     "page": 4,
+     "image": "fig-002-p4.png",
+     "quotes": [
+      "\"Training (% female)\"",
+      "\"Generation (% female)\""
+     ]
+    },
+    {
+     "figure": "Image 3",
+     "page": 5,
+     "image": "fig-003-p5.png",
+     "quotes": [
+      "\"Generation.\"",
+      "\"LEANA WEN\"",
+      "\"DRAFT LOTTERY.\"",
+      "\"Generation\""
+     ]
+    },
+    {
+     "figure": "Image 4",
+     "page": 5,
+     "image": "fig-004-p5.png",
+     "quotes": [
+      "\"Generation\""
+     ]
+    },
+    {
+     "figure": "Image 7",
+     "page": 7,
+     "image": "fig-007-p7.png",
+     "quotes": [
+      "\"Training (% female)\"",
+      "\"Generation (% female)\""
+     ]
+    },
+    {
+     "figure": "Image 8",
+     "page": 7,
+     "image": "fig-008-p7.png",
+     "quotes": [
+      "\"Training (% female)\""
+     ]
+    },
+    {
+     "figure": "Fig. 7",
+     "page": 13,
+     "image": "fig-013-p13.png",
+     "quotes": [
+      "\"Training (% female)\"",
+      "\"Generation (% female)\"",
+      "\"Amplification=6.48%\"",
+      "\"Amplification=3.59%\"",
+      "\"Amplification=1.11%\""
+     ]
+    },
+    {
+     "figure": "Fig. 8",
+     "page": 13,
+     "image": "fig-014-p13.png",
+     "quotes": [
+      "“Training (% female)”",
+      "“Amplification=8.66%”",
+      "“Amplification=6.76%”",
+      "“Amplification=4.35%”"
+     ]
+    }
+   ],
+   "value": 24.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "28 page references valid (pdf pages 1–15)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "15 pages checked, 1 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "1 of 1 passages out of order not repairable, none breaks a sentence of the body text",
+   "findings": [
+    {
+     "page": 1,
+     "words": 10,
+     "text": "Yanai Elazar Allen Institute for AI University of Washington yanaiela@gmail.com",
+     "blocks": [
+      "#/texts/3",
+      "#/texts/5",
+      "#/texts/11",
+      "#/texts/12"
+     ],
+     "problem": "blocks of kind footnote, heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    }
+   ],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "seshadri-et-al-2023-the-bias-amplification-paradox-in-text-to-image-generation",
+ "doc_type": "scholarly_article",
+ "analyzed_at": "2026-11-15T11:55:22.336338+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "The Bias Amplification Paradox in Text-to-Image Generation",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 15,
+   "chars": 51157,
+   "blocks": 137,
+   "inner_headings": 30,
+   "figures": 14
+  }
+ ],
+ "skipped": [
+  "References (p. 9)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 15,
+  "gaps": [
+   {
+    "page": 13,
+    "text": "occupations accountant dentist journalist poet singer architect dietitian lawyer politician student assistant doctor librarian president supervisor athlete engineer manager prime minister surgeon attorney entrepreneur mechanic professor teacher author fashion designer musician programmer technician baker filmmaker nurse psychologist therapist bartender firefighter nutritionist receptionist tutor ceo graphic designer painter reporter veterinarian chef hairdresser pharmacist researcher writer comedian housekeeper photographer salesperson cook intern physician scientist dancer janitor pilot senator Table 4: List of 62 occupations used to study gender-occupation biases. (a) captions without gender indicators (b) nearest neighbors (c) combined approach Figure 7: Bias Amplification for various approaches to address discrepancies between training and Generation. The proposed approaches yield lower Bias Amplification, especially the combined method (c). results are shown for prompt #1. Regions are shaded based on Amplification and de-amplification. (a) captions without gender indicators (b) nearest neighbors (c) combined approach Figure 8: Bias Amplification for various approaches to address discrepancies between training and Generation. The proposed approaches yield lower Bias Amplification, especially the combined method (c). results are averaged across all prompts. Regions are shaded based on Amplification and de-amplification.",
+    "words": 179,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/205"
+   }
+  ],
+  "gaps_dismissed": [
+   {
+    "page": 1,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "| Sameer Singh | Yanai Elazar |\n| UC Irvine | UC Irvine |"
+   },
+   {
+    "page": 3,
+    "words": 10,
+    "reason": "debris",
+    "text": "APo ,So = |GPo − 50| − |TSo − 50|"
+   },
+   {
+    "page": 3,
+    "words": 12,
+    "reason": "debris",
+    "text": "1 X E [APo ,So ] = APo ,So o∈O |O| o∈O"
+   },
+   {
+    "page": 4,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "5 reducing discrepancies"
+   },
+   {
+    "page": 6,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "president Ronald Reagan\" room, portrait\""
+   },
+   {
+    "page": 6,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "5.3 combining approaches"
+   },
+   {
+    "page": 8,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "attorney attorney smiling"
+   },
+   {
+    "page": 8,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "of confounding factors."
+   },
+   {
+    "page": 8,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "together reflect reality. 8 Discussion"
+   },
+   {
+    "page": 14,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "| ceo | 15.0 | 2.6 | 1.8 |\n| chef | 28.0 | 7.0 | 1.2 |"
+   },
+   {
+    "page": 14,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "| janitor | 20.4 | 1.6 | 3.0 |\n| journalist | 38.4 | 49.9 | 59.9 |\n| lawyer | 27.6 | 26.5 | 8.0 |"
+   },
+   {
+    "page": 14,
+    "words": 28,
+    "reason": "duplicate",
+    "text": "| photographer | 55.0 | 52.0 | 27.5 |\n| physician | 39.4 | 35.5 | 2.0 |\n| pilot | 30.4 | 34.7 | 12.2 |\n| poet | 30.8 | 15.2 | 2.0 |\n| politician | 21.6 | 14.5 | 4.2 |\n| president | 19.6 | 1.4 | 0.2 |\n"
+   },
+   {
+    "page": 14,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "| psychologist | 58.6 | 44.3 | 21.6 |\n| receptionist | 91.4 | 99.8 | 100.0 |\n| reporter | 44.4 | 54.8 | 55.2 |"
+   },
+   {
+    "page": 14,
+    "words": 20,
+    "reason": "duplicate",
+    "text": "| surgeon | 30.2 | 82.5 | 15.6 |\n| teacher | 63.0 | 75.8 | 55.7 |\n| technician | 31.2 | 0.6 | 0.0 |\n| therapist | 74.8 | 82.6 | 63.3 |\n| tutor | 59.2 | 48.1 | 23.1 |"
+   },
+   {
+    "page": 14,
+    "words": 186,
+    "reason": "duplicate",
+    "text": "| 43.8 | 35.7 | 15.1 |\n| 3.0 | 0.0 | 1.5 |\n| 71.9 | 75.6 | 7.3 |\n| 69.3 | 77.3 | 11.0 |\n| 43.1 | 65.1 | 19.9 |\n| 81.5 | 61.0 | 13.1 |\n| 58.8 | 59.3 | 17.7 |\n| 12.9 | 22.9 | 7.4 |\n| 4.8 | 11.9 | 4.0 |\n"
+   },
+   {
+    "page": 15,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "| janitor | 20.4 | 3.6 | 3.2 |\n| journalist | 38.4 | 57.2 | 60.2 |\n| lawyer | 27.6 | 34.1 | 8.8 |"
+   },
+   {
+    "page": 15,
+    "words": 16,
+    "reason": "duplicate",
+    "text": "| painter | 52.6 | 43.7 | 20.0 |\n| pharmacist | 68.0 | 87.3 | 26.1 |\n| photographer | 55.0 | 58.1 | 32.5 |\n| physician | 39.4 | 46.4 | 3.2 |"
+   },
+   {
+    "page": 15,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "| programmer | 23.0 | 0.8 | 0.0 |\n| psychologist | 58.6 | 51.0 | 22.4 |"
+   },
+   {
+    "page": 15,
+    "words": 20,
+    "reason": "duplicate",
+    "text": "| singer | 57.6 | 74.0 | 54.1 |\n| student | 63.0 | 44.6 | 32.3 |\n| supervisor | 65.2 | 20.9 | 5.6 |\n| surgeon | 30.2 | 82.0 | 20.4 |\n| teacher | 63.0 | 78.7 | 58.2 |"
+   },
+   {
+    "page": 15,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "| therapist | 74.8 | 88.5 | 80.8 |\n| tutor | 59.2 | 48.8 | 24.1 |"
+   },
+   {
+    "page": 15,
+    "words": 186,
+    "reason": "duplicate",
+    "text": "| 42.1 | 45.2 | 15.8 |\n| 2.2 | 3.4 | 3.2 |\n| 58.6 | 77.8 | 7.6 |\n| 50.0 | 74.3 | 13.8 |\n| 44.3 | 68.3 | 2.05 |\n| 75.4 | 69.0 | 1.11 |\n| 53.3 | 66.6 | 17.7 |\n| 4.8 | 12.2 | 4.0 |\n| 5.4 | 18.5 | 6.9 |\n|"
+   }
+  ],
+  "captions_reclassified": [
+   {
+    "page": 5,
+    "figure": "#/pictures/2",
+    "text": "(a) Training captions for President : 1) \"Leana Wen, Planned Parenthood president...\" 2) \"New Schaumburg Business Associ"
+   },
+   {
+    "page": 5,
+    "figure": "#/pictures/3",
+    "text": "(b) Training captions for Teacher : 1) \"Brad Draper, percussion teacher...\" 2) \"teacher/author in the 80s sits in yoga l"
+   },
+   {
+    "page": 7,
+    "figure": "#/pictures/7",
+    "text": "(b) Captions without Gender Indicators"
+   },
+   {
+    "page": 8,
+    "figure": "#/pictures/10",
+    "text": "(c) A photo of an attorney smiling"
+   },
+   {
+    "page": 8,
+    "figure": "#/pictures/11",
+    "text": "(d) A photo of an attorney at work"
+   }
+  ],
+  "captions_reassigned": [],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [],
+  "superseded": [],
+  "replaced_pages": [
+   13
+  ],
+  "noise_dropped": 0,
+  "hyphens_restored": [
+   {
+    "page": 10,
+    "ref": "#/texts/157",
+    "word": "Kai-Wei"
+   },
+   {
+    "page": 11,
+    "ref": "#/texts/188",
+    "word": "Sentence-BERT"
+   }
+  ],
+  "order": [
+   {
+    "page": 1,
+    "text": "Yanai Elazar Allen Institute for AI University of Washington yanaiela@gmail.com",
+    "words": 10,
+    "refs": [
+     "#/texts/3",
+     "#/texts/5",
+     "#/texts/11",
+     "#/texts/12"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote, heading are involved",
+    "breaks": [],
+    "section": ""
+   }
+  ],
+  "order_pages_checked": 12,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 1,
+  "order_breaking": 0,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 1 minor; distortions: 0 material, 1 minor; additions: 0 material, 0 minor; order: 0 material, 0 minor",
+  "at": "2026-11-15T11:56:24+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 1
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 1
+   },
+   "additions": {
+    "material": 0,
+    "minor": 0
+   },
+   "order": {
+    "material": 0,
+    "minor": 0
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "The Bias Amplification Paradox in Text-to-Image Generation (p. 1–15)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "Note that even such bias preservation may be undesirable.",
+      "severity": "minor",
+      "page": 1
+     }
+    ],
+    "distortions": [
+     {
+      "source": "No Gender Indicators | SD 1.4 | Prompt #1: 6.49 ... Nearest Neighbors 3.59 ... 1.11 (Table 3; Fig. 7 shows Prompt #1 results)",
+      "summary": "The three panels are titled \"Amplification=6.48%\", \"Amplification=3.59%\", and \"Amplification=1.11%\".",
+      "severity": "minor",
+      "page": 6
+     }
+    ],
+    "additions": [],
+    "order": []
+   }
+  ]
+ },
+ "source": {
+  "source": "seshadri-et-al-2023-the-bias-amplification-paradox-in-text-to-image-generation.pdf",
+  "bytes": 16603594,
+  "sha256": "cad95c686f9d1359816b09ff4620d462283d34ee49843bcc2332cdf1bd046263",
+  "extracted_at": "2026-11-13T03:03:43+01:00"
+ }
+}

@@ -1,0 +1,3797 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 17.4% of 18560 words, ceiling 20%, longest run 35 words; not counted: 804 words from the source's lists; not counted: figure descriptions",
+   "findings": [
+    {
+     "words": 35,
+     "text": "wei ming tu humanity and self cultivation 1996 the teacher does not necessarily have privileged access to the sagely truth like his students he is in the process of becoming what he ought to be"
+    },
+    {
+     "words": 35,
+     "text": "research weakened societal and institutional trust can dampen confidence in education s value and integrity and more significantly breed acceptance of corruption as a social norm from one s earliest years a web of exclusions"
+    },
+    {
+     "words": 29,
+     "text": "universities and researchers can extend support by being always in dialogue with schools teachers and students participatory evaluation collaborative research youth led research and practitioner inquiry are among the"
+    },
+    {
+     "words": 25,
+     "text": "vaccine nationalism has highlighted serious gaps in our ability to work collectively for the global common good education as a common good is inextricably linked"
+    },
+    {
+     "words": 25,
+     "text": "students to adapt to mitigate and reverse climate change curricula must enable re learning how we are interconnected with a living damaged planet and unlearning"
+    }
+   ],
+   "value": 0.1736,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "12 of 18 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 16,
+     "expected_items": 4,
+     "first_item": "The planet is in peril but decarbonization and the greening of economies are und",
+     "output_lists": [
+      2,
+      5
+     ]
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 68,
+     "expected_items": 3,
+     "first_item": "Interconnectedness and interdependencies should frame pedagogy. The relationship",
+     "output_lists": [
+      4
+     ]
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 84,
+     "expected_items": 4,
+     "first_item": "Curricula should enhance learners abilities to access and contribute to the know",
+     "output_lists": [
+      4
+     ],
+     "unanswered_items": [
+      {
+       "item": 2,
+       "source": "The ecological crisis requires curricula that fundamentally reorient the place o",
+       "output": "*Primary (p. 66)*: despite massive access expansion between 1990 and 2020, curio"
+      },
+      {
+       "item": 3,
+       "source": "The spread of misinformation must be countered through scientific, digital and h",
+       "output": "*Adolescents and youth (p. 66–67)*: youth face risks to education, protection fr"
+      }
+     ]
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 155,
+     "expected_items": 3,
+     "first_item": "Governments. This Report has stressed the irreplaceable role of governments. How",
+     "output_lists": [
+      4,
+      4
+     ]
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 159,
+     "expected_items": 9,
+     "first_item": "Arab Campaign for Education for All. 2020. Summary report on the Futures of Educ",
+     "output_lists": [
+      4,
+      4
+     ]
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 160,
+     "expected_items": 14,
+     "first_item": "International Union for Conservation of Nature (IUCN) Commission on Education an",
+     "output_lists": [
+      4,
+      4
+     ]
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 161,
+     "expected_items": 2,
+     "first_item": "World Council on Intercultural and Global Competence. 2021. Contribution from th",
+     "output_lists": [
+      4,
+      4
+     ]
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 161,
+     "expected_items": 11,
+     "first_item": "Assié-Lumumba, N. T. 2020. Gender, knowledge production, and transformative poli",
+     "output_lists": [
+      4,
+      4
+     ]
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 162,
+     "expected_items": 15,
+     "first_item": "Gautam, S. and Shyangtan, S. 2020. From suffering to surviving, surviving to liv",
+     "output_lists": [
+      4,
+      4
+     ]
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 163,
+     "expected_items": 6,
+     "first_item": "Stitzlein, S. M. 2020. Using civic participation and civic reasoning to shape ou",
+     "output_lists": [
+      4,
+      4
+     ]
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 163,
+     "expected_items": 5,
+     "first_item": "Jacobs, R. and French, C. 2021. Women, robots and a sustainable generation: Read",
+     "output_lists": [
+      4,
+      4
+     ]
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 164,
+     "expected_items": 3,
+     "first_item": "International Commission on the Futures of Education. 2020. Protecting and trans",
+     "output_lists": [
+      4,
+      4
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "71 of 234 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 2,
+     "number": "75352"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 7,
+     "number": "21"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 22,
+     "number": "2030"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 39,
+     "number": "2040"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 40,
+     "number": "1920"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 60,
+     "number": "2030"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 70,
+     "number": "1907"
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 110,
+     "number": "30"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 134,
+     "number": "9"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 139,
+     "number": "8"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 140,
+     "number": "2005"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 159,
+     "number": "10"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 159,
+     "number": "20"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 159,
+     "number": "379"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 160,
+     "number": "21"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 160,
+     "number": "374112"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 160,
+     "number": "377530"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 160,
+     "number": "378392"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 160,
+     "number": "48223"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 160,
+     "number": "6.5"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 161,
+     "number": "28"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 161,
+     "number": "29"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 161,
+     "number": "374047"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 161,
+     "number": "374085"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 161,
+     "number": "374154"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 161,
+     "number": "374435"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 161,
+     "number": "376150"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 161,
+     "number": "377071"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 162,
+     "number": "27"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 162,
+     "number": "373581"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 162,
+     "number": "374033"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 162,
+     "number": "374045"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 162,
+     "number": "374046"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 162,
+     "number": "374077"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 162,
+     "number": "374086"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 162,
+     "number": "374087"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 162,
+     "number": "374088"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 162,
+     "number": "374089"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 162,
+     "number": "374153"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 162,
+     "number": "374157"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 162,
+     "number": "374436"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 162,
+     "number": "374441"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 163,
+     "number": "2019"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 163,
+     "number": "374034"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 163,
+     "number": "374442"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 163,
+     "number": "375000"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 163,
+     "number": "378271"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 165,
+     "number": "19"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 165,
+     "number": "8"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 166,
+     "number": "2009"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 173,
+     "number": "47"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 175,
+     "number": "4.7"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 177,
+     "number": "8056"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 178,
+     "number": "1050"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 178,
+     "number": "1057"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 178,
+     "number": "1058"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 178,
+     "number": "1107"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 178,
+     "number": "1134"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 178,
+     "number": "1136"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 178,
+     "number": "1140"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 178,
+     "number": "1145"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 178,
+     "number": "1222"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 178,
+     "number": "201"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 178,
+     "number": "2033"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 178,
+     "number": "220"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 178,
+     "number": "33"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 178,
+     "number": "8054"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 178,
+     "number": "8055"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 183,
+     "number": "123"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 184,
+     "number": "16"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 186,
+     "number": "75352"
+    }
+   ],
+   "value": 71.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "247 of 283 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 1,
+     "heading": "REIMAGINING OUR FUTURES TOGETHER A n e w s o c i a l c o n t r a c t f o r e d u c a t i o n"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 2,
+     "heading": "UNESCO - a global leader in education"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 2,
+     "heading": "Futures of Education initiative"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 3,
+     "heading": "A new social contract for education"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 4,
+     "heading": "REIMAGINING OUR FUTURES TOGETHER A n e w s o c i a l c o n t r a c t f o r e d u c a t i o n"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 5,
+     "heading": "Audrey Azoulay"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 7,
+     "heading": "HE Sahle-Work Zewde"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 9,
+     "heading": "International Commission on the Futures of Education"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 13,
+     "heading": "PART III CATALYZING A NEW SOCIAL CONTRACT FOR EDUCATION"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 15,
+     "heading": "A new social contract for education"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 15,
+     "heading": "Foundational principles"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 17,
+     "heading": "Proposals for renewing education"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 18,
+     "heading": "Catalyzing a new social contract for education"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 20,
+     "heading": "The survival of humanity, human rights, and the living planet are at risk"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 22,
+     "heading": "The choices we collectively make today will determine our shared futures."
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 22,
+     "heading": "The need for a new social contract for education"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 23,
+     "heading": "Redefining the purposes of education"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 24,
+     "heading": "Assuring the right to quality education throughout life"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 24,
+     "heading": "A new social contract for education must remain firmly rooted in a commitment to human rights."
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 25,
+     "heading": "Strengthening education as a public endeavour and a common good"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 26,
+     "heading": "Organization of the report"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 30,
+     "heading": "Incomplete and inequitable expansion of education"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 31,
+     "heading": "Chapter 1 I Towards more equitable educational futures"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 32,
+     "heading": "Chapter 1 I Towards more equitable educational futures"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 33,
+     "heading": "There is a worrying regression worldwide in the share of qualified primary school teachers."
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 34,
+     "heading": "Persistent poverty and rising inequality"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 35,
+     "heading": "A web of exclusions"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 36,
+     "heading": "Chapter 1 I Towards more equitable educational futures"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 37,
+     "heading": "Chapter 1 I Towards more equitable educational futures"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 39,
+     "heading": "Chapter 2 I Disruptions and emerging transformations"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 39,
+     "heading": "A planet in peril"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 40,
+     "heading": "Exceeding planetary boundaries"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 41,
+     "heading": "Chapter 2 I Disruptions and emerging transformations"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 41,
+     "heading": "The effects of climate change on education"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 42,
+     "heading": "Cause for hope"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 43,
+     "heading": "The digital that connects and divides"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 44,
+     "heading": "Chapter 2 I Disruptions and emerging transformations"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 45,
+     "heading": "Chapter 2 I Disruptions and emerging transformations"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 45,
+     "heading": "Digital knowledge and its exclusions"
+    },
+    {
+     "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+     "page": 46,
+     "heading": "Hacking human learners"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 47,
+     "heading": "Chapter 2 I Disruptions and emerging transformations"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 49,
+     "heading": "Chapter 2 I Disruptions and emerging transformations"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 51,
+     "heading": "Education, skills development, and the school-to-work transitions"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 52,
+     "heading": "The changing future of credentials"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 53,
+     "heading": "Structural transformation of labour markets"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 54,
+     "heading": "What work will be valued in the future?"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 54,
+     "heading": "What new education would people need to live without formal work?"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 58,
+     "heading": "In a new social contract for education, pedagogy should be rooted in cooperation and solidarity, building the capacities of students and teachers to work together in trust to transform the world."
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 59,
+     "heading": "Reimagining pedagogical approaches"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 59,
+     "heading": "Interdisciplinary problem-oriented collaborative learning"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 60,
+     "heading": "Chapter 3 I Pedagogies of cooperation and solidarity"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 60,
+     "heading": "Treasuring and sustaining diversity and pluralism"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 62,
+     "heading": "Chapter 3 I Pedagogies of cooperation and solidarity"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 62,
+     "heading": "Learning to unlearn divisiveness"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 62,
+     "heading": "Cultural resources are a key part of our relationships with knowledge."
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 63,
+     "heading": "Learning to heal the wounds of injustice"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 63,
+     "heading": "Strengthening meaningful assessment"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 64,
+     "heading": "Pedagogical journeys at every age and stage"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 64,
+     "heading": "Supporting the foundations of early childhood"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 65,
+     "heading": "Chapter 3 I Pedagogies of cooperation and solidarity"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 66,
+     "heading": "Chapter 3 I Pedagogies of cooperation and solidarity"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 66,
+     "heading": "Collaborative education for all children"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 66,
+     "heading": "Propelling the potential of adolescents and youth"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 67,
+     "heading": "Renewing the mission of higher education"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 68,
+     "heading": "Principles for dialogue and action"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 71,
+     "heading": "What should be learned, and what should be unlearned?"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 72,
+     "heading": "Participation in the knowledge commons"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 72,
+     "heading": "Curricular priorities for educational futures"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 73,
+     "heading": "Curricula for a damaged planet"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 73,
+     "heading": "Curricula must enable re-learning how we are interconnected with a living, damaged planet."
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 74,
+     "heading": "Integrating knowing and feeling"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 75,
+     "heading": "Learning to empathize, to cooperate, to address prejudice and bias and to navigate conflict are valuable in every society."
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 76,
+     "heading": "Broadening literacies and creating plurilingual futures"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 77,
+     "heading": "Linguistic diversity is a key feature of humanity's shared knowledge commons."
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 77,
+     "heading": "Enriching numeracy"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 78,
+     "heading": "Drawing on the humanities"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 78,
+     "heading": "Scientific inquiry and understanding"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 79,
+     "heading": "Curricula must foster capacities for discernment and the sincere investigation of truth that is complex and nuanced."
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 79,
+     "heading": "Skills for a digital world"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 80,
+     "heading": "Building imagination, judgment and possibility through arts education"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 80,
+     "heading": "Educating for human rights, active citizenship, and democratic participation"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 81,
+     "heading": "Chapter 4 I Curricula and the evolving knowledge commons"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 82,
+     "heading": "The enabling role of higher education"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 82,
+     "heading": "University research for open knowledge commons"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 83,
+     "heading": "Technical and vocational higher education and knowledge commons"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 83,
+     "heading": "Higher education to support diverse approaches to knowledge"
+    },
+    {
+     "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+     "page": 84,
+     "heading": "Principles for dialogue and action"
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 86,
+     "heading": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation."
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 87,
+     "heading": "Recasting teaching as a collaborative profession"
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 87,
+     "heading": "Teachers in inclusive educational environments"
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 88,
+     "heading": "Chapter 5 I The transformative work of teachers"
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 89,
+     "heading": "Envisioning and enacting curriculum and pedagogy"
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 89,
+     "heading": "Teachers and educational research"
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 90,
+     "heading": "The life-entangled journey of teacher development"
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 90,
+     "heading": "Teacher recruitment"
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 91,
+     "heading": "Teacher education"
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 92,
+     "heading": "Chapter 5 I The transformative work of teachers"
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 92,
+     "heading": "Novice teachers"
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 92,
+     "heading": "Continuing professional development"
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 93,
+     "heading": "Public solidarity to transform teaching"
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 93,
+     "heading": "Teachers' working conditions"
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 94,
+     "heading": "Universities' ongoing relationships with teachers"
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 95,
+     "heading": "Teachers in educational decision-making and in the public sphere"
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 96,
+     "heading": "Principles for dialogue and action"
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 98,
+     "heading": "Chapter 6 I Safeguarding and transforming schools"
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 98,
+     "heading": "Schools should be protected educational sites because of the inclusion, equity and individual and collective well-being they support - and also reimagined to better promote the transformation of the world towards more just, equitable and sustainable futures."
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 99,
+     "heading": "The irreplaceable role of schools"
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 99,
+     "heading": "If the school did not exist, we would need to invent it."
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 100,
+     "heading": "Common historical commitments"
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 100,
+     "heading": "The necessary transformation of schools"
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 101,
+     "heading": "Schools as platforms for cooperation, care and change"
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 102,
+     "heading": "From classrooms to communities of learners"
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 103,
+     "heading": "Structures to support diversified pedagogies"
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 103,
+     "heading": "The digital in support of the school"
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 104,
+     "heading": "Chapter 6 I Safeguarding and transforming schools"
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 104,
+     "heading": "The pandemic has proved that the school cannot be entirely displaced into virtual spaces."
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 105,
+     "heading": "Building cultures of collaboration"
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 106,
+     "heading": "Transitions from school to higher education"
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 107,
+     "heading": "Principles for dialogue and action"
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 109,
+     "heading": "In a new social contract for education, we should enjoy and expand enriching educational opportunities that take place throughout life and in different cultural and social spaces."
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 111,
+     "heading": "Steering educational opportunities towards inclusion and sustainability"
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 111,
+     "heading": "The role of governments and states"
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 113,
+     "heading": "Governing digital learning spaces"
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 115,
+     "heading": "Learning with the living planet"
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 116,
+     "heading": "Expanding 'when' education happens"
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 116,
+     "heading": "Education and care across the lifespan"
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 117,
+     "heading": "Adult learning and education as an emancipatory project"
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 117,
+     "heading": "Adult education will need to extend far beyond lifelong learning for labour market purposes."
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 119,
+     "heading": "Broadening the right to education"
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 120,
+     "heading": "Principles for dialogue and action"
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 123,
+     "heading": "Research and innovation must strengthen our capacities for foresight and futures literacy."
+    },
+    {
+     "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+     "page": 124,
+     "heading": "A new research agenda for education"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 125,
+     "heading": "Mobilizing the learning sciences"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 126,
+     "heading": "Transforming research partnerships for education"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 127,
+     "heading": "Expanding knowledge, data, and evidence"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 127,
+     "heading": "Strengthening complex ecologies of knowledge"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 128,
+     "heading": "Statistical data, indicators, and analysis"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 129,
+     "heading": "Big data and the changing nature of knowledge"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 130,
+     "heading": "Innovating educational futures"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 130,
+     "heading": "Developing, borrowing, and adapting policy and programming"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 131,
+     "heading": "Evaluation, experimentation and ranking"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 134,
+     "heading": "Chapter 9"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 135,
+     "heading": "Vaccine nationalism has highlighted serious gaps in our ability to work collectively."
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 135,
+     "heading": "Responding to an increasingly precarious world order"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 136,
+     "heading": "From aid to partnerships"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 137,
+     "heading": "The educational needs of refugees and involuntary migrants are also underfunded."
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 138,
+     "heading": "Towards shared purposes, commitments, norms and standards"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 139,
+     "heading": "Cooperation in knowledge generation and the use of evidence"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 140,
+     "heading": "Financing education where it is threatened"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 141,
+     "heading": "The role of UNESCO"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 143,
+     "heading": "Epilogue and continuation Building futures of education together"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 145,
+     "heading": "Proposals for building a new social contract"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 145,
+     "heading": "Pedagogies of solidarity and cooperation"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 146,
+     "heading": "Pedagogy is the work of creating transformational encounters that are based in what exists and what can be built."
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 147,
+     "heading": "Curriculum and the knowledge commons"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 148,
+     "heading": "Teachers and the teaching profession"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 148,
+     "heading": "No technology is yet capable of replacing good human teachers."
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 149,
+     "heading": "Safeguarding and transforming schools"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 150,
+     "heading": "Education across different times and spaces"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 151,
+     "heading": "Calls to action"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 151,
+     "heading": "A new research agenda for education"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 152,
+     "heading": "Renewed international solidarity and cooperation"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 154,
+     "heading": "Dialogue and participation"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 156,
+     "heading": "Invitation to continue"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 159,
+     "heading": "Selected references"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 159,
+     "heading": "Independent reports"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 161,
+     "heading": "Background papers"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 163,
+     "heading": "Global consultation inputs"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 164,
+     "heading": "Publications by the International Commission on the Futures of Education"
+    },
+    {
+     "section": "Research from within education (p. 124–165)",
+     "page": 165,
+     "heading": "International Commission on the Futures of Education"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 165,
+     "heading": "H.E. Sahle-Work Zewde"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 166,
+     "heading": "António Nóvoa"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 166,
+     "heading": "Masanori Aoyagi"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 166,
+     "heading": "Arjun Appadurai"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 167,
+     "heading": "Patrick Awuah"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 167,
+     "heading": "Abdel Basset Ben Hassen"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 167,
+     "heading": "Cristovam Buarque"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 167,
+     "heading": "Elisa Guerra"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 168,
+     "heading": "Badr Jafar"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 168,
+     "heading": "Doh-Yeon Kim"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 168,
+     "heading": "Justin Yifu Lin"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 168,
+     "heading": "Evgeny Morozov"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 169,
+     "heading": "Karen Mundy"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 169,
+     "heading": "Fernando M. Reimers"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 169,
+     "heading": "Tarcila Rivera Zea"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 169,
+     "heading": "Serigne Mbaye Thiam"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 170,
+     "heading": "Vaira Vīķe-Freiberga"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 170,
+     "heading": "Maha Yahya"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 171,
+     "heading": "Mr Tariq Al Gurg"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 171,
+     "heading": "Ms Alice P. Albright"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 171,
+     "heading": "Mr Gordon Brown"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 171,
+     "heading": "Ms Annette Dixon"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 171,
+     "heading": "Ms Henrietta Fore"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 171,
+     "heading": "Ms Susan Hopgood"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 171,
+     "heading": "Mr Carlos Moedas"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 171,
+     "heading": "Mr Matías Rodríguez Inciarte"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 171,
+     "heading": "Mr Refat Sabbah"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 171,
+     "heading": "Mr Jeffrey D Sachs"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 171,
+     "heading": "Ms Cecilia Scharp"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 171,
+     "heading": "Mr Andreas Schleicher"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 171,
+     "heading": "Ms Alette Van Leur"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 171,
+     "heading": "Ms Hilligje van't Land"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 171,
+     "heading": "Ms Yume Yamaguchi"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 172,
+     "heading": "Organizations and networks"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 173,
+     "heading": "Appendices"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 174,
+     "heading": "Appendices"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 175,
+     "heading": "Appendices"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 176,
+     "heading": "Appendices"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 177,
+     "heading": "Appendices"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 177,
+     "heading": "Algeria"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 177,
+     "heading": "Angola"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 178,
+     "heading": "Azerbaijan"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 178,
+     "heading": "Bangladesh"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 178,
+     "heading": "Belarus"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 178,
+     "heading": "Canada"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 178,
+     "heading": "China"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 179,
+     "heading": "Appendices"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 179,
+     "heading": "Colombia"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 179,
+     "heading": "Costa Rica"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 179,
+     "heading": "Denmark"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 180,
+     "heading": "Finland"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 180,
+     "heading": "Appendices"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 181,
+     "heading": "Appendices"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 181,
+     "heading": "Germany"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 181,
+     "heading": "Greece"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 181,
+     "heading": "Guatemala"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 181,
+     "heading": "Haiti"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 182,
+     "heading": "Indonesia"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 182,
+     "heading": "Italy"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 182,
+     "heading": "Japan"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 182,
+     "heading": "Lao People's Democratic Republic"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 182,
+     "heading": "Lebanon"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 183,
+     "heading": "Appendices"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 183,
+     "heading": "Madagascar"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 183,
+     "heading": "Mexico"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 183,
+     "heading": "Norway"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 183,
+     "heading": "Pakistan"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 183,
+     "heading": "Peru"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 183,
+     "heading": "Portugal"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 183,
+     "heading": "Republic of Korea"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 184,
+     "heading": "Rwanda"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 184,
+     "heading": "Slovenia"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 185,
+     "heading": "Appendices"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 185,
+     "heading": "Spain"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 185,
+     "heading": "United Kingdom"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 185,
+     "heading": "United States of America"
+    },
+    {
+     "section": "Mandate (p. 165–186)",
+     "page": 186,
+     "heading": "REIMAGINING OUR FUTURES TOGETHER A new social contract for education"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "3 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "3 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "1 quoted texts in 1 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Image 22",
+     "page": 186,
+     "image": "fig-022-p186.png",
+     "quotes": [
+      "\"United Nations Educational, Scientific and Cultural Organization\""
+     ]
+    }
+   ],
+   "value": 1.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "151 page references valid (pdf pages 1–186)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "186 pages checked, 1 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "10 passages out of order break a sentence (16 of 18 not repairable; listed, not gated)",
+   "findings": [
+    {
+     "page": 2,
+     "words": 4,
+     "text": "FUTURES of education initiative",
+     "blocks": [
+      "#/texts/3",
+      "#/texts/4",
+      "#/texts/5"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 2,
+     "words": 16,
+     "text": "global challenges through transformative learning, with special focus on gender equality and Africa across all actions.",
+     "blocks": [
+      "#/texts/4",
+      "#/texts/5",
+      "#/texts/6"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 77,
+     "words": 8,
+     "text": "and develop more autonomy and criticality TOWARDS established",
+     "blocks": [
+      "#/texts/694",
+      "#/texts/696",
+      "#/texts/700"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "sentence cut: 'ors between different signifying systems' | 'Linguistic diversity is a key feature of'",
+      "sentence start detached: 'ematics,  Ma ori mathematics, and so on.' | 'and develop more autonomy and criticalit'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 77,
+     "words": 10,
+     "text": "Patterns of meaning. language is more than a means of",
+     "blocks": [
+      "#/texts/694",
+      "#/texts/696",
+      "#/texts/700"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "sentence cut: 'ors between different signifying systems' | 'Linguistic diversity is a key feature of'",
+      "sentence start detached: 'ematics,  Ma ori mathematics, and so on.' | 'and develop more autonomy and criticalit'",
+      "passage cut out of 'Linguistic diversity is a key feature of'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 77,
+     "words": 15,
+     "text": "Communication; languages carry perspectives on the world and unique ways of understanding. linguistic diversity is",
+     "blocks": [
+      "#/texts/694",
+      "#/texts/696",
+      "#/texts/700"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "sentence cut: 'ors between different signifying systems' | 'Linguistic diversity is a key feature of'",
+      "sentence start detached: 'ematics,  Ma ori mathematics, and so on.' | 'and develop more autonomy and criticalit'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 77,
+     "words": 4,
+     "text": "shared knowledge commons; education",
+     "blocks": [
+      "#/texts/694",
+      "#/texts/696",
+      "#/texts/700"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "sentence cut: 'ors between different signifying systems' | 'Linguistic diversity is a key feature of'",
+      "sentence start detached: 'ematics,  Ma ori mathematics, and so on.' | 'and develop more autonomy and criticalit'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 77,
+     "words": 9,
+     "text": "has a key role to play in sustaining it.",
+     "blocks": [
+      "#/texts/694",
+      "#/texts/696",
+      "#/texts/700"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "sentence cut: 'ors between different signifying systems' | 'Linguistic diversity is a key feature of'",
+      "sentence start detached: 'ematics,  Ma ori mathematics, and so on.' | 'and develop more autonomy and criticalit'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 125,
+     "words": 14,
+     "text": "Universities and researchers can extend support by being always in dialogue with schools, teachers",
+     "blocks": [
+      "#/texts/1132",
+      "#/texts/1134",
+      "#/texts/1139"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'Students are also important sources of k'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 125,
+     "words": 5,
+     "text": "and students. participatory Evaluation, collaborative",
+     "blocks": [
+      "#/texts/1132",
+      "#/texts/1134",
+      "#/texts/1139"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'Students are also important sources of k'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 125,
+     "words": 15,
+     "text": "research, youth-led research, and practitioner inquiry are among the Many methodological traditions that can be",
+     "blocks": [
+      "#/texts/1132",
+      "#/texts/1134",
+      "#/texts/1139"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'Students are also important sources of k'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 125,
+     "words": 8,
+     "text": "drawn on to further systematize the learning between",
+     "blocks": [
+      "#/texts/1132",
+      "#/texts/1134",
+      "#/texts/1139"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'Students are also important sources of k'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 125,
+     "words": 7,
+     "text": "those researching Within and externally to education.",
+     "blocks": [
+      "#/texts/1132",
+      "#/texts/1134",
+      "#/texts/1139"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 125,
+     "words": 20,
+     "text": "Educational research will be a key tool to project and monitor the transformations necessary to engage with anew social",
+     "blocks": [
+      "#/texts/1132",
+      "#/texts/1134",
+      "#/texts/1139"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 171,
+     "words": 5,
+     "text": "to UNESCO on the FUTURES",
+     "blocks": [
+      "#/texts/1599",
+      "#/texts/1615",
+      "#/texts/1616"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 177,
+     "words": 5,
+     "text": "Alda Lara Polytechnic secondary Institute",
+     "blocks": [
+      "#/texts/1687",
+      "#/texts/1688",
+      "#/texts/1692"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 182,
+     "words": 7,
+     "text": "Omuta special education school with special care",
+     "blocks": [
+      "#/texts/1831",
+      "#/texts/1832",
+      "#/texts/1833"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": true,
+     "breaks": [
+      "sentence cut: 'ecial Education School with special care' | 'Hayamadai Elementary School Hayame Eleme'",
+      "passage cut out of 'Hayamadai Elementary School Hayame Eleme'"
+     ],
+     "section": ""
+    }
+   ],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "unesco-reimagining-our-futures-together-a-new-social-contract-for-education-2021",
+ "doc_type": "framework_report",
+ "analyzed_at": "2026-11-15T09:50:38.669081+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "Reimagining our futures together: a new social contract for education",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 46,
+   "chars": 112825,
+   "blocks": 299,
+   "inner_headings": 51,
+   "figures": 1
+  },
+  {
+   "index": 1,
+   "heading": "Chapter 2 I Disruptions and emerging transformations",
+   "derived_heading": "",
+   "part": 1,
+   "parts": 1,
+   "page_from": 47,
+   "page_to": 85,
+   "chars": 112228,
+   "blocks": 275,
+   "inner_headings": 54,
+   "figures": 0
+  },
+  {
+   "index": 2,
+   "heading": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation.",
+   "derived_heading": "",
+   "part": 1,
+   "parts": 1,
+   "page_from": 86,
+   "page_to": 124,
+   "chars": 113262,
+   "blocks": 266,
+   "inner_headings": 50,
+   "figures": 0
+  },
+  {
+   "index": 3,
+   "heading": "Research from within education",
+   "derived_heading": "",
+   "part": 1,
+   "parts": 1,
+   "page_from": 124,
+   "page_to": 165,
+   "chars": 112808,
+   "blocks": 297,
+   "inner_headings": 42,
+   "figures": 0
+  },
+  {
+   "index": 4,
+   "heading": "Mandate",
+   "derived_heading": "",
+   "part": 1,
+   "parts": 1,
+   "page_from": 165,
+   "page_to": 186,
+   "chars": 44228,
+   "blocks": 340,
+   "inner_headings": 82,
+   "figures": 2
+  }
+ ],
+ "skipped": [
+  "Acknowledgements (p. 10)",
+  "Contents (p. 11)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 186,
+  "gaps": [
+   {
+    "page": 1,
+    "text": "REIMAGINING anew social OUR FUTURES contract for TOGETHER",
+    "words": 9,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "before #/texts/0"
+   }
+  ],
+  "gaps_dismissed": [
+   {
+    "page": 3,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "to repair injustices"
+   },
+   {
+    "page": 4,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "REIMAGINING anew social OUR FUTURES contract for TOGETHER"
+   },
+   {
+    "page": 11,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "Acknowledgements Executive summary INTRODUCTION"
+   },
+   {
+    "page": 11,
+    "words": 23,
+    "reason": "duplicate",
+    "text": "Contents v vii vii ix x 1 7 8 10 11 14 17 1920 24 25 29 30 39 34 40 xi"
+   },
+   {
+    "page": 13,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "Innovating Educational FUTURES"
+   },
+   {
+    "page": 13,
+    "words": 19,
+    "reason": "duplicate",
+    "text": "Calls to action dialogue and Participation Invitation to continue appendices Selected references independent reports background papers global consultation inputs"
+   },
+   {
+    "page": 13,
+    "words": 31,
+    "reason": "duplicate",
+    "text": "Contents 119 121 123 126 129 132 135 136 139 140 141 142 143 145 147 153 156 158 161 162 162 164 166 167 168 168 168 174 175 xiii"
+   },
+   {
+    "page": 20,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "and alternative FUTURES"
+   },
+   {
+    "page": 20,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "raises profound questions"
+   },
+   {
+    "page": 22,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "collectively make Today"
+   },
+   {
+    "page": 24,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "for education must"
+   },
+   {
+    "page": 24,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "commitment to human"
+   },
+   {
+    "page": 27,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "agenda for dialogue"
+   },
+   {
+    "page": 30,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "yesterday's exclusions and"
+   },
+   {
+    "page": 33,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "primary school teachers."
+   },
+   {
+    "page": 43,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "more effective approaches"
+   },
+   {
+    "page": 46,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "numbers without development. narratives, connectivity"
+   },
+   {
+    "page": 46,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "without Cultural inclusion,"
+   },
+   {
+    "page": 46,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "digital technology in"
+   },
+   {
+    "page": 47,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "formative period, we"
+   },
+   {
+    "page": 47,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "now understand that"
+   },
+   {
+    "page": 47,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "considerable learning and"
+   },
+   {
+    "page": 48,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "civic discourse and"
+   },
+   {
+    "page": 48,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "expression all have"
+   },
+   {
+    "page": 50,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "and reversing damages"
+   },
+   {
+    "page": 50,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "wreaked by global"
+   },
+   {
+    "page": 50,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "inequality have been"
+   },
+   {
+    "page": 52,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "education should be"
+   },
+   {
+    "page": 54,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "what new education"
+   },
+   {
+    "page": 61,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "PEDAGOGIES of solidarity"
+   },
+   {
+    "page": 61,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "redress the systematic"
+   },
+   {
+    "page": 61,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "exclusions and erasures"
+   },
+   {
+    "page": 61,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "imposed by racism,"
+   },
+   {
+    "page": 61,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "sexism, colonialism, and"
+   },
+   {
+    "page": 62,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "relationships with knowledge."
+   },
+   {
+    "page": 67,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "led movements and"
+   },
+   {
+    "page": 73,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "curricula must enable"
+   },
+   {
+    "page": 73,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "interconnected with a"
+   },
+   {
+    "page": 73,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "living, damaged planet."
+   },
+   {
+    "page": 74,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "in harmony – taking"
+   },
+   {
+    "page": 74,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "existence and well-"
+   },
+   {
+    "page": 74,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "through education. sustainability."
+   },
+   {
+    "page": 75,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "learning to empathize,"
+   },
+   {
+    "page": 79,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "curricula must foster"
+   },
+   {
+    "page": 79,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "capacities for discernment"
+   },
+   {
+    "page": 79,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "complex and nuanced."
+   },
+   {
+    "page": 80,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "curricula should support"
+   },
+   {
+    "page": 82,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "higher education needs"
+   },
+   {
+    "page": 87,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "The individual talents"
+   },
+   {
+    "page": 88,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "student through activities"
+   },
+   {
+    "page": 89,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "reimagination of curricula"
+   },
+   {
+    "page": 89,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "and Pedagogy without"
+   },
+   {
+    "page": 91,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "urgent measures are"
+   },
+   {
+    "page": 95,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "undertake initial Teacher"
+   },
+   {
+    "page": 101,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "schools must allow"
+   },
+   {
+    "page": 101,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "us, individually and"
+   },
+   {
+    "page": 101,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "collectively, to realize"
+   },
+   {
+    "page": 102,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "Classrooms in future"
+   },
+   {
+    "page": 106,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "future policy agendas"
+   },
+   {
+    "page": 112,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "responsibility for ensuring public education. Educational systems are"
+   },
+   {
+    "page": 114,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "bending the digital"
+   },
+   {
+    "page": 114,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "disruption in the"
+   },
+   {
+    "page": 114,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "direction of supporting"
+   },
+   {
+    "page": 114,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "democratization Within a"
+   },
+   {
+    "page": 114,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "robust public sphere."
+   },
+   {
+    "page": 117,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "lifelong learning for"
+   },
+   {
+    "page": 117,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "Labour market purposes."
+   },
+   {
+    "page": 119,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "education supports the"
+   },
+   {
+    "page": 119,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "Access to Cultural"
+   },
+   {
+    "page": 119,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "resources that shape"
+   },
+   {
+    "page": 119,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "identities and expand"
+   },
+   {
+    "page": 123,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "must strengthen our"
+   },
+   {
+    "page": 123,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "capacities for foresight"
+   },
+   {
+    "page": 123,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "and FUTURES literacy."
+   },
+   {
+    "page": 125,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "understanding about their"
+   },
+   {
+    "page": 125,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "own Educational experiences,"
+   },
+   {
+    "page": 125,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "aspirations, achievements, and"
+   },
+   {
+    "page": 127,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "challenge assumptions to"
+   },
+   {
+    "page": 127,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "development models and"
+   },
+   {
+    "page": 131,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "institutions and their"
+   },
+   {
+    "page": 131,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "research ANDINNOVATION"
+   },
+   {
+    "page": 135,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "highlighted serious gaps"
+   },
+   {
+    "page": 137,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "refugees and involuntary"
+   },
+   {
+    "page": 137,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "migrants are also"
+   },
+   {
+    "page": 139,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "global institutions can"
+   },
+   {
+    "page": 139,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "provided transnationally. longer term challenges."
+   },
+   {
+    "page": 144,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "making – by educators,"
+   },
+   {
+    "page": 144,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "and children, families"
+   },
+   {
+    "page": 144,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "– who have identified"
+   },
+   {
+    "page": 144,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "the limitations of"
+   },
+   {
+    "page": 144,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "systems with precision"
+   },
+   {
+    "page": 144,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "and have pioneered"
+   },
+   {
+    "page": 144,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "new approaches to"
+   },
+   {
+    "page": 147,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "Two vital processes"
+   },
+   {
+    "page": 147,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "the acquisition of"
+   },
+   {
+    "page": 147,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "the common heritage"
+   },
+   {
+    "page": 147,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "knowledge and new"
+   },
+   {
+    "page": 149,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "of larger Educational"
+   },
+   {
+    "page": 149,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "ecosystems, and their"
+   },
+   {
+    "page": 150,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "future societies providing"
+   },
+   {
+    "page": 150,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "and encouraging learning"
+   },
+   {
+    "page": 150,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "beyond formal schools"
+   },
+   {
+    "page": 151,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "research programme on"
+   },
+   {
+    "page": 153,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "collective action must"
+   },
+   {
+    "page": 153,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "learners whose right"
+   },
+   {
+    "page": 153,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "threatened by global"
+   },
+   {
+    "page": 153,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "disruptions and change."
+   },
+   {
+    "page": 154,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "through millions of"
+   },
+   {
+    "page": 154,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "individual and collective"
+   },
+   {
+    "page": 154,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "leadership, resistance, possibilities. creativity and care."
+   },
+   {
+    "page": 177,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "University of Leeds"
+   },
+   {
+    "page": 177,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "Gregório Semedo college"
+   },
+   {
+    "page": 186,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "9 789231 004780 FUTURES of education futuresofeducation@unesco.org UNESCO http://en.unesco.org/futuresofeducation"
+   }
+  ],
+  "captions_reclassified": [
+   {
+    "page": 8,
+    "figure": "#/pictures/6",
+    "text": "HE Sahle-Work Zewde Chair of the International Commission for the Futures of Education President of the Federal Democrat"
+   }
+  ],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [
+   {
+    "page": 1,
+    "image": "fig-001-p1.png",
+    "w": 263,
+    "h": 57,
+    "reason": "strip"
+   },
+   {
+    "page": 2,
+    "image": "fig-003-p2.png",
+    "w": 119,
+    "h": 44,
+    "reason": "strip"
+   },
+   {
+    "page": 3,
+    "image": "fig-004-p3.png",
+    "w": 302,
+    "h": 66,
+    "reason": "strip"
+   },
+   {
+    "page": 4,
+    "image": "fig-005-p4.png",
+    "w": 262,
+    "h": 58,
+    "reason": "strip"
+   },
+   {
+    "page": 6,
+    "image": "fig-006-p6.png",
+    "w": 228,
+    "h": 67,
+    "reason": "strip"
+   },
+   {
+    "page": 8,
+    "image": "fig-007-p8.png",
+    "w": 213,
+    "h": 65,
+    "reason": "strip"
+   },
+   {
+    "page": 38,
+    "image": "fig-008-p38.png",
+    "w": 76,
+    "h": 103,
+    "reason": "repeated"
+   },
+   {
+    "page": 38,
+    "image": "fig-009-p38.png",
+    "w": 36,
+    "h": 47,
+    "reason": "small"
+   },
+   {
+    "page": 57,
+    "image": "fig-010-p57.png",
+    "w": 363,
+    "h": 100,
+    "reason": "repeated"
+   },
+   {
+    "page": 57,
+    "image": "fig-011-p57.png",
+    "w": 76,
+    "h": 103,
+    "reason": "repeated"
+   },
+   {
+    "page": 57,
+    "image": "fig-012-p57.png",
+    "w": 36,
+    "h": 48,
+    "reason": "small"
+   },
+   {
+    "page": 85,
+    "image": "fig-013-p85.png",
+    "w": 76,
+    "h": 102,
+    "reason": "repeated"
+   },
+   {
+    "page": 85,
+    "image": "fig-014-p85.png",
+    "w": 35,
+    "h": 47,
+    "reason": "small"
+   },
+   {
+    "page": 97,
+    "image": "fig-015-p97.png",
+    "w": 36,
+    "h": 46,
+    "reason": "small"
+   },
+   {
+    "page": 108,
+    "image": "fig-016-p108.png",
+    "w": 362,
+    "h": 100,
+    "reason": "repeated"
+   },
+   {
+    "page": 108,
+    "image": "fig-017-p108.png",
+    "w": 76,
+    "h": 101,
+    "reason": "repeated"
+   },
+   {
+    "page": 108,
+    "image": "fig-018-p108.png",
+    "w": 36,
+    "h": 47,
+    "reason": "small"
+   },
+   {
+    "page": 122,
+    "image": "fig-019-p122.png",
+    "w": 76,
+    "h": 103,
+    "reason": "repeated"
+   },
+   {
+    "page": 122,
+    "image": "fig-020-p122.png",
+    "w": 37,
+    "h": 49,
+    "reason": "small"
+   },
+   {
+    "page": 134,
+    "image": "fig-021-p134.png",
+    "w": 36,
+    "h": 47,
+    "reason": "small"
+   },
+   {
+    "page": 186,
+    "image": "fig-024-p186.png",
+    "w": 293,
+    "h": 77,
+    "reason": "strip"
+   }
+  ],
+  "superseded": [],
+  "replaced_pages": [],
+  "noise_dropped": 2,
+  "hyphens_restored": [
+   {
+    "page": 153,
+    "ref": "#/texts/1388",
+    "word": "sub-Saharan"
+   },
+   {
+    "page": 160,
+    "ref": "#/texts/1443",
+    "word": "la-Educaci"
+   },
+   {
+    "page": 160,
+    "ref": "#/texts/1445",
+    "word": "20SDG-Ed2030"
+   },
+   {
+    "page": 160,
+    "ref": "#/texts/1446",
+    "word": "Across-Generations"
+   },
+   {
+    "page": 166,
+    "ref": "#/texts/1531",
+    "word": "Secretary-General"
+   },
+   {
+    "page": 168,
+    "ref": "#/texts/1566",
+    "word": "South-South"
+   },
+   {
+    "page": 181,
+    "ref": "#/texts/1807",
+    "word": "Hauswirtschaftlich-Sozialpflegerische"
+   }
+  ],
+  "order": [
+   {
+    "page": 2,
+    "text": "FUTURES of education initiative",
+    "words": 4,
+    "refs": [
+     "#/texts/3",
+     "#/texts/4",
+     "#/texts/5"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 2,
+    "text": "global challenges through transformative learning, with special focus on gender equality and Africa across all actions.",
+    "words": 16,
+    "refs": [
+     "#/texts/4",
+     "#/texts/5",
+     "#/texts/6"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 77,
+    "text": "and develop more autonomy and criticality TOWARDS established",
+    "words": 8,
+    "refs": [
+     "#/texts/694",
+     "#/texts/696",
+     "#/texts/700"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "sentence cut: 'ors between different signifying systems' | 'Linguistic diversity is a key feature of'",
+     "sentence start detached: 'ematics,  Ma ori mathematics, and so on.' | 'and develop more autonomy and criticalit'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 77,
+    "text": "Patterns of meaning. language is more than a means of",
+    "words": 10,
+    "refs": [
+     "#/texts/694",
+     "#/texts/696",
+     "#/texts/700"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "sentence cut: 'ors between different signifying systems' | 'Linguistic diversity is a key feature of'",
+     "sentence start detached: 'ematics,  Ma ori mathematics, and so on.' | 'and develop more autonomy and criticalit'",
+     "passage cut out of 'Linguistic diversity is a key feature of'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 77,
+    "text": "Communication; languages carry perspectives on the world and unique ways of understanding. linguistic diversity is",
+    "words": 15,
+    "refs": [
+     "#/texts/694",
+     "#/texts/696",
+     "#/texts/700"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "sentence cut: 'ors between different signifying systems' | 'Linguistic diversity is a key feature of'",
+     "sentence start detached: 'ematics,  Ma ori mathematics, and so on.' | 'and develop more autonomy and criticalit'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 77,
+    "text": "shared knowledge commons; education",
+    "words": 4,
+    "refs": [
+     "#/texts/694",
+     "#/texts/696",
+     "#/texts/700"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "sentence cut: 'ors between different signifying systems' | 'Linguistic diversity is a key feature of'",
+     "sentence start detached: 'ematics,  Ma ori mathematics, and so on.' | 'and develop more autonomy and criticalit'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 77,
+    "text": "has a key role to play in sustaining it.",
+    "words": 9,
+    "refs": [
+     "#/texts/694",
+     "#/texts/696",
+     "#/texts/700"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "sentence cut: 'ors between different signifying systems' | 'Linguistic diversity is a key feature of'",
+     "sentence start detached: 'ematics,  Ma ori mathematics, and so on.' | 'and develop more autonomy and criticalit'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 106,
+    "text": "need to better account",
+    "words": 4,
+    "refs": [
+     "#/texts/974",
+     "#/texts/975",
+     "#/texts/976"
+    ],
+    "repaired": true,
+    "note": "3 blocks replaced by the text layer's passage",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 125,
+    "text": "Universities and researchers can extend support by being always in dialogue with schools, teachers",
+    "words": 14,
+    "refs": [
+     "#/texts/1132",
+     "#/texts/1134",
+     "#/texts/1139"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "passage cut out of 'Students are also important sources of k'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 125,
+    "text": "and students. participatory Evaluation, collaborative",
+    "words": 5,
+    "refs": [
+     "#/texts/1132",
+     "#/texts/1134",
+     "#/texts/1139"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "passage cut out of 'Students are also important sources of k'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 125,
+    "text": "research, youth-led research, and practitioner inquiry are among the Many methodological traditions that can be",
+    "words": 15,
+    "refs": [
+     "#/texts/1132",
+     "#/texts/1134",
+     "#/texts/1139"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "passage cut out of 'Students are also important sources of k'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 125,
+    "text": "drawn on to further systematize the learning between",
+    "words": 8,
+    "refs": [
+     "#/texts/1132",
+     "#/texts/1134",
+     "#/texts/1139"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "passage cut out of 'Students are also important sources of k'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 125,
+    "text": "those researching Within and externally to education.",
+    "words": 7,
+    "refs": [
+     "#/texts/1132",
+     "#/texts/1134",
+     "#/texts/1139"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 125,
+    "text": "Educational research will be a key tool to project and monitor the transformations necessary to engage with anew social",
+    "words": 20,
+    "refs": [
+     "#/texts/1132",
+     "#/texts/1134",
+     "#/texts/1139"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 171,
+    "text": "to UNESCO on the FUTURES",
+    "words": 5,
+    "refs": [
+     "#/texts/1599",
+     "#/texts/1615",
+     "#/texts/1616"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 177,
+    "text": "Alda Lara Polytechnic secondary Institute",
+    "words": 5,
+    "refs": [
+     "#/texts/1687",
+     "#/texts/1688",
+     "#/texts/1692"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 182,
+    "text": "Omuta special education school with special care",
+    "words": 7,
+    "refs": [
+     "#/texts/1831",
+     "#/texts/1832",
+     "#/texts/1833"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [
+     "sentence cut: 'ecial Education School with special care' | 'Hayamadai Elementary School Hayame Eleme'",
+     "passage cut out of 'Hayamadai Elementary School Hayame Eleme'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 183,
+    "text": "La Columba Ambatomainty",
+    "words": 3,
+    "refs": [
+     "#/texts/1857",
+     "#/texts/1859"
+    ],
+    "repaired": true,
+    "note": "3 blocks replaced by the text layer's passage",
+    "breaks": [],
+    "section": ""
+   }
+  ],
+  "order_pages_checked": 186,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 16,
+  "order_breaking": 10,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 37 minor; distortions: 0 material, 24 minor; additions: 0 material, 2 minor; order: 0 material, 2 minor",
+  "at": "2026-11-15T10:02:49+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 37
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 24
+   },
+   "additions": {
+    "material": 0,
+    "minor": 2
+   },
+   "order": {
+    "material": 0,
+    "minor": 2
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "Reimagining our futures together: a new social contract for education (p. 1–46)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "At the same time, there has been a flourishing of increasingly active citizen participation and activism that is challenging discrimination and injustice worldwide.",
+      "severity": "minor",
+      "page": 16
+     },
+     {
+      "source": "Furthermore, global financing for education must be expanded to ensure that the universal right to education is protected.",
+      "severity": "minor",
+      "page": 7
+     },
+     {
+      "source": "Gender equality, for example, should not only be seen as a goal in its own right, but as a prerequisite for ensuring sustainable futures of education.",
+      "severity": "minor",
+      "page": 30
+     },
+     {
+      "source": "the OECD Programme for International Student Assessment has shown that sizable shares of the populations of 15-year-olds in school are unable to understand what they read beyond the most basic levels",
+      "severity": "minor",
+      "page": 31
+     },
+     {
+      "source": "Lower middle and low income countries, on the other hand, only accounted for one tenth of the global output, despite the fact that they were home to half of the world's population in 2020.",
+      "severity": "minor",
+      "page": 34
+     },
+     {
+      "source": "We need to adapt to, mitigate and revert climate change, and education about and for climate change needs to align with these three goals.",
+      "severity": "minor",
+      "page": 39
+     },
+     {
+      "source": "Whereas it once seemed that net-zero carbon emissions could wait until 2050 to prevent some of the worst effects of climate change, recent scientific research suggests the deadline will come much sooner.",
+      "severity": "minor",
+      "page": 39
+     },
+     {
+      "source": "Even if zero-emissions were achieved tomorrow and we had 100% clean energy systems, we would still face the damaging ecological consequences of unsustainable activity such as deforestation, overfishing, industrial agriculture, mining, and waste",
+      "severity": "minor",
+      "page": 41
+     },
+     {
+      "source": "social justice must encompass ecological justice and vice-versa. We must ensure that those least responsible for causing these strains to the planet do not continue to disproportionately pay the price for them.",
+      "severity": "minor",
+      "page": 41
+     },
+     {
+      "source": "the largest constituencies in education, encompassing students, teachers, and families, are often noticeably absent from discussions on climate change and its effects on education. It is vital that they play a leading role in shaping how education will respond.",
+      "severity": "minor",
+      "page": 42
+     },
+     {
+      "source": "It is essential that everyone be able to participate in building the futures of education - children, youth, parents, teachers, researchers, activists, employers, cultural and religious leaders.",
+      "severity": "minor",
+      "page": 18
+     },
+     {
+      "source": "It is a more complex, public engagement with ways the digital can be marshalled to support the common good - coupled with a new appreciation of what remains outside its sphere.",
+      "severity": "minor",
+      "page": 46
+     }
+    ],
+    "distortions": [
+     {
+      "source": "One in five children in low income countries and one in ten across the world, or some 250 million children, are still out of primary school today.",
+      "summary": "One in five children in low income countries — roughly 250 million worldwide — are still out of primary school.",
+      "severity": "minor",
+      "page": 32
+     },
+     {
+      "source": "A call for research and innovation. ... A call for global solidarity and international cooperation. ... Universities and other higher education institutions must be active in every aspect of building a new social contract for education.",
+      "summary": "Three calls are issued",
+      "severity": "minor",
+      "page": 18
+     },
+     {
+      "source": "Appropriate recognition of identity in curriculum, pedagogy, and institutional approaches can directly impact student retention, mental health, self-esteem, and community well-being.",
+      "summary": "Recognizing students' identities — cultural, spiritual, social, linguistic — directly affects retention, mental health, self-esteem and community well-being.",
+      "severity": "minor",
+      "page": 37
+     }
+    ],
+    "additions": [
+     {
+      "summary": "Most damning, education currently correlates with unsustainable practices",
+      "severity": "minor"
+     }
+    ],
+    "order": []
+   },
+   {
+    "index": 1,
+    "section": "Chapter 2 I Disruptions and emerging transformations (p. 47–85)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "The importance of brain health as a component of the body's physical health reinforces the interdependencies between learning and overall human welfare - and further concretizes the links between the right to education and other rights, such as the right to health.",
+      "severity": "minor",
+      "page": 47
+     },
+     {
+      "source": "certain chemicals may play a role in facilitating the rewiring of the human brain, for example in enabling patients to overcome trauma",
+      "severity": "minor",
+      "page": 47
+     },
+     {
+      "source": "what occurs in regard to educational access, curricula and pedagogy will, in turn, shape political transformations around the globe",
+      "severity": "minor",
+      "page": 49
+     },
+     {
+      "source": "those who lose their jobs in this process may be the least prepared to seize new opportunities",
+      "severity": "minor",
+      "page": 50
+     },
+     {
+      "source": "Every learner, citizen, educator and parent has the potential and possibility to work locally, and to connect with others near and far, to transform day-to-day educational practices, institutions and systems",
+      "severity": "minor",
+      "page": 56
+     },
+     {
+      "source": "creating opportunities for students to discover their own sense of purpose and to determine what will be a flourishing life for them",
+      "severity": "minor",
+      "page": 58
+     },
+     {
+      "source": "The right to inclusion, based on each person's diverse realities, is among the most crucial of all human rights.",
+      "severity": "minor",
+      "page": 61
+     },
+     {
+      "source": "We assess the value of education in the same manner as we assess the value of land or of shares in the stock-exchange market. (epigraph, Mahatma Gandhi, 'True National Education', 1907)",
+      "severity": "minor",
+      "page": 70
+     },
+     {
+      "source": "Education can smoothly embrace both knowing that and knowing how. Content mastery does not need to compete with application, skills, or the development of capabilities.",
+      "severity": "minor",
+      "page": 71
+     },
+     {
+      "source": "curricula that teach students only to be protectors of nature are not sufficient. These approaches still presuppose a division between human beings and their environment.",
+      "severity": "minor",
+      "page": 73
+     },
+     {
+      "source": "images and bodily knowledge should enter the curriculum in much more decisive ways",
+      "severity": "minor",
+      "page": 76
+     },
+     {
+      "source": "school boards in Canada have drawn on indigenous artists and educators to teach link artforms such as beading, basket-making and moccasin-making",
+      "severity": "minor",
+      "page": 77
+     },
+     {
+      "source": "Today, connected technologies may exert profound influence even on people who never use or see them.",
+      "severity": "minor",
+      "page": 79
+     },
+     {
+      "source": "Human rights education can also improve the overall effectiveness of national education systems, and in turn support sustainable and just economic, social, and political development.",
+      "severity": "minor",
+      "page": 81
+     }
+    ],
+    "distortions": [
+     {
+      "source": "macroeconomic, industrial and employment policy are usually more effective levers for creating quality jobs, especially in the near term",
+      "summary": "Education cannot compensate for failures of macroeconomic, industrial and employment policy, which are more effective levers for job creation",
+      "severity": "minor",
+      "page": 51
+     },
+     {
+      "source": "Empowering students to lead the way in creating carbon-neutral educational systems is one promising strategy to prepare them for meaningful work in green economies",
+      "summary": "students should lead in creating carbon-neutral educational systems",
+      "severity": "minor",
+      "page": 52
+     },
+     {
+      "source": "In fact, we may need to profoundly rethink what it means to produce value in the first place",
+      "summary": "The report argues for rethinking what it means to produce value",
+      "severity": "minor",
+      "page": 54
+     },
+     {
+      "source": "in many places it has been neglected... In some settings, professors are evaluated solely on their individual outputs",
+      "summary": "pedagogy has been neglected in universities (professors evaluated solely on individual outputs)",
+      "severity": "minor",
+      "page": 67
+     },
+     {
+      "source": "We can consider 'rewilding' curricula by developing deep connectivity with the natural world and embracing the biosphere as an educational space",
+      "summary": "'Rewilding' curricula means developing deep connectivity with the natural world",
+      "severity": "minor",
+      "page": 73
+     },
+     {
+      "source": "Neuroscience shows that knowing and feeling are part of the same cognitive processes which play out, not in individual isolation, but in direct, extended relationships with others",
+      "summary": "Neuroscience shows knowing and feeling are the same cognitive processes",
+      "severity": "minor",
+      "page": 75
+     }
+    ],
+    "additions": [],
+    "order": [
+     {
+      "source": "Plurilingualism obliges us all to become active translators between different signifying systems [the pull-quote and the entire 'Enriching numeracy' section intervene] and develop more autonomy and criticality towards established patterns of meaning.",
+      "summary": "",
+      "layer": "Plurilingualism obliges us all to become active translators between different signifying systems and develop more autonomy and criticality towards established patterns of meaning.",
+      "severity": "minor",
+      "page": 77
+     }
+    ]
+   },
+   {
+    "index": 2,
+    "section": "In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "They, in turn, must recognize the agency of their students to participate, collaborate, and learn through their shared pedagogical encounters.",
+      "severity": "minor",
+      "page": 86
+     },
+     {
+      "source": "The principle of equal opportunity aims to enable students, regardless of their backgrounds, to emancipate themselves from being confined by the expectations of others so that social origin is not social destiny and the future can be better than the past",
+      "severity": "minor",
+      "page": 104
+     },
+     {
+      "source": "Some students felt comfortable with online and distance education, and their positive experiences remind us that future schools need to be student-centred in ways that support the social, emotional, cognitive, and moral development of the whole person.",
+      "severity": "minor",
+      "page": 104
+     },
+     {
+      "source": "Nurturing the social dimension of learning also implies sustaining citizenship education in an increasingly interconnected world to enable individuals to care about each other, embrace other perspectives and experiences",
+      "severity": "minor",
+      "page": 104
+     },
+     {
+      "source": "It concludes with 2050 guiding principles for dialogue and action, of interest to all participants in education, and including: a call for an inclusive worldwide research agenda drawing on differing perspectives, content and places.",
+      "severity": "minor",
+      "page": 123
+     }
+    ],
+    "distortions": [
+     {
+      "source": "the use of facial recognition software and AI for monitoring of students and teachers by states who could use such resources for political surveillance is antithetical to Article 26 of the UN Declaration of Human Rights",
+      "summary": "state use of facial recognition and AI to monitor students and teachers contravenes Article 26 of the UN Declaration of Human Rights",
+      "severity": "minor",
+      "page": 94
+     },
+     {
+      "source": "Some forecast that quite soon human lifespans could regularly exceed 100 years... In some areas four generations will be co-living in the same space-time",
+      "summary": "Anticipated changes include lifespans regularly exceeding 100 years, four generations co-living in the same space-time",
+      "severity": "minor",
+      "page": 118
+     }
+    ],
+    "additions": [],
+    "order": []
+   },
+   {
+    "index": 3,
+    "section": "Research from within education (p. 124–165)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "Even though scientists are still at the start of true understanding about this field and how it might be applied to education, it has vast implications for teaching and learning and insights should be made as accessible as possible to teachers, researchers, and learners themselves.",
+      "severity": "minor",
+      "page": 125
+     },
+     {
+      "source": "At times of crisis, for example, local communities are often able to channel tremendous reservoirs of experience, knowledge and creativity towards mitigating and adapting education to emergencies.",
+      "severity": "minor",
+      "page": 128
+     },
+     {
+      "source": "A stubborn number of children remain out of school, and large numbers of children and youth attend school but learn little.",
+      "severity": "minor",
+      "page": 137
+     },
+     {
+      "source": "It must address the tension between long-term thinking to govern for the future, and the urgency of intervening in the present to rectify educational inequalities and exclusions inherited from the past.",
+      "severity": "minor",
+      "page": 138
+     },
+     {
+      "source": "International cooperation must open more space for countries from the Global South to define new and innovative research paradigms suited to their unique circumstances. ... New models for investing in South-South cooperation in educational problem-solving are essential.",
+      "severity": "minor",
+      "page": 139
+     },
+     {
+      "source": "there is considerable danger that in 2050 much of our knowledge will have become reshaped into quantitative, algorithm-friendly, molecular, easily storable, rapidly shareable forms that are only accessible through the mediation of digital devices",
+      "severity": "minor",
+      "page": 130
+     }
+    ],
+    "distortions": [
+     {
+      "source": "Yet, entire swathes of such knowledge have been entirely unrecognized, uncanonized and omitted from formal education.",
+      "summary": "Ancestral knowledge about sustainable agriculture, social reciprocity and living with the natural world remains largely unrecognized and omitted from formal education.",
+      "severity": "minor",
+      "page": 128
+     },
+     {
+      "source": "not everything is worth being measured, and not everything that is worthwhile in education can be quantified",
+      "summary": "Not everything worth doing in education can be measured or quantified",
+      "severity": "minor",
+      "page": 129
+     },
+     {
+      "source": "no pattern can be discerned. And, according to one logic of data analytics, without patterns there is no meaning",
+      "summary": "presupposing that no pattern (and hence no meaning) can be discerned without massive data points",
+      "severity": "minor",
+      "page": 129
+     },
+     {
+      "source": "'best practices' themselves are often more focused on the outcomes than on detailing the process or conditions that led to them",
+      "summary": "Since 'best practices' focus on outcomes rather than the processes and conditions producing them",
+      "severity": "minor",
+      "page": 131
+     },
+     {
+      "source": "Governments have an important role to play in this regard, providing adequate support for teachers and schools to participate in dialogue and revision of public education systems and processes.",
+      "summary": "Governments must support teachers' and schools' participation in dialogue and revision of public education.",
+      "severity": "minor",
+      "page": 130
+     },
+     {
+      "source": "Economic growth has created powerful enclaves for those with wealth. Technological development has occurred in tandem with new forms of economic and informational monopoly that threaten the very foundations of liberal democracy.",
+      "summary": "Economic globalization has created enclaves of wealth and new monopolies threatening liberal democracy",
+      "severity": "minor",
+      "page": 136
+     }
+    ],
+    "additions": [],
+    "order": [
+     {
+      "source": "social knowledge, embodied knowledge, emotional intelligence and so on interact with what can be understood through neuroscience but are not defined by it alone. Universities and researchers can extend support by being always in dialogue with schools, teachers and students.",
+      "summary": "",
+      "layer": "Universities and researchers can extend support by being always in dialogue with schools, teachers and students. Participatory evaluation, collaborative research, youth-led research, and practitioner inquiry ... Educational research will be a key tool ... Mobilizing the learning sciences",
+      "severity": "minor",
+      "page": 125
+     }
+    ]
+   },
+   {
+    "index": 4,
+    "section": "Mandate (p. 165–186)",
+    "answered": true,
+    "omissions": [],
+    "distortions": [
+     {
+      "source": "UN Association of Norway | UNESCO National Commission of the Philippines",
+      "summary": "UNESCO National Commissions (including those of Bangladesh, Canada, China, the Democratic People's Republic of Korea, Finland, Germany, Haiti, Indonesia, Korea, Latvia, Lao PDR, Lebanon, Madagascar, Norway",
+      "severity": "minor",
+      "page": 177
+     },
+     {
+      "source": "Alda Lara Polytechnic Secondary Institute ... Training School for Health Technicians of Luanda",
+      "summary": "Angola (over 20)",
+      "severity": "minor",
+      "page": 177
+     },
+     {
+      "source": "Abudharr Ghifari College, Dhaka ... Udayan Uchcha Madhyamik Bidyalaya, Dhaka",
+      "summary": "Bangladesh (13)",
+      "severity": "minor",
+      "page": 178
+     },
+     {
+      "source": "Albert-Schweitzer-Schule Hofgeismar ... Warndt-Gymnasium Völklingen",
+      "summary": "Germany (11)",
+      "severity": "minor",
+      "page": 181
+     },
+     {
+      "source": "1st Junior High School of Serres ... Zagorianakos Junior High School",
+      "summary": "Greece (over 30)",
+      "severity": "minor",
+      "page": 181
+     },
+     {
+      "source": "Agrupamento de Escolas D. Dinis, Quarteira ... Instituto Duarte de Lemos, Águeda",
+      "summary": "Portugal (11)",
+      "severity": "minor",
+      "page": 183
+     },
+     {
+      "source": "Chiak Elementary School ... Yeongjujeil High School",
+      "summary": "Republic of Korea (24)",
+      "severity": "minor",
+      "page": 183
+     }
+    ],
+    "additions": [
+     {
+      "summary": "Japan (over 25, many in Omuta)",
+      "severity": "minor"
+     }
+    ],
+    "order": []
+   }
+  ]
+ },
+ "source": {
+  "source": "unesco-reimagining-our-futures-together-a-new-social-contract-for-education-2021.pdf",
+  "bytes": 4912434,
+  "sha256": "e213723e5b0669f74758dce96cc47add7d36f34201bc38aa6aad14071cfbfe13",
+  "extracted_at": "2026-11-13T02:19:04+01:00"
+ }
+}

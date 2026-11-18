@@ -87,3 +87,9 @@ docs/WHATS_NEW_2026_01.md
 docs/WORKSHOP_REPLAY_TESTING.md
 docs/WORK_ORDER_CONTENT_CHECKING.md
 docs/latent_lab_instrumente_plan_2026-08-26.md
+
+# The records of two particular installations (which host routes where, which
+# machine the key files were copied from). The guides in docs/installation/
+# stay public; these two files are not guides.
+docs/installation/HANDOVER_*
+docs/installation/DEPLOYMENT_REPORT_*

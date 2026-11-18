@@ -10,146 +10,150 @@ themen: [ai, bias]
 lizenz: arXiv non-exclusive distribution licence - original not redistributed; this file is a condensation produced on this platform
 url: "https://arxiv.org/abs/1607.06520"
 status: published
-analyzed_at: "2026-07-31T09:30:18.754429+00:00"
+checks: passed
+review: passed
+analyzed_at: "2026-11-15T11:06:54.815058+00:00"
 analysis_lang: en
-analysis_model: openrouter/z-ai/glm-5.2
+analysis_model: openrouter/z-ai/glm-5.3
+doc_type: scholarly_article
+seitenzahlen: gedruckt
 ---
 
 # Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings
 
 ## PROFIL
 
-The text argues that word embedding frameworks quantitatively encode and amplify gender stereotypes present in training data, setting itself against the blind application of machine learning that ignores these embedded biases. By demonstrating that gender neutral words are linearly separable from gender definition words within a specific gender subspace, the authors develop algorithms to debias embeddings by quantifying and mitigating both direct and indirect gender biases. This geometric intervention preserves the embedding's utility for analogy tasks while neutralizing stereotypical associations, offering arts education a critical framework for analyzing and correcting algorithmic representation in digital media practices.
+The article "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings" was written by Tolga Bolukbasi, Kai-Wei Chang, James Zou, Venkatesh Saligrama and Adam Kalai, affiliated with Boston University and Microsoft Research New England, and is addressed to the machine learning and natural language processing community. Its subject is the pronounced female/male gender stereotypes contained in word embeddings—vector representations of words used as basic features in applications such as web search, document ranking, sentiment analysis and question retrieval—and its claim is that these stereotypes can be quantified and removed while preserving the embeddings' useful properties, so that computer systems at least do not amplify societal bias. The paper first demonstrates the bias in the w2vNEWS word2vec embedding trained on Google News (occupational stereotypes, stereotyped analogies, indirect bias between gender-neutral words), then identifies a gender subspace through principal component analysis of gender-pair difference vectors, defines metrics of direct and indirect bias, and proposes two debiasing algorithms: hard debiasing (Neutralize and Equalize) and soft bias correction via a semidefinite program. It further describes how gender-neutral words are determined (a Wordnet-derived base set extended by a linear SVM), reports debiasing results with crowd judgments from Amazon Mechanical Turk and standard benchmarks showing no utility degradation, and closes with a discussion recommending erring "on the side of neutrality," notes on racial stereotypes in the same embedding, and appendices covering analogy-generation methods, the SDP solution, questionnaires and full-embedding results. It situates itself against two literatures—studies of gender bias and stereotype in English (implicit associations, marked morphology, Glick and Fiske's "benevolent sexism," Wikipedia studies) and work on algorithmic bias and fair classification (Barocas and Selbst; Feldman et al.; Pedreshi et al.)—and distinguishes its approach from Schmidt's simpler proposal of removing multiple gender dimensions entirely. For arts education, the article is usable in media literacy, digital culture and interdisciplinary teaching on representation and stereotype, wherever the analysis of implicit gender associations in language and the ethics of algorithmic systems are at issue.
 
 ## WISSEN
 
-### Problem Framing and Thesis: Gender Bias in Word Embeddings
+### Purpose and Thesis (pp. 1–4)
 
-Blind application of machine learning risks amplifying biases already present in training data. Word embedding—a framework representing text as vectors used across NLP tasks—exemplifies this danger: embeddings trained on Google News articles exhibit female/male gender stereotypes to a disturbing extent, and their widespread use tends to amplify rather than mitigate these biases.
+This paper by Tolga Bolukbasi, Kai-Wei Chang, James Zou, Venkatesh Saligrama and Adam Kalai (Boston University and Microsoft Research New England) demonstrates that word embeddings—vector representations of words used widely in machine learning and natural language processing—contain pronounced female/male gender stereotypes, and proposes methods to quantify and remove ("debias") these stereotypes while preserving the embeddings' useful properties. The authors show that even the popular word2vec embedding trained on Google News articles (w2vNEWS, 3 million English words/terms in 300 dimensions) exhibits disturbing gender bias: it answers the analogy "man is to computer programmer as woman is to x" with x = homemaker, and outputs that a father is to a doctor as a mother is to a nurse. Because embeddings are used as basic features in applications such as web search, document ranking, sentiment analysis and question retrieval, they risk not only reflecting but amplifying societal bias. The authors illustrate amplification with a hypothetical web search: for the query "cmu computer science phd student," among 127 nearly identical student pages differing only in names, the embedding would rank John's page above Mary's. The paper focuses on Female-Male (F-M) gender bias, though the approach may apply to other biases (pp. 1–4).
 
-The argument proceeds in two geometric steps. First, gender bias is captured by a specific direction in the word embedding. Second, gender neutral words are linearly separable from gender definition words. These two properties ground a methodology for modifying embeddings to remove gender stereotypes (e.g., the association between *receptionist* and *female*) while preserving desired associations (e.g., between *queen* and *female*).
+The authors note that simple word co-occurrence counting is misleading due to reporting bias (e.g., "male nurse" is more frequent than "female nurse"), whereas embeddings, trained with second-order methods on large data, can circumvent this: the vector for nurse is in fact closer to female than male. Embeddings may thus serve as a means of extracting implicit gender associations from text, analogous to Implicit Association Tests for people (p. 3).
 
-The authors define metrics to quantify both **direct** and **indirect** gender biases in embeddings, and develop algorithms to debias them. Validation uses both crowd-worker evaluation and standard benchmarks, demonstrating that the algorithms significantly reduce gender bias while preserving useful properties such as clustering related concepts and solving analogy tasks. The resulting embeddings can be deployed in applications without amplifying gender bias.
+### Related Work (pp. 4–6)
 
-<!-- quelle: Problem Framing and Thesis -->
+The paper situates itself in two literatures: (1) gender bias and stereotype in English—studies of implicit associations linking female terms with liberal arts and family and male terms with science and careers; marked vs. unmarked word morphology (actor/actress); Glick and Fiske's "benevolent sexism"; complementary and compensatory stereotypes; and Wikipedia studies showing articles about women emphasize husbands and gender; and (2) bias within algorithms—racial and gender bias in online ads, repeat-offender prediction, dialect differences in social media, and prior work on "fair" classification (Barocas and Selbst; Feldman et al.; Pedreshi et al.'s direct vs. indirect discrimination). The authors note independent work by Schmidt, who proposed removing multiple gender dimensions entirely, a simpler approach than theirs. Unlike supervised fair classification, embeddings present no clear individuals or classification task (pp. 4–6).
 
-### Bias in Word Embeddings and Amplification Risk
+### Preliminaries (p. 6)
 
-Word embeddings represent words as vectors where semantic similarity and relational analogies emerge from co-occurrence in text corpora. The same vector arithmetic that solves *man:king::woman:queen* also produces *man:computer programmer::woman:homemaker*, revealing gender stereotypes embedded in training data. The primary object of study is **w2vNEWS**, trained on Google News; biases persist across other publicly available embeddings.
+An embedding assigns each word w a unit vector in R^d; similarity is measured by inner product (equivalently cosine, since vectors are normalized). The paper assumes a set of gender-neutral words N (e.g., flight attendant, shoes) and a set of F-M gender pairs P (e.g., she-he, mother-father). The primary embedding studied is w2vNEWS: the pre-trained Google News word2vec embedding, filtered to 26,377 lower-case words/phrases under 20 characters from the 50,000 most frequent words. Human experiments were run on Amazon Mechanical Turk with U.S.-based workers; "majority of 10 crowd judgments" means 5 or more independent workers. Because gender associations vary by culture and person, the authors ask about stereotypes rather than personal biases (p. 6).
 
-The central thesis: embeddings quantitatively encode gender stereotypes and, because they serve as features in downstream applications, risk *amplifying* bias. A web-search example illustrates amplification: given identical student pages differing only in names, embeddings rank *John* higher than *Mary* for a CS query, widening the gender gap.
+### Gender Stereotypes in Word Embeddings (pp. 6–8)
 
-Naïve word-count approaches fail due to **reporting bias** (e.g., *male nurse* outnumbers *female nurse*), but embeddings use second-order methods that can circumvent this.
+Two exploratory methods are used:
 
-To quantify bias, a distinction is drawn between *gender specific words* (associated by definition, e.g., *brother*) and *gender neutral words*. Gender-specific words define a **gender subspace**; debiasing removes bias only from neutral words while respecting definitions.
+1. **Occupational stereotypes.** The occupations closest to she in w2vNEWS include homemaker, nurse, receptionist, librarian, socialite, hairdresser, nanny, bookkeeper, stylist, housekeeper, interior designer, guidance counselor; closest to he are maestro, skipper, protege, philosopher, captain, architect, financier, warrior, broadcaster, magician, fighter pilot, boss (occupations like businesswoman, where gender is suggested by spelling, were excluded). Ten crowd-workers rated each occupation's stereotypicality on a 0–10 scale; the projection of occupations onto the she-he axis correlates strongly with these ratings (Spearman ρ = 0.51). Projecting occupations onto the she-he direction in both w2vNEWS and a GloVe web-crawl embedding gives highly consistent results (Spearman ρ = 0.81), showing the bias is not an artifact of one corpus or algorithm (pp. 6–7).
 
-**Direct bias** = association between a gender-neutral word and a gender pair. **Indirect bias** = associations between gender-neutral words arising from gender (e.g., *receptionist* closer to *softball* than *football*). Geometry can determine how much of an association is gender-based versus legitimate.
+2. **Stereotyped analogies.** The authors modify the standard analogy task: given a seed pair (a, b) = (she, he), generate word pairs (x, y) such that "he is to x as she is to y" is a good analogy, scoring pairs by parallelism to the seed direction with a semantic-similarity threshold δ = 1 (angle ≤ π/3). Of 150 generated analogies, 72 were rated gender-appropriate by five or more of 10 workers, and 29 were rated as reflecting gender stereotypes. Stereotypic examples include sewing-carpentry, nurse-surgeon, interior designer-architect, blond-burly, feminism-conservatism, giggle-chuckle, sassy-snappy, volleyball-football, cupcakes-pizzas, hairdresser-barber; gender-appropriate examples include queen-king, sister-brother, mother-father, waitress-waiter, ovarian cancer-prostate cancer, convent-monastery (pp. 7–8).
 
-Crowd workers confirmed biases align with social stereotypes. Debiasing leverages a low-dimensional gender subspace to reduce bias while preserving embedding utility.
+3. **Indirect gender bias.** Projecting occupations onto the softball-football direction (both gender-neutral words) shows bookkeeper and receptionist much closer to softball, plausibly due to female associations with both—bias acting indirectly between gender-neutral words (p. 8).
 
-Extreme she occupations: homemaker, nurse, receptionist, librarian, socialite, hairdresser, nanny, bookkeeper, stylist, housekeeper, interior designer, guidance counselor.
+### Geometry of Gender and Bias (pp. 8–11)
 
-Extreme he occupations: maestro, skipper, protege, philosopher, captain, architect, financier, warrior, broadcaster, magician, fighter pilot, boss.
+**Identifying the gender subspace.** Because language use is "messy" (polysemy, e.g., man as exclamation or verb), individual gender-pair difference vectors are not parallel. Ten gender pairs (she-he, her-his, woman-man, Mary-John, herself-himself, daughter-son, mother-father, gal-guy, girl-boy, female-male) were validated against crowd-solicited lists of definitionally gendered and stereotypically gendered words, achieving roughly 80–93% classification accuracy (e.g., she-he: 92% definitional, 89% stereotypical). Principal component analysis of the ten pair-difference vectors reveals a single direction explaining most variance (the first eigenvalue is significantly larger than the rest, unlike the gradual decrease seen with random unit vectors); the top principal component g is taken as the gender direction, though the methods generalize to higher-dimensional subspaces (pp. 8–9).
 
-Gender stereotype she-he analogies: sewing-carpentry, register_nurse-physician, housewife-shopkeeper, nurse-surgeon, interior_designer-architect, softball-baseball, blond-burly, feminism-conservatism, cosmetics-pharmaceuticals, giggle-chuckle, vocalist-guitarist, petite-lanky, sassy-snappy, diva-superstar, charming-affable, volleyball-football, cupcakes-pizzas, hairdresser-barber.
+**Direct bias.** For gender-neutral words N and gender direction g, DirectBias is defined as the mean of |cos(w, g)|^c over N, where parameter c controls strictness (c = 0 is strict, c = 1 gradual). For the 327 occupation words in w2vNEWS, DirectBias₁ = 0.08, confirming substantial gender components in occupation words (pp. 9–10).
 
-Gender appropriate she-he analogies: queen-king, sister-brother, mother-father, waitress-waiter, ovarian_cancer-prostate_cancer, convent-monastery.
+**Indirect bias.** Each word vector is decomposed as w = w_g + w_⊥, where w_g = (w·g)g is the gender contribution. The indirect bias metric β(w, v) measures how much the similarity between two words changes (as a fraction of the original inner product) when the gender subspace is projected out and vectors renormalized. Case study on the softball-football axis: receptionist's similarity to softball is 67% gender-explained, waitress 35%, homemaker 38%; businessman's similarity to football is 31% and maestro's 42% gender-explained, while pitcher (softball) and footballer (football) have only 2% and -1% gender contribution—their similarity is functional (pp. 10–11).
 
-<!-- quelle: Introduction: Bias in Word Embeddings and Amplification Risk -->
+### Debiasing Algorithms (pp. 11–13)
 
-### Related Work on Bias in Language and Algorithms
+The algorithms operate on sets of words for generality (applicable to racial or religious bias). Step 1, **Identify gender subspace**: given defining sets D₁,…,D_n, compute their means, and take the bias subspace B as the first k rows of the SVD of the matrix of centered means (pp. 11–12).
 
-Related work splits into bias in language and bias in algorithms. The distinction between **direct** and **indirect bias** (Pedreshi et al.) is foundational: direct discrimination uses sensitive features explicitly; indirect discrimination uses non-sensitive correlates that nonetheless produce disproportionate treatment.
+Step 2a, **Hard debiasing (Neutralize and Equalize)**: Neutralize re-embeds each gender-neutral word by zeroing its component in B and renormalizing to unit length. Equalize operates on equality sets (e.g., {grandmother, grandfather}, {guy, gal}): outside B, all words in a set are equated to their average; within B, they are centered (moved to mean 0) and scaled so each vector is unit length. Centering matters: both male and female happen to be positive in the gender direction (female more so), and centering balances them symmetrically—without it, the two would receive identical embeddings, losing analogies like father:male :: mother:female. After Steps 1 and 2a, any neutral word is equidistant to all words in each equality set, and PairBias = 0. The drawback of Equalize is that it removes valuable distinctions, e.g., a language model should prefer "grandfather a regulation" over "grandmother a regulation" (pp. 11–12).
 
-Gender bias in English manifests in implicit associations (IATs) linking female terms to liberal arts/family and male terms to science/careers; in word morphology where default forms (actor) encode the dominant class and female forms (actress) are marked; and in lexical imbalance—fewer words for males but far more words sexualizing females. **Benevolent sexism** (Glick & Fiske) shows that even positive associations (helpful, attractive) harm women by reducing their association with words like professional. Stereotypes, being consistent, are easier to study; **complimentary stereotypes** assign each gender offsetting strengths, and compensatory stereotypes justify the status quo. Online contexts confirm these patterns: Wikipedia articles about women disproportionately emphasize gender, husbands, and husbands' jobs; words like husband predict female subjects, baseball predicts male.
+Step 2b, **Soft bias correction**: a linear transformation T ∈ R^(d×d) is learned that preserves pairwise inner products of all word vectors while minimizing the projection of gender-neutral words onto the gender subspace, formalized as a semidefinite program with tuning parameter λ balancing the two objectives (λ = 0.2 in experiments; large λ corresponds to hard debiasing). The output is renormalized to unit length (pp. 12–13).
 
-Algorithmic bias appears in ad delivery, repeat-offender prediction, and dialect-based exclusion from NLP tools trained on standard datasets. Schmidt independently identified gender bias in word embeddings, proposing debiasing by removing one gender dimension per pair—similar but simpler than our approach. Fair-classification work (Feldman et al.) distinguishes modifying data from modifying the algorithm; our approach resembles the former. However, prior fairness work assumes supervised classification with identifiable individuals and a distinguished sensitive feature. Word embeddings lack clear individuals or a predefined classification task, yet direct and indirect bias still arise, making existing fairness frameworks difficult to apply.
+### Determining Gender-Neutral Words (p. 13)
 
-<!-- quelle: Related Work on Bias in Language and Algorithms -->
+Since gender-specific words are fewer, the authors enumerate those and take the complement. From dictionary (Wordnet) definitions, a base set S₀ of 218 gender-specific words was derived from w2vNEWS (e.g., he, she, mother, father, king, queen, waitress, businesswoman; words like beard, estrogen, rabbi were debated; clothing words were classified as neutral under a strict definition). A linear SVM (C = 1.0) trained on this set generalized to the full 3-million-word embedding, yielding S of 6,449 gender-specific words. Evaluation: F-score of .627 ± .102 (stratified 10-fold cross-validation); binary accuracy over 99% due to class imbalance; class-balanced accuracy 95.12% ± 1.46% with 95% confidence (p. 13).
 
-### Preliminaries and Experimental Setup
+### Debiasing Results (pp. 13–14)
 
-An embedding assigns a unit vector w⃗ ∈ R^d (‖w⃗‖ = 1) to each word w ∈ W. Two subsets are assumed given: **gender neutral words** N ⊂ W (e.g., *flight attendant*, *shoes*), not specific to any gender, and **F-M gender pairs** P ⊂ W × W (e.g., *she-he*, *mother-father*), whose definitions differ mainly in gender. Section 7 addresses discovering N and P within the embedding; until then they are taken as given. Similarity is measured by inner product; since words are unit-normalized, cos(w⃗₁, w⃗₂) = w⃗₁ · w⃗₂. The authors note they "abuse terminology" by using "word" and "embedding of a word" interchangeably.
+**Direct bias.** On the original w2vNEWS, 19% of the top 150 she-he analogies were judged stereotypical by a majority of ten workers; after hard debiasing, only 6%. For "he to doctor is as she to X," the original embedding returns X = nurse, the hard-debiased embedding returns X = physician, while gender-appropriate analogies (she:ovarian cancer :: he:prostate cancer) are preserved. Soft debiasing was less effective. Standard benchmarks show no degradation: RG 62.3→62.4, WS 54.5→54.1, MSR analogy 57.0→57.0 (hard); 62.4/54.2/56.8 (soft) on the filtered vocabulary (pp. 13–14).
 
-The default embedding is w2vNEWS: a d = 300-dimensional word2vec embedding pre-trained on Google News, normalized to unit length. From the 50,000 most frequent words, only lower-case words and phrases with fewer than 20 lower-case characters were retained; words with upper-case letters, digits, or punctuation were discarded. After filtering, 26,377 words remained. Gender stereotypes are later shown to persist in other embedding datasets.
+**Indirect bias.** After hard debiasing, the most extreme softball-end words become pitcher, infielder, major leaguer, bookkeeper, investigator—words relevant to softball without gender bias—while receptionist, waitress, homemaker, businessman and maestro drop off the extremes; pitcher and footballer are essentially unchanged because their similarity is functional (p. 14).
 
-Crowd experiments ran on Amazon Mechanical Turk, restricted to U.S.-based workers for homogeneity and reproducibility. Two experiment types mirror information-retrieval precision/recall evaluation: (1) soliciting words from the crowd to test whether embedding biases contain crowd biases, and (2) soliciting ratings on embedding-generated words or analogies to test whether crowd biases contain embedding biases. "Majority of 10 crowd judgments" means annotations by 5 or more independent workers.
+### Discussion (pp. 14–15)
 
-The authors deliberately solicit ratings of **stereotypes** rather than bias: gender associations vary by culture and person, stereotypes possess greater consistency than biases, and people may feel more comfortable rating cultural stereotypes than discussing personal gender biases.
+A single direction largely captures gender, enabling quantification of both direct bias and indirect inequality. Debiasing changes gender-neutral words by removing their gender associations while retaining the gender component of gender-specific words, maintaining analogies like she:grandmother :: he:grandfather. The authors respond to the view that one should debias society rather than embeddings: since computer systems increasingly rely on embeddings, debiased embeddings can in a small way help reduce societal bias, and machine learning should at least not amplify bias. They recommend erring "on the side of neutrality" and using debiased embeddings wherever possible, while acknowledging that in specific applications biased statistics might be useful. The same w2vNEWS also exhibits racial stereotypes: projecting occupations onto the minorities-whites direction, the most extreme white-end occupations are parliamentarian, advocate, deputy, chancellor, legislator, lawyer; the minorities-end extremes are butler, footballer, socialite, crooner. Future work includes other bias types, other languages (especially those with grammatical gender), and the full-embedding results (Appendix H) confirm no utility degradation: RG 76.1→76.5, WS 70.0→69.7, analogy 71.2→71.2 (pp. 14–15, 24–25).
 
-<!-- quelle: Preliminaries and Experimental Setup -->
+### Appendices (pp. 18–25)
 
-### Gender Stereotypes in Word Embeddings
+Appendix A discusses analogy-generation methods: the parallelogram approach (equivalent to cosAdd) tends to return trivial or symmetric pairs; the authors' metric requires the pair direction to be parallel to the seed direction while keeping the two words semantically close (‖x−y‖ ≤ δ). Appendix B derives the SDP solution for soft debiasing via singular value decomposition of W, reducing the problem to an efficiently solvable 300×300 matrix. Appendix C details the 218-word gender-specific base list. Appendices D–F reproduce the Mechanical Turk questionnaires (soliciting gendered/stereotypical words and analogies; rating analogies as stereotypes, appropriate, or nonsensical). Appendix G lists the generated analogies with crowd ratings before and after hard debiasing (e.g., before: midwife:doctor 1 appropriate/10 biased, sewing:carpentry 2/9, nurse:surgeon 1/9; after: hostess:bartender 1/8, ballerina:dancer 0/7, with definitional pairs like mother:father 10/1 and queen:king 10/0). Appendix H reports debiasing results on the full w2vNEWS embedding (pp. 18–25).
 
-Two methods assess embedding bias: (1) occupation-word proximity to gender terms and (2) generated analogies judged by humans. Projecting occupation words onto the *she-he* direction in w2vNEWS correlates with crowdworker stereotypicality ratings (Spearman ρ = 0.51). The same projection across a GloVe web-crawl embedding yields highly consistent results (ρ = 0.81), establishing that gender stereotypes are prevalent across embeddings and not an artifact of a particular corpus or methodology. Occupation words were chosen for interpretability; *she* and *he* were chosen over *woman*/*man* for frequency and fewer alternative senses.
+### Figures (p. 7–15)
 
-The analogy task is modified: given a seed pair (a, b) = (she, he), generate word pairs (x, y) scored by parallelism to the seed direction plus semantic coherence (threshold δ = 1). U.S.-based crowdworkers judged each analogy on whether it makes sense and whether it reflects a gender stereotype. Of 150 analogies, 72 were rated gender-appropriate and 29 stereotypical by five or more workers.
+*Fig. 4 (p. 7):* Comparing the bias of two different embeddings-the w2vNEWS and the GloVe web-crawl embedding. In each embedding, the occupation words are projected onto the she -he direction. Each dot corresponds to one occupation word; the gender bias of occupations is highly consistent across embeddings (Spearman ρ = 0 . 81 ). — This is a scatter plot titled "Gender bias in occupation words across embeddings." The horizontal axis is labeled "she-he axis of w2vNEWS embedding" and the vertical axis is labeled "she-he axis of GloVe webcrawl embedding." The plot shows many small blue dots forming an upward-sloping distribution from the lower left to the upper right, with both axes marked with values ranging from -0.2 to 0.4. _(Lettering in the image, read by the image model, not confirmed: "Gender bias in occupation words across embeddings.", "she-he axis of w2vNEWS embedding", "she-he axis of GloVe webcrawl embedding.")_
 
-Beyond direct bias, *indirect gender bias* is tested by projecting occupation words onto directions defined by gender-neutral word pairs (e.g., softball–football). Bookkeeper and receptionist cluster near softball, plausibly reflecting indirect female associations. However, some male-biased word pairs have legitimate non-gender associations (footballer–football), motivating the rigorous metric developed in Section 5.
+*Fig. 6 (p. 10):* Left: the percentage of variance explained in the PCA of these vector differences (each difference normalized to be a unit vector). The top component explains significantly more variance than any other. Right: for comparison, the corresponding percentages for random unit vectors (figure created by averaging over 1,000 draws of ten random unit vectors in 300 dimensions). — The picture contains two side-by-side bar charts with solid blue bars on white backgrounds. In the left chart, the vertical axis is marked from 0 to 0.7 and the horizontal axis from 0 to 10; the first bar reaches about 0.6, and the later bars fall rapidly toward zero. In the right chart, the vertical axis is marked from 0.00 to 0.14 and the horizontal axis from 0 to 10; its ten bars decrease only gradually, from about 0.13 down to about 0.07. No words or titles are legible in the charts beyond the numeric axis tick labels.
 
-<!-- quelle: Empirical Demonstration of Gender Stereotypes in Embeddings -->
+*Fig. 8 (p. 15):* Number of stereotypical (Left) and appropriate (Right) analogies generated by wordembeddings before and after debiasing. — The image contains two side-by-side line charts. Both charts share the x-axis label "number of generated analogies"; the left chart's y-axis reads "number of stereotypic analogies" and the right chart's y-axis reads "number of appropriate analogies". A legend in the upper-left of each chart identifies three data series: "before" (blue dots), "hard-debiased" (green line), and "soft-debiased" (red triangles). _(Lettering in the image, read by the image model, not confirmed: "number of generated analogies", "number of stereotypic analogies", "number of appropriate analogies")_
 
-### Geometry of Gender: Identifying Gender Subspace and Bias Metrics
+<!-- quelle: Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25) -->
 
-Because individual word pairs are noisy due to polysemy (e.g., *man* as exclamation, verb, or gendered noun), bias is estimated by aggregating across multiple paired comparisons. Ten gender pair difference vectors are subjected to PCA; the first principal component explains significantly more variance than expected from random sampling, and is hypothesized as the **gender subspace** (unit vector *g*). Crowd-sourced validation on Amazon Mechanical Turk confirms these pairs capture intuitive gender: definitional and stereotypical word lists (50 male, 50 female each) are classified at 80–93% accuracy by individual pairs.
+## LITERATUR
 
-**DirectBias** measures how far gender-neutral words *N* project onto *g*: DirectBias = (1/|N|) Σ |cos(w, g)|^c, where *c* controls strictness (c=0 is binary, c=1 gradual). For 327 occupations in w2vNEWS, DirectBias₁ = 0.08, confirming substantial gender alignment.
+<!-- quelle: References (p. 16–17) -->
 
-**Indirect bias** persists even after removing explicit gender words. Each vector *w* is decomposed as *w = w_g + w_⊥*, where *w_g = (w·g)g*. The metric β(w,v) = (w·v − w_⊥·v_⊥ / (‖w_⊥‖₂‖v_⊥‖₂)) / (w·v) quantifies the fractional change in similarity when the gender subspace is projected out. Case study: *receptionist*, *waitress*, *homemaker* are closer to *softball* than *football*, with β values of 67%, 35%, 38% respectively, indicating their similarity to *softball* is largely explained by gender. Similarly, *businessman* (β=31%) and *maestro* (β=42%) align with *football* via indirect gender bias.
-
-<!-- quelle: Geometry of Gender: Identifying Gender Subspace and Bias Metrics -->
-
-### Debiasing Algorithms and Gender-Neutral Word Classification
-
-Debiasing is defined over sets of words (not just pairs) for generality across bias types. A set of words to neutralize is assumed, either from a list or from the embedding; in practice it is easier to enumerate the smaller set of gender-specific words and take the complement.
-
-**Step 1 — Identify gender subspace:** A subspace *B* (spanned by *k* orthogonal unit vectors) capturing the bias is extracted via SVD of the covariance of defining-set means.
-
-**Step 2a — Hard de-biasing (Neutralize and Equalize):** Neutralize projects gender-neutral words to zero in *B*. Equalize forces each equality set's vectors to share the same orthogonal-to-*B* component (their average) and a centered, unit-length component within *B*. Centering is essential: without it, *male* and *female* would collapse to identical embeddings, losing analogies like *father:male :: mother:female*. The motivation for centering is that both *male* and *female* project positively onto the gender direction (female more so), plausibly due to corpus frequencies such as "male nurse" or "she was assaulted by the male."
-
-Equalize's disadvantage: it erases distinctions valuable for certain applications — e.g., *to grandfather a regulation* should retain higher probability than *to grandmother a regulation*.
-
-**Observation 1:** After Steps 1 and 2a, any neutral word is equidistant to all words within each equality set, and PairBias = 0.
-
-**Step 2b — Soft bias correction:** A linear transformation *T* preserves pairwise inner products while minimizing projection of neutral words onto *B*, balanced by parameter λ (λ large recovers Step 2a exactly; experiment uses λ = 0.2). Solved as a semi-definite program.
-
-**Determining gender-neutral words (Section 7):** A base list *S₀* of 218 gender-specific words is derived from dictionary definitions (subjective; ideally application-customized). A linear SVM (C = 1.0) generalizes this to the full 3-million-word embedding, yielding *S* of 6,449 gender-specific words. Stratified 10-fold cross-validation gives F-score .627 ± .102; balanced accuracy 95.12% ± 1.46% with 95% confidence.
-
-<!-- quelle: Debiasing Algorithms and Gender-Neutral Word Classification -->
-
-### Debiasing Results and Evaluation
-
-The evaluation tests whether debiasing algorithms preserve embedding utility while reducing both direct and indirect gender biases.
-
-**Utility preservation.** Standard benchmarks (RG, WS, MSR-analogy) show no degradation after debiasing: hard-debiased and soft-debiased embeddings score nearly identically to the original w2vNEWS on coherence and analogy-solving (Table 1).
-
-**Direct bias.** Using the she–he analogy generation task with crowd-worker evaluation, stereotypical analogies dropped from 19% (top 150) in the original embedding to 6% after hard-debiasing. The example *he:doctor :: she:X* yields X=nurse in the original but X=physician after hard-debiasing, while gender-appropriate analogies such as *she:ovarian cancer :: he:prostate cancer* are preserved. The count of appropriate analogies remains similar, confirming quality is retained. Soft-debiasing was less effective.
-
-**Indirect bias.** Without ground truth for indirect effects, evaluation is qualitative. In the softball–football direction, after strict debiasing the most extreme words near softball become *infielder*, *major leaguer*, and *pitcher*—semantically relevant and non-gendered—while stereotypic associations (*receptionist*, *waitress*, *homemaker*) and male-biased words (*businessman*) drop in rank. Words whose similarity stems from actual function (*pitcher*–softball, *footballer*–football) remain essentially unchanged, confirming the algorithm targets gender contribution rather than semantic content.
-
-<!-- quelle: Debiasing Results and Evaluation -->
-
-### Discussion: Debiasing Efficacy, Counter-Arguments, and Future Directions
-
-A single gender direction *g* largely captures gender in word embeddings, enabling quantification of both direct associations between gender-neutral words and gender, and *indirect inequality*. Projecting gender-neutral words onto *g* measures their degree of female- or male-bias.
-
-The **hard-debiasing** algorithm removes gender associations from gender-neutral words (e.g., *nurse* becomes equally male and female along *g*), while retaining the gender component for gender-specific words to preserve analogies such as *she:grandmother :: he:grandfather*. Gender-specific words carry biases beyond *g*: *grandmother* and *grandfather* are both closer to *wisdom* than *gal* and *guy* — not a gender difference — yet *babysit* is disproportionately closer to *grandmother*, a bias specific to that pair. Equating the pair outside gender and stripping *g* from *babysit* resolves this. Empirical evaluation shows significant reduction of both direct and indirect gender bias while preserving embedding utility. A **soft-debiasing** variant balances bias reduction against preserving original distances.
-
-Against the view that embeddings merely reflect societal bias and should not be altered, the authors hold that debiased embeddings prevent machine-learning systems from amplifying stereotypes and may contribute, however modestly, to reducing societal bias. Against the claim that biased embeddings capture useful statistics in specific applications, they recommend erring toward neutrality.
-
-Future work: the same corpus (*w2vNEWS*) exhibits strong racial stereotypes (e.g., occupations clustering toward *whites* vs. *minorities*); quantifying and removing racial, ethnic, and cultural biases remains open. Extending the approach to languages with grammatical gender is also proposed.
-
-<!-- quelle: Discussion, Outlook, and References -->
+- J. Angwin, J. Larson, S. Mattu, and L. Kirchner. Machine bias: There's software used across the country to predict future criminals. and it's biased against blacks., 2016.
+- C. Aschwanden. The finkbeiner test: What matters in stories about women scientists? DoubleXScience , 2013.
+- S. Barocas and A. D. Selbst. Big data's disparate impact. Available at SSRN 2477899 , 2014.
+- E. Beigman and B. B. Klebanov. Learning with annotation noise. In ACL , 2009.
+- A. J. Cuddy, E. B. Wolf, P. Glick, S. Crotty, J. Chong, and M. I. Norton. Men as cultural ideals: Cultural values moderate gender stereotype content. Journal of personality and social psychology , 109(4):622, 2015.
+- A. Datta, M. C. Tschantz, and A. Datta. Automated experiments on ad privacy settings. Proceedings on Privacy Enhancing Technologies , 2015.
+- C. Dwork, M. Hardt, T. Pitassi, O. Reingold, and R. Zemel. Fairness through awareness. In Innovations in Theoretical Computer Science Conference , 2012.
+- J. Eisenstein, B. O'Connor, N. A. Smith, and E. P. Xing. Diffusion of lexical change in social media. PLoS ONE , pages 1-13, 2014.
+- M. Faruqui, J. Dodge, S. K. Jauhar, C. Dyer, E. Hovy, and N. A. Smith. Retrofitting word vectors to semantic lexicons. In NAACL , 2015.
+- M. Feldman, S. A. Friedler, J. Moeller, C. Scheidegger, and S. Venkatasubramanian. Certifying and removing disparate impact. In KDD , 2015.
+- C. Fellbaum, editor. Wordnet: An Electronic Lexical Database . The MIT Press, Cambridge, MA, 1998.
+- L. Finkelstein, E. Gabrilovich, Y. Matias, E. Rivlin, Z. Solan, G. Wolfman, and E. Ruppin. Placing search in context: The concept revisited. In WWW . ACM, 2001.
+- P. Glick and S. T. Fiske. The ambivalent sexism inventory: Differentiating hostile and benevolent sexism. Journal of personality and social psychology , 70(3):491, 1996.
+- J. Gordon and B. Van Durme. Reporting bias and knowledge extraction. Automated Knowledge Base Construction (AKBC) , 2013.
+- A. G. Greenwald, D. E. McGhee, and J. L. Schwartz. Measuring individual differences in implicit cognition: the implicit association test. Journal of personality and social psychology , 74(6):1464, 1998.
+- C. Hansen, M. Tosik, G. Goossen, C. Li, L. Bayeva, F. Berbain, and M. Rotaru. How to get the best word vectors for resume parsing. In SNN Adaptive Intelligence / Symposium: Machine Learning 2015, Nijmegen.
+- J. Holmes and M. Meyerhoff. The handbook of language and gender , volume 25. John Wiley & Sons, 2008.
+- O. İrsoy and C. Cardie. Deep recursive neural networks for compositionality in language. In NIPS . 2014.
+- R. Jakobson, L. R. Waugh, and M. Monville-Burston. On language . Harvard Univ Pr, 1990.
+- J. T. Jost and A. C. Kay. Exposure to benevolent sexism and complementary gender stereotypes: consequences for specific and diffuse forms of system justification. Journal of personality and social psychology , 88(3):498, 2005.
+- M. Kay, C. Matuszek, and S. A. Munson. Unequal representation and gender stereotypes in image search results for occupations. In Human Factors in Computing Systems . ACM, 2015.
+- T. Lei, H. Joshi, R. Barzilay, T. Jaakkola, A. M. Katerina Tymoshenko, and L. Marquez. Semi-supervised question retrieval with gated convolutions. In NAACL . 2016.
+- O. Levy and Y. Goldberg. Linguistic regularities in sparse and explicit word representations. In CoNLL , 2014.
+- T. Mikolov, K. Chen, G. Corrado, and J. Dean. Efficient estimation of word representations in vector space. In ICLR , 2013.
+- T. Mikolov, I. Sutskever, K. Chen, G. S. Corrado, and J. Dean. Distributed representations of words and phrases and their compositionality. In NIPS .
+- T. Mikolov, W.-t. Yih, and G. Zweig. Linguistic regularities in continuous space word representations. In HLT-NAACL , pages 746-751, 2013.
+- E. Nalisnick, B. Mitra, N. Craswell, and R. Caruana. Improving document ranking with dual word embeddings. In www , April 2016.
+- B. A. Nosek, M. Banaji, and A. G. Greenwald. Harvesting implicit group attitudes and beliefs from a demonstration web site. Group Dynamics: Theory, Research, and Practice , 6(1):101, 2002.
+- D. Pedreshi, S. Ruggieri, and F. Turini. Discrimination-aware data mining. In Proceedings of the 14th ACM SIGKDD international conference on Knowledge discovery and data mining , pages 560-568. ACM, 2008.
+- J. Pennington, R. Socher, and C. D. Manning. Glove: Global vectors for word representation. In EMNLP , 2014.
+- K. Ross and C. Carter. Women and news: A long and winding road. Media, Culture & Society , 33(8):1148-1165, 2011.
+- H. Rubenstein and J. B. Goodenough. Contextual correlates of synonymy. Communications of the ACM , 8(10):627-633, 1965.
+- E. Sapir. Selected writings of Edward Sapir in language, culture and personality , volume 342. Univ of California Press, 1985.
+- B. Schmidt. Rejecting the gender binary: a vector-space operation. http://bookworm.benschmidt. org/posts/2015-10-30-rejecting-the-gender-binary.html , 2015.
+- J. P. Stanley. Paradigmatic woman: The prostitute. Papers in language variation , pages 303-321, 1977.
+- L. Sweeney. Discrimination in online ad delivery. Queue , 11(3):10, 2013.
+- A. Torralba and A. Efros. Unbiased look at dataset bias. In CVPR , 2012.
+- P. D. Turney. Domain and function: A dual-space model of semantic relations and compositions. Journal of Artificial Intelligence Research , pages 533-585, 2012.
+- C. Wagner, D. Garcia, M. Jadidi, and M. Strohmaier. It's a man's wikipedia? assessing gender inequality in an online encyclopedia. In Ninth International AAAI Conference on Web and Social Media , 2015.
+- D. Yogatama, M. Faruqui, C. Dyer, and N. A. Smith. Learning word representations with hierarchical sparse coding. In ICML , 2015.
+- I. Zliobaite. A survey on measuring indirect discrimination in machine learning. arXiv preprint arXiv:1511.00148 , 2015.
 
 ## GLOSSAR
 
-- **word embedding** — A framework representing text data as vectors, widely used in machine learning and NLP tasks.
-- **direct gender bias** — Gender bias explicitly captured along a direction in the word embedding space.
-- **indirect gender bias** — Bias affecting the relative geometry between gender-neutral words themselves, where associations between neutral words may indirectly reflect gender stereotypes.
-- **direct bias** — Association between a gender-neutral word and a clear gender pair in the embedding geometry.
-- **indirect bias** — Discrimination arising from non-sensitive correlates that nonetheless produce disproportionate treatment, as distinguished from direct use of sensitive features.
-- **gender subspace** — The principal component direction g, learned from PCA on gender pair difference vectors, hypothesized to capture the gender dimension of the embedding.
-- **benevolent sexism** — Perception of women through subjectively positive traits that nonetheless causes discrimination by reducing their association with other desirable attributes.
-- **complimentary stereotypes** — Stereotypes assigning each gender perceived strengths that offset its weaknesses and complement the other gender, used to justify the status quo.
-- **gender neutral words** — Subset N ⊂ W of words not specific to any gender, such as 'flight attendant' or 'shoes'.
-- **F-M gender pairs** — Subset P ⊂ W × W of word pairs whose definitions differ mainly in gender, such as she-he or mother-father.
+- **Word embedding** — a framework representing each word (or phrase) as a d-dimensional unit vector, where semantically similar words have close vectors and vector differences capture relationships.
+- **w2vNEWS** — the publicly available 300-dimensional word2vec embedding trained on Google News (3 million words/terms), the paper's primary object of study.
+- **Gender-specific words** — words associated with a gender by definition (e.g., brother, businesswoman), as opposed to gender-neutral words.
+- **Gender-neutral words** — words not specific to any gender by definition (e.g., flight attendant, nurse), the set N.
+- **Direct bias** — the association between a gender-neutral word and a clear gender pair, measured as the mean of |cos(w, g)|^c over neutral words.
+- **Indirect bias** — associations between gender-neutral words that arise through gender (e.g., receptionist closer to softball than football), measured by the metric β.
+- **Gender subspace / gender direction g** — the low-dimensional subspace (top principal component of gender-pair difference vectors) that captures gender in the embedding.
+- **β (indirect bias metric)** — the fraction of the similarity between two words attributable to gender, computed by projecting out the gender subspace and renormalizing.
+- **Neutralize** — the debiasing step that zeroes gender-neutral words' components in the bias subspace.
+- **Equalize** — the step that makes all words in an equality set (e.g., {grandmother, grandfather}) equidistant from any neutral word, by averaging outside the subspace and centering within it.
+- **Soften (soft debiasing)** — an alternative that reduces differences between equality-set words while preserving original distances as much as possible, via a semidefinite program with parameter λ.
+- **Hard debiasing** — the combined Neutralize-and-Equalize procedure that completely removes pair bias.
+- **Equality set** — a set of words (typically a gender pair) that should be equidistant from all neutral words after debiasing.
+- **Reporting bias** — the phenomenon (Gordon and Van Durme) that common assumptions are left unsaid in text, making raw co-occurrence counts misleading for extracting associations.

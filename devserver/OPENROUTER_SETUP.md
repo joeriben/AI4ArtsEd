@@ -21,7 +21,7 @@ Paste your API key (just the key, nothing else), save and exit.
 
 **Example file content:**
 ```
-sk-or-v1-abc123def456ghi789jkl012mno345pqr678stu901vwx234yz
+sk-or-v1-YOUR_OPENROUTER_KEY_HERE
 ```
 
 That's it! The key file is automatically excluded from git.

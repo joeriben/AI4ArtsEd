@@ -1,0 +1,361 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 15.5% of 1739 words, ceiling 20%, longest run 42 words; not counted: 1695 words from the source's lists; not counted: figure descriptions",
+   "findings": [
+    {
+     "words": 42,
+     "text": "the memory identity and future of peoples ii encouraging the introduction of penal or administrative sanctions in national legislations iii promoting the development of national and local capacities in all countries iv fostering increased and effective cooperation with art market actors notably"
+    },
+    {
+     "words": 21,
+     "text": "the safeguarding promotion digitisation and inventorying of cultural heritage including through tvet and by fostering south south and north south cooperation"
+    },
+    {
+     "words": 21,
+     "text": "the rights of peoples and communities to their cultural identity and heritage including the expressions of the cultures of indigenous peoples"
+    },
+    {
+     "words": 14,
+     "text": "in consultation with the populations concerned and with their free prior and informed consent"
+    },
+    {
+     "words": 11,
+     "text": "the codification of the certificate of origin of cultural property and"
+    }
+   ],
+   "value": 0.1547,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "2 of 2 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "UNESCO World Conference on Cultural Policies and Sustainable Development (MONDIACULT 2022): Final Declaration (p. 1–8)",
+     "page": 1,
+     "expected_items": 8,
+     "first_item": "Reaffirming the fundamental principles of the Declarations adopted at the UNESCO",
+     "output_lists": []
+    },
+    {
+     "section": "UNESCO World Conference on Cultural Policies and Sustainable Development (MONDIACULT 2022): Final Declaration (p. 1–8)",
+     "page": 3,
+     "expected_items": 14,
+     "first_item": "We reaffirm our commitment to protect and promote cultural diversity, as the fou",
+     "output_lists": []
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "1 of 30 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "UNESCO World Conference on Cultural Policies and Sustainable Development (MONDIACULT 2022): Final Declaration (p. 1–8)",
+     "page": 1,
+     "number": "6"
+    }
+   ],
+   "value": 1.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "4 of 4 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "UNESCO World Conference on Cultural Policies and Sustainable Development (MONDIACULT 2022): Final Declaration (p. 1–8)",
+     "page": 1,
+     "heading": "MONDIACULT-2022/CPD/6"
+    },
+    {
+     "section": "UNESCO World Conference on Cultural Policies and Sustainable Development (MONDIACULT 2022): Final Declaration (p. 1–8)",
+     "page": 1,
+     "heading": "Final Declaration"
+    },
+    {
+     "section": "UNESCO World Conference on Cultural Policies and Sustainable Development (MONDIACULT 2022): Final Declaration (p. 1–8)",
+     "page": 1,
+     "heading": "I. Preamble"
+    },
+    {
+     "section": "UNESCO World Conference on Cultural Policies and Sustainable Development (MONDIACULT 2022): Final Declaration (p. 1–8)",
+     "page": 3,
+     "heading": "II. Call to Action"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "1 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "1 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "2 quoted texts in 1 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Image 1",
+     "page": 1,
+     "image": "fig-001-p1.png",
+     "quotes": [
+      "\"M\"",
+      "\"México\""
+     ]
+    }
+   ],
+   "value": 2.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "6 page references valid (printed-folio pages 1–8)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "8 pages checked, 0 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "8 pages checked, 0 passages put back in order",
+   "findings": [],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "unesco-world-conference-on-cultural-policies-and-sustainable-development-mondiacult-2022-final-declaration-2022",
+ "doc_type": "normative_text",
+ "analyzed_at": "2026-11-15T10:56:02.642692+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "UNESCO World Conference on Cultural Policies and Sustainable Development (MONDIACULT 2022): Final Declaration",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 8,
+   "chars": 24657,
+   "blocks": 36,
+   "inner_headings": 4,
+   "figures": 1
+  }
+ ],
+ "skipped": [],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 8,
+  "gaps": [],
+  "gaps_dismissed": [],
+  "captions_reclassified": [],
+  "captions_reassigned": [],
+  "headings_restored": [],
+  "lists_reunited": [
+   {
+    "page": 2,
+    "list": "#/groups/1",
+    "fragment": "#/groups/2",
+    "markers": "4-6",
+    "rule": "fragment continues numbering"
+   },
+   {
+    "page": 3,
+    "list": "#/groups/1",
+    "fragment": "#/groups/3",
+    "markers": "7-8",
+    "rule": "fragment continues numbering"
+   },
+   {
+    "page": 4,
+    "list": "#/groups/4",
+    "fragment": "#/groups/5",
+    "markers": "11-13",
+    "rule": "fragment continues numbering"
+   },
+   {
+    "page": 5,
+    "list": "#/groups/4",
+    "fragment": "#/groups/6",
+    "markers": "14-16",
+    "rule": "fragment continues numbering"
+   },
+   {
+    "page": 6,
+    "list": "#/groups/4",
+    "fragment": "#/groups/7",
+    "markers": "17-18",
+    "rule": "fragment continues numbering"
+   },
+   {
+    "page": 7,
+    "list": "#/groups/4",
+    "fragment": "#/groups/8",
+    "markers": "19-22",
+    "rule": "fragment continues numbering"
+   }
+  ],
+  "figures_screened": [],
+  "superseded": [],
+  "replaced_pages": [],
+  "noise_dropped": 0,
+  "hyphens_restored": [
+   {
+    "page": 4,
+    "ref": "#/texts/23",
+    "word": "Inter-Agency"
+   }
+  ],
+  "order": [],
+  "order_pages_checked": 8,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 0,
+  "order_breaking": 0,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 10 minor; distortions: 0 material, 1 minor; additions: 0 material, 0 minor; order: 0 material, 0 minor",
+  "at": "2026-11-15T10:56:28+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 10
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 1
+   },
+   "additions": {
+    "material": 0,
+    "minor": 0
+   },
+   "order": {
+    "material": 0,
+    "minor": 0
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "UNESCO World Conference on Cultural Policies and Sustainable Development (MONDIACULT 2022): Final Declaration (p. 1–8)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "while also reaffirming the power of culture to renew and broaden bilateral and multilateral cooperation, promote multilingualism and a culture of peace",
+      "severity": "minor",
+      "page": 1
+     },
+     {
+      "source": "thereby undermining the intrinsic value of culture as a link between peoples and a source of income, while at the same time eroding cultural diversity on a global scale",
+      "severity": "minor",
+      "page": 2
+     },
+     {
+      "source": "enhancing the knowledge, documentation, conservation, safeguarding, promotion and management of heritage, and stimulating creativity and innovation",
+      "severity": "minor",
+      "page": 2
+     },
+     {
+      "source": "the respect of which constitutes, today more than ever, a ferment of peace and a force for creativity and innovation to build a more sustainable world",
+      "severity": "minor",
+      "page": 3
+     },
+     {
+      "source": "while also sustaining context-relevant models of economic and social development",
+      "severity": "minor",
+      "page": 3
+     },
+     {
+      "source": "as well as by stimulating the exchange of good practices, in order to mobilize their transformative potential",
+      "severity": "minor",
+      "page": 3
+     },
+     {
+      "source": "with the aim of assisting Member States in the development of their policies and strategies to address extreme climate impacts",
+      "severity": "minor",
+      "page": 5
+     },
+     {
+      "source": "with a view to supporting countries in their protection efforts, international solidarity and national recovery strategies",
+      "severity": "minor",
+      "page": 5
+     },
+     {
+      "source": "to propose concrete measures and initiatives to combat this increasing phenomenon",
+      "severity": "minor",
+      "page": 6
+     },
+     {
+      "source": "in light of the increasing claims from the countries concerned, with a view to strengthen social cohesion and intergenerational transmission of cultural heritage",
+      "severity": "minor",
+      "page": 6
+     }
+    ],
+    "distortions": [
+     {
+      "source": "better regulating digital platforms and engaging them in a participatory dialogue",
+      "summary": "better regulating digital platforms through participatory dialogue",
+      "severity": "minor",
+      "page": 6
+     }
+    ],
+    "additions": [],
+    "order": []
+   }
+  ]
+ },
+ "source": {
+  "source": "unesco-world-conference-on-cultural-policies-and-sustainable-development-mondiacult-2022-final-declaration-2022.pdf",
+  "bytes": 306953,
+  "sha256": "2bc2c6c750a06e4074893547a28cc1ce3133b7eaa4b72808c87b10e5ee7ebf59",
+  "extracted_at": "2026-11-13T01:28:09+01:00"
+ }
+}

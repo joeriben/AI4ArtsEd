@@ -146,6 +146,10 @@ class IntegrityReport:
     # number grid). Not inserted, and not gaps.
     gaps_dismissed: list[dict] = field(default_factory=list)
     captions_reclassified: list[dict] = field(default_factory=list)
+    # Captions Docling had given to the picture after their own
+    # (reassign_shifted_captions): page, caption (its label), from (the ref of
+    # the picture that carried it), to (the ref of the picture above it).
+    captions_reassigned: list[dict] = field(default_factory=list)
     # Numbered headings Docling had cut into a list (restore_numbered_headings):
     # page, ref, text, rule ("number-only heading" / "list item between
     # headings").
@@ -438,8 +442,72 @@ def normalise(ext: Extraction) -> None:
             continue
         out.append(b)
     ext.blocks = out
+    reassign_shifted_captions(ext)
     restore_numbered_headings(ext)
     reunite_numbered_lists(ext)
+
+
+# A figure caption's label and number: "Figure 11.", "Abb. 3:".
+_FIGURE_NUMBER_RE = re.compile(
+    r"^\s*(Abb(?:ildung)?|Fig(?:ure|\.)?|Grafik|Bild|Image)\.?\s*(\d+)\b", re.IGNORECASE)
+
+
+def _caption_number(text: str) -> Optional[tuple[str, int]]:
+    m = _FIGURE_NUMBER_RE.match(text or "")
+    return (m.group(1)[:3].lower(), int(m.group(2))) if m else None
+
+
+def reassign_shifted_captions(ext: Extraction) -> None:
+    """A caption Docling gave to the picture after its own goes back up.
+
+    Where a caption stands below its picture and a second picture follows on
+    the page, Docling can attach the caption to the second picture and leave
+    the second picture's own caption as a free caption block (Esser et al.
+    2024, p. 22: "Figure 11. The mode (left) and logit-normal (right)
+    distributions" on the image grid, "Figure 12. Qualitative effects of
+    scaling" free beneath it, the distribution charts above without one).
+    Bound to an unbroken numbering on one page: a picture with caption N,
+    the picture before it without caption or number, and the next caption
+    block after it numbered N + 1 under the same label, before any further
+    picture. The caption N then goes to the picture before, and the free
+    caption N + 1 becomes the caption of the picture that carried N. Each
+    move is recorded in ``integrity.captions_reassigned``.
+    """
+    blocks = ext.blocks
+    drop: set[int] = set()
+    for i, b in enumerate(blocks):
+        if b.kind != "figure" or not b.caption:
+            continue
+        num = _caption_number(b.caption)
+        if num is None:
+            continue
+        prev = None
+        for j in range(i - 1, -1, -1):
+            if blocks[j].page != b.page or blocks[j].kind == "caption":
+                break
+            if blocks[j].kind == "figure":
+                prev = j
+                break
+        if prev is None or blocks[prev].caption or blocks[prev].figure_no:
+            continue
+        free = None
+        for k in range(i + 1, len(blocks)):
+            if blocks[k].page != b.page or blocks[k].kind == "figure":
+                break
+            if blocks[k].kind == "caption":
+                if k not in drop and _caption_number(blocks[k].text) == (num[0], num[1] + 1):
+                    free = k
+                break
+        if free is None:
+            continue
+        above = blocks[prev]
+        above.caption, above.figure_no = b.caption, b.figure_no or str(num[1])
+        b.caption, b.figure_no = blocks[free].text, str(num[1] + 1)
+        drop.add(free)
+        ext.integrity.captions_reassigned.append(
+            {"page": b.page, "caption": f"{num[0]} {num[1]}", "from": b.ref, "to": above.ref})
+    if drop:
+        ext.blocks = [b for i, b in enumerate(blocks) if i not in drop]
 
 
 # A heading or list item that carries its own number: "2. Gut geplant ist halb

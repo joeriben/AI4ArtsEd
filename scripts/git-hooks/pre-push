@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+#
+# No password, key or token in a commit that leaves this clone.
+#
+# The pre-commit and commit-msg gates judge a commit when it is made. A commit
+# made with --no-verify, in a clone without the hooks, or brought in by a
+# cherry-pick, a rebase or a fast-forward merge passes neither. This gate
+# judges the messages and the added lines of every commit the push sends.
+# Rule and reasoning: devserver/tests/test_no_secrets_in_code.py
+#
+# git passes the remote's name and URL as arguments and the refs on stdin.
+# Installed with the other hooks: scripts/install-hooks.sh
+
+set -uo pipefail
+
+REPO="$(git rev-parse --show-toplevel)"
+PY="$REPO/venv/bin/python"
+[ -x "$PY" ] || PY="$(command -v python3 || true)"
+if [ -z "${PY}" ] || [ ! -x "${PY}" ]; then
+    echo "pre-push: no python interpreter, the secrets gate cannot run" >&2
+    exit 0
+fi
+
+"$PY" "$REPO/devserver/tests/test_no_secrets_in_code.py" --push || exit 1
+exit 0

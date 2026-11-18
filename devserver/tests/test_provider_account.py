@@ -1084,7 +1084,13 @@ def _settings_client():
     app = Flask(__name__)
     app.secret_key = "test"
     app.register_blueprint(settings_routes.settings_bp)
-    return app.test_client()
+    c = app.test_client()
+    # The settings session: the settings password, or a sign-in as an admin.
+    # The machine the server runs on is no admin since 2026-11-15
+    # (routes/settings_routes.py, `_settings_admitted`).
+    with c.session_transaction() as s:
+        s["settings_authenticated"] = True
+    return c
 
 
 def test_the_api_usage_lists_an_account_for_every_key_in_a_key_file(monkeypatch):

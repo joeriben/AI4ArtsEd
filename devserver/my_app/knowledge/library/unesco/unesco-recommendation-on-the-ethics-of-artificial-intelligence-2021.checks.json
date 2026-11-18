@@ -1,0 +1,1344 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 10.9% of 3619 words, ceiling 20%, longest run 25 words; not counted: 1038 words from the source's lists; not counted: figure descriptions",
+   "findings": [
+    {
+     "words": 25,
+     "text": "range from research design and development to deployment and use including maintenance operation trade financing monitoring and evaluation validation end of use disassembly and termination"
+    },
+    {
+     "words": 21,
+     "text": "low and middle income countries lmics including least developed countries ldcs landlocked developing countries lldcs and small island developing states sids"
+    },
+    {
+     "words": 18,
+     "text": "a unesco ethical impact assessment methodology and national commissions for the ethics of ai can be important instruments"
+    },
+    {
+     "words": 17,
+     "text": "systems in countries where such standards may not exist policy area 11 health and social well being"
+    },
+    {
+     "words": 16,
+     "text": "the universal declaration of human rights 1948 the convention on the rights of the child 1989"
+    }
+   ],
+   "value": 0.1086,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "36 of 39 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 7,
+     "expected_items": 3,
+     "first_item": "Adopts the present Recommendation on the Ethics of Artificial Intelligence on th",
+     "output_lists": [
+      3,
+      4,
+      5,
+      4,
+      10
+     ]
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 10,
+     "expected_items": 5,
+     "first_item": "This Recommendation addresses ethical issues related to the domain of Artificial",
+     "output_lists": [
+      3,
+      4,
+      5,
+      4,
+      10
+     ]
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 11,
+     "expected_items": 3,
+     "first_item": "(b) Science, in the broadest sense and including all academic fields from the na",
+     "output_lists": [
+      3,
+      4,
+      5,
+      4,
+      10
+     ]
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 14,
+     "expected_items": 5,
+     "first_item": "This Recommendation aims to provide a basis to make AI systems work for the good",
+     "output_lists": [
+      3,
+      4,
+      5,
+      4,
+      10
+     ]
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 15,
+     "expected_items": 4,
+     "first_item": "(b) to guide the actions of individuals, groups, communities, institutions and p",
+     "output_lists": [
+      3,
+      4,
+      5,
+      4,
+      10
+     ],
+     "unanswered_items": [
+      {
+       "item": 2,
+       "source": "(c) to protect, promote and respect human rights and fundamental freedoms, human",
+       "output": "(b) **Science**: AI brings new research capacities and implications for concepts"
+      }
+     ]
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 18,
+     "expected_items": 3,
+     "first_item": "The values and principles included below should be respected by all actors in th",
+     "output_lists": [
+      3,
+      4,
+      5,
+      4,
+      10
+     ]
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 18,
+     "expected_items": 2,
+     "first_item": "The inviolable and inherent dignity of every human constitutes the foundation fo",
+     "output_lists": [
+      3,
+      4,
+      5,
+      4,
+      10
+     ]
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 18,
+     "expected_items": 2,
+     "first_item": "Persons may interact with AI systems throughout their life cycle and receive ass",
+     "output_lists": [
+      3,
+      4,
+      5,
+      4,
+      10
+     ]
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 19,
+     "expected_items": 2,
+     "first_item": "Environmental and ecosystem flourishing should be recognized, protected and prom",
+     "output_lists": [
+      3,
+      4,
+      5,
+      4,
+      10
+     ]
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 19,
+     "expected_items": 4,
+     "first_item": "Respect, protection and promotion of diversity and inclusiveness should be ensur",
+     "output_lists": [
+      3,
+      4,
+      5,
+      4,
+      10
+     ]
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 19,
+     "expected_items": 2,
+     "first_item": "AI actors should play a participative and enabling role to ensure peaceful and j",
+     "output_lists": [
+      3,
+      4,
+      5,
+      4,
+      10
+     ]
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 20,
+     "expected_items": 2,
+     "first_item": "It should be recognized that AI technologies do not necessarily, per se, ensure ",
+     "output_lists": [
+      3,
+      4,
+      5,
+      4,
+      10
+     ]
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 20,
+     "expected_items": 2,
+     "first_item": "Unwanted harms (safety risks), as well as vulnerabilities to attack (security ri",
+     "output_lists": [
+      3,
+      4,
+      5,
+      4,
+      10
+     ]
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 20,
+     "expected_items": 3,
+     "first_item": "AI actors should promote social justice and safeguard fairness and non-discrimin",
+     "output_lists": [
+      3,
+      4,
+      5,
+      4,
+      10
+     ]
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 21,
+     "expected_items": 3,
+     "first_item": "Privacy, a right essential to the protection of human dignity, human autonomy an",
+     "output_lists": [
+      3,
+      4,
+      5,
+      4,
+      10
+     ]
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 22,
+     "expected_items": 2,
+     "first_item": "Member States should ensure that it is always possible to attribute ethical and ",
+     "output_lists": [
+      3,
+      4,
+      5,
+      4,
+      10
+     ]
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 22,
+     "expected_items": 5,
+     "first_item": "The transparency and explainability of AI systems are often essential preconditi",
+     "output_lists": [
+      3,
+      4,
+      5,
+      4,
+      10
+     ]
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 22,
+     "expected_items": 2,
+     "first_item": "AI actors and Member States should respect, protect and promote human rights and",
+     "output_lists": [
+      3,
+      4,
+      5,
+      4,
+      10
+     ]
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 23,
+     "expected_items": 2,
+     "first_item": "Public awareness and understanding of AI technologies and the value of data shou",
+     "output_lists": [
+      3,
+      4,
+      5,
+      4,
+      10
+     ]
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 23,
+     "expected_items": 2,
+     "first_item": "International law and national sovereignty must be respected in the use of data.",
+     "output_lists": [
+      3,
+      4,
+      5,
+      4,
+      10
+     ]
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 26,
+     "expected_items": 2,
+     "first_item": "The policy actions described in the following policy areas operationalize the va",
+     "output_lists": [
+      3,
+      4,
+      5,
+      4,
+      10
+     ]
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 27,
+     "expected_items": 17,
+     "first_item": "Member States should ensure that AI governance mechanisms are inclusive, transpa",
+     "output_lists": [
+      3,
+      4,
+      5,
+      4,
+      10
+     ]
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 30,
+     "expected_items": 3,
+     "first_item": "Member States should promote open data. In this regard, Member States should con",
+     "output_lists": [
+      3,
+      4,
+      5,
+      4,
+      10
+     ]
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 30,
+     "expected_items": 4,
+     "first_item": "Member States and transnational corporations should prioritize AI ethics by incl",
+     "output_lists": [
+      3,
+      4,
+      5,
+      4,
+      10
+     ]
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 30,
+     "expected_items": 2,
+     "first_item": "Member States should promote AI ethics research by engaging international organi",
+     "output_lists": [
+      3,
+      4,
+      5,
+      4,
+      10
+     ]
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 31,
+     "expected_items": 8,
+     "first_item": "Member States should introduce incentives, when needed and appropriate, to ensur",
+     "output_lists": [
+      3,
+      4,
+      5,
+      4,
+      10
+     ]
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 32,
+     "expected_items": 3,
+     "first_item": "Member States should ensure that the potential for digital technologies and arti",
+     "output_lists": [
+      3,
+      4,
+      5,
+      4,
+      10
+     ]
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 32,
+     "expected_items": 6,
+     "first_item": "Member States are encouraged to incorporate AI systems, where appropriate, in th",
+     "output_lists": [
+      3,
+      4,
+      5,
+      4,
+      10
+     ]
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 33,
+     "expected_items": 5,
+     "first_item": "Member States should promote AI education and digital training for artists and c",
+     "output_lists": [
+      3,
+      4,
+      5,
+      4,
+      10
+     ]
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 33,
+     "expected_items": 11,
+     "first_item": "Member States should work with international organizations, educational institut",
+     "output_lists": [
+      3,
+      4,
+      5,
+      4,
+      10
+     ]
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 35,
+     "expected_items": 4,
+     "first_item": "Member States should use AI systems to improve access to information and knowled",
+     "output_lists": [
+      3,
+      4,
+      5,
+      4,
+      10
+     ]
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 36,
+     "expected_items": 6,
+     "first_item": "Member States should assess and address the impact of AI systems on labour marke",
+     "output_lists": [
+      3,
+      4,
+      5,
+      4,
+      10
+     ]
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 37,
+     "expected_items": 13,
+     "first_item": "Member States should endeavour to employ effective AI systems for improving huma",
+     "output_lists": [
+      3,
+      4,
+      5,
+      4,
+      10
+     ]
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 39,
+     "expected_items": 8,
+     "first_item": "Member States should, according to their specific conditions, governing structur",
+     "output_lists": [
+      3,
+      4,
+      5,
+      4,
+      10
+     ]
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 41,
+     "expected_items": 2,
+     "first_item": "Member States and all other stakeholders as identified in this Recommendation sh",
+     "output_lists": [
+      3,
+      4,
+      5,
+      4,
+      10
+     ]
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 43,
+     "expected_items": 2,
+     "first_item": "This Recommendation needs to be understood as a whole, and the foundational valu",
+     "output_lists": [
+      3,
+      4,
+      5,
+      4,
+      10
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "17 of 48 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 2,
+     "number": "2022"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 2,
+     "number": "3.0"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 2,
+     "number": "75352"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 5,
+     "number": "125"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 5,
+     "number": "1951"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 5,
+     "number": "1958"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 5,
+     "number": "1960"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 5,
+     "number": "1965"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 5,
+     "number": "1966"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 5,
+     "number": "1979"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 5,
+     "number": "1986"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 5,
+     "number": "1997"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 5,
+     "number": "2005"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 5,
+     "number": "2006"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 38,
+     "number": "128"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 38,
+     "number": "129"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 42,
+     "number": "138"
+    }
+   ],
+   "value": 17.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "31 of 40 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 1,
+     "heading": "the Ethics of Artificial Intelligence"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 2,
+     "heading": "Cover photo:"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 2,
+     "heading": "Inside photo:"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 3,
+     "heading": "the Ethics of Artificial Intelligence"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 18,
+     "heading": "Respect, protection and promotion of human rights and fundamental freedoms and human dignity"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 19,
+     "heading": "Environment and ecosystem flourishing"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 19,
+     "heading": "Ensuring diversity and inclusiveness"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 19,
+     "heading": "Living in peaceful, just and interconnected societies"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 20,
+     "heading": "Proportionality and Do No Harm"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 20,
+     "heading": "Safety and security"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 20,
+     "heading": "Fairness and non-discrimination"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 21,
+     "heading": "Sustainability"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 21,
+     "heading": "Right to Privacy, and Data Protection"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 22,
+     "heading": "Human oversight and determination"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 22,
+     "heading": "Transparency and explainability"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 22,
+     "heading": "Responsibility and accountability"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 23,
+     "heading": "Awareness and literacy"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 23,
+     "heading": "Multi-stakeholder and adaptive governance and collaboration"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 26,
+     "heading": "POLICY AREA 1: ETHICAL IMPACT ASSESSMENT"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 27,
+     "heading": "POLICY AREA 2: ETHICAL GOVERNANCE AND STEWARDSHIP"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 29,
+     "heading": "POLICY AREA 3: DATA POLICY"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 30,
+     "heading": "POLICY AREA 4: DEVELOPMENT AND INTERNATIONAL COOPERATION"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 30,
+     "heading": "POLICY AREA 5: ENVIRONMENT AND ECOSYSTEMS"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 32,
+     "heading": "POLICY AREA 6: GENDER"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 32,
+     "heading": "POLICY AREA 7: CULTURE"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 33,
+     "heading": "POLICY AREA 8: EDUCATION AND RESEARCH"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 35,
+     "heading": "POLICY AREA 9: COMMUNICATION AND INFORMATION"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 36,
+     "heading": "POLICY AREA 10: ECONOMY AND LABOUR"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 37,
+     "heading": "POLICY AREA 11: HEALTH AND SOCIAL WELL-BEING"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 44,
+     "heading": "Social and Human Sciences Sector"
+    },
+    {
+     "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+     "page": 44,
+     "heading": "Follow us"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "17 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "17 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "1 quoted texts in 1 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Image 12",
+     "page": 24,
+     "image": "fig-012-p24.png",
+     "quotes": [
+      "\"Ai\""
+     ]
+    }
+   ],
+   "value": 1.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "32 page references valid (printed-folio pages 1–44)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "44 pages checked, 1 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "5 passages out of order break a sentence (6 of 6 not repairable; listed, not gated)",
+   "findings": [
+    {
+     "page": 10,
+     "words": 7,
+     "text": "This Recommendation pays specific attention to the",
+     "blocks": [
+      "#/texts/40",
+      "#/texts/45"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of '(ii) machine reasoning, including planni'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 18,
+     "words": 6,
+     "text": "possible limitations on human rights and",
+     "blocks": [
+      "#/texts/85",
+      "#/texts/92"
+     ],
+     "problem": "blocks of kind heading, list_item are involved",
+     "fails": true,
+     "breaks": [
+      "sentence cut: 'oportionality  and  in  compliance  with' | 'III.1 VALUES'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 30,
+     "words": 23,
+     "text": "research and innovation centres and networks that promote greater participation and leadership of Researchers from LMICs and other countries, including LDCs, LLDCs and",
+     "blocks": [
+      "#/texts/206",
+      "#/texts/207",
+      "#/texts/213"
+     ],
+     "problem": "blocks of kind heading, list_item are involved",
+     "fails": true,
+     "breaks": [
+      "sentence cut: 'I  research  and  innovation,  including' | 'POLICY AREA 5: ENVIRONMENT AND ECOSYSTEM'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 30,
+     "words": 62,
+     "text": "States should promote AI Ethics research by engaging international organizations ANDRESEARCH institutions, as well as transnational corporations, that can be a basis for the ETHICAL use of AI systems ",
+     "blocks": [
+      "#/texts/207",
+      "#/texts/208",
+      "#/texts/214"
+     ],
+     "problem": "blocks of kind heading, list_item are involved",
+     "fails": true,
+     "breaks": [
+      "sentence cut: 'I  research  and  innovation,  including' | 'POLICY AREA 5: ENVIRONMENT AND ECOSYSTEM'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 30,
+     "words": 53,
+     "text": "Member States should encourage international COOPERATION and collaboration in the field of AI to bridge geo-technological lines. technological exchanges and consultations should take place between Mem",
+     "blocks": [
+      "#/texts/209",
+      "#/texts/210",
+      "#/texts/215"
+     ],
+     "problem": "blocks of kind heading, list_item are involved",
+     "fails": true,
+     "breaks": [
+      "sentence cut: 'I  research  and  innovation,  including' | 'POLICY AREA 5: ENVIRONMENT AND ECOSYSTEM'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 33,
+     "words": 34,
+     "text": "States should promote Awareness and evaluation of AI tools among local Cultural industries and small and medium enterprises working in the field of CULTURE, to avoid the risk of concentration in the C",
+     "blocks": [
+      "#/texts/239",
+      "#/texts/240",
+      "#/texts/241"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    }
+   ],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "unesco-recommendation-on-the-ethics-of-artificial-intelligence-2021",
+ "doc_type": "normative_text",
+ "analyzed_at": "2026-11-15T10:35:42.207613+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "Recommendation on the Ethics of Artificial Intelligence",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 44,
+   "chars": 101599,
+   "blocks": 284,
+   "inner_headings": 40,
+   "figures": 17
+  }
+ ],
+ "skipped": [
+  "Table of contents (p. 4)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 44,
+  "gaps": [
+   {
+    "page": 7,
+    "text": "Underlining that the strengthening of global COOPERATION and solidarity, including through multilateralism, is needed to facilitate fair Access to AI technologies and address the challenges that they bring to diversity and interconnectivity of cultures and ETHICAL systems, to mitigate potential misuse, to realize the full potential that AI can bring, especially in the AREA of DEVELOPMENT, and to ensure that national AI strategies are Guided by ETHICAL principles, Taking fully into account that the rapid DEVELOPMENT of AI technologies challenges their ETHICAL implementation and GOVERNANCE, as well as the respect for and protection of Cultural diversity, and has the potential to disrupt local and regional ETHICAL standards and Values, 1.",
+    "words": 110,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "before #/texts/29"
+   }
+  ],
+  "gaps_dismissed": [
+   {
+    "page": 43,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "VIII. final provisions 140."
+   }
+  ],
+  "captions_reclassified": [],
+  "headings_restored": [],
+  "lists_reunited": [
+   {
+    "page": 20,
+    "list": "#/groups/14",
+    "fragment": "#/groups/15",
+    "markers": "23-23",
+    "rule": "fragment continues numbering"
+   },
+   {
+    "page": 21,
+    "list": "#/groups/18",
+    "fragment": "#/groups/19",
+    "markers": "30-30",
+    "rule": "fragment continues numbering"
+   },
+   {
+    "page": 22,
+    "list": "#/groups/23",
+    "fragment": "#/groups/24",
+    "markers": "39-41",
+    "rule": "fragment continues numbering"
+   },
+   {
+    "page": 23,
+    "list": "#/groups/25",
+    "fragment": "#/groups/26",
+    "markers": "43-43",
+    "rule": "fragment continues numbering"
+   },
+   {
+    "page": 26,
+    "list": "#/groups/30",
+    "fragment": "#/groups/31",
+    "markers": "52-53",
+    "rule": "fragment continues numbering"
+   },
+   {
+    "page": 28,
+    "list": "#/groups/32",
+    "fragment": "#/groups/33",
+    "markers": "63-70",
+    "rule": "fragment continues numbering"
+   },
+   {
+    "page": 30,
+    "list": "#/groups/35",
+    "fragment": "#/groups/36",
+    "markers": "77-77",
+    "rule": "fragment continues numbering"
+   },
+   {
+    "page": 34,
+    "list": "#/groups/44",
+    "fragment": "#/texts/248",
+    "markers": "103",
+    "rule": "paragraph continues numbering"
+   },
+   {
+    "page": 34,
+    "list": "#/groups/44",
+    "fragment": "#/texts/249",
+    "markers": "104",
+    "rule": "paragraph continues numbering"
+   },
+   {
+    "page": 34,
+    "list": "#/groups/44",
+    "fragment": "#/texts/250",
+    "markers": "105",
+    "rule": "paragraph continues numbering"
+   },
+   {
+    "page": 35,
+    "list": "#/groups/44",
+    "fragment": "#/groups/45",
+    "markers": "106-111",
+    "rule": "fragment continues numbering"
+   },
+   {
+    "page": 35,
+    "list": "#/groups/46",
+    "fragment": "#/groups/47",
+    "markers": "114-115",
+    "rule": "fragment continues numbering"
+   }
+  ],
+  "figures_screened": [
+   {
+    "page": 1,
+    "image": "fig-001-p1.png",
+    "w": 341,
+    "h": 78,
+    "reason": "strip"
+   },
+   {
+    "page": 2,
+    "image": "fig-002-p2.png",
+    "w": 122,
+    "h": 45,
+    "reason": "strip"
+   },
+   {
+    "page": 3,
+    "image": "fig-003-p3.png",
+    "w": 339,
+    "h": 74,
+    "reason": "strip"
+   },
+   {
+    "page": 44,
+    "image": "fig-021-p44.png",
+    "w": 35,
+    "h": 24,
+    "reason": "small"
+   },
+   {
+    "page": 44,
+    "image": "fig-022-p44.png",
+    "w": 33,
+    "h": 35,
+    "reason": "small"
+   },
+   {
+    "page": 44,
+    "image": "fig-023-p44.png",
+    "w": 36,
+    "h": 34,
+    "reason": "small"
+   },
+   {
+    "page": 44,
+    "image": "fig-024-p44.png",
+    "w": 37,
+    "h": 32,
+    "reason": "small"
+   },
+   {
+    "page": 44,
+    "image": "fig-025-p44.png",
+    "w": 34,
+    "h": 34,
+    "reason": "small"
+   }
+  ],
+  "superseded": [],
+  "replaced_pages": [],
+  "noise_dropped": 0,
+  "hyphens_restored": [
+   {
+    "page": 2,
+    "ref": "#/texts/7",
+    "word": "NonCommercial-ShareAlike"
+   }
+  ],
+  "order": [
+   {
+    "page": 10,
+    "text": "This Recommendation pays specific attention to the",
+    "words": 7,
+    "refs": [
+     "#/texts/40",
+     "#/texts/45"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [
+     "passage cut out of '(ii) machine reasoning, including planni'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 18,
+    "text": "possible limitations on human rights and",
+    "words": 6,
+    "refs": [
+     "#/texts/85",
+     "#/texts/92"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading, list_item are involved",
+    "breaks": [
+     "sentence cut: 'oportionality  and  in  compliance  with' | 'III.1 VALUES'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 30,
+    "text": "research and innovation centres and networks that promote greater participation and leadership of Researchers from LMICs and other countries, including LDCs, LLDCs and",
+    "words": 23,
+    "refs": [
+     "#/texts/206",
+     "#/texts/207",
+     "#/texts/213"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading, list_item are involved",
+    "breaks": [
+     "sentence cut: 'I  research  and  innovation,  including' | 'POLICY AREA 5: ENVIRONMENT AND ECOSYSTEM'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 30,
+    "text": "States should promote AI Ethics research by engaging international organizations ANDRESEARCH institutions, as well as transnational corporations, that can be a basis for the ETHICAL use of AI systems by public and private entities, including research into the applicability of specific ETHICAL frameworks in specific cultures and contexts, and the possibilities to develop technologically feasible solutions in line with these frameworks.",
+    "words": 62,
+    "refs": [
+     "#/texts/207",
+     "#/texts/208",
+     "#/texts/214"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading, list_item are involved",
+    "breaks": [
+     "sentence cut: 'I  research  and  innovation,  including' | 'POLICY AREA 5: ENVIRONMENT AND ECOSYSTEM'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 30,
+    "text": "Member States should encourage international COOPERATION and collaboration in the field of AI to bridge geo-technological lines. technological exchanges and consultations should take place between Member States and their populations, between the public and private sectors, and between and among the most and least technologically advanced countries in full respect of international law.",
+    "words": 53,
+    "refs": [
+     "#/texts/209",
+     "#/texts/210",
+     "#/texts/215"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading, list_item are involved",
+    "breaks": [
+     "sentence cut: 'I  research  and  innovation,  including' | 'POLICY AREA 5: ENVIRONMENT AND ECOSYSTEM'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 33,
+    "text": "States should promote Awareness and evaluation of AI tools among local Cultural industries and small and medium enterprises working in the field of CULTURE, to avoid the risk of concentration in the Cultural market.",
+    "words": 34,
+    "refs": [
+     "#/texts/239",
+     "#/texts/240",
+     "#/texts/241"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": ""
+   }
+  ],
+  "order_pages_checked": 39,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 6,
+  "order_breaking": 5,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 6 minor; distortions: 0 material, 2 minor; additions: 0 material, 1 minor; order: 0 material, 2 minor",
+  "at": "2026-11-15T10:36:28+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 6
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 2
+   },
+   "additions": {
+    "material": 0,
+    "minor": 1
+   },
+   "order": {
+    "material": 0,
+    "minor": 2
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "Recommendation on the Ethics of Artificial Intelligence (p. 1–44)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "the General Conference of UNESCO, at its 40th session, adopted 40 C/ Resolution 37, by which it mandated the Director-General 'to prepare an international standard-setting instrument on the ethics of artificial intelligence (AI) in the form of a recommendation'",
+      "severity": "minor",
+      "page": 5
+     },
+     {
+      "source": "including maintenance, operation, trade, financing, monitoring and evaluation, validation, end-of-use, disassembly and termination",
+      "severity": "minor",
+      "page": 10
+     },
+     {
+      "source": "personal data and consumer protection, environment, democracy, rule of law, security and policing, dual use, and human rights and fundamental freedoms, including freedom of expression, privacy and nondiscrimination",
+      "severity": "minor",
+      "page": 10
+     },
+     {
+      "source": "Member States should also be able to assess the socioeconomic impact of AI systems on poverty and ensure that the gap between people living in wealth and poverty, as well as the digital divide among and within countries, are not increased",
+      "severity": "minor",
+      "page": 26
+     },
+     {
+      "source": "avoiding violence such as harassment, bullying or trafficking of girls and women and under-represented groups, including in the online domain",
+      "severity": "minor",
+      "page": 32
+     },
+     {
+      "source": "Ethical questions related to AI-powered systems for neurotechnologies and braincomputer interfaces should be considered in order to preserve human dignity and autonomy",
+      "severity": "minor",
+      "page": 37
+     }
+    ],
+    "distortions": [
+     {
+      "source": "the ability to access and erase their personal data in AI systems, except for certain circumstances in compliance with international law",
+      "summary": "individuals' rights over personal data, including access and erasure, with independent oversight",
+      "severity": "minor",
+      "page": 29
+     },
+     {
+      "source": "for example to determine whether or how to protect with IP rights the works created by means of Al technologies",
+      "summary": "research at the intersection of AI and intellectual property (IP), including protection of AI-created works",
+      "severity": "minor",
+      "page": 33
+     }
+    ],
+    "additions": [
+     {
+      "summary": "the ROAM principles (Rights, Openness, Accessibility, Multi-stakeholder participation)",
+      "severity": "minor"
+     }
+    ],
+    "order": [
+     {
+      "source": "the definition of 'quality of human rights and fundamental freedoms. In all cases, any possible limitations",
+      "summary": "",
+      "layer": "the definition of “quality of life” should be left open to individuals or groups, as long as there is no violation or abuse of human rights",
+      "severity": "minor",
+      "page": 18
+     },
+     {
+      "source": "research and innovation centres and networks that promote greater participation and leadership of researchers from LMICs and other countries, including LDCs, LLDCs and SIDS. (placed after paragraph 84, under Policy Area 5)",
+      "summary": "",
+      "layer": "81. Member States should work to promote international collaboration on AI research and innovation, including research and innovation centres and networks that promote greater participation and leadership of researchers from LMICs",
+      "severity": "minor",
+      "page": 30
+     }
+    ]
+   }
+  ]
+ },
+ "source": {
+  "source": "unesco-recommendation-on-the-ethics-of-artificial-intelligence-2021.pdf",
+  "bytes": 1058096,
+  "sha256": "7e9386aa913affe2fe00a2c31d426e804faae108f07f8589ce21aeeebf1f0222",
+  "extracted_at": "2026-11-13T02:17:32+01:00"
+ }
+}

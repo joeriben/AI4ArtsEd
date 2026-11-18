@@ -1,0 +1,6196 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 16.5% of 5498 words, ceiling 20%, longest run 145 words; not counted: 35 words from the source's lists; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 145,
+     "text": "firefighter 0 58 94 9 5 1 architect 0 55 68 4 31 6 industrial engineer 0 46 74 0 26 0 plane mechanic 0 43 96 8 3 2 metal worker 0 42 78 0 22 0 electrician 0 39 98 3 1 7 sheet metal worker 0 38 96 1 3 9 carpet installer 0 38 92 3 7 7 butcher 0 36 80 6 19 4 plumber 0 35 97 9 2 1 construction worker 0 "
+    },
+    {
+     "words": 138,
+     "text": "social worker 2 82 16 4 83 6 fast food worker 2 54 34 3 65 7 cleaner 2 51 83 0 17 0 correctional officer 2 50 69 6 30 4 teller 2 47 23 9 76 1 artist 2 40 45 8 54 2 tutor 2 37 29 5 70 5 aide 2 30 19 6 80 4 mental health counselor 2 27 24 4 75 6 teacher 2 26 20 8 79 2 school bus driver 2 24 44 7 55 3 "
+    },
+    {
+     "words": 22,
+     "text": "race gender and appearance propagate to downstream tasks such as image captioning e g associating women with shopping and men with snowboarding"
+    },
+    {
+     "words": 21,
+     "text": "art dreamlike photoreal 2 0 openjourney v4 vintedois diffusion v0 1 vox2 realistic vision dreamshaper analog diffusion stable diffusion v1 5"
+    },
+    {
+     "words": 19,
+     "text": "top 20 most diverse and bottom 20 least diverse professions by entropy in the 12 cluster setting with the"
+    }
+   ],
+   "value": 0.1646,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "28 of 29 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 6,
+     "table_cells": 52,
+     "missing_cells": [
+      "Labor Bureau",
+      "Labor Bureau",
+      "%gender markers",
+      "%gender markers",
+      "97.24%",
+      "37.77%",
+      "62.23%",
+      "47.92%",
+      "96.66%",
+      "68.90%",
+      "44.50%",
+      "99.09%",
+      "21.95%",
+      "78.05%",
+      "44.25%",
+      "30.48%",
+      "69.52%",
+      "30.06%",
+      "69.67%"
+     ]
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 7,
+     "table_cells": 84,
+     "missing_cells": [
+      "Top gender phrases",
+      "Top gender phrases",
+      "Top ethnicity phrases",
+      "Top ethnicity phrases",
+      "Top ethnicity phrases",
+      "Top ethnicity phrases",
+      "12.6%",
+      "First Nation",
+      "8.8%",
+      "SE Asian",
+      "Indigenous",
+      "Afr.American",
+      "Indigenous",
+      "Afr.American",
+      "Pacific Isl."
+     ]
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "table_cells": 60,
+     "missing_cells": [
+      "Quintiles by rank",
+      "BLS Woman",
+      "Clusters featuring 'woman' phrase%",
+      "Clusters featuring 'woman' phrase%",
+      "Clusters featuring 'woman' phrase%",
+      "BLS Black",
+      "Clusters featuring 'Black' phrase%",
+      "Clusters featuring 'Black' phrase%",
+      "Clusters featuring 'Black' phrase%",
+      "Low 20%",
+      "8.5 ( ± 0.36)",
+      "5.3 ( ± 0.28)",
+      "1.4 ( ± 0.17)",
+      "6.6 ( ± 0.60)",
+      "4.8 ( ± 0.56)",
+      "3.9 ( ± 0.48)",
+      "26.5",
+      "15.2 ( ± 0.46)",
+      "14.9 ( ± 0.46)",
+      "2.8 ( ± 0.20)"
+     ]
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "table_cells": 68,
+     "missing_cells": [
+      "SD 1.4 SD 2 Dall-E",
+      "47.1 58.2 74.0",
+      "47.1 58.2 74.0",
+      "27.3 24.1 13.1",
+      "27.3 24.1 13.1",
+      "4.0 4.8",
+      "4.0 4.8",
+      "3.9 4.7 0.1",
+      "3.9 4.7 0.1",
+      "4.9 1.9 1.5",
+      "4.9 1.9 1.5",
+      "3.2 1.3 3.3",
+      "3.2 1.3 3.3",
+      "3.1 1.8 1.6",
+      "3.1 1.8 1.6",
+      "3.0 2.5 0.4",
+      "3.0 2.5 0.4",
+      "White Unspe Cauca",
+      "29.2 28.7 27.5",
+      "Lat-x Cauca Hispa"
+     ]
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "table_cells": 323,
+     "missing_cells": [
+      "Cluster ID",
+      "10.5",
+      "30.2",
+      "11.8",
+      "42.1",
+      "18.6",
+      "32.7",
+      "42.9",
+      "34.7",
+      "31.2",
+      "42.3",
+      "53.9",
+      "27.3",
+      "48.8",
+      "55.7",
+      "18.6",
+      "81.4",
+      "52.8",
+      "43.0",
+      "26.5"
+     ]
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "table_cells": 619,
+     "missing_cells": [
+      "Cluster ID",
+      "22.7",
+      "48.8",
+      "46.6",
+      "40.3",
+      "42.3",
+      "16.7",
+      "43.8",
+      "47.9",
+      "31.9",
+      "54.9",
+      "42.2",
+      "48.4",
+      "40.7",
+      "51.8",
+      "27.8",
+      "15.7",
+      "2.8",
+      "95.5",
+      "28.1"
+     ]
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "table_cells": 583,
+     "missing_cells": [
+      "Cluster ID",
+      "26",
+      "28",
+      "32",
+      "34.3",
+      "22.9",
+      "8.8",
+      "41.2",
+      "31.0",
+      "17.1",
+      "77.1",
+      "55.9",
+      "62.1",
+      "40.7",
+      "11.1",
+      "48.6",
+      "23.5",
+      "58.8",
+      "88.2",
+      "41.2"
+     ]
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "table_cells": 165,
+     "missing_cells": [
+      "48.09",
+      "34.89",
+      "5.49",
+      "55.09",
+      "19.22",
+      "56.47",
+      "18.11",
+      "0.89",
+      "56.51",
+      "24.93",
+      "4.73",
+      "55.13",
+      "27.27",
+      "59.13",
+      "25.47",
+      "2.13",
+      "1.18",
+      "58.40",
+      "26.22",
+      "1.33"
+     ]
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "table_cells": 343,
+     "missing_cells": [
+      "26.07",
+      "48.53",
+      "6.87",
+      "43.67",
+      "36.60",
+      "42.07",
+      "26.13",
+      "39.80",
+      "31.60",
+      "3.60",
+      "44.33",
+      "20.13",
+      "5.20",
+      "49.33",
+      "31.40",
+      "32.60",
+      "3.67",
+      "49.27",
+      "30.53",
+      "5.00"
+     ]
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "table_cells": 115,
+     "missing_cells": [
+      "Professions rank quintiles",
+      "BLS% Woman",
+      "stable-diffusion-v1-5 stable-diffusion-2-1-base",
+      "Bottom20% 20 to40% 40 to60% 60 to80% Top 20%",
+      "5.3 6.8",
+      "21.5",
+      "25.8",
+      "37.5",
+      "45.0",
+      "52.2",
+      "74.9",
+      "57.3",
+      "53.7",
+      "84.4",
+      "84.4",
+      "86.1",
+      "20 to40%",
+      "10.2",
+      "40 to60%",
+      "10.7"
+     ]
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "table_cells": 298,
+     "missing_cells": [
+      "25.71",
+      "16.35",
+      "11.75",
+      "25.08",
+      "23.81",
+      "20.32",
+      "40.32",
+      "20.48",
+      "4.13",
+      "45.71",
+      "17.30",
+      "40.79",
+      "4.13",
+      "11.90",
+      "44.29",
+      "25.24",
+      "52.22",
+      "47.94",
+      "18.73",
+      "27.94"
+     ]
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "table_cells": 298,
+     "missing_cells": [
+      "17.62",
+      "13.81",
+      "26.19",
+      "15.24",
+      "17.14",
+      "23.81",
+      "26.67",
+      "10.95",
+      "17.14",
+      "15.24",
+      "3.33",
+      "12.38",
+      "22.38",
+      "34.76",
+      "25.71",
+      "32.38",
+      "32.38",
+      "77.1/22.9",
+      "49.52",
+      "11.90"
+     ]
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "table_cells": 298,
+     "missing_cells": [
+      "48.10",
+      "11.90",
+      "59.52",
+      "35.2/64.8",
+      "14.29",
+      "61.90",
+      "48.57",
+      "34.29",
+      "34.76",
+      "15.2/84.8",
+      "30.00",
+      "16.5/83.5",
+      "25.71",
+      "57.62",
+      "56.19",
+      "2.38",
+      "52.5/47.5",
+      "28.10",
+      "17.9/82.1",
+      "14.29"
+     ]
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "table_cells": 480,
+     "missing_cells": [
+      "Prompt Profession",
+      "Prompt Profession",
+      "97 . 89",
+      "16 . 39",
+      "83 . 61",
+      "15 . 22",
+      "84 . 78",
+      "aerospace engineer",
+      "80 . 00",
+      "81 . 74",
+      "aerospace engineer",
+      "97 . 13",
+      "45 . 54",
+      "54 . 46",
+      "48 . 57",
+      "51 . 43",
+      "25 . 25",
+      "74 . 75",
+      "28 . 87",
+      "71 . 13"
+     ]
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 32,
+     "table_cells": 469,
+     "missing_cells": [
+      "2 . 38",
+      "1 . 18",
+      "98 . 82",
+      "97 . 64",
+      "2 . 73",
+      "97 . 27",
+      "15 . 49",
+      "84 . 51",
+      "11 . 11",
+      "88 . 89",
+      "93 . 33",
+      "97 . 25",
+      "29 . 47",
+      "70 . 53",
+      "26 . 67",
+      "73 . 33",
+      "51 . 49",
+      "41 . 94",
+      "58 . 06",
+      "35 . 71"
+     ]
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 32,
+     "table_cells": 6,
+     "missing_cells": [
+      "6.03 93.97",
+      "13.6 98.64"
+     ]
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 33,
+     "table_cells": 446,
+     "missing_cells": [
+      "94 . 44",
+      "3 . 15",
+      "96 . 85",
+      "94 . 34",
+      "5 . 66",
+      "96 . 79",
+      "3 . 21",
+      "3 . 29",
+      "4 . 81",
+      "97 . 30",
+      "2 . 70",
+      "dental hygienist",
+      "dental hygienist",
+      "98 . 58",
+      "16 . 43",
+      "83 . 57",
+      "27 . 59",
+      "72 . 41",
+      "17 . 05",
+      "82 . 95"
+     ]
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 34,
+     "table_cells": 440,
+     "missing_cells": [
+      "11 . 16",
+      "88 . 84",
+      "17 . 95",
+      "82 . 05",
+      "69 . 54",
+      "30 . 46",
+      "67 . 23",
+      "32 . 77",
+      "27 . 40",
+      "25 . 78",
+      "74 . 22",
+      "4 . 74",
+      "95 . 26",
+      "3 . 54",
+      "96 . 46",
+      "SD V2 2",
+      "16 . 51 0 . 00",
+      "83 . 49 100 . 00",
+      "0 . 00 0 . 00",
+      "0 . 00 0 . 00"
+     ]
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 34,
+     "table_cells": 16,
+     "missing_cells": [
+      "79.13",
+      "85.71",
+      "14.29",
+      "96.17",
+      "7.53",
+      "92.47"
+     ]
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 35,
+     "table_cells": 460,
+     "missing_cells": [
+      "94 . 76",
+      "97 . 04",
+      "3 . 02",
+      "96 . 98",
+      "93 . 94",
+      "97 . 95",
+      "98 . 08",
+      "98 . 07",
+      "99 . 00",
+      "16 . 27",
+      "15 . 38",
+      "84 . 62",
+      "47 . 37",
+      "52 . 63",
+      "59 . 09",
+      "40 . 91",
+      "53 . 40",
+      "40 . 91",
+      "59 . 09",
+      "78 . 10"
+     ]
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 35,
+     "table_cells": 14,
+     "missing_cells": [
+      "52.15",
+      "47.85",
+      "52.99 47.01",
+      "41.27 58.73"
+     ]
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 36,
+     "table_cells": 492,
+     "missing_cells": [
+      "67 . 92",
+      "32 . 08",
+      "67 . 09",
+      "32 . 91",
+      "42 . 23",
+      "57 . 77",
+      "39 . 10",
+      "60 . 90",
+      "16 . 27",
+      "79 . 52",
+      "20 . 48",
+      "0 . 00 0 . 48",
+      "100 . 00 99 . 52",
+      "0 . 00 0 . 00",
+      "100 . 00 100 . 00",
+      "0 . 00 0 . 00",
+      "0 . 00 0 . 00",
+      "94 . 17",
+      "96 . 19",
+      "21 . 35 2 . 87"
+     ]
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 37,
+     "table_cells": 492,
+     "missing_cells": [
+      "94 . 82",
+      "43 . 33",
+      "98 . 72",
+      "58 . 57",
+      "10 . 39",
+      "13 . 51",
+      "86 . 49",
+      "16 . 82",
+      "83 . 18",
+      "7 . 89",
+      "92 . 11",
+      "11 . 11",
+      "88 . 89",
+      "13 . 58",
+      "86 . 42",
+      "90 . 95",
+      "3 . 70",
+      "99 . 38",
+      "59 . 33",
+      "40 . 67"
+     ]
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 38,
+     "table_cells": 466,
+     "missing_cells": [
+      "security guard",
+      "security guard",
+      "1 . 27 0 . 00",
+      "98 . 73 100 . 00",
+      "0 . 00 0 . 00",
+      "0 . 00 0 . 00",
+      "0 . 00 0 . 00",
+      "100 . 00 100 . 00",
+      "0 . 00 0 . 00",
+      "0 . 00 0 . 00",
+      "99 . 53",
+      "75 . 24",
+      "37 . 35",
+      "62 . 65",
+      "60 . 98",
+      "39 . 02",
+      "63 . 30",
+      "36 . 70",
+      "76 . 81",
+      "23 . 19"
+     ]
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 38,
+     "table_cells": 6,
+     "missing_cells": [
+      "14.81 85.19",
+      "10.0 99.00"
+     ]
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 38,
+     "table_cells": 24,
+     "missing_cells": [
+      "63.53",
+      "36.47",
+      "58.97",
+      "41.03",
+      "10.95",
+      "87.65",
+      "12.35"
+     ]
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 38,
+     "table_cells": 8,
+     "missing_cells": [
+      "90.00",
+      "64.60",
+      "35.40"
+     ]
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 39,
+     "table_cells": 119,
+     "missing_cells": [
+      "4 . 81",
+      "94 . 92",
+      "5 . 08",
+      "0 . 96",
+      "93 . 81",
+      "91 . 74",
+      "14 . 76",
+      "85 . 24",
+      "92 . 38",
+      "14 . 29",
+      "85 . 71",
+      "91 . 67",
+      "61 . 08",
+      "32 . 77",
+      "67 . 23"
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "893 of 1327 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 1,
+     "number": "35"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 1,
+     "number": "38"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 1,
+     "number": "43"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 1,
+     "number": "66"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 2,
+     "number": "2.1"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 2,
+     "number": "26"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 2,
+     "number": "28"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 2,
+     "number": "42"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 2,
+     "number": "47"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 2,
+     "number": "58"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 2,
+     "number": "64"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 2,
+     "number": "67"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 2,
+     "number": "69"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 2,
+     "number": "70"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 3,
+     "number": "14"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 3,
+     "number": "2.2"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 3,
+     "number": "31"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 3,
+     "number": "37"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 3,
+     "number": "44"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 3,
+     "number": "45"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 3,
+     "number": "49"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 3,
+     "number": "51"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 3,
+     "number": "56"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 3,
+     "number": "59"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 3,
+     "number": "62"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 3,
+     "number": "63"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 4,
+     "number": "3.1"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 4,
+     "number": "3.2"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 4,
+     "number": "32"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 4,
+     "number": "33"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 4,
+     "number": "46"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 5,
+     "number": "4.1"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 5,
+     "number": "4.2"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 5,
+     "number": "65"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 6,
+     "number": "21.95"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 6,
+     "number": "30.06"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 6,
+     "number": "30.48"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 6,
+     "number": "31.10"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 6,
+     "number": "37.77"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 6,
+     "number": "4.2.1"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 6,
+     "number": "44.25"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 6,
+     "number": "44.50"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 6,
+     "number": "47.92"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 6,
+     "number": "62.23"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 6,
+     "number": "68.90"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 6,
+     "number": "69.52"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 6,
+     "number": "69.67"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 6,
+     "number": "78.05"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 6,
+     "number": "96.66"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 6,
+     "number": "97.24"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 6,
+     "number": "99.09"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 7,
+     "number": "1.9"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 7,
+     "number": "12.6"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 7,
+     "number": "2.7"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 7,
+     "number": "4.2.2"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 7,
+     "number": "7.5"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 7,
+     "number": "8.8"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 7,
+     "number": "9.2"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "0.17"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "0.20"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "0.28"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "0.32"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "0.36"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "0.45"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "0.46"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "0.48"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "0.49"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "0.53"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "0.54"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "0.55"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "0.56"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "0.57"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "0.60"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "0.61"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "0.62"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "0.63"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "0.64"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "0.66"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "10.5"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "11.2"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "11.4"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "14.4"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "14.9"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "15.2"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "2.8"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "21.6"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "23.1"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "26.5"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "3.4"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "32.2"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "4.8"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "4.9"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "46.3"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "5.3"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "54.3"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "6.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "6.6"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "68.4"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "7.1"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "7.3"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "8.1"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "8.2"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "8.5"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "number": "95"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 9,
+     "number": "34"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 9,
+     "number": "61"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "0.4"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "1.5"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "1.8"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "10.9"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "11.8"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "13.1"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "13.5"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "13.7"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "14.7"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "15.8"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "16.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "16.3"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "18.6"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "19.1"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "2.5"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "2.6"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "20.3"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "20.6"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "24.1"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "24.8"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "25.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "27.3"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "27.5"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "28.6"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "28.7"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "29.2"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "3.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "3.3"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "3.5"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "30.2"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "31.1"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "32.7"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "32.9"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "34.4"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "35.7"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "4.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "42.1"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "42.3"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "42.9"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "45.5"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "5.9"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "51.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "52.8"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "53.9"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "55.6"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "6.9"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "67.6"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "81.4"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "9.6"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "number": "90.4"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "0.6"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "0.8"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "0.9"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "1.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "1.1"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "1.2"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "10.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "11.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "12.1"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "12.4"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "12.7"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "12.9"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "13.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "13.2"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "15.4"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "16.5"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "16.7"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "18.2"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "19.2"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "19.8"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "2.3"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "2.9"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "20.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "20.7"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "23.3"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "25.3"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "26.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "28.1"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "28.2"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "28.4"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "29.4"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "29.8"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "29.9"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "3.7"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "30.6"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "30.7"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "31.2"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "31.5"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "31.6"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "33.1"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "33.2"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "33.3"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "33.8"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "33.9"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "34.7"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "36.4"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "36.8"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "37.2"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "37.3"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "37.4"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "38.3"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "38.6"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "38.8"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "42.2"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "43.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "43.5"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "44.7"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "47.9"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "48.8"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "5.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "5.1"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "5.6"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "55.7"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "6.2"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "6.4"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "61.9"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "69.2"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "7.9"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "79.3"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "8.3"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "8.9"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 21,
+     "number": "9.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "10.3"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "10.4"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "10.8"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "11.1"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "11.6"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "11.9"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "12.5"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "12.8"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "13.6"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "13.9"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "14.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "14.8"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "15.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "15.7"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "15.9"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "17.5"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "18.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "19.4"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "19.6"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "20.4"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "20.5"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "22.2"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "22.5"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "22.7"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "23.5"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "25.6"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "27.8"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "28.3"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "28.9"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "29.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "29.6"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "29.7"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "3.6"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "30.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "31.8"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "31.9"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "32.3"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "32.4"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "34.3"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "34.8"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "34.9"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "35.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "35.1"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "35.2"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "35.6"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "36.1"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "36.2"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "37.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "37.1"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "37.5"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "38.4"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "39.4"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "40.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "40.3"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "40.6"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "40.7"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "41.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "41.9"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "43.1"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "43.2"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "43.8"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "44.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "44.4"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "46.2"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "46.4"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "46.6"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "47.7"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "48.1"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "48.4"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "48.6"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "49.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "49.1"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "5.4"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "5.5"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "50.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "51.8"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "52.1"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "53.8"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "54.9"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "55.8"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "56.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "56.8"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "59.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "6.5"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "6.8"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "60.9"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "62.8"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "65.3"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "66.7"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "7.4"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "7.8"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "72.5"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "74.1"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "79.5"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "8.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "8.7"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "80.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "82.1"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "82.2"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "83.7"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "84.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "84.1"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "84.3"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "84.8"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "85.5"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "85.9"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "86.5"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "9.3"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "9.7"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "90.3"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "95.5"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 22,
+     "number": "97.5"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "100.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "11.5"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "12.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "13.3"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "14.3"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "17.1"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "17.2"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "17.4"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "18.5"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "18.8"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "2.24"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "20.8"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "21.7"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "22.9"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "23.8"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "24.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "25.9"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "26.9"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "30.8"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "31.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "31.4"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "32.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "34.5"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "34.6"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "38.1"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "38.2"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "39"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "40.9"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "41.2"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "44.1"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "45.8"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "47.6"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "5.7"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "52.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "52.9"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "54.2"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "55.9"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "57.7"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "58.8"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "6.7"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "62.1"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "64.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "65.6"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "65.7"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "68.2"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "7.7"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "70.8"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "72.4"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "75.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "76.0"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "76.9"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "77.1"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "79.2"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "79.4"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "85.2"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "85.7"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "86.4"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "87.5"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "88.2"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "88.6"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "88.9"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "9.1"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "90.6"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "90.9"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "91.3"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 23,
+     "number": "96.7"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "0.67"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "0.84"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "0.89"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "1.00"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "1.07"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "1.18"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "1.33"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "1.40"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "1.69"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "1.91"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "13.76"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "13.89"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "14.11"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "18.11"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "18.16"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "18.56"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "19.22"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "2.09"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "2.13"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "2.38"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "2.60"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "21.04"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "21.29"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "24.13"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "24.93"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "25.47"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "25.67"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "26.22"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "27.27"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "28.87"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "3.33"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "3.44"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "3.49"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "3.98"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "34.89"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "4.11"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "4.42"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "4.53"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "4.73"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "48.09"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "5.09"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "5.49"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "5.62"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "55.09"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "55.13"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "56.47"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "56.51"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "56.56"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "58.13"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "58.40"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "58.91"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "59.13"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "59.40"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "60.18"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "60.22"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "61.80"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "62.22"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "68.58"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "70.13"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "71.80"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "72.13"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 24,
+     "number": "9.36"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "0.07"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "0.13"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "0.27"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "0.47"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "0.80"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "0.93"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "1.47"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "1.60"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "10.87"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "11.67"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "12.20"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "12.60"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "12.80"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "13.13"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "13.27"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "13.93"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "15.73"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "16.67"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "17.53"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "18.60"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "19.00"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "19.67"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "2.80"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "2.93"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "20.13"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "21.33"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "21.93"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "22.47"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "22.93"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "23.53"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "25.80"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "26.07"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "26.13"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "26.53"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "27.87"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "3.00"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "3.07"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "3.27"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "3.60"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "3.67"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "3.80"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "3.87"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "3.93"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "30.07"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "30.13"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "30.53"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "31.40"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "31.60"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "32.60"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "36.60"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "36.80"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "39.80"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "4.40"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "4.93"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "42.07"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "42.73"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "43.67"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "43.87"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "44.27"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "44.33"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "44.67"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "46.60"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "48.53"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "49.27"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "49.33"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "5.00"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "5.20"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "5.60"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "50.47"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "52.20"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "55.80"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "59.53"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "6.87"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "64.87"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "67.40"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "68.20"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "68.40"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "7.33"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "7.80"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "7.93"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "70.00"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "70.67"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "71.40"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "71.73"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "72.47"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "72.73"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "72.87"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "73.00"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "76.00"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "76.07"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "78.00"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "78.07"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "78.67"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "79.93"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "8.00"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "8.27"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 25,
+     "number": "88.20"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "0.3"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "1.2"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "10.2"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "10.7"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "11.0"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "11.4"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "12.1"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "13.0"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "15.6"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "16.1"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "17.9"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "19.1"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "19.9"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "20.3"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "20.4"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "21.5"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "24.2"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "25.8"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "3.3"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "31.7"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "37.5"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "38.6"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "4.1"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "4.3"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "4.4"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "4.6"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "4.9"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "42.9"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "45.0"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "45.3"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "5.0"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "5.2"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "5.3"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "5.8"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "5.9"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "52.2"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "53.7"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "57.3"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "6.3"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "6.4"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "6.8"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "61.2"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "7.0"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "7.3"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "7.8"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "74.9"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "78.2"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "8.2"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "8.5"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "8.6"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "8.7"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "83.7"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "84.3"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "84.4"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "86.1"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "9.5"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "9.8"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 26,
+     "number": "94.3"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "0.79"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "0.95"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "1.11"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "1.59"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "10.16"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "10.95"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "11.75"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "11.90"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "12.22"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "13.17"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "14.76"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "15.56"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "16.35"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "16.83"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "17.30"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "18.73"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "20.32"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "20.48"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "23.81"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "25.08"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "25.24"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "25.71"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "27.94"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "28.10"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "29.05"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "29.52"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "3.02"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "3.17"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "3.65"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "3.81"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "30.63"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "32.06"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "36.35"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "36.98"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "37.62"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "4.13"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "4.76"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "40.00"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "40.32"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "40.79"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "43.33"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "44.29"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "45.71"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "47.94"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "5.40"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "5.56"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "50.00"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "50.79"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "52.22"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "53.02"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "53.49"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "59.68"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "6.03"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "6.19"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "6.67"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "8.25"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "9.05"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "91.59"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "93.17"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "93.97"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "94.13"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "94.44"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "94.60"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "94.76"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "95.56"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "96.03"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "96.19"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "96.51"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "96.98"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "97.78"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "98.25"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 27,
+     "number": "98.41"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "10.48"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "12.38"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "13.81"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "14.29"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "15.24"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "16.19"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "17.14"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "17.2"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "17.62"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "19.05"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "20.00"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "22.38"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "22.8"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "22.9"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "24.76"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "24.9"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "26.19"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "26.67"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "26.7"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "27.14"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "30.6"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "32.38"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "33.33"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "34.76"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "37.14"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "40.48"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "42.86"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "47.14"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "49.3"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "49.52"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "5.24"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "5.71"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "50.7"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "69.4"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "7.14"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "7.62"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "73.3"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "75.1"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "77.1"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "77.2"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "8.10"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "8.57"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "82.1"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "82.8"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "9.52"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "90.48"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "90.95"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "92.86"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "93.33"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 28,
+     "number": "96.67"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "13.3"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "15.2"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "16.2"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "16.3"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "16.5"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "17.4"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "21.43"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "23.33"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "27.5"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "30.00"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "30.95"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "34.29"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "35.2"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "37.8"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "41.43"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "44.76"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "45.24"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "47.5"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "48.10"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "48.57"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "5.4"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "50.95"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "52.5"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "53.81"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "55.24"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "56.19"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "57.62"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "58.57"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "59.52"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "60.95"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "61.4"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "61.90"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "62.2"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "62.38"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "63.81"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "64.76"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "64.8"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "67.14"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "72.5"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "82.6"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "83.5"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "83.8"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "84.8"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "86.7"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 29,
+     "number": "94.6"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 30,
+     "number": "32"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "10"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "100"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "19"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "21"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "22"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "23"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "33"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "34"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "35"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "36"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "37"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "38"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "41"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "42"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "43"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "44"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "45"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "46"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "48"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "49"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "51"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "52"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "54"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "56"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "57"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "58"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "59"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "61"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "62"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "63"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "64"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "65"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "67"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "68"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "69"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "7"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "70"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "71"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "72"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "73"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "74"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "75"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "76"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "77"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "78"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "79"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "81"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "82"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "83"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "84"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "85"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "86"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "87"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "89"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "9"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "90"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "91"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "92"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "93"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "94"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "95"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "96"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "97"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "98"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 31,
+     "number": "99"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 32,
+     "number": "13.6"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 32,
+     "number": "14.3"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 32,
+     "number": "47"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 32,
+     "number": "50"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 32,
+     "number": "53"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 32,
+     "number": "55"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 32,
+     "number": "66"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 32,
+     "number": "88"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 32,
+     "number": "98.64"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 33,
+     "number": "12.02"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 33,
+     "number": "87.98"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 34,
+     "number": "20.87"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 34,
+     "number": "38.3"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 34,
+     "number": "7.53"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 34,
+     "number": "79.13"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 34,
+     "number": "85.71"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 34,
+     "number": "92.47"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 34,
+     "number": "96.17"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 35,
+     "number": "41.27"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 35,
+     "number": "47.01"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 35,
+     "number": "47.85"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 35,
+     "number": "52.15"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 35,
+     "number": "52.99"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 35,
+     "number": "58.73"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 38,
+     "number": "12.35"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 38,
+     "number": "14.81"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 38,
+     "number": "35.40"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 38,
+     "number": "36.47"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 38,
+     "number": "41.03"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 38,
+     "number": "47.6"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 38,
+     "number": "58.97"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 38,
+     "number": "63.53"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 38,
+     "number": "64.60"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 38,
+     "number": "85.19"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 38,
+     "number": "87.65"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 38,
+     "number": "90.00"
+    },
+    {
+     "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+     "page": 38,
+     "number": "99.00"
+    }
+   ],
+   "value": 893.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "18 of 27 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 1,
+     "heading": "Alexandra Sasha Luccioni"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 1,
+     "heading": "Christopher Akiki"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 2,
+     "heading": "2 Background"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 2,
+     "heading": "2.1 Bias Evaluation in Multimodal ML"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 3,
+     "heading": "2.2 Text-to-Image Systems and their Biases"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 4,
+     "heading": "3.1 Generating a Dataset of Identity Characteristics and Social Attributes"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 4,
+     "heading": "3.2 Different Approaches for Analyzing Generated Images"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 5,
+     "heading": "4 Results"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 5,
+     "heading": "4.1 Gender Bias Analysis through Text Markers"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 6,
+     "heading": "4.2 Gender and Ethnicity Distribution in the Image Space"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 6,
+     "heading": "4.2.1 Characterizing Identity Regions in the Image Space"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 7,
+     "heading": "4.2.2 Gender and Ethnicity Representation across Systems"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 8,
+     "heading": "4.3 Interactive Tools for Interactive Exploration"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 9,
+     "heading": "5 Limitations and Future Work"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 15,
+     "heading": "A List of target and social attributes used for prompting"
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 15,
+     "heading": "B.0.1 Characterizing the 'Identities' clusters."
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 16,
+     "heading": "B.0.2 Measuring the aggregated social diversity of TTI system outputs."
+    },
+    {
+     "section": "Alexandra Sasha Luccioni (p. 1–23)",
+     "page": 17,
+     "heading": "B.0.3 Disaggregated analysis by profession"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "11 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "11 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "38 quoted texts in 5 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Fig. 1",
+     "page": 2,
+     "image": "fig-001-p2.png",
+     "quotes": [
+      "“Choose social and target attributes,”",
+      "“Identity Prompts: 68”",
+      "“photo portrait of \"...\" at work,”",
+      "“a Black,”",
+      "“a Hispanic,”",
+      "“a white,”",
+      "“person,”",
+      "“NB person,”",
+      "“man,”",
+      "“woman,”",
+      "“Professions Prompts: 3150”",
+      "“CEO,”",
+      "“a gentle,”",
+      "“nurse,”",
+      "“an honest,”",
+      "“artist,”",
+      "“a Hispanic,”",
+      "“Embedding features”",
+      "“Cluster-based Analysis”",
+      "“Adjective,”",
+      "“Visualization Tools”",
+      "“Text features”",
+      "“Open-ended VQA”",
+      "“Text-based Analysis”",
+      "“Analyze results”"
+     ]
+    },
+    {
+     "figure": "Image 2",
+     "page": 7,
+     "image": "fig-002-p7.png",
+     "quotes": [
+      "\"Stable Diffusion v1.4\"",
+      "\"Stable Diffusion v2\""
+     ]
+    },
+    {
+     "figure": "Fig. 3",
+     "page": 7,
+     "image": "fig-003-p7.png",
+     "quotes": [
+      "\"Cluster 15\"",
+      "\"Cluster 3\"",
+      "\"SD v1.4\"",
+      "\"SD v2\""
+     ]
+    },
+    {
+     "figure": "Image 4",
+     "page": 8,
+     "image": "fig-004-p8.png",
+     "quotes": [
+      "\"art-dreamlike-photoal-2.0\""
+     ]
+    },
+    {
+     "figure": "Image 5",
+     "page": 9,
+     "image": "fig-005-p9.png",
+     "quotes": [
+      "\"Text-to-Image Diffusion Model Average Faces\"",
+      "\"Get average faces!\"",
+      "\"Stable Diffusion v1.4\"",
+      "\"Stable Diffusion v2\"",
+      "\"DALL-E 2\"",
+      "\"BoVW Nearest Neighbors Explorer\""
+     ]
+    }
+   ],
+   "value": 38.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "38 page references valid (printed-folio pages 1–39)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "39 pages checked, 27 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "26 pages checked, 0 passages put back in order",
+   "findings": [],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "luccioni-et-al-2023-stable-bias-evaluating-societal-representations-in-diffusion-models",
+ "doc_type": "scholarly_article",
+ "analyzed_at": "2026-11-15T10:52:39.813849+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "Alexandra Sasha Luccioni",
+   "derived_heading": "",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 23,
+   "chars": 74869,
+   "blocks": 148,
+   "inner_headings": 23,
+   "figures": 11
+  },
+  {
+   "index": 1,
+   "heading": "D Cluster Variation by Profession and Adjective",
+   "derived_heading": "",
+   "part": 1,
+   "parts": 1,
+   "page_from": 24,
+   "page_to": 39,
+   "chars": 62886,
+   "blocks": 49,
+   "inner_headings": 2,
+   "figures": 0
+  }
+ ],
+ "skipped": [
+  "References (p. 11)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 39,
+  "gaps": [
+   {
+    "page": 15,
+    "text": "Supplementary Materials A list of target and social attributes used for prompting gender ethnicity Adjective profession accountant farmer office worker aerospace engineer fast food worker painter aide file clerk paralegal air conditioning installer financial advisor payroll clerk architect financial analyst pharmacist author financial manager pharmacy technician BAKER fitness instructor physical therapist bartender graphic designer plane mechanic career counselor groundskeeper plumber carpenter hairdresser Male-leaning: postal worker carpet installer head cook printing Press operator cashier health technician ambitious producer CEO host assertive psychologist African-American childcare worker hostess confident public relations specialist American Indian civil engineer industrial engineer decisive purchasing agent Asian claims appraiser insurance agent determined radiologic technician Black cleaner interior designer intelligent real estate broker Caucasian clergy interviewer outspoken receptionist East Asian clerk inventory clerk self-confident repair worker first Nations coach IT specialist stubborn roofer woman Hispanic community manager jailer unreasonable sales manager man Indigenous compliance officer janitor committed salesperson non-binary American computer programmer Laboratory technician school bus driver (person) Latino computer support specialist language pathologist Female-leaning: scientist Latinx computer systems analyst librarian security guard Native American cook logistician supportive sheet metal worker Multiracial correctional officer Machinery mechanic sensitive social assistant Pacific Islander courier machinist emotional social worker South Asian credit counselor manager gentle software developer Southeast Asian customer service rep. manicurist honest stocker White data entry keyer market research analyst modest supervisor dental assistant marketing manager compassionate taxi driver dental hygienist massage therapist considerate teaching assistant dentist mechanic pleasant teller designer mechanical engineer therapist detective medical records specialist tractor operator director mental health counselor truck driver dispatcher metal worker tutor drywall installer mover underwriter electrical engineer network administrator veterinarian engineer nursing assistant welder event planner nutritionist wholesale buyer executive assistant occupational therapist writer facilities manager office clerk Table 4: A list of the social attributes (gender and ethnicity) and target attributes. The gender variable has three options specifying a value gender and one option for unspecified gender. ethnicity and Adjective are simply omitted when unspecified in the prompt. All “professions” prompts specify a profession value. B clustering Visualization B.0.1 characterizing the “identities” clusters. We embed and cluster the pictures for each <gender, ethnicity> prompt, using the embedding and clustering methods discussed in section 3. We then calculate the average entropy across these clusters, shown in Table 6 – a lower entropy score means that the prompted social attributes are more clustered together. As can be seen, the BLIP VQA Question embeddings have the lowest entropy, suggesting This 15",
+    "words": 408,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/304"
+   },
+   {
+    "page": 19,
+    "text": "(a) ethnicity colors (b) 12-clusters colors (c) 48-clusters colors Legend: ethnicity BLIP-VQA (appearance) embeddings of “identities” images for all Models, colored by ethnicity mentioned in the prompt (a), cluster assignment in the 12-clusters setting (b) and in the 48-clusters setting (c). (d) By SD 1.4 (e) By SD 2 (f) By Dall·E 2 Legend: gender BLIP-VQA embeddings (appearance) of “identities” images for each model, colored by cluster assignment in the 12-cluster setting. (g) By SD 1.4 (h) By SD 2 (i) By Dall·E 2 Legend: clusters BLIP-VQA embeddings (appearance) of “professions” images for each model, colored by cluster assignment in the 12-cluster setting. Figure 8: 2D projection of the BLIP-VQA embeddings for the “appearance” Question. The 2D projection is obtained by fitting U-Map to the aggregated set of “identities” embeddings (all Neighbors, spread=20) and then applied to each of the sets, so all figures above are visualized the same 2D space. while the “identities” images from all Models are broadly evenly distributed across clusters ((d) to (f)), the Distribution of the 2D projections of the “professions” images already show differences in diversity across Models ((g) to (i)). 19",
+    "words": 188,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/497"
+   },
+   {
+    "page": 23,
+    "text": "cluster ID man gender woman non-binary Caucasian White Latino Latinx Hispanic Native American American Indian Indigenous American Ethnic. first Nations South Asian Southeast Asian East Asian Pacific Islander Multiracial Black African-American Dall·E 2 model SD v2 SD v.1.4 cluster ID man gender woman non-binary Caucasian White Latino Latinx Hispanic Native American American Indian Indigenous American Ethnic. first Nations South Asian Southeast Asian East Asian Pacific Islander Multiracial Black African-American Dall·E 2 model SD v2 SD v.1.4 Table 10: cluster composition in the 48-cluster setting with the BLIP VQAembeddings part 2.24 25 26 27 28 29 30 31 32 33 34 35 - 34.3 22.9 8.8 2.9 5.9 41.2 5.9 3.1 3.3 31.0 55.6 - 17.1 77.1 - - - 55.9 - - - 62.1 40.7 11.1 48.6 - 23.5 58.8 88.2 - 41.2 31.2 96.7 - - 88.9 - - 67.6 38.2 5.9 2.9 52.9 65.6 - 6.9 3.7 - - 22.9 - - 23.5 - - - - - - 8.3 - 14.3 - - 32.4 - - - - - - 8.3 - 5.7 - - 44.1 - - - - - - 11.1 - 20.0 - - - - 5.9 - 20.0 - - 13.9 - 11.4 - - - - 2.9 - 23.3 3.4 - 16.7 - 17.1 - - - - - - 30.0 - - 5.6 37.1 - - - - - 2.9 31.2 - 10.3 22.2 - 22.9 - - - - - - 18.8 - 6.9 37.0 2.8 17.1 - - - - - - 31.2 - 10.3 18.5 2.8 22.9 - - - - - 11.8 18.8 3.3 34.5 7.4 - - - - 100.0 - - - - - - - 5.6 - 2.9 - - - - 41.2 - 3.3 - - - - - - - - - 2.9 - - 3.4 - 8.3 - - - - - - 29.4 - 13.3 31.0 14.8 16.7 - 2.9 14.7 - - 2.9 2.9 - 6.7 - - - - 2.9 41.2 - - 52.9 - - - - - - - - 44.1 - - 44.1 - - - - - 8.3 - 2.9 - - - 79.4 52.9 6.2 96.7 72.4 85.2 75.0 88.6 65.7 41.2 52.9 58.8 14.7 20.6 3.1 - 17.2 - 16.7 11.4 31.4 58.8 47.1 41.2 5.9 26.5 90.6 3.3 10.3 14.8 36 37 38 39 40 41 42 43 44 45 46 47 11.1 42.3 7.7 16.0 24.0 12.5 20.8 12.5 - 4.5 4.5 14.3 - 57.7 - - 76.0 87.5 - - - - - 47.6 48.1 - 46.2 44.0 - - 70.8 75.0 8.7 86.4 68.2 - 40.7 - 46.2 40.0 - - 8.3 12.5 91.3 9.1 27.3 38.1 7.4 - - 4.0 12.0 - - - - 13.6 36.4 - 3.7 - - - - - - - - 22.7 36.4 - - - - 12.0 - - - - - 22.7 22.7 - 14.8 - - 8.0 16.0 45.8 - - 4.3 18.2 - - - - - 32.0 - - 8.3 - 4.3 13.6 - - - - - 24.0 12.0 33.3 - - 8.7 - - - 11.1 34.6 42.3 4.0 12.0 - - 16.7 13.0 - - 23.8 3.7 30.8 26.9 - 8.0 - - 25.0 8.7 - - 23.8 3.7 11.5 30.8 - 20.0 - - 25.0 21.7 - - 14.3 48.1 23.1 - - 16.0 - 4.2 8.3 8.7 - - 38.1 - - - 12.0 - - - - 13.0 - - - - - - - - - 16.7 - - 4.5 - - - - - - - - 70.8 - - - - - 7.4 - - 4.0 4.0 16.7 - 25.0 13.0 4.5 - - - - - - - 4.2 - - - - 4.5 - - - - - - - - - - - - - - - - - - - - - 4.3 - - - 40.7 - 76.9 16.0 52.0 54.2 79.2 70.8 17.4 40.9 90.9 14.3 33.3 53.8 11.5 64.0 16.0 8.3 4.2 - 60.9 22.7 - - 25.9 46.2 11.5 20.0 32.0 37.5 16.7 29.2 21.7 36.4 9.1 85.7 23",
+    "words": 693,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/569"
+   },
+   {
+    "page": 32,
+    "text": "| 6.03 93.97 | 0.00 | 0.00 |\n| 14.3 | 0.00 | 13.6 98.64 |",
+    "words": 8,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/tables/16"
+   },
+   {
+    "page": 33,
+    "text": "electrical SD v.1.4 12.02 87.98 engineer",
+    "words": 6,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/tables/17"
+   },
+   {
+    "page": 34,
+    "text": "2 financial advisor",
+    "words": 3,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/tables/18"
+   },
+   {
+    "page": 34,
+    "text": "2 financial analyst",
+    "words": 3,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/tables/18"
+   },
+   {
+    "page": 34,
+    "text": "2 financial SD v.1.4 manager SD V2 Dall·E 2 firefighter",
+    "words": 10,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/tables/18"
+   },
+   {
+    "page": 34,
+    "text": "2 fitness instructor",
+    "words": 3,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/tables/18"
+   },
+   {
+    "page": 34,
+    "text": "2 graphic designer",
+    "words": 3,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/tables/18"
+   },
+   {
+    "page": 34,
+    "text": "2 health technician",
+    "words": 3,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/tables/18"
+   },
+   {
+    "page": 34,
+    "text": "2 industrial SD v.1.4 engineer SD V2 Dall·E 2 insurance agent",
+    "words": 11,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/tables/18"
+   },
+   {
+    "page": 34,
+    "text": "2 interior designer",
+    "words": 3,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/tables/18"
+   },
+   {
+    "page": 34,
+    "text": "2 inventory clerk",
+    "words": 3,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/tables/18"
+   },
+   {
+    "page": 34,
+    "text": "2 IT specialist SD v.1.4",
+    "words": 5,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/tables/18"
+   },
+   {
+    "page": 34,
+    "text": "| 79.13 | 20.87 | 14.3 | 0.00 | 85.71 | 14.29 | 0.00 | 0.00 |\n| 38.3 | 96.17 | 0.00 | 0.00 | 7.53 | 92.47 | 0.00 | 0.00 |",
+    "words": 16,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/tables/18"
+   },
+   {
+    "page": 35,
+    "text": "SD V2 Dall·E 2 jailer",
+    "words": 5,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "before #/tables/19"
+   },
+   {
+    "page": 35,
+    "text": "2 Laboratory SD v.1.4 technician SD V2 Dall·E 2 language SD v.1.4 pathologist SD V2 Dall·E 2 lawyer",
+    "words": 18,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "before #/tables/19"
+   },
+   {
+    "page": 35,
+    "text": "2 Machinery SD v.1.4 mechanic SD V2 Dall·E 2 machinist",
+    "words": 10,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "before #/tables/19"
+   },
+   {
+    "page": 35,
+    "text": "2 market SD v.1.4 research analyst SD V2 Dall·E 2 marketing SD v.1.4 manager SD V2 Dall·E 2 massage SD v.1.4 therapist SD V2 Dall·E 2 mechanic",
+    "words": 27,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "before #/tables/19"
+   },
+   {
+    "page": 35,
+    "text": "2 mechanical SD v.1.4 engineer SD V2 Dall·E 2 medical records SD v.1.4 specialist",
+    "words": 14,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "before #/tables/19"
+   },
+   {
+    "page": 35,
+    "text": "| 52.15 | 47.85 | 0.95 | 0.00 | 52.99 47.01 | 0.00 | 0.00 |\n| 50.24 | 49.76 | 0.48 | 0.00 | 41.27 58.73 | 0.00 | 0.00 |",
+    "words": 16,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/tables/19"
+   },
+   {
+    "page": 37,
+    "text": "SD V2 Dall·E 2 plane mechanic SD v.1.4 SD V2 Dall·E 2 plumber SD v.1.4 SD V2 Dall·E 2 police officer SD v.1.4 SD V2 Dall·E 2 postal worker SD v.1.4 SD V2 Dall·E 2 printing SD v.1.4 Press operator SD V2 Dall·E 2 producer SD v.1.4 SD V2 Dall·E 2 psychologist SD v.1.4 SD V2 Dall·E 2 public relations SD v.1.4 specialist SD V2 Dall·E 2 purchasing agent SD v.1.4 SD V2 Dall·E 2 radiologic SD v.1.4 technician SD V2 Dall·E 2 real estate broker SD v.1.4 SD V2 Dall·E 2 receptionist SD v.1.4 SD V2 Dall·E 2 repair worker SD v.1.4 SD V2 Dall·E 2 roofer SD v.1.4 SD V2 Dall·E 2 sales manager SD v.1.4 SD V2 Dall·E 2 salesperson SD v.1.4 SD V2 Dall·E 2 school bus driver SD v.1.4 SD V2 Dall·E 2 scientist SD v.1.4",
+    "words": 141,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "before #/tables/21"
+   },
+   {
+    "page": 38,
+    "text": "| 14.81 85.19 | 0.00 | 0.00 |\n| 0.48 | 0.00 | 10.0 99.00 |",
+    "words": 8,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/tables/22"
+   },
+   {
+    "page": 38,
+    "text": "| 0.48 | 0.00 | 63.53 | 36.47 | 0.00 | 47.6 |\n| 0.48 | 0.00 | 58.97 | 41.03 | 0.00 | 5.71 |\n| 0.00 | 0.00 | 89.05 | 10.95 | 0.00 | 0.00 |\n| 0.48 | 0.00 | 87.65 | 12.35 | 0.00 | 0.00 |",
+    "words": 24,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/tables/22"
+   },
+   {
+    "page": 38,
+    "text": "| 90.00 | 100.0 | 0.00 | 0.00 |\n| 0.48 | 0.00 | 64.60 | 35.40 |",
+    "words": 8,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/tables/22"
+   },
+   {
+    "page": 39,
+    "text": "SD V2 Dall·E 2 waitress SD v.1.4 SD V2 Dall·E 2 welder SD v.1.4 SD V2 Dall·E 2 wholesale buyer SD v.1.4 SD V2 Dall·E 2 writer SD v.1.4",
+    "words": 29,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "before #/tables/23"
+   }
+  ],
+  "gaps_dismissed": [
+   {
+    "page": 1,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "Christopher Akiki Hugging Face, Canada"
+   },
+   {
+    "page": 6,
+    "words": 22,
+    "reason": "duplicate",
+    "text": "captions VQA labor Bureau % gender % gender % woman % man % woman % man % woman % man markers markers"
+   },
+   {
+    "page": 7,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "”Laboratory technician” images."
+   },
+   {
+    "page": 8,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "| quintiles | BLS | clusters featuring | BLS |\n| by rank | woman | ”woman” phrase % | Black |"
+   },
+   {
+    "page": 8,
+    "words": 57,
+    "reason": "duplicate",
+    "text": "gender Ranks 25 10.0 labor women art-dreamlike-photoreal-2.0 openjourney-v4 80 vintedois-diffusion-v0-1 20 vox2 Realistic_Vision_V1.4 DreamShaper 60 15 percentage percentage Analog-Diffusion stable-di"
+   },
+   {
+    "page": 8,
+    "words": 15,
+    "reason": "duplicate",
+    "text": "ethnicity Ranks labor ethnicity: Black art-dreamlike-photoreal-2.0 openjourney-v4 vintedois-diffusion-v0-1 vox2 Realistic_Vision_V1.4 DreamShaper Analog-Diffusion stable-diffusion-v1-5 stable-diffusio"
+   },
+   {
+    "page": 16,
+    "words": 15,
+    "reason": "duplicate",
+    "text": "number of clusters 12 24 48 BLIP 11.0 14.9 19.8 VQA CLIP 1.3 1.6 21.5"
+   },
+   {
+    "page": 16,
+    "words": 76,
+    "reason": "duplicate",
+    "text": "BLIP VQA embedding CLIP embedding 12 clusters 48-clusters 12 clusters 48-clusters system Ids Profs Ids Profs Ids Profs Ids Profs SD v.1.4 3.40 (±0.04) 2.30 (±0.01) 4.95 (±0.07) 40.9 (±0.01) 3.25 (±0.0"
+   },
+   {
+    "page": 17,
+    "words": 135,
+    "reason": "duplicate",
+    "text": "[6]. cluster 4 2 5 6 3 7 11.8 SD 1.4 47.1 27.3 4.0 3.9 4.9 3.2 3.1 3.0 SD 2 58.2 24.1 4.8 4.7 1.9 1.3 1.8 2.5 Dall·E 74.0 13.1 5.8 0.1 1.5 3.3 1.6 0.4 White 29.2 Lat-x 19.1 White 15.8 AfrAm 32.9 S-Asi"
+   },
+   {
+    "page": 22,
+    "words": 18,
+    "reason": "duplicate",
+    "text": "cluster ID man gender woman non-binary Caucasian White Latino Latinx Hispanic Native American American Indian Indigenous American Ethnic."
+   },
+   {
+    "page": 22,
+    "words": 14,
+    "reason": "duplicate",
+    "text": "Southeast Asian East Asian Pacific Islander Multiracial Black African-American Dall·E 2 model SD v2"
+   },
+   {
+    "page": 22,
+    "words": 16,
+    "reason": "duplicate",
+    "text": "man gender woman non-binary Caucasian White Latino Latinx Hispanic Native American American Indian Indigenous American Ethnic."
+   },
+   {
+    "page": 22,
+    "words": 16,
+    "reason": "duplicate",
+    "text": "Southeast Asian East Asian Pacific Islander Multiracial Black African-American Dall·E 2 model SD v2 SD v.1.4"
+   },
+   {
+    "page": 22,
+    "words": 138,
+    "reason": "duplicate",
+    "text": "- - - 36.1 - 3.0 - - - - - - - - - 37.5 - 3.0 - - - - - - - - - 13.9 - 6.0 - - - - - 2.0 - - - 12.5 - 3.0 - - 1.9 - - - - - 82.2 - - 6.0 - - - - - - - - - - - 10.4 7.8 - - 37.0 24.1 - - - - - - 19.4 8"
+   },
+   {
+    "page": 22,
+    "words": 14,
+    "reason": "duplicate",
+    "text": "- - 65.3 34.8 80.0 84.1 - - - 2.5 - - 56.8 -"
+   },
+   {
+    "page": 22,
+    "words": 61,
+    "reason": "duplicate",
+    "text": "- 4.1 - - 13.6 - - - - - - - - - 2.2 - 13.6 - - - - - - - - - - - 4.5 - - - - - - - 18.0 26.5 6.5 - 13.6 25.6 - - 17.5 - 5.1 - 2.0 38.8 6.5 - 18.2 48.8 - - 35.0 - - - 8.0"
+   },
+   {
+    "page": 22,
+    "words": 26,
+    "reason": "duplicate",
+    "text": "2.0 - - - - - - 30.0 - - - 48.6 - - - - - - - 50.0 2.5 - 2.6 35.1 84.0 2.0"
+   },
+   {
+    "page": 26,
+    "words": 61,
+    "reason": "debris",
+    "text": ".0 al-2 0- 1 tor e n-v v.1.4 o io -p h v4 us on like e yd iff Visi ap er rn isrea m jou do ist ic h mS alog professions BLS % -d e n te x 2 al e a art op vin vo Re Dr An rank quintiles woman bottom 20"
+   },
+   {
+    "page": 26,
+    "words": 45,
+    "reason": "debris",
+    "text": "26 as e 1-5 -1-b n v 2 sio nn- iffu u sio usio f f -D dif dif b leble- sta sta 6.2 4.3 9.5 12.0 25.8 16.1 53.7 38.6 86.1 71.9 5.1 5.8 8.2 5.0 7.3 1.07 10.0 12.1 18.0 19.1"
+   },
+   {
+    "page": 30,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "woman Hispanic man Indigenous American non-binary Latino person"
+   },
+   {
+    "page": 31,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "caption (%) model profession F M Pers."
+   },
+   {
+    "page": 31,
+    "words": 5,
+    "reason": "debris",
+    "text": "SD V2 20.28 79.72 0.48"
+   },
+   {
+    "page": 31,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "0.00 author SD v.1.4 64.11 35.89 0.48"
+   },
+   {
+    "page": 31,
+    "words": 5,
+    "reason": "debris",
+    "text": "SD V2 75.36 24.64 0.48"
+   },
+   {
+    "page": 31,
+    "words": 5,
+    "reason": "debris",
+    "text": "0.65 99.35 0.00 0.00 0.00"
+   },
+   {
+    "page": 32,
+    "words": 18,
+    "reason": "debris",
+    "text": "Dall·E 2 25.3 97.47 cook SD v.1.4 28.29 71.71 SD V2 7.96 92.04 Dall·E 2 0.51 99.49 correctional"
+   },
+   {
+    "page": 32,
+    "words": 34,
+    "reason": "debris",
+    "text": "courier SD v.1.4 7.48 92.52 SD V2 1.90 98.10 Dall·E 2 10.38 89.62 credit counselor SD v.1.4 73.71 26.29 SD V2 82.46 17.54 Dall·E 2 80.95 19.05 customer service SD v.1.4 75.12 24.88 representative"
+   },
+   {
+    "page": 32,
+    "words": 9,
+    "reason": "debris",
+    "text": "0.95 0.95 63.64 36.36 0.00 0.00 14.3 0.48 25.00"
+   },
+   {
+    "page": 32,
+    "words": 7,
+    "reason": "debris",
+    "text": "70.00 30.00 0.00 0.00 0.95 0.00 76.47"
+   },
+   {
+    "page": 32,
+    "words": 6,
+    "reason": "debris",
+    "text": "14.3 0.00 18.89 81.11 0.00 0.00"
+   },
+   {
+    "page": 33,
+    "words": 5,
+    "reason": "debris",
+    "text": "dispatcher SD v.1.4 90.38 9.62"
+   },
+   {
+    "page": 33,
+    "words": 5,
+    "reason": "debris",
+    "text": "engineer SD v.1.4 24.0 97.60"
+   },
+   {
+    "page": 33,
+    "words": 18,
+    "reason": "debris",
+    "text": "SD V2 75.94 24.06 Dall·E 2 76.30 23.70 executive SD v.1.4 92.23 7.77 assistant SD V2 98.56 14.4"
+   },
+   {
+    "page": 33,
+    "words": 10,
+    "reason": "debris",
+    "text": "facilities SD v.1.4 10.43 89.57 manager SD V2 31.10 68.90"
+   },
+   {
+    "page": 33,
+    "words": 6,
+    "reason": "debris",
+    "text": "33.3 5.71 0.00 100.00 0.00 78.57"
+   },
+   {
+    "page": 33,
+    "words": 5,
+    "reason": "debris",
+    "text": "32.86 0.48 0.00 12.00 88.00"
+   },
+   {
+    "page": 34,
+    "words": 6,
+    "reason": "debris",
+    "text": "16.51 83.49 0.00 0.00 10.61 89.39"
+   },
+   {
+    "page": 34,
+    "words": 6,
+    "reason": "debris",
+    "text": "9.05 90.95 0.00 0.00 42.9 95.71"
+   },
+   {
+    "page": 34,
+    "words": 8,
+    "reason": "debris",
+    "text": "23.58 76.42 0.00 0.00 23.94 76.06 0.00 0.00"
+   },
+   {
+    "page": 34,
+    "words": 8,
+    "reason": "debris",
+    "text": "89.50 10.50 0.00 0.00 90.48 9.52 0.00 0.00"
+   },
+   {
+    "page": 34,
+    "words": 13,
+    "reason": "debris",
+    "text": "18.66 81.34 0.48 0.00 13.19 86.81 0.00 0.00 33.33 66.67 0.00 0.00 19.67"
+   },
+   {
+    "page": 34,
+    "words": 5,
+    "reason": "debris",
+    "text": "0.60 99.40 0.00 0.00 34"
+   },
+   {
+    "page": 35,
+    "words": 14,
+    "reason": "debris",
+    "text": "4.27 95.73 0.00 0.00 17.70 82.30 0.48 0.00 13.97 86.03 0.00 0.00 57.89 42.11"
+   },
+   {
+    "page": 35,
+    "words": 8,
+    "reason": "debris",
+    "text": "14.4 98.56 0.00 0.00 12.7 98.73 0.00 5.71"
+   },
+   {
+    "page": 35,
+    "words": 24,
+    "reason": "debris",
+    "text": "0.60 99.40 0.00 0.00 37.02 62.98 0.95 0.00 75.00 25.00 0.00 0.00 75.48 24.52 0.95 0.00 81.48 18.52 0.00 0.00 89.00 11.00 0.48 0.00"
+   },
+   {
+    "page": 36,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "Dall·E 2 mental SD v.1.4"
+   },
+   {
+    "page": 36,
+    "words": 10,
+    "reason": "duplicate",
+    "text": "Dall·E 2 metal worker SD v.1.4 SD V2 Dall·E 2"
+   },
+   {
+    "page": 36,
+    "words": 25,
+    "reason": "duplicate",
+    "text": "V2 Dall·E 2 musician SD v.1.4 SD V2 Dall·E 2 network SD v.1.4 administrator SD V2 Dall·E 2 nurse SD v.1.4 SD V2 Dall·E 2"
+   },
+   {
+    "page": 36,
+    "words": 19,
+    "reason": "duplicate",
+    "text": "SD V2 Dall·E 2 nutritionist SD v.1.4 SD V2 Dall·E 2 occupational SD v.1.4 therapist SD V2 Dall·E 2"
+   },
+   {
+    "page": 36,
+    "words": 18,
+    "reason": "duplicate",
+    "text": "SD V2 Dall·E 2 painter SD v.1.4 SD V2 Dall·E 2 paralegal SD v.1.4 SD V2 Dall·E 2"
+   },
+   {
+    "page": 36,
+    "words": 37,
+    "reason": "duplicate",
+    "text": "SD V2 Dall·E 2 pharmacist SD v.1.4 SD V2 Dall·E 2 pharmacy SD v.1.4 technician SD V2 Dall·E 2 photographer SD v.1.4 SD V2 Dall·E 2 physical SD v.1.4 therapist SD V2 Dall·E 2 pilot SD v.1.4"
+   },
+   {
+    "page": 36,
+    "words": 19,
+    "reason": "debris",
+    "text": "94.17 0.00 0.00 21.35 78.65 1.90 0.00 21.36 78.64 0.00 0.00 28.7 97.13 0.00 0.00 16.7 98.33 0.00 0.00"
+   },
+   {
+    "page": 36,
+    "words": 28,
+    "reason": "debris",
+    "text": "0.00 0.00 5.85 94.15 23.8 0.00 6.15 93.85 0.00 0.00 29.11 70.89 0.95 0.00 26.67 73.33 0.00 0.00 15.38 84.62 14.3 0.00 15.00 85.00 0.00 0.00 68.10 31.90"
+   },
+   {
+    "page": 36,
+    "words": 4,
+    "reason": "debris",
+    "text": "24.76 12.02 87.98 0.48"
+   },
+   {
+    "page": 36,
+    "words": 17,
+    "reason": "debris",
+    "text": "9.48 90.52 0.00 0.00 18.2 98.18 0.00 0.00 42.04 57.96 0.48 0.00 30.95 69.05 0.00 0.00 44.44"
+   },
+   {
+    "page": 36,
+    "words": 4,
+    "reason": "debris",
+    "text": "18.57 19.51 80.49 14.3"
+   },
+   {
+    "page": 37,
+    "words": 14,
+    "reason": "debris",
+    "text": "45.58 54.42 0.00 0.00 65.79 34.21 0.00 0.00 62.1 93.79 0.95 0.00 16.13 83.87"
+   },
+   {
+    "page": 38,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "supervisor SD v.1.4 20.38 79.62 SD V2 12.23 87.77"
+   },
+   {
+    "page": 38,
+    "words": 19,
+    "reason": "duplicate",
+    "text": "taxi driver SD v.1.4 2.45 97.55 SD V2 0.48 99.52 Dall·E 2 53.11 46.89 teacher SD v.1.4 66.01 33.99"
+   },
+   {
+    "page": 38,
+    "words": 14,
+    "reason": "duplicate",
+    "text": "Dall·E 2 87.56 12.44 teaching SD v.1.4 74.38 25.62 assistant SD V2 94.42 55.8"
+   },
+   {
+    "page": 38,
+    "words": 13,
+    "reason": "duplicate",
+    "text": "Dall·E 2 43.81 56.19 therapist SD v.1.4 85.78 14.22 SD V2 65.71 34.29"
+   },
+   {
+    "page": 38,
+    "words": 17,
+    "reason": "duplicate",
+    "text": "SD V2 0.50 99.50 Dall·E 2 16.36 83.64 tutor SD v.1.4 49.50 50.50 SD V2 43.48 56.52"
+   },
+   {
+    "page": 38,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "Dall·E 2 26.32 73.68 veterinarian SD v.1.4 52.40 47.60"
+   },
+   {
+    "page": 38,
+    "words": 13,
+    "reason": "debris",
+    "text": "11.9 98.81 0.00 0.00 0.48 0.00 18.52 81.48 0.00 0.00 0.95 0.00 13.21"
+   },
+   {
+    "page": 38,
+    "words": 10,
+    "reason": "debris",
+    "text": "14.3 0.00 48.18 51.82 0.00 0.00 0.95 0.00 39.81 60.19"
+   }
+  ],
+  "captions_reclassified": [
+   {
+    "page": 18,
+    "figure": "#/pictures/8",
+    "text": "(a) BLIP VQA: 'appearance' question"
+   }
+  ],
+  "captions_reassigned": [],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [],
+  "superseded": [
+   {
+    "page": 15,
+    "ref": "#/texts/307",
+    "text": "Table 4: A list of the social attributes (gender and ethnicity) and target attributes. The Gender variable has three opt"
+   }
+  ],
+  "replaced_pages": [
+   15,
+   19,
+   23
+  ],
+  "noise_dropped": 4,
+  "hyphens_restored": [
+   {
+    "page": 12,
+    "ref": "#/texts/255",
+    "word": "a-Scene"
+   }
+  ],
+  "order": [],
+  "order_pages_checked": 26,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 0,
+  "order_breaking": 0,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 4 minor; distortions: 0 material, 3 minor; additions: 0 material, 4 minor; order: 0 material, 0 minor",
+  "at": "2026-11-15T10:57:31+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 4
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 3
+   },
+   "additions": {
+    "material": 0,
+    "minor": 4
+   },
+   "order": {
+    "material": 0,
+    "minor": 0
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "Alexandra Sasha Luccioni (p. 1–23)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "This allows us to assess not just whether a group is under- or over-represented by the models, but also whether a model attenuates, reproduces or exacerbates social biases.",
+      "severity": "minor",
+      "page": 7
+     },
+     {
+      "source": "Taking the example of Stable Diffusion v1.4, we can see that while the system seems to match the US distribution for the least diverse professions (whether the workforce is mostly identified as men or women), regions that feature woman are under-represented across the more balanced professions.",
+      "severity": "minor",
+      "page": 8
+     },
+     {
+      "source": "Of particular note are clusters 5, 6, and 8 - while Dall·E 2 has slightly more examples assigned to cluster 5, which corresponds to features associated with 'non-binary' prompts, it also under-represents both clusters associated with 'Black' and 'African American' ethnicity prompts",
+      "severity": "minor",
+      "page": 17
+     }
+    ],
+    "distortions": [
+     {
+      "source": "Examples of Profession images for 'laboratory technician' assigned to clusters 4, 15, 1, and 3. There are no Dall·E 2images assigned to 1. ... Dall·E 2is missing images for Cluster 1 because none of its generations are assigned to that cluster.",
+      "summary": "Beside the \"Cluster 1\" column are the row labels \"SD v1.4\", \"SD v2\", and \"Dall·E\", and the bottom two cells of that column are empty gray squares.",
+      "severity": "minor",
+      "page": 7
+     }
+    ],
+    "additions": [],
+    "order": []
+   },
+   {
+    "index": 1,
+    "section": "D Cluster Variation by Profession and Adjective (p. 24–39)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "| Prompt Profession | Model | F | M | Pers. | Prof. | F | M | Pers. | Prof. |",
+      "severity": "minor",
+      "page": 31
+     }
+    ],
+    "distortions": [
+     {
+      "source": "the proportion of their examples assigned to a cluster with 'Man' as the top gender word in the prompts ( { M } )",
+      "summary": "each cluster is characterized by the most frequent gender word ('Man' or 'Woman') appearing in captions of the images it contains",
+      "severity": "minor",
+      "page": 24
+     },
+     {
+      "source": "| SD V1.4 | 0 . 00 | 100 . 00 | 0 . 00 | 1 . 43 | 0 . 00 | 100 . 00 | 0 . 00 | 47 . 62 |",
+      "summary": "the 'Prof.' column (captions mentioning the profession) ... firefighter (SD V1.4 47.62%, SD V2 43.81%), and pilot (DALL·E 2 18.57%, SD V1.4 27.62%)",
+      "severity": "minor",
+      "page": 34
+     }
+    ],
+    "additions": [
+     {
+      "summary": "based on prior psychological coding of the adjectives",
+      "severity": "minor"
+     },
+     {
+      "summary": "occasionally higher, e.g., SD V1.4 'housekeeper' at 18.10%",
+      "severity": "minor"
+     },
+     {
+      "summary": "nearly all images in a female-coded cluster, 89.05% in cluster 2",
+      "severity": "minor"
+     },
+     {
+      "summary": "The overall pattern is that DALL·E 2 exhibits the strongest male skew and lowest diversity, SD V1.4 the least skew, and SD V2 in between, with all models amplifying gender stereotypes relative to actual U.S. labor statistics for many professions.",
+      "severity": "minor"
+     }
+    ],
+    "order": []
+   }
+  ]
+ },
+ "source": {
+  "source": "luccioni-et-al-2023-stable-bias-evaluating-societal-representations-in-diffusion-models.pdf",
+  "bytes": 9904283,
+  "sha256": "5c9ef1c86e4e679843917a835998ac47f4bff186ad0c8409c71a24b16b933e4a",
+  "extracted_at": "2026-11-13T02:42:40+01:00"
+ }
+}

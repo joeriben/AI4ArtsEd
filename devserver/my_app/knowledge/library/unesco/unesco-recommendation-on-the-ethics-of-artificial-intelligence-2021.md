@@ -3,6 +3,7 @@ id: unesco-recommendation-on-the-ethics-of-artificial-intelligence-2021
 titel: Recommendation on the Ethics of Artificial Intelligence
 autor: UNESCO
 jahr: 2021
+quelle: "United Nations Educational, Scientific and Cultural Organization (UNESCO), Paris, 2022"
 sprache: en
 tier: F
 sparten: [uebergreifend]
@@ -10,211 +11,184 @@ themen: [ai, ethics, policy]
 lizenz: CC BY-SA 3.0 IGO
 url: "https://unesdoc.unesco.org/ark:/48223/pf0000380455"
 status: published
-analyzed_at: "2026-07-18T12:58:44.989898+00:00"
+checks: passed
+review: passed
+analyzed_at: "2026-11-15T10:35:42.207613+00:00"
 analysis_lang: en
-analysis_model: openrouter/z-ai/glm-5.2
+analysis_model: openrouter/z-ai/glm-5.3
+doc_type: normative_text
+seitenzahlen: gedruckt
 ---
 
 # Recommendation on the Ethics of Artificial Intelligence
 
 ## PROFIL
 
-- The UNESCO Recommendation on the Ethics of Artificial Intelligence, adopted 23 November 2021, establishes a universal framework of values, principles, and actions to guide States in the ethical development and application of AI systems.
-- It defines "AI systems" as information-processing technologies integrating models/algorithms to perform cognitive tasks with varying autonomy, covering their entire life cycle from research and design to termination.
-- The document is grounded in international human rights law and prior UN declarations, explicitly recalling the UDHR 1948, UNDRIP 2007, and the 2030 Agenda 2015.
-- It emphasizes protecting human dignity, fundamental freedoms, gender equality, and the environment, while addressing embedded biases, digital divides, and threats to cultural, social, and biological diversity.
-- For an arts-education platform, the text applies to disciplines spanning education, science, culture, and communication/information.
-- It is relevant in situations involving the integration of AI technologies in educational and cultural processes, where it mandates the recognition, protection, and promotion of endogenous cultures, values, and knowledge.
-- The framework requires stakeholder monitoring, contextual assessment, and proportionality to ensure AI actors minimize biased outcomes and uphold justice, trust, and fairness, particularly in low- and middle-income countries (LMICs).
+- Adopted by the General Conference of UNESCO at its 41st session in Paris on 23 November 2021, this Recommendation is addressed to Member States, which are invited to apply its provisions on a voluntary basis and to engage all stakeholders, including business enterprises, in implementation. It provides ethical guidance to all "AI actors" across every stage of the AI system life cycle.
+
+- Its subject is the ethics of artificial intelligence, which it deliberately defines not through a single definition of AI but through ethically relevant features of AI systems. Its claim is to be a globally accepted normative instrument that makes AI work for the good of humanity, individuals, societies and the environment, preventing harm and stimulating peaceful use, with strong emphasis on gender equality and environmental protection.
+
+- The text contains a Preamble anchoring the instrument in international law and human rights; a section on scope of application covering UNESCO's four central domains (education, science, cultural identity and diversity, communication and information); a statement of aims and objectives; four values (human rights and dignity, environment and ecosystem flourishing, diversity and inclusiveness, peaceful and just societies) unpacked into ten principles (from proportionality and do no harm to multi-stakeholder governance); eleven areas of policy action (ethical impact assessment, governance, data policy, international cooperation, environment, gender, culture, education and research, communication and information, economy and labour, health); and sections on monitoring, utilization, promotion and final provisions.
+
+- It builds on prior instruments it cites — the Universal Declaration of Human Rights, the Convention on the Rights of the Child, the UN Declaration on the Rights of Indigenous Peoples, the 2030 Agenda, the Recommendation on Science and Scientific Researchers (2017), the ROAM principles — and draws on the 2019 Preliminary Study on the Ethics of Artificial Intelligence by COMEST. It sets itself against uses of AI that reproduce and reinforce existing biases and discrimination, and directs special attention to low- and middle-income countries underrepresented in the AI ethics debate.
+
+- For arts education it is usable wherever AI enters teaching, learning and creative practice: it calls for AI ethics curricula at all levels, for "prerequisite skills" including media and information literacy and critical and creative thinking, for AI education and digital training for artists and creative professionals, for AI in the preservation and accessibility of tangible, documentary and intangible cultural heritage including endangered and indigenous languages, and for research at the intersection of AI and intellectual property. It is relevant to disciplines spanning cultural studies, education, ethics, law, linguistics, philosophy, political science, sociology and psychology, and to situations ranging from classroom use of AI and teacher training to algorithmic recommendation of local cultural content.
 
 ## WISSEN
 
-### the Ethics of Artificial Intelligence
+### Preamble and adoption (p. 5–8)
 
-UNESCO Recommendation on the Ethics of Artificial Intelligence, adopted 23 November 2021 (SHS/BIO/PI/2021/1). Published 2022, Open Access under CC-BY-NC-SA 3.0 IGO license.
+The General Conference of UNESCO, meeting in Paris at its 41st session, adopted this Recommendation on 23 November 2021. The Preamble frames AI as having "profound and dynamic positive and negative impacts" on societies, the environment and human lives, including the human mind. It recalls UNESCO's constitutional mandate and anchors the instrument in international law, human rights and fundamental freedoms, gender equality, and environmental protection. It cites a long list of prior instruments, including the Universal Declaration of Human Rights (1948), the Convention on the Rights of the Child (1989), the UN Declaration on the Rights of Indigenous Peoples (2007), the 2030 Agenda for Sustainable Development (2015), the Recommendation on Science and Scientific Researchers (2017) and the ROAM principles (Rights, Openness, Accessibility, Multi-stakeholder participation). Special attention is directed to low- and middle-income countries (LMICs), including least developed countries (LDCs), landlocked developing countries (LLDCs) and small island developing States (SIDS), which have been underrepresented in the AI ethics debate. The Conference recommends that Member States apply the provisions on a voluntary basis, in conformity with their constitutional practice and international law, and engage all stakeholders, including business enterprises, in implementation (p. 7).
 
-<!-- quelle: the Ethics of Artificial Intelligence … Inside photo: -->
+### I. Scope of application (p. 9–12)
 
-### the Ethics of Artificial Intelligence
+The Recommendation deliberately avoids a single definition of AI, instead addressing features of AI systems of central ethical relevance. It approaches AI systems as systems that process data and information in a way resembling intelligent behaviour, typically including reasoning, learning, perception, prediction, planning or control. Three elements are central:
 
-- **Adoption**: Adopted 23 November 2021 by UNESCO General Conference (41st session). Voluntary application by Member States.
-- **Core Concepts**: AI profoundly impacts societies, environment, ecosystems, and human lives, including the human mind. Key concerns include embedded biases leading to discrimination, inequality, digital divides, and threats to cultural, social, and biological diversity. Emphasizes transparency and understandability of algorithms and training data.
-- **Equity and Access**: Justice, trust, and fairness must be upheld so no country or person is left behind. Specific attention to LMICs, LDCs, LLDCs, and SIDS, requiring recognition, protection, and promotion of endogenous cultures, values, and knowledge for sustainable digital economies.
-- **Obligations of States Parties**: Apply provisions on a voluntary basis via appropriate legislative or other measures in conformity with international human rights law. Engage all stakeholders, including business enterprises, research, academic, and civil society organizations, to ensure roles in implementation and guide AI development by scientific research and ethical evaluation.
-- **Context**: Grounded in international human rights law and prior UN declarations (e.g., UDHR 1948, UNDRIP 2007, 2030 Agenda 2015).
+- (a) AI systems are information-processing technologies integrating models and algorithms that produce a capacity to learn and perform cognitive tasks leading to outcomes such as prediction and decision-making, operating with varying degrees of autonomy. Methods include (i) machine learning, including deep learning and reinforcement learning, and (ii) machine reasoning, including planning, scheduling, knowledge representation, search and optimization. AI systems can be used in cyber-physical systems such as the Internet of things, robotic systems, social robotics and human-computer interfaces.
+- (b) Ethical questions pertain to all stages of the AI system life cycle — from research, design and development to deployment and use, including maintenance, trade, financing, monitoring, validation, end-of-use, disassembly and termination. "AI actors" are any actors involved in at least one life-cycle stage, natural or legal persons.
+- (c) AI raises new ethical issues: impacts on decision-making, employment, social interaction, health care, education, media, digital divide, personal data, environment, democracy, rule of law, security and human rights; and the capacity of algorithms to reproduce and reinforce existing biases and discrimination.
 
-<!-- quelle: Preamble -->
+The Recommendation pays specific attention to UNESCO's four central domains, drawing on the 2019 Preliminary Study on the Ethics of Artificial Intelligence by the World Commission on Ethics of Scientific Knowledge and Technology (COMEST):
 
-### The Ethics of Artificial Intelligence
+- (a) **Education**: digital societies require new practices, ethical reflection, critical thinking and new skills, given implications for the labour market, employability and civic participation.
+- (b) **Science**: AI brings new research capacities and implications for concepts of scientific understanding and explanation.
+- (c) **Cultural identity and diversity**: AI can enrich cultural and creative industries but risks concentrating content, data, markets and income in few hands, with negative implications for linguistic and cultural pluralism.
+- (d) **Communication and information**: AI shapes the processing and provision of information; automated journalism, algorithmic news provision and content moderation raise issues of access to information, disinformation, hate speech, freedom of expression, privacy and media and information literacy.
 
-- **Scope**: Addresses ethical issues of AI within UNESCO's mandate. Defines "AI systems" as information-processing technologies integrating models/algorithms to learn and perform cognitive tasks (reasoning, learning, perception, prediction, planning, control) with varying autonomy.
-- **AI system life cycle**: Ranges from research, design, development to deployment, use, maintenance, operation, trade, financing, monitoring, evaluation, validation, end-of-use, disassembly, termination.
-- **AI actors**: Natural or legal persons involved in at least one stage of the life cycle.
-- **Domains**: Education, science, culture, communication/information.
-- **Objectives**: Universal framework of values, principles, actions to guide States. Protect human rights, fundamental freedoms, human dignity, gender equality. Safeguard present/future generations, preserve environment, respect cultural diversity. Promote equitable access, focusing on LMICs, including LDCs, LLDCs and SIDS.
-- **Values/Principles**: Must comply with international law and UN SDGs. Tensions managed via contextual assessment and proportionality.
+The text is addressed to Member States and provides ethical guidance to all AI actors through a basis for ethical impact assessment throughout the AI life cycle (p. 11).
 
-<!-- quelle: I. Scope of application -->
+### II. Aims and objectives (p. 13–15)
 
-### Ethics of Artificial Intelligence
+The Recommendation aims to make AI work for the good of humanity, individuals, societies and the environment, to prevent harm, and to stimulate peaceful use of AI. It seeks to be a globally accepted normative instrument focused not only on articulating values and principles but on their practical realization through concrete policy recommendations, with strong emphasis on gender equality and environmental protection. Its objectives are:
 
-- **Human rights and dignity**: Inviolable throughout the *life cycle of AI systems*. No human or community may be harmed or subordinated. Limitations on rights must be lawful, reasonable, necessary, and proportionate.
-- **Trustworthiness**: Requires stakeholder monitoring.
-- **Environment**: Compliance with international law, reducing carbon footprints, preventing unsustainable resource exploitation.
-- **Diversity and inclusiveness**: Active participation regardless of background; international cooperation to overcome infrastructure gaps in *LMICs, LDCs, LLDCs and SIDS*.
-- **Peaceful societies**: AI actors must promote peace, inclusiveness, justice, and equity.
-- **Proportionality and Do No Harm**: Processes must not exceed legitimate aims. Risk assessment is mandatory. Final human determination required for irreversible or life-and-death decisions. Prohibition of *social scoring* and mass surveillance.
-- **Safety and security**: Avoid risks via sustainable, privacy-protective data access frameworks.
+- (a) to provide a universal framework of values, principles and actions to guide States' legislation and policies, consistent with international law;
+- (b) to guide the actions of individuals, groups, communities, institutions and companies to embed ethics in all stages of the AI system life cycle;
+- (c) to protect, promote and respect human rights, fundamental freedoms, human dignity and equality, including gender equality; safeguard present and future generations; preserve the environment, biodiversity and ecosystems; and respect cultural diversity;
+- (d) to foster multi-stakeholder, multidisciplinary and pluralistic dialogue and consensus building;
+- (e) to promote equitable access to AI developments and knowledge and sharing of benefits, with particular attention to LMICs, including LDCs, LLDCs and SIDS.
 
-<!-- quelle: Respect, protection and promotion of human rights and fundamental freedoms and human dignity … Safety and security -->
+### III. Values and principles (p. 17–23)
 
-### Ethics of Artificial Intelligence
+Values and principles should be respected by all actors in the AI life cycle and promoted through legislation, regulations and business guidelines, in compliance with international law and aligned with the Sustainable Development Goals (SDGs). Values are motivating ideals; principles unpack them for operationalization. Tensions between values and principles require contextual assessment guided by proportionality and human rights law. Trustworthiness of AI systems is the outcome of operationalizing these principles, requiring thorough monitoring throughout the life cycle.
 
-- **Fairness/non-discrimination**: AI actors must minimize biased outcomes throughout the AI system life cycle; effective remedy required against discriminatory algorithmic determinations. Member States ensure inclusive access across rural/urban, age, disability, gender, language, cultural groups; technologically advanced countries bear solidarity responsibility toward least advanced.
-- **Sustainability**: Continuous assessment of human, social, cultural, economic, environmental AI impact, aligned with UN SDGs.
-- **Privacy/data protection**: Privacy by design approach; privacy impact assessments including societal/ethical considerations; informed consent and valid legal basis for personal data processing.
-- **Human oversight**: Ethical/legal responsibility always attributable to physical persons or legal entities; life and death decisions not ceded to AI systems.
+#### III.1 Values (p. 17–20)
 
-<!-- quelle: Fairness and non-discrimination … Human oversight and determination -->
+Four values are set out:
 
-### The Ethics of Artificial Intelligence
+1. **Respect, protection and promotion of human rights and fundamental freedoms and human dignity** (paras 13–16): the inherent dignity of every human is the foundation of human rights; no human being or community should be harmed or subordinated physically, economically, socially, politically, culturally or mentally in any phase of the AI life cycle. Persons interacting with AI, including vulnerable people (children, older persons, persons with disabilities or the ill), should never be objectified. New technologies must provide new means to advocate, defend and exercise human rights, not infringe them.
+2. **Environment and ecosystem flourishing** (paras 17–18): all actors must comply with environmental law and reduce AI's environmental impact, including its carbon footprint, preventing unsustainable exploitation of natural resources.
+3. **Ensuring diversity and inclusiveness** (paras 19–21): participation of all individuals and groups regardless of race, gender, age, language, religion, disability or other grounds; lifestyle choices and the optional use of AI should not be restricted; international cooperation should overcome, and never take advantage of, infrastructure and skills gaps in LMICs, LDCs, LLDCs and SIDS.
+4. **Living in peaceful, just and interconnected societies** (paras 22–24): AI actors should ensure AI contributes to interconnectedness of all living creatures; life-cycle processes should not segregate, objectify or undermine freedom, autonomous decision-making and safety, or threaten coexistence between humans, other living beings and the natural environment.
 
-- **Transparency and explainability**: People must be informed when AI informs or makes decisions affecting them, can request explanations, access reasons, and submit corrections. Meaningful explanation is required for non-temporary, non-reversible, non-low-risk impacts.
-- **Responsibility and accountability**: Ethical and legal liability is attributable to AI actors corresponding to their role in the AI life cycle. Requires oversight, impact assessment, audit, due diligence, and whistle-blower protection.
-- **Awareness and literacy**: Promote public understanding via education and AI ethics training, grounded in human rights and environmental impact.
-- **Governance**: States regulate data within their territories. Requires multi-stakeholder participation, open standards, and respect for Indigenous Peoples' data self-governance.
+#### III.2 Principles (p. 20–23)
 
-<!-- quelle: Transparency and explainability … Multi-stakeholder and adaptive governance and collaboration -->
+Ten principles follow:
 
-### Areas of policy action
+1. **Proportionality and Do No Harm** (paras 25–26): AI processes must not exceed what is necessary for legitimate aims; the choice to use AI must be justified — appropriate and proportional to a legitimate aim, non-infringing of foundational values, and scientifically grounded. Where decisions are irreversible or involve life and death, final human determination should apply; AI should not be used for social scoring or mass surveillance.
+2. **Safety and security** (para 27): safety risks and security vulnerabilities should be addressed, prevented and eliminated throughout the life cycle, enabled by sustainable, privacy-protective data access frameworks.
+3. **Fairness and non-discrimination** (paras 28–30): inclusive access to AI benefits for all, including persons with disabilities, girls and women, and marginalized groups; digital and knowledge divides within and between countries must be addressed; the most technologically advanced countries bear a responsibility of solidarity with the least advanced; effective remedy must be available against biased algorithmic determination.
+4. **Sustainability** (para 31): continuous assessment of the human, social, cultural, economic and environmental impact of AI, with cognizance of the SDGs.
+5. **Right to Privacy, and Data Protection** (paras 32–34): data must be collected, used, shared, archived and deleted consistently with international law; data protection frameworks with informed consent; privacy impact assessments and "privacy by design"; AI actors are accountable for protecting personal information throughout the life cycle.
+6. **Human oversight and determination** (paras 35–36): ethical and legal responsibility must always be attributable to physical persons or existing legal entities; humans may cede control in limited contexts but AI can never replace ultimate human responsibility; as a rule, life and death decisions should not be ceded to AI.
+7. **Transparency and explainability** (paras 37–41): people should be fully informed when a decision is informed by or made on the basis of AI algorithms, and should be able to access the reasons for decisions affecting their rights and request review and correction. Explainability means making intelligible the input, output and functioning of algorithmic building blocks. In cases of serious threats of adverse human rights impacts, transparency may require sharing of code or datasets.
+8. **Responsibility and accountability** (paras 42–43): ethical responsibility and liability for decisions based on AI should always be attributable to AI actors corresponding to their role; oversight, impact assessment, audit and due diligence mechanisms, including whistle-blowers' protection, should ensure auditability and traceability.
+9. **Awareness and literacy** (paras 44–45): public awareness and understanding of AI and the value of data should be promoted through open education, civic engagement, digital skills and AI ethics training, and media and information literacy, so all members of society can take informed decisions; learning about AI should include learning about, through and for human rights.
+10. **Multi-stakeholder and adaptive governance and collaboration** (paras 46–47): States can regulate data generated within or passing through their territories, consistent with international law; participation of different stakeholders — governments, intergovernmental organizations, technical community, civil society, researchers, media, private sector, human rights institutions, youth and children's groups — is necessary, with open standards, interoperability, meaningful participation by marginalized groups and, for Indigenous Peoples, respect for self-governance of their data.
 
-- Member States to implement policy frameworks and ensure stakeholder adherence via due diligence tools.
-- UNESCO to develop a readiness assessment methodology and an Ethical Impact Assessment (EIA) methodology.
-- Member States to introduce EIA frameworks to identify AI risks to human rights, vulnerable groups, labour, and the environment.
-- Implement enforceable transparency protocols and monitor all phases of the AI system life cycle.
-- Public authorities to conduct multidisciplinary, transparent EIAs with oversight mechanisms (auditability, traceability, explainability, external review).
+### IV. Areas of policy action (p. 25–38)
 
-<!-- quelle: IV. Areas of policy action … POLICY AREA 1: ETHICAL IMPACT ASSESSMENT -->
+The policy areas operationalize the values and principles. UNESCO recognizes Member States are at different stages of "readiness" (a dynamic status) and will (1) develop a readiness assessment methodology and (2) support a UNESCO methodology for Ethical Impact Assessment (EIA) of AI technologies, sharing of best practices and analytical work (p. 26).
 
-### Ethical Governance and Stewardship
+**Policy Area 1: Ethical impact assessment** (paras 50–53, p. 26–27): Member States should introduce impact assessment frameworks identifying benefits, concerns and risks, including impacts on human rights, labour rights, the environment and ethical and social implications, and facilitate citizen participation. AI systems identified as potential risks to human rights should be broadly tested, including in real-world conditions, before market release. Governments should adopt regulatory frameworks requiring public authorities to carry out ethical impact assessments, with auditability, traceability, explainability and external review; assessments should be multidisciplinary, multi-stakeholder, multicultural, pluralistic and inclusive.
 
-- Member States should ensure AI governance is inclusive, transparent, multidisciplinary, multilateral (including cross-border mitigation/redress), and multi-stakeholder, with anticipation, protection, impact monitoring, enforcement, and redress.
-- Harms caused through AI systems must be investigated and redressed; auditability and traceability of AI systems should be promoted.
-- Soft governance encouraged: certification mechanisms for AI systems with different levels of audit of systems, data, and adherence to ethical guidelines; regular monitoring over the entire life cycle; re-certification if necessary; must not hinder innovation or disadvantage SMEs, start-ups, civil society, or research organizations.
-- Transparent self-assessment of existing and proposed AI systems required; if adoption would violate human rights obligations, use must be prohibited.
-- Role of independent AI Ethics Officer encouraged; UNESCO-supported network of AI Ethics Officers at national, regional, and international levels.
-- Participation of LMICs, especially LDCs, LLDCs, and SIDS, in international AI governance discussions must be ensured through funds, equal regional participation, and travel facilitation.
-- Human rights-sensitive use cases (law enforcement, welfare, employment, media, health care, judiciary) require monitoring of social and economic impact by oversight authorities, including independent data protection authorities.
-- AI systems must not be given legal personality; ultimate responsibility and accountability must always lie with natural or legal persons.
-- Regulatory sandboxes and policy prototypes encouraged to test laws in a safe environment before adoption.
-- Clear requirements for AI system transparency and explainability, tailored to application domain, intended use, target audience, and feasibility.
+**Policy Area 2: Ethical governance and stewardship** (paras 54–70, p. 27–29): governance mechanisms should be inclusive, transparent, multidisciplinary, multilateral and multi-stakeholder, including anticipation, protection, monitoring, enforcement and redress across borders. Member States are encouraged to develop national and regional AI strategies and soft governance such as certification mechanisms, without hindering innovation or disadvantaging small enterprises, start-ups, civil society and research organizations. Measures include: transparent self-assessment by public authorities; an independent AI Ethics Officer or similar oversight mechanism, with a network of such officers at national, regional and international levels; development of a digital ecosystem for ethical and inclusive AI; mechanisms ensuring active participation of LMICs, LDCs, LLDCs and SIDS in international AI governance discussions; legislation compliant with human rights obligations; monitoring of AI systems for human rights-sensitive use cases (law enforcement, welfare, employment, media, health care, judiciary); enhancing judicial capacity with human oversight safeguards; international standards for measurable, testable levels of safety and transparency; policies against stereotyping in AI outcomes and data; diversity in AI development teams and training datasets; liability frameworks ensuring accountability always lies with natural or legal persons — AI systems should not be given legal personality; use of policy prototypes and regulatory sandboxes to test laws in safe environments; and clear requirements for transparency and explainability.
 
-<!-- quelle: POLICY AREA 2: ETHICAL GOVERNANCE AND STEWARDSHIP -->
+**Policy Area 3: Data policy** (paras 71–77, p. 29–30): data governance strategies with continual evaluation of training data quality; safeguards for privacy including against surveillance; individuals' rights over personal data, including access and erasure, with independent oversight; protection of sensitive data (offence-related, biometric, genetic and health data, and personal data on race, gender, religion, disability etc.); promotion of open data, open repositories for publicly funded data and source code, and data trusts; investment in "gold standard datasets", diverse and built on valid legal basis including consent, with annotation standards including gender-disaggregated data; and, following the UN Secretary-General's High-level Panel on Digital Cooperation, a "digital commons approach" to data, increased interoperability, and encouragement of private companies to share data for research, innovation or public benefit.
 
-### Data Policy and Development/International Cooperation
+**Policy Area 4: Development and international cooperation** (paras 78–83, p. 30–31): prioritizing AI ethics in international fora; ensuring AI use in development areas (education, science, culture, communication, health care, agriculture, environment, infrastructure, economic planning) adheres to the Recommendation's values; platforms for international cooperation especially for LMICs, LDCs, LLDCs and SIDS; research and innovation centres promoting leadership of researchers from these countries; promotion of AI ethics research including into the applicability of ethical frameworks in specific cultures; and technological exchanges between most and least technologically advanced countries.
 
-- **Data governance**: States should continually evaluate training-data quality, collection/selection processes, and data security; establish feedback mechanisms for sharing best practices.
-- **Privacy safeguards**: States should adopt legislative frameworks compliant with international law; AI actors should conduct **privacy impact assessments** within **ethical impact assessments** and apply **privacy by design** throughout the AI life cycle.
-- **Individual data rights**: transparency; safeguards for sensitive data; accountability mechanisms; rights to access and erase personal data (with lawful exceptions); independent oversight.
-- **Sensitive data categories requiring full security**: offences/criminal proceedings/convictions; biometric, genetic, health data; personal data on race, colour, descent, gender, age, language, religion, political opinion, national/ethnic/social origin, economic or social condition of birth, disability.
-- **Open data**: promote open repositories for publicly funded/held data and source code; consider **data trusts**.
-- **Quality datasets**: invest in **gold standard datasets** (open, trustworthy, diverse, valid legal basis including consent); encourage annotation standards, including disaggregation by gender.
-- **Digital commons approach**: per UN Secretary-General's High-level Panel on Digital Cooperation; increase interoperability; encourage private-sector data sharing; create collaborative platforms in trusted/secured data spaces.
-- **Development cooperation**: AI use in education, science, culture, health, agriculture, environment, infrastructure, economic planning must adhere to the Recommendation's values; international cooperation especially for **LMICs**, in particular **LDCs**, **LLDCs** and **SIDS**.
+**Policy Area 5: Environment and ecosystems** (paras 84–86, p. 31): assessment of direct and indirect environmental impact throughout the AI life cycle, including carbon footprint, energy consumption and raw material extraction; incentives for rights-based AI solutions for disaster risk resilience, environmental monitoring and regeneration, involving local and indigenous communities and supporting circular economy approaches. Examples include using AI to: (a) protect, monitor and manage natural resources; (b) predict, prevent, control and mitigate climate-related problems; (c) support an efficient and sustainable food ecosystem; (d) accelerate access to and adoption of sustainable energy; (e) mainstream sustainable infrastructure, business models and finance; (f) detect pollutants or predict pollution levels. When choosing AI methods, actors should favour data-, energy- and resource-efficient methods; where evidence of intended effect is lacking, the precautionary principle must be favoured, and AI should not be used where negative environmental impacts are disproportionate.
 
-<!-- quelle: POLICY AREA 3: DATA POLICY … POLICY AREA 4: DEVELOPMENT AND INTERNATIONAL COOPERATION -->
+**Policy Area 6: Gender** (paras 87–93, p. 32): maximizing AI's contribution to gender equality while protecting the human rights, safety and integrity of girls and women; Ethical Impact Assessment should include a transversal gender perspective; dedicated public funds for gender-responsive schemes and gender action plans in digital policies; targeted programmes and gender-specific language to increase girls' and women's participation in STEM and ICT; eliminating gender gaps (wage gap, professional representation, top management and research representation, education, digital access, unpaid work distribution); preventing gender stereotyping and discriminatory biases in AI systems; encouraging female entrepreneurship and balanced gender participation in AI research and company leadership; and a UNESCO repository of best practices for incentivizing participation of girls, women and under-represented groups.
 
-### The Ethics of Artificial Intelligence
+**Policy Area 7: Culture** (paras 94–100, p. 32–33): incorporating AI in preservation, enrichment, understanding, promotion, management and accessibility of tangible, documentary and intangible cultural heritage, including endangered and indigenous languages and knowledges, with a participatory approach; examining the cultural impact of natural language processing (NLP) applications such as automated translation and voice assistants on human language, including risks of disappearance of endangered languages, local dialects and cultural variations; AI education and digital training for artists and creative professionals; awareness of AI tools among local cultural industries and small and medium enterprises to avoid market concentration; engagement of technology companies to ensure algorithmic recommendation enhances visibility and discoverability of local content; research at the intersection of AI and intellectual property (IP), including protection of AI-created works and the rights of IP owners whose works are used to train AI; and encouragement of museums, galleries, libraries and archives to use AI to highlight collections and enhance knowledge bases.
 
-- Assess direct/indirect environmental impact throughout AI system life cycle (carbon footprint, energy, raw material extraction); ensure compliance with environmental law.
-- Favour data/energy/resource-efficient AI methods (proportionality); apply precautionary principle—AI should not be used if disproportionate negative impacts exist.
-- Maximize AI for gender equality; include transversal gender perspective in Ethical Impact Assessment.
-- Fund gender-responsive schemes and STEM/ICT programs for girls/women.
-- Eliminate gender gaps: wage, AI management/boards/research representation, education, digital access, unpaid work/caring responsibilities.
+**Policy Area 8: Education and research** (paras 101–111, p. 33–35): adequate AI literacy education for the public at all levels to reduce digital divides; promotion of "prerequisite skills" for AI education — basic literacy, numeracy, coding, digital skills, media and information literacy, critical and creative thinking, teamwork, communication, socio-emotional and AI ethics skills; general awareness programmes on AI, data, human rights and children's rights, accessible to non-technical and technical groups; research on responsible and ethical AI in teaching, teacher training and e-learning, with AI in learning subject to strict requirements on monitoring, assessment of abilities or prediction of learner behaviour — AI should support learning without reducing cognitive abilities or extracting sensitive information, and learner data must not be misused or commercially exploited; participation and leadership of girls and women, persons with disabilities and marginalized groups in AI education; AI ethics curricula for all levels, with online courses in local languages including indigenous languages and accessible formats for persons with disabilities; support for AI ethics research; training of AI researchers in research ethics; facilitation of scientific community access to private sector data, especially in LMICs; interdisciplinary AI research including cultural studies, education, ethics, law, linguistics, philosophy, political science, sociology and psychology; and awareness in scientific communities of the benefits, limits and risks of data-driven approaches.
 
-<!-- quelle: POLICY AREA 5: ENVIRONMENT AND ECOSYSTEMS … POLICY AREA 6: GENDER -->
+**Policy Area 9: Communication and information** (paras 112–115, p. 35): using AI to improve access to information and knowledge, enhancing freedom of expression, academic and scientific freedoms and proactive disclosure of official data; ensuring AI actors respect freedom of expression and access to information in automated content generation, moderation and curation, with transparency of online operators, user notification of content removal reasons and appeal mechanisms; investment in digital, media and information literacy to counter disinformation, misinformation and hate speech, including understanding recommender systems; and enabling environments for media to report on AI and use AI ethically.
 
-### the Ethics of Artificial Intelligence
+**Policy Area 10: Economy and labour** (paras 116–120, p. 36–37): assessing AI's impact on labour markets, especially in labour-intensive economies, introducing "core" and interdisciplinary skills — "learning how to learn", communication, critical thinking, teamwork, empathy, knowledge transfer — alongside specialist technical skills; collaboration agreements among governments, academic and vocational institutions, industry, workers' organizations and civil society; fair transition for at-risk employees through upskilling and reskilling programmes, retention mechanisms and "safety net" programmes, with sufficient public funding and examination of tax regimes; interdisciplinary research on AI's impact on local labour environments, human-robot interactions and human-human relationships; and steps to ensure competitive markets and consumer protection, preventing abuse of dominant market positions and monopolies, with due consideration for LMICs, LDCs, LLDCs and SIDS. AI actors from countries with ethical AI standards should respect these standards when exporting products or applying systems in countries where such standards may not exist.
 
-- Use AI for tangible, documentary, and intangible cultural heritage, including endangered and indigenous languages.
-- Address gender stereotyping and discriminatory biases; promote female entrepreneurship and gender diversity in AI research.
-- Assess cultural impact of NLP (automated translation, voice assistants) on endangered languages, local dialects, and tonal variations.
-- Promote AI education for artists; ensure algorithmic recommendation enhances local content visibility.
-- Foster research on AI and IP; encourage museums, galleries, libraries, and archives to use AI.
+**Policy Area 11: Health and social well-being** (paras 121–130, p. 37–38): employing AI to improve human health and mitigate disease outbreaks, consistent with international law; regulation of health and mental health AI (with attention to children and youth) so systems are safe, effective, scientifically and medically proven; particular attention in regulating prediction, detection and treatment solutions by: (a) oversight to minimize and mitigate bias; (b) including the professional, patient, caregiver or service user as "domain expert" in algorithm development; (c) attention to privacy in medical monitoring; (d) informed consent mechanisms without preventing access to health care; (e) ensuring human care and final decisions of diagnosis and treatment are always taken by humans; (f) review by an ethical research committee prior to clinical use where necessary. Further measures: research on potential mental health harms (depression, anxiety, social isolation, addiction, trafficking, radicalization, misinformation); guidelines for human-robot interactions, with attention to care robots, robots in education, toy robots, chatbots and companion robots, and to AI's potential to manipulate human cognitive biases; ensuring users can identify whether they interact with a living being or an AI system and can refuse and request human intervention; awareness of anthropomorphization of AI, especially when children are involved; collaborative research on long-term psychological and cognitive effects of AI on children and young people; and mechanisms to meaningfully engage children and young people in debates on AI's impact on their lives.
 
-<!-- quelle: POLICY AREA 7: CULTURE -->
+### V. Monitoring and evaluation (p. 39–40)
 
-### Education, Research, Communication and Information
+Member States should credibly and transparently monitor and evaluate AI ethics policies using quantitative and qualitative approaches. UNESCO can contribute by: (a) developing a methodology for Ethical Impact Assessment (EIA) of AI technologies grounded in international human rights law, with implementation guidance and capacity-building materials; (b) developing a readiness assessment methodology; (c) developing a methodology to evaluate ex ante and ex post the effectiveness and efficiency of AI ethics policies; (d) strengthening evidence-based analysis and reporting; (e) collecting and disseminating progress, research, data and statistics to support best-practice sharing. Monitoring should ensure broad stakeholder participation, social, cultural and gender diversity, and continuous, risk-proportionate assessment based on internationally agreed frameworks. Member States may consider mechanisms such as an ethics commission, AI ethics observatory, repository of human rights-compliant AI systems, experience-sharing mechanism, AI regulatory sandboxes, and an assessment guide for AI actors (paras 131–134).
 
-- Promote 'prerequisite skills': basic literacy, numeracy, coding, digital skills, media and information literacy, critical/creative thinking, socio-emotional and AI ethics skills.
-- AI in learning: strict requirements for monitoring, assessing abilities, predicting behaviours. No reduction of cognitive abilities or extraction of sensitive info. Interaction data must not be misused.
-- Develop AI ethics curricula for all levels; online courses in local and indigenous languages, accessible for persons with disabilities.
-- Train AI researchers in research ethics; require ethical considerations in designs, publications, and dataset analyses.
-- Ensure AI respects freedom of expression and access to information; require transparency, diversity of viewpoints, content removal notification, and appeal mechanisms.
-- Invest in digital and media and information literacy to counter disinformation, misinformation, hate speech; evaluate recommender systems.
+### VI. Utilization and exploitation of the present Recommendation (p. 41–42)
 
-<!-- quelle: POLICY AREA 8: EDUCATION AND RESEARCH … POLICY AREA 9: COMMUNICATION AND INFORMATION -->
+Member States and all stakeholders should respect, promote and protect the values, principles and standards identified, and take all feasible steps to give effect to the policy recommendations. Member States should cooperate with relevant governmental and non-governmental organizations, transnational corporations and scientific organizations; a UNESCO Ethical Impact Assessment methodology and national commissions for the ethics of AI can be important instruments (paras 135–136).
 
-### Policy Area 10: Economy and Labour
+### VII. Promotion of the present Recommendation (p. 43)
 
-- Assess AI impact on labour and education; teach 'core' and interdisciplinary skills alongside technical tasks.
-- Foster collaboration (gov, academia, industry, unions) for project-based teaching.
-- Ensure fair transition for at-risk employees via upskilling, reskilling, 'safety net' programmes, and tax changes.
-- Prevent AI market monopolies, protecting vulnerable states (LMICs, LDCs, LLDCs, SIDS).
-- AI actors must respect established ethical standards when exporting to countries lacking them.
+UNESCO has the vocation to be the principal UN agency to promote and disseminate the Recommendation, working with other UN entities while avoiding duplication. Its bodies — COMEST, the International Bioethics Committee (IBC) and the Intergovernmental Bioethics Committee (IGBC) — will collaborate with international, regional and sub-regional organizations. Civil society will be an important actor in advocating for the public sector's interests (paras 137–139).
 
-<!-- quelle: POLICY AREA 10: ECONOMY AND LABOUR -->
+### VIII. Final provisions (p. 43)
 
-### Health, Social Well-being, and Monitoring & Evaluation
+The Recommendation must be understood as a whole, with foundational values and principles complementary and interrelated. Nothing in it may be interpreted as replacing or prejudicing States' obligations under international law, or as approval for any activity contrary to human rights, fundamental freedoms, human dignity and concern for the environment and ecosystems (paras 140–141).
 
-- Member States should regulate AI in healthcare to ensure it is safe, effective, and scientifically proven; human professionals must make final diagnosis and treatment decisions.
-- AI systems require informed consent for data use, privacy protection, and ethical committee review prior to clinical use.
-- Special attention must be paid to children and youth regarding mental health impacts and long-term cognitive effects.
-- Users must easily identify whether interacting with an AI system or a human and can request human intervention.
-- Member States should transparently monitor and evaluate AI ethics policies, ensuring broad stakeholder participation.
-- UNESCO will develop an Ethical Impact Assessment (EIA) methodology, a readiness assessment methodology, and ex ante/ex post evaluation tools.
-- Monitoring should be continuous, risk-proportionate, and based on internationally agreed frameworks.
-- Possible mechanisms include ethics commissions, AI ethics observatories, and AI regulatory sandboxes.
+### Figures (p. 8–44)
 
-<!-- quelle: POLICY AREA 11: HEALTH AND SOCIAL WELL-BEING … V. Monitoring and evaluation -->
+*Image 4 (p. 8):* — This is a computer-generated digital illustration, not a photograph. It shows a dark blue globe with faint landmass shapes against a black background. Glowing cyan-white curved lines wrap around the globe and cross at bright luminous dots, with a stronger blue glow along the right side. There is no legible text in the picture.
 
-### Utilization, Promotion, and Final Provisions
+*Image 5 (p. 11):* — This is a photograph of two children leaning on a wooden table and looking at an open laptop. The child in the foreground wears a yellow long-sleeved shirt and rests their chin on their hands, while the child behind wears a white long-sleeved shirt. The silver laptop on the table shows its keyboard and trackpad, but any text on it is not legible. The background consists of a plain, light-colored wall.
 
-- Member States and stakeholders must respect, promote, and protect the Recommendation's ethical values and standards.
-- Key instruments: UNESCO Ethical Impact Assessment methodology and national commissions for the ethics of AI.
-- UNESCO is the principal UN agency for promotion, collaborating with COMEST, IBC, IGBC; civil society advocates for public interests.
-- The Recommendation is a whole and does not alter international law or permit acts contrary to human rights.
+*Image 6 (p. 12):* — This is a photograph of a woman with dark hair, round glasses, and a beige high-neck blouse, reaching her hand toward a translucent blue digital display. Around her are floating panels showing line graphs, node-and-link diagrams, bar charts, circular gauges, and arcs of light particles over a dark background. Small labels and numbers appear on the panels, but most of the text is not legible.
 
-<!-- quelle: Utilization and exploitation of the present Recommendation … VIII. Final provisions -->
+*Image 7 (p. 14):* — This is a photograph of a hand reaching from the left toward a glowing blue digital interface on the right. The interface shows a circuit-board pattern with illuminated dots and lines, along with four icons: a scale of justice, a document, a group of people, and a magnifying glass. The background is dark. No text is legible in the picture.
+
+*Image 8 (p. 15):* — A close-up photograph-style image shows a glowing blue electronic circuit board covered with illuminated traces and small round connection dots. Overlaid on the board are rounded-square icons containing white symbols: a partial balance scale at the left edge, a gavel in the upper left, a columned building with a triangular pediment near the center, and an open book in the lower left. There is no legible text anywhere in the picture.
+
+*Image 9 (p. 16):* — This is a color photograph showing a woman wearing a peach-colored hijab alongside two young children. All three are looking at the screen of a laptop computer that sits on a wooden surface. The background consists of a light-colored curtain with a repeating geometric pattern. No text is legible in the picture.
+
+*Image 10 (p. 19):* — This is a color photograph of an elderly woman sitting on a woven mat on the floor. She wears an orange headscarf, a purple floral-patterned blouse, an orange sash, and blue patterned pants, and she is using a black laptop computer with a circular logo on the lid. A computer mouse and a smartphone lie on the mat next to her, and beside her is an open fire with several metal pots and cooking utensils. The background shows brick walls, wooden posts, and household furniture.
+
+*Image 11 (p. 21):* — This is a photograph of a child wearing a red headband with pink goggles on top and a light blue shirt with colorful dots. In the foreground, a hand holds a white smartphone whose screen shows the child's face overlaid with many small white dots connected by thin lines. A solid black rectangle covers the lower part of the phone screen. No text in the picture is legible.
+
+*Image 12 (p. 24):* — This is a photograph showing a hand reaching toward a digital interface overlaid with white circuit board patterns. A square button displaying the text "Ai" is visible near the fingertip. The background features a blurred cityscape with buildings. _(Lettering in the image, read by the image model, not confirmed: "Ai")_
+
+*Image 13 (p. 29):* — This is a photograph of a person with dark hair and glasses, wearing a white coat over a light blue collared shirt, holding an open laptop in front of tall server racks. The racks have perforated metal doors with rows of small lights. Text on labels attached to the rack doors is not legible.
+
+*Image 14 (p. 31):* — This is a photograph showing a person in profile view wearing a plaid shirt and holding a white tablet computer with both hands, with the right index finger touching the screen. In the background, several large green pods hang from a tree amidst green foliage with bright sunlight creating a lens flare. There is no legible text visible in the picture.
+
+*Image 15 (p. 33):* — This is a photograph showing a person wearing a black and white VR headset, with one hand raised to the side of the headset and the other hand extended outward with an open palm. The person wears a tan jacket over a maroon button-up shirt. The background consists of a white wall with two framed abstract paintings—one predominantly red and the other featuring red, black, and gray shapes—along with a black cylindrical object mounted on a stand to the right.
+
+*Image 16 (p. 34):* — This is a photograph. In the foreground, a smiling girl wearing a brown and tan patterned headscarf and a light-colored top looks toward the camera, with an open laptop in front of her whose dark screen shows small icons and text that are not legible. Behind her, two other people wearing white headscarves are visible but out of focus against a pale green wall.
+
+*Image 17 (p. 36):* — This is a photograph showing two workers wearing white hard hats and gray work uniforms with dark sleeves in an industrial setting. The worker on the left is handling cables attached to a white mechanical device, while the worker on the right holds a silver laptop and looks at its screen. The reflective strips on the uniforms contain text that is not legible.
+
+*Image 18 (p. 38):* — This is a photograph of a person wearing a light gray cable-knit buttoned cardigan, holding a syringe with both hands. Behind the person stands a white robot with a dark rectangular panel on its head. There is no legible text in the image.
+
+*Image 19 (p. 41):* — This is a digital graphic showing the text "VI." in bold blue letters on a white background. The characters are rendered in a heavy sans-serif typeface. The image displays the capital letter V, followed by the capital letter I, and ending with a blue period.
+
+*Image 20 (p. 44):* — This is a graphic logo image consisting of two stacked rectangular sections. The upper white section contains a black line drawing of a classical temple with the word "UNESCO" inscribed across its front. The lower dark navy section displays the word "unesco" in white lowercase letters.
+
+<!-- quelle: Recommendation on the Ethics of Artificial Intelligence (p. 1–44) -->
 
 ## GLOSSAR
 
-- **endogenous cultures, values and knowledge** — Local or native cultural frameworks and knowledge systems that require recognition, protection, and promotion in the development of sustainable digital economies.
-- **AI system life cycle** — The full span from data collection through design, deployment, use, and deletion of an AI system, to which ethical principles apply throughout.
-- **AI actors** — Entities assuming ethical and legal responsibility for decisions and actions based on an AI system, corresponding to their role in the AI life cycle.
-- **LMICs, including LDCs, LLDCs and SIDS** — Acronyms referring to low- and middle-income countries, least developed countries, landlocked developing countries, and small island developing states.
-- **life cycle of AI systems** — The phases from research and design to deployment and disposal of AI technologies.
-- **LMICs, LDCs, LLDCs and SIDS** — Low- and Middle-Income Countries, Least Developed Countries, Landlocked Developing Countries, and Small Island Developing States.
-- **social scoring** — The use of AI to evaluate, rank, or categorize individuals or groups based on their behavior or data.
-- **privacy by design approach** — An approach embedding personal-data protection into the design and implementation of AI systems from the outset rather than retroactively.
-- **Explainability** — Making intelligible and providing insight into the outcome of AI systems, including the understandability of input, output, and the functioning of each algorithmic building block.
-- **Auditability** — Technical and institutional designs ensuring the working of AI systems can be audited and traced to address conflicts with human rights norms.
-- **Ethical Impact Assessment (EIA)** — A UNESCO methodology for assessing the ethical impacts of AI technologies based on rigorous scientific research and human rights law.
-- **readiness assessment methodology** — A tool to assist Member States in identifying their status along a continuum of dimensions for implementing AI ethics policies.
-- **regulatory sandboxes** — Mechanisms allowing laws, regulations, and policies to be tested in a safe environment before official adoption.
-- **AI Ethics Officer** — An independent role proposed to oversee ethical impact assessment, auditing, and continuous monitoring of AI systems.
-- **certification mechanism for AI systems** — A soft-governance tool involving different levels of audit of systems, data, and adherence to ethical guidelines, with regular monitoring and re-certification over the AI system life cycle.
-- **privacy by design** — Embedding privacy protections into AI systems from the outset of their design rather than adding them retroactively.
-- **gold standard datasets** — High-quality, open, trustworthy, diverse datasets built on a valid legal basis, used for training and evaluating AI systems.
-- **digital commons approach** — Treating data as a shared resource, increasing interoperability and encouraging private-sector data sharing for public benefit.
-- **Precautionary principle** — A principle dictating that if an AI application has disproportionate negative environmental impacts and cannot be justified, it should not be used.
-- **Transversal gender perspective** — An approach integrating gender equality considerations across all aspects of AI policy and assessment.
-- **intangible cultural heritage** — Cultural assets, including endangered and indigenous languages and knowledges, to be preserved and enriched using AI.
-- **NLP (natural language processing)** — AI applications such as automated translation and voice assistants affecting human language nuances.
-- **prerequisite skills** — Foundational competencies for AI education, including basic literacy, numeracy, coding, digital skills, media and information literacy, critical and creative thinking, teamwork, communication, socio-emotional and AI ethics skills.
-- **recommender systems** — Systems that predict user preferences to suggest content, whose positive and potentially harmful effects must be evaluated.
-- **'core' and interdisciplinary skills** — Skills such as 'learning how to learn', communication, critical thinking, teamwork, empathy, and knowledge transfer taught alongside specialist technical skills.
-- **'safety net' programmes** — Support mechanisms for at-risk employees who cannot be retrained due to AI-based automation.
-- **AI regulatory sandboxes** — Mechanisms for monitoring and evaluating AI systems within a controlled environment.
-- **UNESCO Ethical Impact Assessment methodology** — A proposed instrument for Member States to give effect to the Recommendation's policy recommendations.
-- **national commissions for the ethics of AI** — National bodies established to extend and complement state action regarding the Recommendation.
+- **AI system** — an information-processing system with the capacity to process data in a way resembling intelligent behaviour, typically including reasoning, learning, perception, prediction, planning or control, operating with varying degrees of autonomy.
+- **AI actor** — any actor involved in at least one stage of the AI system life cycle, whether a natural or legal person (researchers, programmers, engineers, data scientists, end-users, business enterprises, universities, public and private entities, among others).
+- **AI system life cycle** — the range from research, design and development to deployment and use, including maintenance, operation, trade, financing, monitoring and evaluation, validation, end-of-use, disassembly and termination.
+- **Ethical Impact Assessment (EIA)** — a framework to identify and assess benefits, concerns and risks of AI systems — including human rights, labour rights, environmental and social implications — and appropriate prevention, mitigation and monitoring measures; UNESCO is to develop a dedicated methodology.
+- **Readiness assessment methodology** — a UNESCO tool to assist Member States in identifying their status along a continuum of scientific, technological, economic, educational, legal, regulatory, infrastructural, societal and cultural dimensions; "readiness" is a dynamic status.
+- **Proportionality and Do No Harm** — the principle that AI processes must not exceed what is necessary to achieve legitimate aims, that AI use must be justified, and that risk assessment procedures must preclude harm.
+- **Explainability** — making intelligible and providing insight into the outcomes of AI systems, including the understandability of input, output and the functioning of each algorithmic building block.
+- **Human oversight and determination** — the requirement that ethical and legal responsibility for any stage of the AI life cycle always be attributable to physical persons or existing legal entities; AI can never replace ultimate human responsibility and accountability.
+- **Privacy by design** — an approach requiring AI actors to design and implement systems so that personal information is protected throughout the AI system life cycle.
+- **Gold standard datasets** — open and trustworthy datasets that are diverse, constructed on a valid legal basis including data subjects' consent, with annotation standards including gender-disaggregated data.
+- **Digital commons approach** — a data policy approach, suggested by the UN Secretary-General's High-level Panel on Digital Cooperation, favouring interoperability and appropriate data sharing for research, innovation or public benefit.
+- **AI Ethics Officer** — an independent role proposed for overseeing ethical impact assessment, auditing and continuous monitoring of AI systems, with a network of such officers at national, regional and international levels.
+- **Regulatory sandbox** — a mechanism to test laws, regulations and policies in a safe environment before official adoption, allowing regular review in line with rapid technological development.
+- **Prerequisite skills** — basic literacy, numeracy, coding and digital skills, media and information literacy, critical and creative thinking, teamwork, communication, socio-emotional and AI ethics skills needed for AI education.
+- **Domain expert** — in health-care AI development, the professional, patient, caregiver or service user included in the team at all relevant steps when developing algorithms.

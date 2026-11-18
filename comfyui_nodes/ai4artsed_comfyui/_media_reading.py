@@ -363,7 +363,7 @@ def _window(config: Any) -> int:
 
 def _answer(model: Any, tokenizer: Any, inputs: Dict[str, Any], window: int,
             prompt_len: int, seen_prompt_len: int, name: str,
-            eos_ids: Optional[Tuple[int, ...]] = None) -> str:
+            booking: Any, eos_ids: Optional[Tuple[int, ...]] = None) -> str:
     """One answer, taken the way _local_llm.generate takes one: streamed,
     so that the repetition guard stops a model that loops; a stopping
     criterion asked after every token (ComfyUI's interrupt, the guard); the
@@ -374,7 +374,10 @@ def _answer(model: Any, tokenizer: Any, inputs: Dict[str, Any], window: int,
     `eos_ids` are the tokens the generation stops at, where the caller holds
     them (Built.eos_ids: the generation config's and the tokenizer's
     end-of-turn token, which a Qwen 3.5 checkpoint's derived config leaves
-    out); without them the model's own generation config decides."""
+    out); without them the model's own generation config decides.
+    `booking` (_local_llm.CacheBooking) books the card for the cache as
+    the answer fills it; the caller has put the model on the card with its
+    first_reserve."""
     from transformers import StoppingCriteriaList, TextIteratorStreamer
     if prompt_len >= window:
         raise ValueError(f"the prompt is {prompt_len} tokens and the window of {name} {window}; "
@@ -389,7 +392,8 @@ def _answer(model: Any, tokenizer: Any, inputs: Dict[str, Any], window: int,
         try:
             with torch.inference_mode():
                 model.generate(**inputs, max_new_tokens=max_new, streamer=streamer,
-                               stopping_criteria=StoppingCriteriaList([stop]), **stop_at)
+                               stopping_criteria=StoppingCriteriaList([stop, booking]),
+                               cache_implementation="dynamic", **stop_at)
         except BaseException as e:      # handed to the reading thread below
             failure.append(e)
             streamer.end()
@@ -437,18 +441,20 @@ def describe_audio(dir_name: str, path: str, prompt: str, system_prompt: str,
     with held.lock:
         model, processor = held.module.hf, held.extra["processor"]
         window = _window(model.config)
-        device = _card.on_card(held, AUDIO_RESERVE_BYTES + _local_llm._kv_cache_bytes(model.config, window),
-                               held.key)
         inputs = processor.apply_chat_template(messages, tokenize=True, add_generation_prompt=True,
                                                add_special_tokens=True, return_dict=True)
-        # Per the model card: tensors to the device, floating tensors to bf16.
-        inputs = inputs.to(device=device, dtype=model.dtype)
         # MiDashengLM's generate runs its decoder on inputs_embeds: the
         # sequence the stopping criterion sees, and the one returned, holds
         # the new tokens only, so the prompt counts as 0 there and its length
-        # is taken off the window here.
+        # is taken off the window here, and added to what the booking sees.
         prompt_len = int(inputs["input_ids"].shape[1])
-        return _answer(model, processor.tokenizer, dict(inputs), window, prompt_len, 0, held.key)
+        booking = _local_llm.CacheBooking(held, model.config, prompt_len, window, held.key,
+                                          offset=prompt_len)
+        device = _card.on_card(held, AUDIO_RESERVE_BYTES + booking.first_reserve(), held.key)
+        # Per the model card: tensors to the device, floating tensors to bf16.
+        inputs = inputs.to(device=device, dtype=model.dtype)
+        return _answer(model, processor.tokenizer, dict(inputs), window, prompt_len, 0, held.key,
+                       booking)
 
 
 # ---------------------------------------------------------------------------
@@ -481,12 +487,14 @@ def _describe_visual(llm_dir: str, content: List[dict], reserve: int, video: boo
     messages = [{"role": "user", "content": content}]
     with built.lock:
         window = _window(built.config)
-        device = _local_llm._on_card(built, reserve + _local_llm._kv_cache_bytes(built.config, window))
         model = built.module.hf
-        inputs = _visual_inputs(built, messages, video).to(device)
+        inputs = _visual_inputs(built, messages, video)
         prompt_len = int(inputs["input_ids"].shape[1])
+        booking = _local_llm.CacheBooking(built, built.config, prompt_len, window, llm_dir)
+        device = _local_llm._on_card(built, reserve + booking.first_reserve())
+        inputs = inputs.to(device)
         return _answer(model, built.tokenizer, dict(inputs), window, prompt_len, prompt_len, llm_dir,
-                       eos_ids=built.eos_ids)
+                       booking, eos_ids=built.eos_ids)
 
 
 def describe_image(llm_dir: str, path: str, prompt: str) -> str:

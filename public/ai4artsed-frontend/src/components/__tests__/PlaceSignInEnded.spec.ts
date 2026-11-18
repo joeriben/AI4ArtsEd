@@ -13,7 +13,9 @@ vi.mock('@/stores/safetyLevel', () => ({
 }))
 vi.mock('@/composables/useCrossmodalPicture', () => ({ clearCrossmodalPicture: vi.fn() }))
 const { push } = vi.hoisted(() => ({ push: vi.fn(async () => {}) }))
-vi.mock('vue-router', () => ({ useRouter: () => ({ push }) }))
+vi.mock('vue-router', () => ({
+  useRouter: () => ({ push, currentRoute: { value: { name: 'x2x-flow', fullPath: '/x2x-flow' } } }),
+}))
 
 import axios from 'axios'
 import i18n from '@/i18n'
@@ -103,7 +105,7 @@ describe('PlaceSignInEnded', () => {
     get.mockResolvedValueOnce(signedOut)
     buttons()[0]!.click()
     await flushPromises()
-    expect(push).toHaveBeenCalledWith({ name: 'login' })
+    expect(push).toHaveBeenCalledWith({ name: 'login', query: { redirect: '/x2x-flow' } })
     expect(auth.user).toBeNull()
     expect(row()).toBeNull()
   })

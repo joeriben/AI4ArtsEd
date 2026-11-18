@@ -710,10 +710,13 @@ DISABLE_API_CACHE = os.environ.get("DISABLE_API_CACHE", "true").lower() == "true
 
 # Cache strategy for production (only applies when DISABLE_API_CACHE=False)
 # Only GET requests to these routes will be cached. POST/SSE are never cached by browsers.
+# Private since 2026-11-15: these routes answer only a signed-in browser
+# (my_app/lab/sign_in_gate.py), and a shared cache (the Cloudflare edge) must
+# not hand their answer to anybody else. Only a 200 is kept (my_app/__init__.py).
 CACHE_STRATEGY = {
-    "/api/config/": "public, max-age=300",         # Configs: 5 minutes
-    "/pipeline_configs_": "public, max-age=300",   # Metadata: 5 minutes
-    "/api/models/": "public, max-age=300",         # Models: 5 minutes (matches backend cache TTL)
+    "/api/config/": "private, max-age=300",         # Configs: 5 minutes
+    "/pipeline_configs_": "private, max-age=300",   # Metadata: 5 minutes
+    "/api/models/": "private, max-age=300",         # Models: 5 minutes (matches backend cache TTL)
 }
 
 # Logging Configuration

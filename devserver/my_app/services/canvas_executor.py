@@ -114,7 +114,9 @@ def _load_interception_context(config_id: str, lang: Optional[str] = None) -> Tu
                         f"'{pipeline_name}' — its context text is ONE link of a chain "
                         f"and needs a target language per step, which a single canvas "
                         f"interception node has no way to give it")
-    contexts = cfg.get("context") or {}
+    # A pool preset runs one of its entries (config_loader.draw_from_pool).
+    from schemas.engine.config_loader import draw_from_pool
+    contexts = draw_from_pool(cfg.get("context")) or {}
     if not isinstance(contexts, dict) or not contexts:
         return '', f"interception config '{safe}' has no context texts"
     wanted = (lang or "en").strip().lower()
@@ -1408,7 +1410,8 @@ class CanvasWorkflowExecutor:
                         node_id=node_id,
                         url=output['url'],
                         config_id=config_id,
-                        seed=output.get('seed')
+                        seed=output.get('seed'),
+                        level=self.safety_level,
                     )
                 logger.info(f"[Canvas Executor] Generation: {output.get('url', 'no url')}")
                 return output, 'image', None

@@ -574,7 +574,7 @@ function openWhereItWasMade() {
 /**
  * The setting the run went out with, in one line under the prompt, as the
  * instrument lays it back when the run is opened there. So far the Encoder
- * Fusion alone: its three factors, layout and pooled vector, read with the
+ * Fusion alone: its three factors, layout, pooled vector and CLIP encoders, read with the
  * instrument's own reader and worded as on its run cards (lib/fusionSetting),
  * then the CFG under the label of its field and the seed under the word its
  * field shows, the seed by the rule the restore lays it back with (`asSeed`)
@@ -591,7 +591,7 @@ const shownSetting = computed(() => {
   const parts: string[] = []
   const factors = recordedFactors(state)
   if (factors) {
-    parts.push(fusionSettingLabel(factors.a, factors.b, factors.c, factors.rows, factors.pooled, locale.value))
+    parts.push(fusionSettingLabel(factors.a, factors.b, factors.c, factors.rows, factors.pooled, factors.clip, locale.value))
   }
   const cfg = recordedNumber(state.cfg)
   if (cfg !== null) {

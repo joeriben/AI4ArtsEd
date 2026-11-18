@@ -22,7 +22,17 @@ CLAUDE.md
 # Python virtual environments
 venv/
 .venv/
-.env/ 
+.env/
+
+# -------------------------------------
+# Environment files hold keys and passwords: .env, .env.local, secrets.env.
+# Until 2026-11-15 the rule here read ".env/", which matches a directory only,
+# so a .env file was committable. The examples stay committable.
+.env
+.env.*
+*.env
+!.env.example
+!.env.sample
 
 # -------------------------------------
 # Logs, caches, backups, system dumps

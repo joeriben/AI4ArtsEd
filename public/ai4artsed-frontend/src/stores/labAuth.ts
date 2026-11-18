@@ -18,6 +18,7 @@ import { useSafetyLevelStore } from './safetyLevel'
 import { clearCrossmodalPicture } from '@/composables/useCrossmodalPicture'
 import axios from 'axios'
 import { apiBase } from '@/services/labApi'
+import { isSignInRequired } from '@/lib/signInLapse'
 
 export type Role = 'admin' | 'educator' | 'participant'
 
@@ -36,6 +37,22 @@ const ACTIVE_COURSE_KEY = 'ai4artsed.activeCourseId'
 export interface ActiveCourse {
   id: number
   name: string
+}
+
+/** When an account with a password agreed to which version of the conditions
+ *  of use (devserver/my_app/lab/terms.py), as /api/auth/me names it. */
+export interface TermsAgreement {
+  version: string
+  language: string
+  accepted_at: string | null
+}
+
+/** What a sign-in with a password needs besides the password: the agreement
+ *  to the version of the conditions the server named, in the language the
+ *  text stood in on the page. */
+export interface TermsConsent {
+  version: string
+  language: string
 }
 
 /** An answer of /api/auth/me: the account, and for a place its course and number. */
@@ -81,6 +98,17 @@ export const useLabAuthStore = defineStore('labAuth', () => {
   /** The course the session works in, with its name, as the server answered;
    *  null for a leader's own use and for no sign-in. */
   const course = ref<ActiveCourse | null>(null)
+  /** The account's latest agreement to the conditions of use; null for a place
+   *  and for no sign-in (views/AccountView.vue shows it). */
+  const terms = ref<TermsAgreement | null>(null)
+  /** The version of the conditions the server asks this account to agree to
+   *  before it signs in (`login`, 409 `terms_required`); null otherwise. The
+   *  login page shows the conditions while it is set. */
+  const termsRequired = ref<string | null>(null)
+  /** Counts the sign-ins that ended while the page stood open, as the server
+   *  answered a check (`fetchMe`); a sign-out on this page is not one. App.vue
+   *  sends a page that needs a sign-in to the sign-in page when it changes. */
+  const sessionLost = ref(0)
 
   // What `checkPlaceSession` weighs an answer against, kept out of the view.
   // `sessions` counts every change of the session on this page: an answer to a
@@ -88,6 +116,8 @@ export const useLabAuthStore = defineStore('labAuth', () => {
   let sessions = 0
   /** The end of this device's sign-in is known; nothing more is asked. */
   let placeEnded = false
+  /** The account whose place `endedPlace` names. */
+  let endedAccount: number | null = null
   /** The last answer could not read the session; the next check asks for it. */
   let sessionUnknown = false
   /** Sign-ins and sign-outs under way; nothing is asked meanwhile. */
@@ -96,6 +126,7 @@ export const useLabAuthStore = defineStore('labAuth', () => {
   const questions = new Set<AbortController>()
   let placeCheck: Promise<void> | null = null
   let leaderCheck: Promise<void> | null = null
+  let signInCheck: Promise<void> | null = null
   /** The choice of course that is out (`chooseCourse`); a sign-out waits for it. */
   let choiceOut: Promise<string | null> | null = null
 
@@ -182,8 +213,12 @@ export const useLabAuthStore = defineStore('labAuth', () => {
     }
     sessions++
     sessionUnknown = false
+    const was = user.value
     if (!same(user.value, data.user)) user.value = data.user
     place.value = data.user?.role === 'participant' ? (data.place ?? null) : null
+    const agreed: TermsAgreement | null = data.user ? (data.terms ?? null) : null
+    if (!same(terms.value, agreed)) terms.value = agreed
+    if (was !== null && !data.user) sessionLost.value++
     if (!data.user) {
       // No session, no course. A place session ends on the server when its
       // course closes or its code is replaced; the course it was bound to
@@ -191,8 +226,18 @@ export const useLabAuthStore = defineStore('labAuth', () => {
       activeCourseId.value = null
       course.value = null
     } else {
-      placeEnded = false
-      endedPlace.value = null
+      // The row of an ended place goes when the server answers with that
+      // place again (its code entered in another tab). Another account in this
+      // browser leaves it standing until it is acted on
+      // (components/PlaceSignInEnded.vue).
+      const placeBack = endedPlace.value === null
+        || (data.user.role === 'participant' && data.user.id === endedAccount
+          && (data.place ?? null) === endedPlace.value)
+      if (placeBack) {
+        placeEnded = false
+        endedPlace.value = null
+        endedAccount = null
+      }
       // The server holds the course of every session: a place's fixed
       // binding, or the course a leader chose (2026-11-14), null for a
       // leader's own use. A choice the server has ended (the course is gone,
@@ -241,7 +286,9 @@ export const useLabAuthStore = defineStore('labAuth', () => {
   function checkPlaceSession(again = false): Promise<void> {
     if (placeEnded) return Promise.resolve()
     const knows = isParticipant.value && place.value !== null
-    if (!knows && !sessionUnknown) return Promise.resolve()
+    // A participant without a place number is asked for its session as well;
+    // checkLeaderSession asks for leaders and admins.
+    if (!knows && !sessionUnknown && !isParticipant.value) return Promise.resolve()
     if (placeCheck !== null && !again) return placeCheck
     const check: Promise<void> = (knows ? askPlace() : fetchMe()).finally(() => {
       if (placeCheck === check) placeCheck = null
@@ -260,12 +307,39 @@ export const useLabAuthStore = defineStore('labAuth', () => {
     if (data === 'stale' || data === 'unknown') return
     if (data.user?.role === 'participant' && data.user.id === was?.id && data.place === at) return
     placeEnded = true
+    endedAccount = was?.id ?? null
     endedPlace.value = at
   }
 
-  /** "Close" on the row: the row goes, and the page stays as it is. */
+  /** A request of this page was answered 401 `sign_in_required`
+   *  (lib/signInLapse.ts): the server is asked who is signed in. Where nobody
+   *  is, `sessionLost` counts up and App.vue sends the page to the sign-in.
+   *  One question at a time; a page that knows no sign-in asks nothing. */
+  function checkSignIn(): Promise<void> {
+    if (user.value === null) return Promise.resolve()
+    if (signInCheck !== null) return signInCheck
+    const check: Promise<void> = fetchMe().finally(() => {
+      if (signInCheck === check) signInCheck = null
+    })
+    signInCheck = check
+    return check
+  }
+
+  /** Whether the last answer could not read the session (`askMe`): the
+   *  router asks once more before it sends a page to the sign-in. */
+  function sessionUnreadable(): boolean {
+    return sessionUnknown
+  }
+
+  /** "Close" on the row: the row goes, and the page stays as it is. Where
+   *  another account holds this browser now, its own place is checked from
+   *  here on; the ended account is asked nothing more. */
   function dismissEndedPlace(): void {
     endedPlace.value = null
+    if (user.value !== null && user.value.id !== endedAccount) {
+      placeEnded = false
+      endedAccount = null
+    }
   }
 
   /** Before a sign-in or a sign-out goes out, the questions still out are
@@ -285,21 +359,33 @@ export const useLabAuthStore = defineStore('labAuth', () => {
     sessions++
     sessionUnknown = false
     placeEnded = false
+    endedAccount = null
     endedPlace.value = null
     place.value = at
   }
 
-  async function login(identifier: string, password: string): Promise<boolean> {
+  /** A sign-in with a password. The server signs an account in only with its
+   *  agreement to the conditions of use (devserver/my_app/lab/terms.py): where
+   *  it has not agreed to the version that stands, the answer is 409
+   *  `terms_required` with the version, and `termsRequired` holds it until the
+   *  sign-in is asked again with `consent`. */
+  async function login(identifier: string, password: string, consent?: TermsConsent): Promise<boolean> {
     loading.value = true
     error.value = null
     beginSigning()
     try {
+      const body: Record<string, string> = { identifier, password }
+      if (consent) {
+        body.accept_terms = consent.version
+        body.language = consent.language
+      }
       const { data } = await axios.post(
         `${apiBase()}/api/auth/login`,
-        { identifier, password },
+        body,
         { withCredentials: true },
       )
       user.value = data.user
+      termsRequired.value = null
       newSession(null)
       // The server drops the course of whatever session this browser held,
       // a place session included (auth_service.login_user), and with it that
@@ -311,7 +397,14 @@ export const useLabAuthStore = defineStore('labAuth', () => {
       await useSafetyLevelStore().fetchLevel()
       return true
     } catch (e: any) {
-      error.value = e?.response?.data?.error ?? 'Login failed'
+      const answer = e?.response?.data
+      if (e?.response?.status === 409 && answer?.error === 'terms_required'
+          && typeof answer.terms_version === 'string') {
+        // The password holds; the conditions come first.
+        termsRequired.value = answer.terms_version
+      } else {
+        error.value = answer?.error ?? 'Login failed'
+      }
       // A refused sign-in leaves the session as it was, on the server and
       // here; where no answer came, the next check reads it again.
       sessionUnknown = true
@@ -376,6 +469,7 @@ export const useLabAuthStore = defineStore('labAuth', () => {
       signing--
     }
     user.value = null
+    terms.value = null
     newSession(null)
     // What this participant brought with them goes with them — see the watch
     // above; said here as well, because a sign-out with no course active
@@ -411,6 +505,9 @@ export const useLabAuthStore = defineStore('labAuth', () => {
   async function sendChoice(id: number | null): Promise<string | null> {
     beginSigning()
     const mine = sessions
+    // The gate's refusal (lib/signInLapse.ts) comes while nothing may be
+    // asked; the session is read once the choice is done.
+    let refused = false
     try {
       const answer = await axios.post(
         `${apiBase()}/api/auth/active-course`,
@@ -437,18 +534,20 @@ export const useLabAuthStore = defineStore('labAuth', () => {
       return null
     } catch (e: any) {
       sessionUnknown = true
+      refused = isSignInRequired(e?.response?.status, e?.response?.data)
       return String(e?.response?.data?.error ?? e?.message ?? e)
     } finally {
       signing--
+      if (refused) void fetchMe()
     }
   }
 
   return {
     user, loading, error, retryAfter, place, endedPlace,
-    activeCourseId, course,
+    activeCourseId, course, terms, termsRequired, sessionLost,
     isAuthenticated, role, isAdmin, isEducator, isParticipant,
     setActiveCourse,
     fetchMe, login, participantLogin, logout, chooseCourse, checkPlaceSession, checkLeaderSession,
-    dismissEndedPlace,
+    checkSignIn, sessionUnreadable, dismissEndedPlace,
   }
 })

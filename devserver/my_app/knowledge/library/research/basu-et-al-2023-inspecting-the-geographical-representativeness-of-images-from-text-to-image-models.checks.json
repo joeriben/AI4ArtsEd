@@ -1,0 +1,1354 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 10.2% of 1744 words, ceiling 20%, longest run 26 words; not counted: 39 words from the source's lists; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 26,
+     "text": "italy spain greece japan korea india israel australia south africa belgium poland portugal germany france latvia hungary the czech republic estonia new zealand finland and slovenia"
+    },
+    {
+     "words": 16,
+     "text": "by 1 44 points on average for dall e 2 and 0 75 for stable diffusion"
+    },
+    {
+     "words": 14,
+     "text": "rq4 how feasible is it to automatically assess the geographical representativeness of generated images"
+    },
+    {
+     "words": 13,
+     "text": "query of the form high definition image of a typical artifact in country"
+    },
+    {
+     "words": 13,
+     "text": "from greece 1 94 japan 1 95 and finland 2 03 the average"
+    }
+   ],
+   "value": 0.1021,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "3 of 5 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 2,
+     "expected_items": 3,
+     "first_item": "RQ1 : Are the images generated using DALL·E 2 and Stable Diffusion geographicall",
+     "output_lists": [
+      4,
+      2,
+      2
+     ]
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "table_cells": 10,
+     "missing_cells": [
+      "w/ country",
+      "w/ country",
+      "GR(c, ·, ·, p)",
+      "GR(c, ·, ·, pc )",
+      "GR(c, D2, ·, p)",
+      "GR(c, D2, ·, pc )",
+      "GR(c, SD, ·, p)"
+     ]
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 8,
+     "table_cells": 22,
+     "missing_cells": [
+      "w/o country",
+      "w/ country",
+      "Reference ( = 3 . 0 )",
+      "VGG16 [35]",
+      "1.55",
+      "1.52",
+      "ResNet18 [12]",
+      "1.67",
+      "1.77",
+      "ResNet50 [12]",
+      "2.04",
+      "1.62",
+      "ViT [10]",
+      "1.81",
+      "1.51",
+      "CLIPVision [21]",
+      "1.38"
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "163 of 202 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 1,
+     "number": "24"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 1,
+     "number": "28"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 1,
+     "number": "29"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 1,
+     "number": "37"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 1,
+     "number": "42"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 1,
+     "number": "43"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 1,
+     "number": "44"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 1,
+     "number": "75"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 2,
+     "number": "2.0"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 2,
+     "number": "21"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 2,
+     "number": "39"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 2,
+     "number": "49"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 3,
+     "number": "17"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 3,
+     "number": "32"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 3,
+     "number": "91"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 4,
+     "number": "20"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 4,
+     "number": "23"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 4,
+     "number": "3.1"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 4,
+     "number": "3.2"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 4,
+     "number": "3.3"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 4,
+     "number": "35"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 4,
+     "number": "64"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 4,
+     "number": "94"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "11"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "22"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "3.4"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "31"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "33"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "34"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "36"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "38"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "40"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "46"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "47"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "48"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "51"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "52"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "53"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "54"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "55"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "56"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "57"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "58"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "59"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "61"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "62"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "63"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "65"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "66"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "67"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "68"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "69"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "70"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "71"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "72"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "73"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "74"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "76"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "78"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "79"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "82"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "83"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "84"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "87"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "89"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "92"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "93"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "96"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "number": "97"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "2.26"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "2.54"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "2.60"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "2.61"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "2.62"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "2.65"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "2.72"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "2.78"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "2.8"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "2.80"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "2.85"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "2.89"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "2.92"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "2.94"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.00"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.05"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.06"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.09"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.11"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.19"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.20"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.21"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.22"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.26"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.27"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.29"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.31"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.33"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.37"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.38"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.40"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.42"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.44"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.47"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.50"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.53"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.54"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.56"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.58"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.61"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.62"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.63"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.67"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.73"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.74"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.75"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.77"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.78"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.80"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.82"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.83"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.84"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.85"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.88"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.89"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.92"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.93"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.94"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "3.95"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "4.00"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "4.06"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "4.07"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "4.1"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "4.11"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "4.12"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "4.13"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "4.14"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "4.15"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "4.16"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "4.17"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "4.21"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "4.23"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "4.26"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "4.27"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "4.31"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "4.32"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "4.35"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "4.37"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "4.46"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "4.54"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "4.56"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "4.73"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "77"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "number": "98"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 8,
+     "number": "1.38"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 8,
+     "number": "1.51"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 8,
+     "number": "1.52"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 8,
+     "number": "1.55"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 8,
+     "number": "1.62"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 8,
+     "number": "1.67"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 8,
+     "number": "1.77"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 8,
+     "number": "1.81"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 8,
+     "number": "2.04"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 8,
+     "number": "4.2"
+    }
+   ],
+   "value": 163.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "15 of 16 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 1,
+     "heading": "Abstract"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 1,
+     "heading": "1. Introduction"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 4,
+     "heading": "3. Results"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 4,
+     "heading": "3.1. Metrics"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 4,
+     "heading": "3.2. Geographical Representativeness"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 4,
+     "heading": "3.3. Effect of Country-specific Prompts"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 5,
+     "heading": "3.4. Photo-realism of Generated Images"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 6,
+     "heading": "3.5. Comparison of DALL · E 2 and Stable Diffusion"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 6,
+     "heading": "4. Feasibility of Automating the Evaluation"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 7,
+     "heading": "4.1. CLIP-based Similarity"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 8,
+     "heading": "4.2. Estimation using Nearest Neighbors"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 9,
+     "heading": "5. Limitations & Future Directions"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 9,
+     "heading": "6. Related Work"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 10,
+     "heading": "7. Conclusion"
+    },
+    {
+     "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+     "page": 12,
+     "heading": "A. Qualitative Analysis"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "9 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "9 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "31 quoted texts in 5 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Fig. 1",
+     "page": 1,
+     "image": "fig-001-p1.png",
+     "quotes": [
+      "\"Not at all\"",
+      "\"To a great extent\""
+     ]
+    },
+    {
+     "figure": "Fig. 2",
+     "page": 3,
+     "image": "fig-002-p3.png",
+     "quotes": [
+      "“Percentage of users that pick the most common option”"
+     ]
+    },
+    {
+     "figure": "Fig. 3",
+     "page": 6,
+     "image": "fig-003-p6.png",
+     "quotes": [
+      "\"House,\"",
+      "\"Flag,\"",
+      "\"City,\"",
+      "\"Wedding,\"",
+      "\"Unspecified (default),\"",
+      "\"Mexico,\"",
+      "\"Italy,\"",
+      "\"S. Korea,\"",
+      "\"Japan.\"",
+      "\"Unspecified (default)\""
+     ]
+    },
+    {
+     "figure": "Fig. 4",
+     "page": 6,
+     "image": "fig-004-p6.png",
+     "quotes": [
+      "\"Average geographical representativeness (averaged over all countries)\"",
+      "\"DALL-E 2 unspecified (default)\"",
+      "\"DALL-E 2 with country name\"",
+      "\"Stable Diffusion unspecified (default)\"",
+      "\"Stable Diffusion score with country name\""
+     ]
+    },
+    {
+     "figure": "Fig. 5",
+     "page": 9,
+     "image": "fig-005-p9.png",
+     "quotes": [
+      "“Total,”",
+      "“UK + USA,”",
+      "“South Africa”",
+      "“Luxembourg,”",
+      "“10000,”",
+      "“1000000.”",
+      "“Total”",
+      "“1,21,416,”",
+      "“UK + USA”",
+      "“81,000,”",
+      "“South Africa”",
+      "“7,746,”",
+      "“Luxembourg,”"
+     ]
+    }
+   ],
+   "value": 31.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "22 page references valid (pdf pages 1–15)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "15 pages checked, 1 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "1 passages out of order break a sentence (2 of 2 not repairable; listed, not gated)",
+   "findings": [
+    {
+     "page": 1,
+     "words": 5,
+     "text": "Indian Institute of Science, Bangalore",
+     "blocks": [
+      "#/texts/1",
+      "#/texts/4",
+      "#/texts/10"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "sentence cut: 'ave captured the interest of researchers' | 'Indian Institute of Science, Bangalore'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 5,
+     "text": "Images generated from DALL·E 2",
+     "blocks": [
+      "#/texts/159",
+      "#/texts/161"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    }
+   ],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "basu-et-al-2023-inspecting-the-geographical-representativeness-of-images-from-text-to-image-models",
+ "doc_type": "scholarly_article",
+ "analyzed_at": "2026-11-15T10:16:32.604710+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 15,
+   "chars": 48322,
+   "blocks": 92,
+   "inner_headings": 16,
+   "figures": 9
+  }
+ ],
+ "skipped": [
+  "Acknowledgements (p. 10)",
+  "References (p. 10)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 15,
+  "gaps": [
+   {
+    "page": 5,
+    "text": "| unspecified | w/ country | unspecified | w/ country | unspecified |\n| GR(c, ·, ·, p) | GR(c, ·, ·, pc ) | GR(c, D2, ·, p) | GR(c, D2, ·, pc ) | GR(c, SD, ·, p) |",
+    "words": 29,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/tables/0"
+   }
+  ],
+  "gaps_dismissed": [
+   {
+    "page": 1,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "R. Venkatesh Babu Danish Pruthi abhipsabasu@iisc.ac.in venky@iisc.ac.in danishp@iisc.ac.in"
+   },
+   {
+    "page": 7,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "4.1. CLIP-based similarity"
+   },
+   {
+    "page": 12,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "A. Qualitative Analysis"
+   },
+   {
+    "page": 12,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "road unspecified US Chile UK Japan SA Aus"
+   },
+   {
+    "page": 13,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "dress flag park kitchen wedding unspecified US Chile UK Japan SA Aus"
+   },
+   {
+    "page": 14,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "unspecified US Chile UK Japan SA Aus"
+   },
+   {
+    "page": 15,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "unspecified US Chile UK Japan SA Aus"
+   }
+  ],
+  "captions_reclassified": [],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [],
+  "superseded": [],
+  "replaced_pages": [],
+  "noise_dropped": 0,
+  "hyphens_restored": [],
+  "order": [
+   {
+    "page": 1,
+    "text": "Indian Institute of Science, Bangalore",
+    "words": 5,
+    "refs": [
+     "#/texts/1",
+     "#/texts/4",
+     "#/texts/10"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "sentence cut: 'ave captured the interest of researchers' | 'Indian Institute of Science, Bangalore'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "Images generated from DALL·E 2",
+    "words": 5,
+    "refs": [
+     "#/texts/159",
+     "#/texts/161"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   }
+  ],
+  "order_pages_checked": 12,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 2,
+  "order_breaking": 1,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 3 minor; distortions: 0 material, 2 minor; additions: 0 material, 0 minor; order: 0 material, 0 minor",
+  "at": "2026-11-15T10:17:27+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 3
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 2
+   },
+   "additions": {
+    "material": 0,
+    "minor": 0
+   },
+   "order": {
+    "material": 0,
+    "minor": 0
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "Inspecting the Geographical Representativeness of Images from Text-to-Image Models (p. 1–15)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "Note that the scope and focus of our study is solely on measuring the extent of geographical representativeness for both country-specified and unspecified prompts, rather than finding better ways to prompt the model, or improve the model to produce more geographically inclusive content.",
+      "severity": "minor",
+      "page": 1
+     },
+     {
+      "source": "We acknowledge and speculate that we may observe different trends if the study included participants from many other developing countries. However, significantly improving the coverage of the study is challenging (see Section 5).",
+      "severity": "minor",
+      "page": 4
+     },
+     {
+      "source": "We believe that this is partly due to the fact that we only have a few annotated images in the training corpus to match with. We also speculate that the image feature extractors (used for similarity computation) may not extract features that differentiate images along the geographical lines.",
+      "severity": "minor",
+      "page": 8
+     }
+    ],
+    "distortions": [
+     {
+      "source": "We sample the 88 countries using weighted random sampling where each nation was weighted by its population. The final set of 27 countries... includes...",
+      "summary": "obtaining sufficient responses from 27 countries (selected through population-weighted random sampling)",
+      "severity": "minor",
+      "page": 3
+     },
+     {
+      "source": "We observe that the geographical representativeness scores of the 27 countries is positively correlated with their population (ρ = 0.64). This may suggest that the datasets used to pre-train the chosen models contain many images from residents of populous countries.",
+      "summary": "GR scores were positively correlated with population (ρ = 0.64), suggesting training datasets contain many images from populous countries.",
+      "severity": "minor",
+      "page": 4
+     }
+    ],
+    "additions": [],
+    "order": []
+   }
+  ]
+ },
+ "source": {
+  "source": "basu-et-al-2023-inspecting-the-geographical-representativeness-of-images-from-text-to-image-models.pdf",
+  "bytes": 7762293,
+  "sha256": "977d5cf9c12812ddb7a4dcb5e7aa0877e9d012bb2aac2197c63a13d396d35c9a",
+  "extracted_at": "2026-11-13T02:24:00+01:00"
+ }
+}

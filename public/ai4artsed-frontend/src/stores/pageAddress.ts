@@ -99,7 +99,11 @@ const PAGE_ADDRESSES: Readonly<Record<string, PageAddress>> = {
   },
   // Language Understanding. First half: the same prompt in two to four
   // languages, one row per image model, translation and back-translation per
-  // column; second half: reading along a row and across two rows.
+  // column. Second half: the back-translation as the check, reading along a
+  // row, and the matter of fact, which stays: the text encoders of SD 3.5 are
+  // trained on English, and what is left is the cliché. The delivery of
+  // 2026-11-08 had dropped it with this comment; it stands again since
+  // 2026-11-15.
   '/latent-lab/language-understanding': {
     storyKey: 'compare.address.language.story',
     purposeKey: 'compare.address.language.purpose',

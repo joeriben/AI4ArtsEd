@@ -1,0 +1,2329 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 12.8% of 2442 words, ceiling 20%, longest run 24 words; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 24,
+     "text": "a generated image has replicated content if it contains an object foreground or background that appears identically in a training image neglecting minor variations"
+    },
+    {
+     "words": 14,
+     "text": "girl with pearl earring by johannes vermeer the persistence of memory by salvador dali"
+    },
+    {
+     "words": 13,
+     "text": "foreground or background that appears identically in a training image neglecting minor variations"
+    },
+    {
+     "words": 12,
+     "text": "a highly skewed distribution of image repetitions in the training set and"
+    },
+    {
+     "words": 11,
+     "text": "the reproduction of training images either in part or in whole"
+    }
+   ],
+   "value": 0.1282,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "2 of 2 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 14,
+     "expected_items": 3,
+     "first_item": "We present the source caption and the match caption for Fig. 1 in Fig. 13.",
+     "output_lists": [
+      6
+     ]
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "table_cells": 143,
+     "missing_cells": [
+      "rOxford5k ↑",
+      "rParis6k ↑",
+      "CD/IR",
+      "Multigrain [6], ResNet-50",
+      "22.87",
+      "44.74",
+      "3.67",
+      "37.09",
+      "56.72",
+      "27.77",
+      "25.8",
+      "67.54",
+      "79.44",
+      "24.91",
+      "5.9",
+      "CD/IR",
+      "SSCD [47] , ResNet-50",
+      "30.16",
+      "45.75",
+      "31.42"
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "158 of 204 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 1,
+     "number": "52"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 1,
+     "number": "54"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 1,
+     "number": "9.10.22"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 2,
+     "number": "11.13.15.28.30"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 2,
+     "number": "18"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 2,
+     "number": "19"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 2,
+     "number": "23"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 2,
+     "number": "25.67"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 2,
+     "number": "26"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 2,
+     "number": "27"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 2,
+     "number": "33.60"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 2,
+     "number": "34"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 2,
+     "number": "47"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 2,
+     "number": "49"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 2,
+     "number": "53"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 2,
+     "number": "58"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 2,
+     "number": "63"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 2,
+     "number": "64"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 3,
+     "number": "24"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 3,
+     "number": "29"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 3,
+     "number": "38"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 3,
+     "number": "39"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 3,
+     "number": "40"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 3,
+     "number": "56"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 3,
+     "number": "57"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "10.18"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "13"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "13.12"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "13.14"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "14.25"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "14.75"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "15.49"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "15.61"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "16.63"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "17.91"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "18.15"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "2.00"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "20.37"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "20.61"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "22.42"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "22.87"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "23.21"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "24.31"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "24.51"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "24.91"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "25.01"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "25.8"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "26.11"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "27.77"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "28.4"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "29.15"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "29.41"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "3.02"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "3.44"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "3.67"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "30.16"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "30.25"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "30.43"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "31.24"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "31.42"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "32.14"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "32.23"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "32.83"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "32.9"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "34.95"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "36"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "36.41"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "37.09"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "37.76"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "37.98"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "39.92"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "4.2"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "4.24"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "4.94"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "40.06"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "40.44"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "40.58"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "40.74"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "40.93"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "42"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "43"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "44.74"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "45"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "45.29"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "45.43"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "45.75"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "46"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "46.42"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "46.73"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "46.96"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "47.54"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "48"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "48.36"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "48.58"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "49.69"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "5.0"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "5.1"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "5.4"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "5.5"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "5.76"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "5.9"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "50.06"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "50.98"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "51"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "51.6"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "51.88"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "52.74"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "53.54"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "53.79"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "54.09"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "54.11"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "55"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "55.74"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "56.72"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "59.12"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "59.5"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "6.5"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "61"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "61.5"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "61.99"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "62"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "62.13"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "62.88"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "65"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "65.82"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "65.98"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "66"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "67.04"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "67.54"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "68"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "68.46"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "68.92"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "69.74"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "72.07"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "73.19"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "74.79"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "79.44"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "8.6"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "8.76"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "80.02"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "89.78"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "9.2"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "93.53"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "95.86"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 4,
+     "number": "98.92"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 5,
+     "number": "31"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 5,
+     "number": "37"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 5,
+     "number": "41"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 5,
+     "number": "44"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 5,
+     "number": "59"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 7,
+     "number": "88"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 8,
+     "number": "145"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 8,
+     "number": "2014"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 8,
+     "number": "2017"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 8,
+     "number": "85"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 10,
+     "number": "95"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 14,
+     "number": "256"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 14,
+     "number": "30"
+    }
+   ],
+   "value": 158.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "20 of 23 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 1,
+     "heading": "Abstract"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 1,
+     "heading": "1. Introduction"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 3,
+     "heading": "3. What Counts as Replication?"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 3,
+     "heading": "4. Detecting Content Replication"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 5,
+     "heading": "4.1. Choosing the Best Replication Detector"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 6,
+     "heading": "6. Case Study: ImageNet LDM"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 7,
+     "heading": "7. Case Study: Stable Diffusion"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 8,
+     "heading": "Caption Source Generation Top Match"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 9,
+     "heading": "DINO 1 DINO 10 SSCD 1-10"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 10,
+     "heading": "8. Possible causes of replication"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 10,
+     "heading": "9. Limitations & Conclusion"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 14,
+     "heading": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 14,
+     "heading": "A. Additional Stable Diffusion results"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 14,
+     "heading": "B. Trained diffusion models"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 14,
+     "heading": "B.1. Hyperparameters for training"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 14,
+     "heading": "C. Stable Diffusion settings"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 14,
+     "heading": "Prompts"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 14,
+     "heading": "Prompts"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 14,
+     "heading": "C.1. Misc results"
+    },
+    {
+     "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+     "page": 16,
+     "heading": "Prompts"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "15 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "15 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "6 quoted texts in 2 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Fig. 1",
+     "page": 1,
+     "image": "fig-001-p1.png",
+     "quotes": [
+      "\"GOLDEN GLOBE AWARDS\"",
+      "\"M\""
+     ]
+    },
+    {
+     "figure": "Fig. 6",
+     "page": 7,
+     "image": "fig-006-p7.png",
+     "quotes": [
+      "\"sim(gen,train)\"",
+      "\"sim(train,train)\"",
+      "\"sim(gen,train)\"",
+      "\"sim(train,train)\""
+     ]
+    }
+   ],
+   "value": 6.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "40 page references valid (printed-folio pages 1–17)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "17 pages checked, 1 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "8 passages out of order break a sentence (35 of 35 not repairable; listed, not gated)",
+   "findings": [
+    {
+     "page": 1,
+     "words": 20,
+     "text": "1. Introduction The rapid rise of Diffusion Models has led to new generative tools with the potential to be used",
+     "blocks": [
+      "#/texts/1",
+      "#/texts/31",
+      "#/texts/32",
+      "#/texts/33"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 1,
+     "words": 35,
+     "text": "and graphic design. The power of the Diffusion paradigm stems in large part from its reliance on simple denoising networks that maintain their stability when trained on huge web-scale datasets contain",
+     "blocks": [
+      "#/texts/1",
+      "#/texts/31",
+      "#/texts/33"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 5,
+     "text": "7. case study: Stable Diffusion",
+     "blocks": [
+      "#/texts/192",
+      "#/texts/198"
+     ],
+     "problem": "blocks of kind footnote, heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 8,
+     "text": "this section, we evaluate Stable Diffusion v1.4 [54],",
+     "blocks": [
+      "#/texts/193",
+      "#/texts/198"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 9,
+     "text": "which was trained on the publicly available LAION [57]",
+     "blocks": [
+      "#/texts/193",
+      "#/texts/198"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'Observations. In Figure 7, we visualize '"
+     ],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 10,
+     "text": "dataset. Since it is outside the computational reach of our",
+     "blocks": [
+      "#/texts/193",
+      "#/texts/198"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 10,
+     "text": "meager academic cluster to store and search 2 billion+ im-",
+     "blocks": [
+      "#/texts/193",
+      "#/texts/198"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 10,
+     "text": "ages, we narrow our search scope to the smaller LAION",
+     "blocks": [
+      "#/texts/193",
+      "#/texts/198"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 11,
+     "text": "Aesthetics v2 6+ dataset which has 12M images and is a",
+     "blocks": [
+      "#/texts/193",
+      "#/texts/198"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'Observations. In Figure 7, we visualize '"
+     ],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 12,
+     "text": "subset of images that were used for the final rounds of train-",
+     "blocks": [
+      "#/texts/193",
+      "#/texts/198",
+      "#/texts/199"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 10,
+     "text": "ing. We load the model and the checkpoints via Hugging-",
+     "blocks": [
+      "#/texts/193",
+      "#/texts/199"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 8,
+     "text": "the first experiment, we randomly sample 9000 im-",
+     "blocks": [
+      "#/texts/194",
+      "#/texts/200"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 9,
+     "text": "ages, which we call source images, from LAION Aesthetics",
+     "blocks": [
+      "#/texts/194",
+      "#/texts/200"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 8,
+     "text": "12M and retrieve the corresponding captions. These source",
+     "blocks": [
+      "#/texts/194",
+      "#/texts/200"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 10,
+     "text": "images provide us with a large pool of random captions.",
+     "blocks": [
+      "#/texts/194",
+      "#/texts/200"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'In fact, sometimes the caption of the so'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 9,
+     "text": "then, we generate synthetic images by passing those cap-",
+     "blocks": [
+      "#/texts/194",
+      "#/texts/200"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 9,
+     "text": "tions into Stable Diffusion. We study the top-1 matches,",
+     "blocks": [
+      "#/texts/194",
+      "#/texts/200",
+      "#/texts/201"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 9,
+     "text": "which we call match images, for each generated sample.",
+     "blocks": [
+      "#/texts/194",
+      "#/texts/200",
+      "#/texts/201"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 10,
+     "text": "See the supplementary material for all the prompts used to",
+     "blocks": [
+      "#/texts/194",
+      "#/texts/201"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'In those 170 images, we find instances w'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 12,
+     "text": "generate the images for figures as well as the analysis in this",
+     "blocks": [
+      "#/texts/194",
+      "#/texts/201"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'In those 170 images, we find instances w'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 10,
+     "words": 139,
+     "text": "shows a histogram of how many times a training image is duplicated in LAION-Aesthetics, where “duplicate” is defined as having SSCD score > 0.95. Weplot a histogram for two populations. first, the 100",
+     "blocks": [
+      "#/texts/331",
+      "#/texts/336",
+      "#/texts/337"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 10,
+     "words": 51,
+     "text": "8. Possible causes of Replication Data Replication in generative Models is not inevitable; previous studies of GANs have not found it, and our study of ImageNet LDM did not find any evidence of signif",
+     "blocks": [
+      "#/texts/332",
+      "#/texts/333",
+      "#/texts/334",
+      "#/texts/339"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 14,
+     "words": 8,
+     "text": "Florian Pond Behind The House Garden painting Canvas",
+     "blocks": [
+      "#/texts/423",
+      "#/texts/435"
+     ],
+     "problem": "blocks of kind caption, heading, list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 14,
+     "words": 15,
+     "text": "Starry night painting Canvas Wall Art Print A poster with letter V Canvas Wall Art",
+     "blocks": [
+      "#/texts/423",
+      "#/texts/424",
+      "#/texts/436",
+      "#/texts/437"
+     ],
+     "problem": "blocks of kind caption, heading, list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 14,
+     "words": 9,
+     "text": "A painting of an avocado chair Canvas Wall Art",
+     "blocks": [
+      "#/texts/424",
+      "#/texts/425",
+      "#/texts/438"
+     ],
+     "problem": "blocks of kind caption, heading, list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 14,
+     "words": 5,
+     "text": "Table 3. prompts used in",
+     "blocks": [
+      "#/texts/424",
+      "#/texts/425",
+      "#/texts/439"
+     ],
+     "problem": "blocks of kind caption, heading, list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 14,
+     "words": 5,
+     "text": "of Fig. 10 (Bottom row)",
+     "blocks": [
+      "#/texts/424",
+      "#/texts/425",
+      "#/texts/439"
+     ],
+     "problem": "blocks of kind caption, heading, list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 14,
+     "words": 6,
+     "text": "Wave off Kanagawa by Katsushika Hokusai",
+     "blocks": [
+      "#/texts/426",
+      "#/texts/441"
+     ],
+     "problem": "blocks of kind caption, heading, list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 14,
+     "words": 5,
+     "text": "A painting of Kanagawa coast",
+     "blocks": [
+      "#/texts/426",
+      "#/texts/442"
+     ],
+     "problem": "blocks of kind caption, heading, list_item are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'We present the 20 hand-curated prompts f'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 14,
+     "words": 4,
+     "text": "painting of a Wave",
+     "blocks": [
+      "#/texts/426",
+      "#/texts/443"
+     ],
+     "problem": "blocks of kind caption, heading, list_item are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'We present the 20 hand-curated prompts f'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 14,
+     "words": 20,
+     "text": "Wealso include the top-10 generations and their top 5 matches for DINO split-product on the Celeb-A dataset for",
+     "blocks": [
+      "#/texts/428",
+      "#/texts/429",
+      "#/texts/445"
+     ],
+     "problem": "blocks of kind caption, heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 14,
+     "words": 11,
+     "text": "all 3 Diffusion Models (trained on 300, 3000 and 30k im-",
+     "blocks": [
+      "#/texts/429",
+      "#/texts/445"
+     ],
+     "problem": "blocks of kind caption, heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 14,
+     "words": 11,
+     "text": "ages) in Fig. 15. We further present a few generations from",
+     "blocks": [
+      "#/texts/429",
+      "#/texts/445"
+     ],
+     "problem": "blocks of kind caption, heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 14,
+     "words": 7,
+     "text": "the Pre-Trained ImageNet conditional-LDM model and their",
+     "blocks": [
+      "#/texts/429",
+      "#/texts/445"
+     ],
+     "problem": "blocks of kind caption, heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 14,
+     "words": 10,
+     "text": "closest matches in the ImageNet train set in Fig. 14.",
+     "blocks": [
+      "#/texts/429",
+      "#/texts/445"
+     ],
+     "problem": "blocks of kind caption, heading are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'Celeb-A We trained the 300 image model u'"
+     ],
+     "section": ""
+    }
+   ],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "somepalli-et-al-2023-diffusion-art-or-digital-forgery-investigating-data-replication",
+ "doc_type": "scholarly_article",
+ "analyzed_at": "2026-11-15T11:24:18.841269+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 17,
+   "chars": 46666,
+   "blocks": 137,
+   "inner_headings": 23,
+   "figures": 15
+  }
+ ],
+ "skipped": [
+  "10. Acknowledgements (p. 11)",
+  "References (p. 11)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 17,
+  "gaps": [
+   {
+    "page": 8,
+    "text": "caption source generation Top match source caption: Hill Country Castle by R Del Angel match caption: Ben Hogan Portrait Golf Legend&quot (2014) by GinetteCallaway source caption: Captain Marvel Exclusive Ccxp poster Released Online By Marvel match caption: Marvel Studios releases new poster of 'Captain Marvel' source caption: the colors of the mountain fall color colorado highway 145 in the san juan mountains match caption: Boreal Forest「Detail on the Yukon Mountains of the colorful tundra in Autumn among spruce trees… source caption: 85th Annual Academy Awards – Arrivals match caption: gown-inspo-rooney-mara-givenchy-1 source caption: Portrait of Tiger in black and white by Lukas Holas match caption: Tiger Black And white Wallpapers Top Free Tiger Black And white backgrounds Wallpaperaccess source caption: Rosie Huntington-Whiteley short hair (2015 Vanity fair Oscar Party) (Venturelli, photographer for Getty images) match caption: 2017 Vanity fair Oscar Party Hosted By Graydon Carter -Arrivals source caption: VAN Gogh Cafe TERASSE copy.jpg match caption: Cafe Terrace at night by Van Gogh - 1000 pc. jigsaw puzzle source caption: US presidential election certified results match caption: No guns vote Figure 7. selected Stable Diffusion generations using captions sampled from LAION images, with similarity score ≥ 0.5. 8",
+    "words": 197,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/202"
+   }
+  ],
+  "gaps_dismissed": [
+   {
+    "page": 1,
+    "words": 14,
+    "reason": "duplicate",
+    "text": "Gowthami Somepalli , Vasu Singla , Micah Goldblum , Jonas Geiping , Tom Goldstein"
+   },
+   {
+    "page": 1,
+    "words": 16,
+    "reason": "duplicate",
+    "text": "University of Maryland, College Park New York University {gowthami, vsingla, jgeiping, tomg}@cs.umd.edu goldblum@nyu.edu generation LAION-A match"
+   },
+   {
+    "page": 4,
+    "words": 16,
+    "reason": "duplicate",
+    "text": "VOC-IN-Cutmix IN-Dif-IN-Dif- average Segmix ↑ Segmix ↑ Diagonal outpaint rank ↓ ↑ ↑ ↑"
+   },
+   {
+    "page": 4,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "1 github.com/facebookresearch/multigrain 4 github.com/facebookresearch/VICRegL 2 github.com/facebookresearch/sscd-copy-detection"
+   },
+   {
+    "page": 5,
+    "words": 17,
+    "reason": "duplicate",
+    "text": "5 Gener. SSCD DINO Swin 300 images trained on 3000 images trained on 30000 images trained on"
+   },
+   {
+    "page": 6,
+    "words": 24,
+    "reason": "duplicate",
+    "text": "sim(gen,train) sim(train,train) 5 8 4 6 3 4 2 2 1 0 0 0.0 0.2 0.4 0.6 0.8 1000 0.2 (a) 300 points"
+   },
+   {
+    "page": 6,
+    "words": 26,
+    "reason": "duplicate",
+    "text": "sim(gen,train) 5 sim(gen,train) sim(train,train) sim(train,train) 4 3 2 1 0 0.4 0.6 0.8 1000 0.2 0.4 0.6 0.8 1.0 (b) 3000 points (call points"
+   },
+   {
+    "page": 9,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "generation Top match"
+   },
+   {
+    "page": 10,
+    "words": 32,
+    "reason": "duplicate",
+    "text": "sim(gen,train) sim(source,train) 10.18 sim(gen,train),9k 101 source match 6 10−2 100 4 10−3 2 10−1 10−4 0 0.0 0.2 0.4 0.6 0.8 1000 0.2 0.4 0.6 0.8 1.0 101 102 103"
+   },
+   {
+    "page": 10,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "Top match in LAION-Match in LAION-"
+   },
+   {
+    "page": 10,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "generation Aesthetics v2 6+ Aesthetics v2 5+"
+   },
+   {
+    "page": 10,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "9. Limitations & Conclusion"
+   },
+   {
+    "page": 17,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "trained on 300 images trained on 3000 images trained on all images"
+   }
+  ],
+  "captions_reclassified": [
+   {
+    "page": 9,
+    "figure": "#/pictures/9",
+    "text": "Prompt: <The description of the wall art> Canvas Wall Art Print"
+   },
+   {
+    "page": 9,
+    "figure": "#/pictures/10",
+    "text": "Prompt: A painting of  the Great Wave off Kanagawa by Katsushika Hokusai"
+   }
+  ],
+  "captions_reassigned": [],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [],
+  "superseded": [
+   {
+    "page": 8,
+    "ref": "#/texts/234",
+    "text": "Source caption:"
+   },
+   {
+    "page": 8,
+    "ref": "#/texts/235",
+    "text": "US presidential election certified"
+   },
+   {
+    "page": 8,
+    "ref": "#/texts/236",
+    "text": "results"
+   },
+   {
+    "page": 8,
+    "ref": "#/texts/237",
+    "text": "Match caption:"
+   },
+   {
+    "page": 8,
+    "ref": "#/texts/238",
+    "text": "No guns vote"
+   }
+  ],
+  "replaced_pages": [
+   8
+  ],
+  "noise_dropped": 0,
+  "hyphens_restored": [
+   {
+    "page": 1,
+    "ref": "#/pictures/0",
+    "word": "LAION-Aesthetics"
+   },
+   {
+    "page": 3,
+    "ref": "#/texts/62",
+    "word": "IN-Cutmix"
+   },
+   {
+    "page": 3,
+    "ref": "#/texts/63",
+    "word": "Dif-Diagonal"
+   },
+   {
+    "page": 4,
+    "ref": "#/tables/0",
+    "word": "Self-Supervised"
+   },
+   {
+    "page": 4,
+    "ref": "#/tables/0",
+    "word": "Self-Supervised"
+   },
+   {
+    "page": 12,
+    "ref": "#/texts/387",
+    "word": "Pre-Training"
+   },
+   {
+    "page": 13,
+    "ref": "#/texts/415",
+    "word": "Instance-Level"
+   }
+  ],
+  "order": [
+   {
+    "page": 1,
+    "text": "1. Introduction The rapid rise of Diffusion Models has led to new generative tools with the potential to be used",
+    "words": 20,
+    "refs": [
+     "#/texts/1",
+     "#/texts/31",
+     "#/texts/32",
+     "#/texts/33"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 1,
+    "text": "and graphic design. The power of the Diffusion paradigm stems in large part from its reliance on simple denoising networks that maintain their stability when trained on huge web-scale datasets containing billions of imagecaption pairs.",
+    "words": 35,
+    "refs": [
+     "#/texts/1",
+     "#/texts/31",
+     "#/texts/33"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "7. case study: Stable Diffusion",
+    "words": 5,
+    "refs": [
+     "#/texts/192",
+     "#/texts/198"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote, heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "this section, we evaluate Stable Diffusion v1.4 [54],",
+    "words": 8,
+    "refs": [
+     "#/texts/193",
+     "#/texts/198"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "which was trained on the publicly available LAION [57]",
+    "words": 9,
+    "refs": [
+     "#/texts/193",
+     "#/texts/198"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [
+     "passage cut out of 'Observations. In Figure 7, we visualize '"
+    ],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "dataset. Since it is outside the computational reach of our",
+    "words": 10,
+    "refs": [
+     "#/texts/193",
+     "#/texts/198"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "meager academic cluster to store and search 2 billion+ im-",
+    "words": 10,
+    "refs": [
+     "#/texts/193",
+     "#/texts/198"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "ages, we narrow our search scope to the smaller LAION",
+    "words": 10,
+    "refs": [
+     "#/texts/193",
+     "#/texts/198"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "Aesthetics v2 6+ dataset which has 12M images and is a",
+    "words": 11,
+    "refs": [
+     "#/texts/193",
+     "#/texts/198"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [
+     "passage cut out of 'Observations. In Figure 7, we visualize '"
+    ],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "subset of images that were used for the final rounds of train-",
+    "words": 12,
+    "refs": [
+     "#/texts/193",
+     "#/texts/198",
+     "#/texts/199"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "ing. We load the model and the checkpoints via Hugging-",
+    "words": 10,
+    "refs": [
+     "#/texts/193",
+     "#/texts/199"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "the first experiment, we randomly sample 9000 im-",
+    "words": 8,
+    "refs": [
+     "#/texts/194",
+     "#/texts/200"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "ages, which we call source images, from LAION Aesthetics",
+    "words": 9,
+    "refs": [
+     "#/texts/194",
+     "#/texts/200"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "12M and retrieve the corresponding captions. These source",
+    "words": 8,
+    "refs": [
+     "#/texts/194",
+     "#/texts/200"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "images provide us with a large pool of random captions.",
+    "words": 10,
+    "refs": [
+     "#/texts/194",
+     "#/texts/200"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [
+     "passage cut out of 'In fact, sometimes the caption of the so'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "then, we generate synthetic images by passing those cap-",
+    "words": 9,
+    "refs": [
+     "#/texts/194",
+     "#/texts/200"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "tions into Stable Diffusion. We study the top-1 matches,",
+    "words": 9,
+    "refs": [
+     "#/texts/194",
+     "#/texts/200",
+     "#/texts/201"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "which we call match images, for each generated sample.",
+    "words": 9,
+    "refs": [
+     "#/texts/194",
+     "#/texts/200",
+     "#/texts/201"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "See the supplementary material for all the prompts used to",
+    "words": 10,
+    "refs": [
+     "#/texts/194",
+     "#/texts/201"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [
+     "passage cut out of 'In those 170 images, we find instances w'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "generate the images for figures as well as the analysis in this",
+    "words": 12,
+    "refs": [
+     "#/texts/194",
+     "#/texts/201"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [
+     "passage cut out of 'In those 170 images, we find instances w'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 10,
+    "text": "shows a histogram of how many times a training image is duplicated in LAION-Aesthetics, where “duplicate” is defined as having SSCD score > 0.95. Weplot a histogram for two populations. first, the 1000 uniformly sampled source images. second, we generate 1000 synthetic images, search for their closest match in the training set, and plot the duplication histogram for These “match” images. Surprisingly, wesee that a typical random image from the dataset is duplicated 11.6 times, which is more often than a typical matched image, which is duplicated 3.1 times. However, if we look only at very close matches (> .5 SSCD), These match images are replicated on average 34.1 times – far more often than a typical image. It seems that replicated content tends to be drawn from training images that are duplicated more than a typical",
+    "words": 139,
+    "refs": [
+     "#/texts/331",
+     "#/texts/336",
+     "#/texts/337"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 10,
+    "text": "8. Possible causes of Replication Data Replication in generative Models is not inevitable; previous studies of GANs have not found it, and our study of ImageNet LDM did not find any evidence of significant Data Replication. what makes Stable Diffusion different? Wenote that both ImageNet LDM (section 6) and Stable",
+    "words": 51,
+    "refs": [
+     "#/texts/332",
+     "#/texts/333",
+     "#/texts/334",
+     "#/texts/339"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 14,
+    "text": "Florian Pond Behind The House Garden painting Canvas",
+    "words": 8,
+    "refs": [
+     "#/texts/423",
+     "#/texts/435"
+    ],
+    "repaired": false,
+    "note": "blocks of kind caption, heading, list_item are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 14,
+    "text": "Starry night painting Canvas Wall Art Print A poster with letter V Canvas Wall Art",
+    "words": 15,
+    "refs": [
+     "#/texts/423",
+     "#/texts/424",
+     "#/texts/436",
+     "#/texts/437"
+    ],
+    "repaired": false,
+    "note": "blocks of kind caption, heading, list_item are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 14,
+    "text": "A painting of an avocado chair Canvas Wall Art",
+    "words": 9,
+    "refs": [
+     "#/texts/424",
+     "#/texts/425",
+     "#/texts/438"
+    ],
+    "repaired": false,
+    "note": "blocks of kind caption, heading, list_item are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 14,
+    "text": "Table 3. prompts used in",
+    "words": 5,
+    "refs": [
+     "#/texts/424",
+     "#/texts/425",
+     "#/texts/439"
+    ],
+    "repaired": false,
+    "note": "blocks of kind caption, heading, list_item are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 14,
+    "text": "of Fig. 10 (Bottom row)",
+    "words": 5,
+    "refs": [
+     "#/texts/424",
+     "#/texts/425",
+     "#/texts/439"
+    ],
+    "repaired": false,
+    "note": "blocks of kind caption, heading, list_item are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 14,
+    "text": "Wave off Kanagawa by Katsushika Hokusai",
+    "words": 6,
+    "refs": [
+     "#/texts/426",
+     "#/texts/441"
+    ],
+    "repaired": false,
+    "note": "blocks of kind caption, heading, list_item are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 14,
+    "text": "A painting of Kanagawa coast",
+    "words": 5,
+    "refs": [
+     "#/texts/426",
+     "#/texts/442"
+    ],
+    "repaired": false,
+    "note": "blocks of kind caption, heading, list_item are involved",
+    "breaks": [
+     "passage cut out of 'We present the 20 hand-curated prompts f'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 14,
+    "text": "painting of a Wave",
+    "words": 4,
+    "refs": [
+     "#/texts/426",
+     "#/texts/443"
+    ],
+    "repaired": false,
+    "note": "blocks of kind caption, heading, list_item are involved",
+    "breaks": [
+     "passage cut out of 'We present the 20 hand-curated prompts f'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 14,
+    "text": "Wealso include the top-10 generations and their top 5 matches for DINO split-product on the Celeb-A dataset for",
+    "words": 20,
+    "refs": [
+     "#/texts/428",
+     "#/texts/429",
+     "#/texts/445"
+    ],
+    "repaired": false,
+    "note": "blocks of kind caption, heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 14,
+    "text": "all 3 Diffusion Models (trained on 300, 3000 and 30k im-",
+    "words": 11,
+    "refs": [
+     "#/texts/429",
+     "#/texts/445"
+    ],
+    "repaired": false,
+    "note": "blocks of kind caption, heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 14,
+    "text": "ages) in Fig. 15. We further present a few generations from",
+    "words": 11,
+    "refs": [
+     "#/texts/429",
+     "#/texts/445"
+    ],
+    "repaired": false,
+    "note": "blocks of kind caption, heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 14,
+    "text": "the Pre-Trained ImageNet conditional-LDM model and their",
+    "words": 7,
+    "refs": [
+     "#/texts/429",
+     "#/texts/445"
+    ],
+    "repaired": false,
+    "note": "blocks of kind caption, heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 14,
+    "text": "closest matches in the ImageNet train set in Fig. 14.",
+    "words": 10,
+    "refs": [
+     "#/texts/429",
+     "#/texts/445"
+    ],
+    "repaired": false,
+    "note": "blocks of kind caption, heading are involved",
+    "breaks": [
+     "passage cut out of 'Celeb-A We trained the 300 image model u'"
+    ],
+    "section": ""
+   }
+  ],
+  "order_pages_checked": 15,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 35,
+  "order_breaking": 8,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 3 minor; distortions: 0 material, 2 minor; additions: 0 material, 0 minor; order: 0 material, 1 minor",
+  "at": "2026-11-15T11:26:17+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 3
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 2
+   },
+   "additions": {
+    "material": 0,
+    "minor": 0
+   },
+   "order": {
+    "material": 0,
+    "minor": 1
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models (p. 1–17)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "The level of image similarity required for something to count as 'replication' is subjective... Rather than choosing an arbitrary definition, we focus on presenting quantitative and qualitative results to the reader, leaving each person to draw their own conclusions",
+      "severity": "minor",
+      "page": 2
+     },
+     {
+      "source": "the samples in Fig. 3 and Fig. 4 are not cherry-picked, but they are chosen from the small subset of 20 images with highest top-1 similarity to the training data",
+      "severity": "minor",
+      "page": 6
+     },
+     {
+      "source": "these models can produce novel images of known identities from the training data without making verbatim copies",
+      "severity": "minor",
+      "page": 3
+     }
+    ],
+    "distortions": [
+     {
+      "source": "Feng et al. [24] study the conditions that lead GANs to replicate training data. They look for copies in pixel-space and find that such replications are inversely proportional to dataset complexity and dataset size.",
+      "summary": "Related GAN studies (Meehan et al., Feng et al., Webster et al.) found replication inversely proportional to dataset complexity/size",
+      "severity": "minor",
+      "page": 3
+     },
+     {
+      "source": "Examples certainly exist of content replication from sources outside the 12M LAION Aesthetics v2 6+ split see Fig 12",
+      "summary": "(e.g., 'The Scream' by Edvard Munch was generated from an image in the 600M Aesthetics 5+ split outside the searched 12M split)",
+      "severity": "minor",
+      "page": 11
+     }
+    ],
+    "additions": [],
+    "order": [
+     {
+      "source": "guidance scale= 7.5, strength= 0.5, steps= 50. #### Prompts Florian Pond Behind The House Garden Painting Canvas Wall Art Print",
+      "summary": "",
+      "layer": "Table 2. Prompts used in generation of Fig. 10 (Top row) Prompts Florian Pond Behind The House Garden Painting Canvas Wall Art Print",
+      "severity": "minor",
+      "page": 14
+     }
+    ]
+   }
+  ]
+ },
+ "source": {
+  "source": "somepalli-et-al-2023-diffusion-art-or-digital-forgery-investigating-data-replication.pdf",
+  "bytes": 31874379,
+  "sha256": "4b725a407d6942769fc2323bb2bb6a06bf3c505e80b9a7b4c41c9aac031b53d8",
+  "extracted_at": "2026-11-13T03:05:01+01:00"
+ }
+}

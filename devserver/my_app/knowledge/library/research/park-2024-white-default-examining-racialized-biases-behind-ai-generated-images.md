@@ -3,6 +3,7 @@ id: park-2024-white-default-examining-racialized-biases-behind-ai-generated-imag
 titel: "White Default: Examining Racialized Biases Behind AI-Generated Images"
 autor: Yoon Soo Park
 jahr: 2024
+quelle: "Art Education, 77:4, 36-45, DOI: 10.1080/00043125.2024.2330340"
 sprache: en
 tier: R
 sparten: [bildnerisch, medial]
@@ -10,92 +11,110 @@ themen: [ai, bias, aesthetic_education, decolonial]
 lizenz: "All rights reserved - operator copy, local only; this file is a condensation produced on this platform"
 url: "https://doi.org/10.1080/00043125.2024.2330340"
 status: published
-analyzed_at: "2026-07-31T12:15:40.783097+00:00"
+checks: passed
+review: passed
+analyzed_at: "2026-11-15T11:19:53.653784+00:00"
 analysis_lang: en
-analysis_model: openrouter/z-ai/glm-5.2
+analysis_model: openrouter/z-ai/glm-5.3
+doc_type: scholarly_article
+seitenzahlen: gedruckt
 ---
 
 # White Default: Examining Racialized Biases Behind AI-Generated Images
 
 ## PROFIL
 
-The text argues that generative AI models like DALL-E 2 reproduce intersectional biases—such as positioning Whiteness as the default and hypersexualizing marginalized groups—thereby exacerbating social inequities under postdigital conditions. It sets itself against the framing of the digital divide as merely an issue of access and against the passive consumption of AI imagery that obscures opaque informational infrastructures. Drawing on Salvaggio's (2022) critical content analysis, the author demonstrates how treating AI images as "data patterns inscribed into pictures" reveals the hidden ideologies and power structures embedded in training data. For arts education, this methodology provides a practical pedagogy to foster critical engagement with the entangled visuality of human- and nonhuman-produced imagery, empowering students to navigate and challenge systemic oppression in digital visual culture.
+Yoon Soo Park is the author of this open-access article, published in *Art Education* (2024, vol. 77:4, pp. 36–45), the journal of the National Art Education Association, and addressed to art educators in K-12 and higher education working within visual culture art education under postdigital conditions. Its subject is racialized bias in generative AI image systems, focusing on DALL-E 2, and its claim is that models trained on data produced by "inherently biased humans" reproduce and amplify racial and gender stereotypes, so that art education must teach students to "read" AI-generated images critically. Framing references include Hannah Knox on "opaque informational infrastructures" and Cathy O'Neil on value-laden algorithms; the article builds on scholarship documenting AI harms (Bianchi et al.; Gebru) and on critical race theory (Knight; Dyer; Bolgatz; Gaztambide-Fernández et al.) to argue that Whiteness functions as the default, unmarked category. Its core content is a critical content analysis of DALL-E 2 outputs using Eryk Salvaggio's six-step inductive method, treating AI images as "data patterns inscribed into pictures" and "a map of biases"; Park's experiments show hypersexualized depictions of Asian and Black women, and prompts with "White" yielding figures painted white rather than racially White people, which she attributes to sparse annotation of racially White people as simply "people." The article closes with pedagogical implications: because biases cannot be fully mitigated by prompts or filtering, critical content analysis should be taught at both levels, with practical guidance on free image generators, sample-set creation, and guiding analysis questions. It is usable in art education, visual culture studies, and media literacy contexts concerned with critical pedagogy for social justice.
 
 ## WISSEN
 
-### Problem Framing and Thesis
+### Overview and Purpose (p. 1–2)
 
-The problem has moved beyond the digital divide (access) to opaque informational infrastructures that sustain poverty, racism, and capital accumulation. Algorithms are value-laden: human biases embedded in code, trained on historically biased data, manifest in facial recognition misrecognizing Black women and generative AI reinforcing stereotypes of race, gender, class, and dis/abilities. Under postdigital conditions, visual culture is increasingly entangled with human- and nonhuman-produced imagery, necessitating art pedagogies that empower critical engagement with emergent intelligences. I investigate DALL-E 2's racialized assumptions inductively via critical content analysis (Salvaggio, 2022), since OpenAI withholds its training data, then derive implications for art teaching.
+This open-access article by Ye Sul Park, published in *Art Education* (2024, vol. 77:4, pp. 36–45), examines racialized biases embedded in generative AI image systems, focusing on DALL-E 2. The author argues that because generative AI models are trained on past data produced by "inherently biased humans," their outputs reproduce and amplify racial and gender stereotypes—and that art education must respond by teaching students to "read" AI-generated images critically. Drawing on anthropologist Hannah Knox, Park frames the problem as one of "opaque informational infrastructures" that sustain racism and other inequities with real-world effects; citing mathematician Cathy O'Neil, she notes that algorithms, though they sound neutral, are value-laden. The article situates itself in visual culture art education under postdigital conditions, in which human and nonhuman image-making increasingly entangle.
 
-<!-- quelle: Problem Framing and Thesis -->
+### Biases in Generative AI (p. 3–4)
 
-### Biases in Generative AI
+Park reviews scholarship showing that generative AI has been accused of reinforcing stereotypes of race, gender, class, and dis/ability (Bianchi et al., 2022). Documented harms include hypersexualized portrayals of women, deepfakes and nonconsensual pornographic content (Gebru, 2020), and the centering of Western epistemologies that "invisibilize other ways of being." Because models are largely trained on U.S.-based data, outputs carry American associations and tend to exoticize non-White ethnicities, reifying White supremacy as a social norm. DALL-E's development relies on the CLIP model, trained on 400 million text–image pairs from the internet; Dehouche and Dehouche (2023) note CLIP is prone to reproducing skewed stereotypes present in online media culture. Park argues that engaging with AI images without awareness of their biased nature leads students to passively absorb hidden ideologies rather than become agents of social change.
 
-Generative AI reproduces intersectional stereotypes of marginalized groups, reifying social categories and justifying discrimination. Image tools hypersexualize women; deepfakes weaponize women's faces without consent. Training on U.S.-centric data centers Western epistemologies, 'invisibilizing other ways of being' and exoticizing non-White ethnicities. DALL-E's CLIP model, trained on 400 million internet text-image pairs, reproduces skewed stereotypes embedded in online content. Art education seeks to disrupt normalized ways of being through social justice, yet AI outputs amplify existing biases. Students engaging with AI imagery without awareness passively absorb hidden ideologies, perpetuating systemic oppression. I therefore propose critical content analysis (Salvaggio's six steps) as pedagogy and apply it to my DALL-E 2 experimentation.
+### Critical Content Analysis: Salvaggio's Six Steps (p. 4–5)
 
-<!-- quelle: Biases in Generative AI -->
-
-### Critical Content Analysis Method
-
-Salvaggio (2022) treats AI images as "data patterns inscribed into pictures" revealing dataset stories and human decisions. Because DALL-E 2's dataset is opaque, he proposes inductively tracing hidden biases through six steps:
+Because DALL-E 2's data sets are not public, Park adopts the inductive method of new media artist Eryk Salvaggio (2022), who treats AI images as "data patterns inscribed into pictures" that tell "stories about that dataset and the human decisions behind it." The six steps are:
 
 1. **Create a sample set**: generate multiple images from the same prompt to identify patterns.
-2. **Content analysis**: describe what one sees; identify strong connectivity, looking for "certain compositions/arrangements, color schemes, lighting effects, figures or poses, or other expressive elements"; note strengths, weaknesses, and absences—e.g., distorted Black women's faces suggest underrepresentation.
-3. **Open the hood**: examine training data of comparable models (e.g., LAION for Midjourney).
-4. **Interventions**: consider content-filtering effects—e.g., DALL-E 2 generated "two men kissing" but flagged "two women kissing" as explicit, revealing cultural values in OpenAI's policy.
-5. **Connotative analysis**: infer assumptions and values from what the model does well or poorly.
-6. **Start over**: confirm whether a new sample set supports the hypothesis.
+2. **Content analysis**: describe what one sees—compositions, color schemes, lighting, figures/poses—and note patterns, strengths, weaknesses, and what is missing (e.g., distorted Black women's faces may indicate underrepresentation in the data).
+3. **Open the hood**: examine training data where possible, e.g., the LAION data set for Midjourney, since DALL-E 2's data is inaccessible.
+4. **Interventions**: consider external interventions such as content filtering; Salvaggio's anecdote shows DALL-E 2 generated "two men kissing" but flagged "two women kissing" as explicit content, revealing cultural values in OpenAI's policy.
+5. **Connotative analysis**: infer assumptions and values embedded in the data set from what the model does well or poorly.
+6. **Start over**: regenerate a new sample set to confirm the hypothesis.
 
-AI images are "cultural, social, economic, and political artifacts"—a map of biases. Though opacity prevents solid conclusions, the practice cultivates criticality about gaps, erasures, and prevalence in datasets.
+Salvaggio stresses AI images should be read as "a map of biases"; the method cannot yield solid conclusions about DALL-E 2's opaque data set but cultivates criticality about gaps, erasures, and prevalence in the data.
 
-<!-- quelle: Critical Content Analysis Method -->
+### Experiments With DALL-E 2 (p. 6–7)
 
-### Experiments with DALL-E 2
+Park prompted DALL-E 2 with racial categories. Key findings:
 
-Using Salvaggio's (2022) method, I prompted DALL-E 2 with racial categories. "Asian in visual culture" (no gender specified) yielded Asian women in traditional attire; adding "woman"/"female" produced hypersexualized images. Comparative prompts showed Asian and Black women hypersexualized, Asian women cast as submissive, exotic sexual objects for White male fantasy. "White female/people" yielded white-colored figures, not racially White people, while "Black" reliably produced racially Black people. Two hypotheses: diverse people classified as "people," or lack of diversity masked by content filtering. The white-colored outputs suggest racially White people are annotated simply as "people"—manifesting Whiteness as norm, the default state.
+- The prompt "Asian in visual culture" (no gender specified) produced only images of Asian women in traditional attire; a 16-image sample set was highly uniform. Adding "woman" or "female" yielded hypersexualized images of Asian women in traditional dress, reaffirming stereotypes of Asian women as "submissive and exotic sexual objects to satisfy White males' desires and fantasies."
+- Comparative prompts ("Black woman/female in visual culture," "White woman/female in visual culture") showed Asian and Black women depicted far more hypersexualized than White women, whose images showed no clear pattern.
+- Prompting "White female in visual culture" produced figures with faces painted in the color white rather than racially White people, whereas "Black people" prompts produced racially Black people. Follow-up prompts ("White people," "White people in visual culture," "people," "people in visual culture") confirmed this asymmetry.
+- Park hypothesizes that the data set sparsely links the word "white" to racially White people—suggesting racially White people are annotated simply as "people" without racial descriptors—while racially Black people are annotated with "black." OpenAI's diversity-enhancing filtering technique (which it claims makes results reflect "the diversity of the world's population" 12 times more often for unmarked prompts) may also produce apparent diversity despite sparse data.
 
-<!-- quelle: Experiments with DALL-E 2 -->
+### Whiteness as Default (p. 7–9)
 
-### Whiteness as Default
+Park interprets the findings through critical race theory. Citing Wanda B. Knight (2006a) and Rodriguez and Villaverde (2000), she explains that Whiteness has been historically deemed colorless and "the human norm," expressed "in terms of 'people' in general" (Dyer, 1997)—which is why "white" is not read as a racial term by the AI. This manifests unequal power dynamics: Whiteness is the default state (Bolgatz, 2005). Supporting examples include:
 
-Whiteness is historically deemed colorless and "the human norm," sustaining White normalcy and privilege. Because White is expressed as "people" in general, Whiteness goes unmarked. The arts are conceived as "White property": racial modifiers attach to artists of color while White artists are assumed unmarked. *Minari*'s Golden Globe classification as foreign-language film despite being about Americans exemplifies how "American" defaults to English-speaking Whiteness. DALL-E 2 prompts for "American" and "American beauty" generate predominantly lighter-skinned images, visualizing how privilege and disadvantage are inscribed through "socially loaded visual components" that reaffirm Whiteness as the "default ideal" while subordinating non-White entities.
+- Gaztambide-Fernández et al. (2018) on the arts as White property: some creators are simply "artists" while others are "African American artists" or "Latino composers"; Melville, Hemingway, and Fitzgerald are "American" authors while Toni Morrison, Maxine Hong Kingston, and Leslie Marmon Silko are relegated to "multicultural" literature.
+- Lee Isaac Chung's film *Minari* (2020), a story about Americans, won Best Foreign Language Film at the 2021 Golden Globes because the Hollywood Foreign Press Association required 50% or more English dialogue for Best Motion Picture eligibility.
+- Prompts "American" and "American beauty" generated 16 images each dominated by lighter skin tones, excluding non-White races.
 
-<!-- quelle: Whiteness as Default -->
+AI images thus visualize how privilege is inscribed through "socially loaded visual components," reaffirming Whiteness as the "default ideal" (Bianchi et al., 2022).
 
-### Implications for Art Education
+### Implications for Art Education (p. 9–10)
 
-Visual culture art education must address a new *entangled visuality* of human and nonhuman imagery, as AI generators now constitute digital visual culture. Since AI biases resist mitigation via prompts or filtering, *critical content analysis* of AI images can expose biases around race, gender, class, and dis/abilities. Students generate sample sets from text prompts and analyze:
+Park argues that reading AI images is a critical pedagogy for social justice, exposing invisible power structures and institutionalized oppression (Jung, 2015). Because biases cannot be fully mitigated by careful prompts or content filtering, critical content analysis should be taught in both K-12 and higher education. Practical guidance: teachers can use free generators (Stable Diffusion, Canva, Bing) instead of DALL-E, which requires purchased credits; students experiment with multiple prompts, choose one, and create a 16-image sample set, then analyze it with these questions:
 
 - What do you see?
 - What patterns do you identify?
 - Who/what is present or dominant? Who/what is missing or misrepresented?
 - How are these patterns tied to existing social norms or stereotypes in contemporary media culture?
 
-This serves as critical pedagogy for social justice, exposing invisible power structures and institutionalized oppression, empowering navigation of emerging visuality in postdigital conditions.
+Students thereby investigate what stereotyped images signify and question who builds and sustains the systems reinforcing such biases (Knight, 2006b).
 
-<!-- quelle: Implications for Art Education -->
+### Conclusion and Limitations (p. 10)
 
-### Conclusion and Outlook
+Park acknowledges that AI evolves daily: OpenAI may change its content policies or filtering (e.g., for "two women kissing" or "American" imagery), so her specific findings may not hold in the future. She calls for ongoing development of pedagogies for critical engagement with AI so students understand how these technologies shape worldviews. An author note states the experiments used DALL-E 2 before DALL-E 3 was released in late 2023.
 
-Generative AIs reproduce biases and stereotypes that exacerbate social inequities; critical content analysis of AI-generated images (Salvaggio, 2022) serves as effective art pedagogy for examining power structures. I acknowledge this argument may not hold as AI evolves daily: DALL-E 2 currently generates 'two men kissing' but flags 'two women kissing' as explicit content, and 'American' or 'American beauty' images lack racial diversity—yet OpenAI may alter both. New pedagogies for critical engagement with AI products are needed in art classrooms to empower students to understand how these technologies shape worldviews and ways the world is operated.
+### Figures (p. 1–9)
 
-<!-- quelle: Conclusion and Outlook -->
+*Image 1 (p. 1):* — This is a magazine cover for "ART EDUCATION," subtitled "The Journal of the National Art Education Association." The cover features a black-and-white photograph of a pair of eyes looking through a dark, irregular opening surrounded by textured material. A yellow banner displays the headline "Teaching Visual Culture in the New Digital Mediascape." At the bottom of the cover are two rectangular boxes labeled "ARTICLES" and "INTERACTIVE REVIEWS," containing smaller text that is not legible. _(Lettering in the image, read by the image model, not confirmed: "ART EDUCATION,", "The Journal of the National Art Education Association.", "Teaching Visual Culture in the New Digital Mediascape.", "ARTICLES", "INTERACTIVE REVIEWS,")_
 
-### Back Matter and References
+*Fig. 1 (p. 2):* A sample set of 16 images generated by DALL-E 2 with the prompt 'Asian in visual culture.' — The picture is a collage of eight color photographs arranged in four rows and two columns. Each photograph shows a woman in elaborate dress with accessories such as parasols, ornate hairpieces, headdresses, and jewelry, against varied backgrounds and in different colored garments. No text in the image is legible.
 
-The author notes the article's visual experiments used DALL-E 2 prior to DALL-E 3's release in late 2023, situating the study within a specific generative-AI moment. The author positions art educators and researchers as responsible for empowering future generations to navigate emerging visuality and digital visual culture through robust engagement with visual culture art education. The reference list spans critical race theory in art education, AI bias and stereotype amplification in text-to-image systems, algorithmic visuality, decolonizing and antiracist art inquiry, and Whiteness critique in arts education.
+*Image 11 (p. 3):* — This is a collage of eight color photographs arranged in four rows and two columns. Each photograph shows a person posed in an elaborate costume, including long patterned robes, embroidered garments, ornate headdresses, and decorative hairpieces, with dramatic facial makeup. Some portraits show the person from the back or in profile, holding props such as a parasol, against dark or richly colored backgrounds. No text is legible anywhere in the collage.
 
-<!-- quelle: Back Matter and References -->
+*Fig. 2 (p. 4):* Images generated by DALL-E 2 with prompts 'Asian female in visual culture' (1st row) and 'Asian woman in visual culture' (2nd row). — The picture is a collage arranged in two rows of four portrait images. The upper-left cell is a flat digital illustration of a woman with a black ornate updo, hairpins, dangling earrings, and red lips against a red background; the other seven cells are photographs of women with long dark hair, several wearing red traditional-style robes and elaborate hairstyles with ornaments and red makeup accents. No text is legible within the images.
+
+*Fig. 3 (p. 5):* Images generated by DALL-E 2 with prompts 'Black female in visual culture' (1st row) and 'Black woman in visual culture' (2nd row). — The picture is a collage of eight rectangular images arranged in two rows of four. The top row shows four stylized portraits of a Black woman: an illustration with an afro and orange sunglasses, a hooded figure with a white face covering holding a sheet of paper, a color-lit portrait with a yellow headwrap, and an illustration with two afro puffs and a pink headband. The bottom row shows four photographs of a Black woman with an afro posing in different outfits—a black romper with red boots, a silver off-shoulder gown, a black lace top with a white belt and a black skirt, and a pink top with black pants—against doors, a graffiti wall, and metal siding. No text is legible within the images.
+
+*Fig. 4 (p. 5):* Images generated by DALL-E 2 with prompts 'White female in visual culture' (1st row) and 'White woman in visual culture' (2nd row). — This is a composite figure made up of eight rectangular images arranged in a grid of two rows and four columns. The top row contains four portrait-style images of pale-skinned women: one with a hand near the chin, one eye peeking from behind white fabric, one face with black paint around an eye, and one face seen through a sheer white veil. The bottom row mixes two fashion-style drawings—a profile of a woman with a hair bun and a full-length figure in red trousers—with two photographs of women, one in profile against a yellow-orange background and one facing forward in a red top and dark hat against a red background. No text in the images is legible.
+
+*Image 15 (p. 6):* — This is a collage of sixteen 3D-rendered digital illustrations arranged in a four-by-four grid. Each panel depicts stylized humanoid figures in various scenarios, such as operating a video camera, standing in crowds with one highlighted figure, posing with red question marks, exercising on a bench, and holding art supplies. Two panels show close-up portraits of stylized heads with green skin and purple hair. Small text appears at the bottom edges of some panels but is not legible.
+
+*Fig. 6 (p. 7):* A sample set of 16 images generated by DALL-E 2 with a prompt 'Black people in visual culture.' — This is a digital collage arranged as a 4 by 4 grid of 16 square panels, each containing a flat, stylized illustration of Black people. The panels show individual portraits, profile views and silhouettes, small groups, and full-figure scenes in bold colors. Legible text includes the words “Black Flare” in one top-row panel and “GONY” across the shirt in a green-background portrait; a small handwritten signature in the upper-left corner is not fully legible. _(Lettering in the image, read by the image model, not confirmed: “Black Flare”, “GONY”)_
+
+*Fig. 7 (p. 8):* Images generated by DALL-E 2 with prompts 'White people' (1st row), 'Black people' (2nd row), and 'people' (3rd row). — This is a collage arranged in a loose grid of photographs, 3D-rendered cartoon figures, and silhouettes. The top row shows three white humanoid 3D characters—one holding a red megaphone, one giving a thumbs up, and one wearing a tie with both thumbs up—next to a cropped photo of a person in a red tank top. The middle row contains portrait photos of several individuals alongside two flat cartoon illustrations of a seated man with headphones and a woman in a red dress, plus another portrait. The bottom row shows a photo of an older man with crossed arms, two crowds of human silhouettes in black and in bright colors, and a smiling portrait of a young woman outdoors. No text in the image is legible.
+
+*Image 18 (p. 9):* — The image is a collage of sixteen pictures arranged in a four-by-four grid. Fifteen of the cells contain photographs of people posing with American flags or wearing flag-themed clothing, and one cell contains a cartoon drawing of a brown bear holding a small American flag with the text "Americca" written above it. _(Lettering in the image, read by the image model, not confirmed: "Americca")_
+
+*Image 19 (p. 9):* — This is a collage of sixteen color photographs arranged in a four-by-four grid. Each photograph shows a woman or girl, many holding, wearing, or posing with American flags in outdoor settings such as beaches, fields, and wooded areas; one wears a shirt with a Union Jack design, and another holds a red flag with gold ornamentation. No text is legible in the picture.
+
+<!-- quelle: White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11) -->
 
 ## GLOSSAR
 
-- **postdigital conditions** — A state in which emerging technologies permeate every dimension of life, complicating the ecosystem of visual imagery.
-- **critical content analysis** — An inductive method for examining racialized assumptions and biases inscribed in AI systems when training data is inaccessible.
-- **intersectional stereotypes** — Overlapping categories of marginalization (race, gender, class, dis/ability) that AI models reproduce from training data.
-- **invisibilizing other ways of being** — The erasure of non-Western epistemologies through AI outputs that center U.S.-based values and culture.
-- **data patterns inscribed into pictures** — Salvaggio's characterization of AI-generated images as legible records of the dataset and human decisions behind their production.
-- **connotative analysis** — A step in the method where one infers the assumptions and values embedded in a dataset by assessing what the AI model generates well or poorly.
-- **interventions** — A method step examining external content-filtering or auditing measures that may alter generated output beyond mere data sparsity.
-- **embodied or desired experiences** — Lived or aspirational self-representations of identity that may conflict with stereotyped visual discourse.
-- **Whiteness as norm, the default state** — The structural assumption that racially White subjects need no racial annotation, rendering them the unmarked standard.
-- **White property** — Conception of the arts as owned by and normatively centered on Whiteness, whereby White artists are unmarked while artists of color receive racial qualifiers.
+- **White default** — the phenomenon whereby Whiteness is treated as the colorless "human norm," so racially White people are annotated and represented simply as "people" without racial descriptors, while people of color receive racial labels.
+- **Critical content analysis** — Salvaggio's six-step inductive method for reading AI-generated images as "data patterns inscribed into pictures" to surface hidden biases in opaque training data sets.
+- **Sample set** — a set of multiple images (e.g., 16) generated from the same prompt to identify recurring patterns and assumptions in a generative AI system.
+- **Connotative analysis** — the step of inferring the assumptions and values embedded in a data set by examining what the AI model generates well or poorly.
+- **Interventions** — external mechanisms such as content filtering and internal audits that shape AI outputs and embed cultural values (e.g., flagging "two women kissing" as explicit).
+- **Whiteness as "default ideal"** — Bianchi et al.'s phrase for how AI-generated imagery reaffirms Whiteness as the norm while subordinating non-White entities.
+- **Postdigital conditions** — the situation in which emerging technologies increasingly permeate every dimension of life, complicating the ecosystem of imagery with human and nonhuman visuality.

@@ -20,6 +20,7 @@ import { ref, onUnmounted } from 'vue'
 import { useSafetyEventStore } from '@/stores/safetyEvent'
 import i18n from '@/i18n'
 import { clearRunPlace, noteRunPlace } from './useRunPlace'
+import { suspectSignIn } from '@/lib/signInLapse'
 
 export interface GenerationParams {
   prompt: string
@@ -820,6 +821,9 @@ export function useGenerationStream() {
         } else {
           // Connection error
           console.error('[GENERATION-STREAM] Connection error')
+          // An EventSource does not say why it was refused; the sign-in may
+          // have ended (lib/signInLapse.ts).
+          suspectSignIn()
           eventSource.close()
           endRun()
           currentStage.value = 'idle'

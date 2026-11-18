@@ -1,0 +1,972 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 12.6% of 7078 words, ceiling 20%, longest run 26 words; not counted: 379 words from the source's lists; not counted: figure descriptions",
+   "findings": [
+    {
+     "words": 26,
+     "text": "early adolescence through young adulthood art standards standards for art teacher preparation purposes principles and standards for school art programmes and the national visual arts standards"
+    },
+    {
+     "words": 21,
+     "text": "culture and the arts in africa e g crac in togo celtho in niger to arts education institutions public or private"
+    },
+    {
+     "words": 20,
+     "text": "performing arts dance drama music etc literature and poetry craft design digital arts storytelling heritage visual arts and film media"
+    },
+    {
+     "words": 18,
+     "text": "education for arts teachers teacher education partnerships for secondary education in papua new guinea singing dancing mime sculpture"
+    },
+    {
+     "words": 17,
+     "text": "good practice in arts teacher education the artist in community education programme canada a specialized stream of"
+    }
+   ],
+   "value": 0.1263,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "17 of 26 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 8,
+     "expected_items": 3,
+     "first_item": "Study of artistic works.",
+     "output_lists": [
+      4,
+      10,
+      2,
+      1,
+      3,
+      10,
+      4,
+      2,
+      1,
+      3,
+      2,
+      3
+     ]
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 10,
+     "expected_items": 8,
+     "first_item": "One or more arts disciplines",
+     "output_lists": [
+      4,
+      10,
+      2,
+      1,
+      3,
+      10,
+      4,
+      2,
+      1,
+      3,
+      2,
+      3
+     ]
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 15,
+     "expected_items": 10,
+     "first_item": "Noting that the development, through Arts Education, of an aesthetic sense, crea",
+     "output_lists": [
+      4,
+      10,
+      2,
+      1,
+      3,
+      10,
+      4,
+      2,
+      1,
+      3,
+      2,
+      3
+     ],
+     "unanswered_items": [
+      {
+       "item": 2,
+       "source": "Considering that greater awareness must be created among children and young peop",
+       "output": "literature and poetry"
+      },
+      {
+       "item": 3,
+       "source": "Recognizing the role of Arts Education in preparing audiences and different sect",
+       "output": "craft"
+      },
+      {
+       "item": 4,
+       "source": "Understanding the challenges to cultural diversity posed by globalization and th",
+       "output": "design"
+      },
+      {
+       "item": 5,
+       "source": "Acknowledging that in many societies art traditionally was, and often continues ",
+       "output": "digital arts"
+      },
+      {
+       "item": 6,
+       "source": "Noting the essential needs of young people to have a space for artistic activiti",
+       "output": "storytelling"
+      },
+      {
+       "item": 7,
+       "source": "Noting that among the most important 21 st century challenges is an increasing n",
+       "output": "heritage"
+      },
+      {
+       "item": 8,
+       "source": "Recognizing that there is a need for our contemporary societies to develop educa",
+       "output": "visual arts and film"
+      },
+      {
+       "item": 9,
+       "source": "Taking into account the multi-cultural nature of most nations of the world, wher",
+       "output": "media"
+      },
+      {
+       "item": 10,
+       "source": "Recognizing the value and applicability of the arts in the learning process and ",
+       "output": "photography"
+      }
+     ]
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 16,
+     "expected_items": 7,
+     "first_item": "Recognizing that Arts Education brings about improved learning and skills develo",
+     "output_lists": [
+      4,
+      10,
+      2,
+      1,
+      3,
+      10,
+      4,
+      2,
+      1,
+      3,
+      2,
+      3
+     ]
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 16,
+     "expected_items": 6,
+     "first_item": "Recognizing that, in many countries, education policies place little value on Ar",
+     "output_lists": [
+      4,
+      10,
+      2,
+      1,
+      3,
+      10,
+      4,
+      2,
+      1,
+      3,
+      2,
+      3
+     ]
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 17,
+     "expected_items": 9,
+     "first_item": "Raise public awareness and promote the value and social impact of Arts Education",
+     "output_lists": [
+      4,
+      10,
+      2,
+      1,
+      3,
+      10,
+      4,
+      2,
+      1,
+      3,
+      2,
+      3
+     ]
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 17,
+     "expected_items": 3,
+     "first_item": "Implement and evaluate collaborative school-community projects that are based on",
+     "output_lists": [
+      4,
+      10,
+      2,
+      1,
+      3,
+      10,
+      4,
+      2,
+      1,
+      3,
+      2,
+      3
+     ]
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 18,
+     "expected_items": 2,
+     "first_item": "Recognize the value of successful locally-developed, culturally-relevant Arts Ed",
+     "output_lists": [
+      4,
+      10,
+      2,
+      1,
+      3,
+      10,
+      4,
+      2,
+      1,
+      3,
+      2,
+      3
+     ]
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 18,
+     "expected_items": 8,
+     "first_item": "Translate the growing understanding of the importance of Arts Education into the",
+     "output_lists": [
+      4,
+      10,
+      2,
+      1,
+      3,
+      10,
+      4,
+      2,
+      1,
+      3,
+      2,
+      3
+     ]
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 18,
+     "expected_items": 8,
+     "first_item": "Make professional education for artists and teachers available to enhance the qu",
+     "output_lists": [
+      4,
+      10,
+      2,
+      1,
+      3,
+      10,
+      4,
+      2,
+      1,
+      3,
+      2,
+      3
+     ]
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 19,
+     "expected_items": 4,
+     "first_item": "Encourage government officials at every level join forces with educators, artist",
+     "output_lists": [
+      4,
+      10,
+      2,
+      1,
+      3,
+      10,
+      4,
+      2,
+      1,
+      3,
+      2,
+      3
+     ]
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 19,
+     "expected_items": 4,
+     "first_item": "Develop a complete databank of human and material Arts Education resources and m",
+     "output_lists": [
+      4,
+      10,
+      2,
+      1,
+      3,
+      10,
+      4,
+      2,
+      1,
+      3,
+      2,
+      3
+     ]
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 19,
+     "expected_items": 14,
+     "first_item": "Reflect the important contributions that Arts Education can offer to all areas o",
+     "output_lists": [
+      4,
+      10,
+      2,
+      1,
+      3,
+      10,
+      4,
+      2,
+      1,
+      3,
+      2,
+      3
+     ]
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 20,
+     "expected_items": 4,
+     "first_item": "Facilitate coordination between cultural and educational institutions in each co",
+     "output_lists": [
+      4,
+      10,
+      2,
+      1,
+      3,
+      10,
+      4,
+      2,
+      1,
+      3,
+      2,
+      3
+     ]
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 20,
+     "expected_items": 9,
+     "first_item": "Promote ongoing evaluation of the emotional, social, cultural, cognitive and cre",
+     "output_lists": [
+      4,
+      10,
+      2,
+      1,
+      3,
+      10,
+      4,
+      2,
+      1,
+      3,
+      2,
+      3
+     ]
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 21,
+     "expected_items": 2,
+     "first_item": "Facilitate the preparation and implementation of regional and international educ",
+     "output_lists": [
+      4,
+      10,
+      2,
+      1,
+      3,
+      10,
+      4,
+      2,
+      1,
+      3,
+      2,
+      3
+     ]
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 21,
+     "expected_items": 7,
+     "first_item": "Facilitate training of teachers in the theory and practice of Arts Education;",
+     "output_lists": [
+      4,
+      10,
+      2,
+      1,
+      3,
+      10,
+      4,
+      2,
+      1,
+      3,
+      2,
+      3
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "1 of 31 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 10,
+     "number": "5"
+    }
+   ],
+   "value": 1.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "57 of 73 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 1,
+     "heading": "United Nations Educational, Scientific and Cultural Organization"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 1,
+     "heading": "Road Map for Arts Education"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 2,
+     "heading": "Road Map for Arts Education"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 2,
+     "heading": "Building Creative Capacities for the 21 st Century"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 2,
+     "heading": "I. Background"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 2,
+     "heading": "II. The Aims of Arts Education"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 2,
+     "heading": "III. Concepts Related to Arts Education"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 2,
+     "heading": "IV. Essential Strategies for Effective Arts Education"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 2,
+     "heading": "V. Research on Arts Education, and Knowledge Sharing"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 2,
+     "heading": "VI. Recommendations"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 3,
+     "heading": "1. Uphold the human right to education and cultural participation"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 4,
+     "heading": "The Universal Declaration of Human Rights"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 4,
+     "heading": "Article 22"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 4,
+     "heading": "Article 26"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 4,
+     "heading": "Article 27"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 4,
+     "heading": "The Convention on the Rights of the Child"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 4,
+     "heading": "Article 29"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 4,
+     "heading": "Article 31"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 4,
+     "heading": "2. Develop Individual Capabilities"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 6,
+     "heading": "3. Improve the Quality of Education"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 6,
+     "heading": "4. Promote the Expression of Cultural Diversity"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 7,
+     "heading": "1. Arts Fields"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 7,
+     "heading": "2. Approaches to Arts Education"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 8,
+     "heading": "3. Dimensions of Arts Education"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 9,
+     "heading": "· Education of teachers of general subjects"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 9,
+     "heading": "· Education for arts teachers"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 11,
+     "heading": "(See Case Study in the Annex)"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 11,
+     "heading": "· Ministerial level or municipality level"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 11,
+     "heading": "· School level"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 12,
+     "heading": "· Teacher level"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 12,
+     "heading": "(See Case Study in the Annex)"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 17,
+     "heading": "Partnerships and Cooperation"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 17,
+     "heading": "Recognition"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 18,
+     "heading": "Policy Development"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 18,
+     "heading": "Education, Implementation and Support"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 18,
+     "heading": "Partnerships and Cooperation"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 19,
+     "heading": "Research and Knowledge-sharing"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 19,
+     "heading": "Advocacy and Support"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 20,
+     "heading": "Partnerships and Cooperation"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 20,
+     "heading": "Research, Evaluation and Knowledge-sharing"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 21,
+     "heading": "Training and Support for Teachers, Schools and Artists"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 22,
+     "heading": "· Education for arts teachers"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 22,
+     "heading": "Teacher Education Partnerships for Secondary Education in Papua New Guinea"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 22,
+     "heading": "The Artist in Community Education Programme, Canada"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 23,
+     "heading": "· Education for artists"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 23,
+     "heading": "The Artist Teacher Scheme in the United Kingdom"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 23,
+     "heading": "· Ministerial level and municipality level"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 23,
+     "heading": "Methods for Partnership, Lithuania"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 23,
+     "heading": "Laboratories of Investigation-Creation, Colombia"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 24,
+     "heading": "Norwegian Cultural Rucksack"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 24,
+     "heading": "· School level"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 24,
+     "heading": "Pilot Project for School Level Partnership in the Republic of Korea (2004-2006)"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 24,
+     "heading": "Museum assistance for implementing learning through arts pedagogy, a programme suggested by Guggenheim Museum (USA, Spain 2006)"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 25,
+     "heading": "· Teacher level"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 25,
+     "heading": "Windmill Performing Arts, Australia"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 25,
+     "heading": "The Oak of Finland Cultural Heritage Project"
+    },
+    {
+     "section": "Road Map for Arts Education (p. 1–26)",
+     "page": 26,
+     "heading": "Young Digital Creators (YDC)"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "1 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "1 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "1 quoted texts in 1 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Image 1",
+     "page": 1,
+     "image": "fig-001-p1.png",
+     "quotes": [
+      "\"UNESCO\""
+     ]
+    }
+   ],
+   "value": 1.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "15 page references valid (printed-labels pages 1–26)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "26 pages checked, 0 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "1 of 1 passages out of order not repairable, none breaks a sentence of the body text",
+   "findings": [
+    {
+     "page": 8,
+     "words": 4,
+     "text": "Engaging in Arts practices.",
+     "blocks": [
+      "#/texts/94",
+      "#/texts/95",
+      "#/texts/96"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    }
+   ],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "unesco-road-map-for-arts-education-2006",
+ "doc_type": "framework_report",
+ "analyzed_at": "2026-11-15T10:14:33.943979+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "Road Map for Arts Education",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 26,
+   "chars": 71020,
+   "blocks": 341,
+   "inner_headings": 73,
+   "figures": 1
+  }
+ ],
+ "skipped": [
+  "Contents (p. 2)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 26,
+  "gaps": [],
+  "gaps_dismissed": [
+   {
+    "page": 2,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "2. Develop Individual Capabilities 3."
+   }
+  ],
+  "captions_reclassified": [],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [],
+  "superseded": [],
+  "replaced_pages": [],
+  "noise_dropped": 0,
+  "hyphens_restored": [],
+  "order": [
+   {
+    "page": 8,
+    "text": "Engaging in Arts practices.",
+    "words": 4,
+    "refs": [
+     "#/texts/94",
+     "#/texts/95",
+     "#/texts/96"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": ""
+   }
+  ],
+  "order_pages_checked": 26,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 1,
+  "order_breaking": 0,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 1 minor; distortions: 0 material, 6 minor; additions: 0 material, 0 minor; order: 0 material, 0 minor",
+  "at": "2026-11-15T10:17:14+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 1
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 6
+   },
+   "additions": {
+    "material": 0,
+    "minor": 0
+   },
+   "order": {
+    "material": 0,
+    "minor": 0
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "Road Map for Arts Education (p. 1–26)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "due to societal changes which affect family structures, children are often deprived of parental attention … transmission of cultural traditions and artistic practices within family environments is becoming more difficult, especially in urban areas.",
+      "severity": "minor",
+      "page": 5
+     }
+    ],
+    "distortions": [
+     {
+      "source": "However this integration may not be effective if there is not specific teaching of the arts in parallel.",
+      "summary": "but integration fails unless the arts are also specifically taught alongside it",
+      "severity": "minor",
+      "page": 9
+     },
+     {
+      "source": "the more recent understanding that learning through the arts can lead to improved learning and skills development",
+      "summary": "the newer understanding that learning through the arts improves learning and skills",
+      "severity": "minor",
+      "page": 16
+     },
+     {
+      "source": "for many people, cultural industries … and cultural institutions … serve as key gateways by which to access culture and the arts",
+      "summary": "are most people's main gateways to culture",
+      "severity": "minor",
+      "page": 5
+     },
+     {
+      "source": "Learning in and through the arts (Arts Education and Arts-in-Education) can enhance at least four of these factors",
+      "summary": "Under the Dakar Framework for Action, learning in and through the arts strengthens at least four prerequisites of quality",
+      "severity": "minor",
+      "page": 6
+     },
+     {
+      "source": "International declarations and conventions aim at securing for every child and adult the right to education and to opportunities that will ensure full and harmonious development",
+      "summary": "International declarations and conventions guarantee every child and adult education and opportunities for full, harmonious development",
+      "severity": "minor",
+      "page": 3
+     },
+     {
+      "source": "In many cultures, the expressions which communicate insights and open up room for reflection in people's minds are called 'art'.",
+      "summary": "the expressions that convey insight and provoke reflection are called \"art\"",
+      "severity": "minor",
+      "page": 7
+     }
+    ],
+    "additions": [],
+    "order": []
+   }
+  ]
+ },
+ "source": {
+  "source": "unesco-road-map-for-arts-education-2006.pdf",
+  "bytes": 282111,
+  "sha256": "33cef17cb9ea000928411c8d105b25c82a6a070e58eb4fea1c8f784d9cd5de54",
+  "extracted_at": "2026-11-13T02:19:24+01:00"
+ }
+}

@@ -1,0 +1,2534 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 16.0% of 3169 words, ceiling 20%, longest run 24 words; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 24,
+     "text": "exhibit greater similarity with real world images quality is higher when gendered prompts use the gender most represented in neutral prompts and lower otherwise"
+    },
+    {
+     "words": 22,
+     "text": "24 19 10 and 10 male images respectively a male administrative assistant a male receptionist a male housekeeper and a male paralegal"
+    },
+    {
+     "words": 20,
+     "text": "race white 0 87 0 89 race black 0 99 0 98 age 18 40 0 95 0 91 age"
+    },
+    {
+     "words": 16,
+     "text": "boastful energetic egoistic dogmatic decisive rational strong minded striving industrious intelligent gullible moral reliable self critical"
+    },
+    {
+     "words": 14,
+     "text": "china india nigeria ethiopia russia germany mexico brazil colombia australia and papua new guinea"
+    }
+   ],
+   "value": 0.1597,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "13 of 14 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 7,
+     "expected_items": 2,
+     "first_item": "Prompts that consistently resulted in images for which the face of the generated",
+     "output_lists": [
+      3,
+      3,
+      4,
+      3,
+      3,
+      4
+     ]
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 10,
+     "table_cells": 18,
+     "missing_cells": [
+      "Correlation (DALLE-v2)",
+      "Correlation (SD)",
+      "Age - Adult 18-40",
+      "Age - Adult 40-60"
+     ]
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 10,
+     "table_cells": 12,
+     "missing_cells": [
+      "Age - Adult 18-40",
+      "Age - Adult 40-60"
+     ]
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 11,
+     "table_cells": 108,
+     "missing_cells": [
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "birthdayparty",
+      "0.11",
+      "0.11 0.04",
+      "0.02",
+      "0.03",
+      "0.03",
+      "0.02",
+      "0.03"
+     ]
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 11,
+     "table_cells": 108,
+     "missing_cells": [
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "birthdayparty",
+      "0.31",
+      "0.25 0.28",
+      "0.07",
+      "0.06",
+      "0.08",
+      "0.16",
+      "0.04"
+     ]
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 14,
+     "table_cells": 12,
+     "missing_cells": [
+      "BLS 2022 vs. DALLE-v2"
+     ]
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 19,
+     "table_cells": 299,
+     "missing_cells": [
+      "Places Nigeria EthiopiaPNG India ColombiaMexicoRussiaBrazil ChinaAustralia Germany USA",
+      "Places Nigeria EthiopiaPNG India ColombiaMexicoRussiaBrazil ChinaAustralia Germany USA",
+      "Places Nigeria EthiopiaPNG India ColombiaMexicoRussiaBrazil ChinaAustralia Germany USA",
+      "Places Nigeria EthiopiaPNG India ColombiaMexicoRussiaBrazil ChinaAustralia Germany USA",
+      "Places Nigeria EthiopiaPNG India ColombiaMexicoRussiaBrazil ChinaAustralia Germany USA",
+      "Places Nigeria EthiopiaPNG India ColombiaMexicoRussiaBrazil ChinaAustralia Germany USA",
+      "Places Nigeria EthiopiaPNG India ColombiaMexicoRussiaBrazil ChinaAustralia Germany USA",
+      "Places Nigeria EthiopiaPNG India ColombiaMexicoRussiaBrazil ChinaAustralia Germany USA",
+      "Places Nigeria EthiopiaPNG India ColombiaMexicoRussiaBrazil ChinaAustralia Germany USA",
+      "Places Nigeria EthiopiaPNG India ColombiaMexicoRussiaBrazil ChinaAustralia Germany USA",
+      "Places Nigeria EthiopiaPNG India ColombiaMexicoRussiaBrazil ChinaAustralia Germany USA",
+      "Places Nigeria EthiopiaPNG India ColombiaMexicoRussiaBrazil ChinaAustralia Germany USA",
+      "0.13",
+      "0.35 0.11",
+      "0.07",
+      "0.07",
+      "0.03",
+      "0.04",
+      "0.03",
+      "0.03"
+     ]
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 19,
+     "table_cells": 300,
+     "missing_cells": [
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "0.02",
+      "0.03 0.01",
+      "classroom",
+      "0.27",
+      "0.26",
+      "0.25 0.2",
+      "0.03",
+      "0.02"
+     ]
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 20,
+     "table_cells": 117,
+     "missing_cells": [
+      "0.17",
+      "0.19",
+      "0.12",
+      "0.12",
+      "0.12",
+      "0.07",
+      "0.12",
+      "0.21",
+      "0.36",
+      "0.08",
+      "0.08",
+      "0.08",
+      "0.08",
+      "0.08",
+      "0.17",
+      "0.19",
+      "0.19",
+      "0.06",
+      "0.06",
+      "0.08"
+     ]
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 21,
+     "table_cells": 72,
+     "missing_cells": [
+      "0.31",
+      "0.31 0.3",
+      "0.19",
+      "0.07",
+      "0.29",
+      "0.33",
+      "0.34 0.33",
+      "0.25",
+      "0.26",
+      "0.17",
+      "baby",
+      "0.13",
+      "0.19",
+      "0.13 0.1",
+      "0.04",
+      "0.06",
+      "0.02",
+      "0.03",
+      "0.12",
+      "0.02"
+     ]
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 21,
+     "table_cells": 77,
+     "missing_cells": [
+      "0.27",
+      "0.27 0.25 0.24",
+      "0.19",
+      "0.21",
+      "0.44",
+      "0.39",
+      "0.39 0.38 0.37",
+      "0.33",
+      "0.33",
+      "0.31",
+      "0.29",
+      "0.24",
+      "0.21",
+      "baby",
+      "0.24",
+      "0.16 0.19 0.11",
+      "0.12",
+      "0.06",
+      "0.08",
+      "0.06"
+     ]
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 21,
+     "table_cells": 143,
+     "missing_cells": [
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "amaninadress",
+      "0.35",
+      "0.19",
+      "0.21",
+      "0.23",
+      "0.16",
+      "0.24",
+      "awomaninadress"
+     ]
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 21,
+     "table_cells": 143,
+     "missing_cells": [
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "NigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazil ChinaAustraliaGermanyUSA",
+      "amaninadress",
+      "0.44",
+      "0.37",
+      "0.37",
+      "0.35",
+      "0.36",
+      "0.32",
+      "0.33"
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "66 of 143 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 1,
+     "number": "400"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 3,
+     "number": "39"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 4,
+     "number": "3.1"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 5,
+     "number": "20222"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 5,
+     "number": "3.2"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 6,
+     "number": "0.0001"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 6,
+     "number": "3.3"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 6,
+     "number": "3.4"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 6,
+     "number": "3.4.1"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 6,
+     "number": "3.4.2"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 6,
+     "number": "4.1"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 6,
+     "number": "4.2"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 6,
+     "number": "4.2.1"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 8,
+     "number": "4.2.2"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 8,
+     "number": "4.5"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 9,
+     "number": "4.2.3"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 9,
+     "number": "4.3"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 9,
+     "number": "4.4"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 11,
+     "number": "0.02"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 11,
+     "number": "0.03"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 11,
+     "number": "0.04"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 11,
+     "number": "0.05"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 11,
+     "number": "0.06"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 11,
+     "number": "0.07"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 11,
+     "number": "0.08"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 11,
+     "number": "0.09"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 11,
+     "number": "0.11"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 11,
+     "number": "0.12"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 11,
+     "number": "0.13"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 11,
+     "number": "0.14"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 11,
+     "number": "0.15"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 11,
+     "number": "0.16"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 11,
+     "number": "0.17"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 11,
+     "number": "0.19"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 11,
+     "number": "0.2"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 11,
+     "number": "0.21"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 11,
+     "number": "0.22"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 11,
+     "number": "0.23"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 11,
+     "number": "0.24"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 11,
+     "number": "0.25"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 11,
+     "number": "0.26"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 11,
+     "number": "0.27"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 11,
+     "number": "0.29"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 11,
+     "number": "0.3"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 11,
+     "number": "0.31"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 11,
+     "number": "0.32"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 11,
+     "number": "0.33"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 11,
+     "number": "0.35"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 11,
+     "number": "0.36"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 11,
+     "number": "0.38"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 11,
+     "number": "0.4"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 11,
+     "number": "0.44"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 11,
+     "number": "4.6"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 15,
+     "number": "2010"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 17,
+     "number": "0.5"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 21,
+     "number": "0.37"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 21,
+     "number": "0.39"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 21,
+     "number": "0.41"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 21,
+     "number": "0.42"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 21,
+     "number": "0.43"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 21,
+     "number": "0.45"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 21,
+     "number": "0.46"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 21,
+     "number": "0.47"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 21,
+     "number": "0.48"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 21,
+     "number": "0.54"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 22,
+     "number": "35"
+    }
+   ],
+   "value": 66.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "26 of 26 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 1,
+     "heading": "ABSTRACT"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 1,
+     "heading": "CCS CONCEPTS"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 1,
+     "heading": "KEYWORDS"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 1,
+     "heading": "1 INTRODUCTION"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 2,
+     "heading": "2 RELATED WORK"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 3,
+     "heading": "Table 1: Summary of study results."
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 4,
+     "heading": "3 METHODOLOGY"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 4,
+     "heading": "3.1 Social Bias Dimensions"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 5,
+     "heading": "3.2 Social Bias Subjects"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 6,
+     "heading": "3.3 Model and Data"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 6,
+     "heading": "3.4 Evaluation"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 6,
+     "heading": "3.4.1 Human Evaluation."
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 6,
+     "heading": "3.4.2 Automated Evaluation."
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 6,
+     "heading": "4 RESULTS"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 6,
+     "heading": "4.1 What does a person look like in T2I generation?"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 6,
+     "heading": "4.2 Representational bias for occupations"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 6,
+     "heading": "4.2.1 Neutral Occupations."
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 8,
+     "heading": "4.2.2 Expanded prompts."
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 9,
+     "heading": "4.2.3 Image Quality Evaluation."
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 9,
+     "heading": "4.3 Representational bias for personality traits"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 9,
+     "heading": "4.4 Representational bias for everyday situations"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 10,
+     "heading": "4.5 Human vs. Automated Evaluation"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 11,
+     "heading": "4.6 Limitations"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 12,
+     "heading": "5 CONCLUSION"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 13,
+     "heading": "A APPENDIX"
+    },
+    {
+     "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+     "page": 21,
+     "heading": "communityNigeriaEthiopiaPNGIndiaColombiaMexicoRussiaBrazilChinaAustraliaGermanyUSA"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "30 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "30 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "37 quoted texts in 8 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Fig. 1",
+     "page": 1,
+     "image": "fig-001-p1.png",
+     "quotes": [
+      "“chief executive officer,”",
+      "“house keeper.”",
+      "“house keeper”"
+     ]
+    },
+    {
+     "figure": "Fig. 2",
+     "page": 2,
+     "image": "fig-002-p2.png",
+     "quotes": [
+      "\"Social bias subjects\"",
+      "\"Models + Data\"",
+      "\"Text-to-Image Generation\"",
+      "\"Social Biases.\""
+     ]
+    },
+    {
+     "figure": "Fig. 3",
+     "page": 4,
+     "image": "fig-003-p4.png",
+     "quotes": [
+      "\"Image Search A\"",
+      "\"Image Search B\"",
+      "\"DALL-E\"",
+      "\"THE 10 SMARTEST PEOPLE ALIVE\"",
+      "\"DALL-E\""
+     ]
+    },
+    {
+     "figure": "Fig. 4",
+     "page": 5,
+     "image": "fig-004-p5.png",
+     "quotes": [
+      "\"Image Search A\"",
+      "\"DALL-E\""
+     ]
+    },
+    {
+     "figure": "Fig. 9",
+     "page": 8,
+     "image": "fig-009-p8.png",
+     "quotes": [
+      "“Difference in Proportion of Women (BLS - DALL-E)”",
+      "“lab tech,”",
+      "“librarian,”",
+      "“CSR,”",
+      "“CSR”"
+     ]
+    },
+    {
+     "figure": "Fig. 11",
+     "page": 10,
+     "image": "fig-085-p10.png",
+     "quotes": [
+      "\"BackHome\"",
+      "\"FOX\"",
+      "\"CNN\"",
+      "\"ON AIR\""
+     ]
+    },
+    {
+     "figure": "Image 86",
+     "page": 11,
+     "image": "fig-086-p11.png",
+     "quotes": [
+      "\"ambitious\"",
+      "\"vigorous\"",
+      "\"striving\"",
+      "\"conceited\"",
+      "\"detached\"",
+      "\"independent\"",
+      "\"hardhearted\"",
+      "\"industrious\"",
+      "\"determined\"",
+      "\"lazy\"",
+      "\"caring\"",
+      "\"warm\""
+     ]
+    },
+    {
+     "figure": "Fig. 17",
+     "page": 14,
+     "image": "fig-089-p14.png",
+     "quotes": [
+      "“Image Search A,”",
+      "“Image Search B,”"
+     ]
+    }
+   ],
+   "value": 37.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "45 page references valid (pdf pages 1–23)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "23 pages checked, 7 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "5 passages out of order break a sentence (18 of 23 not repairable; listed, not gated)",
+   "findings": [
+    {
+     "page": 1,
+     "words": 230,
+     "text": "however to release, consume, and use a model that is trained on large, non-curated, and partially non-public web data? Previous work has shown that datasets filtered from the web and search engines ca",
+     "blocks": [
+      "#/texts/2",
+      "#/texts/24",
+      "#/texts/32"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "sentence cut: 'representational fairness, social biases' | '1 INTRODUCTION'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 1,
+     "words": 17,
+     "text": "images generated by DALLE-v2, and other occupations like nurse and housekeeper have almost 100% representation on women",
+     "blocks": [
+      "#/texts/24",
+      "#/texts/32"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "sentence cut: 'representational fairness, social biases' | '1 INTRODUCTION'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 1,
+     "words": 5,
+     "text": "images generated by Stable Diffusion.",
+     "blocks": [
+      "#/texts/24",
+      "#/texts/32"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "sentence cut: 'representational fairness, social biases' | '1 INTRODUCTION'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 1,
+     "words": 39,
+     "text": "this work, we set to systematically quantify the extent of representational Biases in large vision and language Generation models (Figure 2). Results shown in this paper are intended to inform technol",
+     "blocks": [
+      "#/texts/23",
+      "#/texts/32"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "sentence cut: 'representational fairness, social biases' | '1 INTRODUCTION'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 5,
+     "words": 49,
+     "text": "Age: We have defined four age groups that will help us examine the characteristics, behaviors, and experiences of people at different stages of their lives, seen through the Lens of Text-to-Image mode",
+     "blocks": [
+      "#/texts/96",
+      "#/texts/97",
+      "#/texts/98"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 6,
+     "words": 76,
+     "text": "FairFace [16] dataset comprises 108,501 images, with an emphasis on balanced race composition in the dataset. images are sourced from the YFCC-100M Flickr dataset and labeled with information about ra",
+     "blocks": [
+      "#/texts/113",
+      "#/texts/114",
+      "#/texts/120"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": true,
+     "breaks": [
+      "sentence cut: 'typical face datasets. The study defines' | 'Azure Cognitive Services - Analyze Image'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 8,
+     "words": 4,
+     "text": "Additionally, our analysis of",
+     "blocks": [
+      "#/texts/281",
+      "#/texts/282"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 8,
+     "words": 34,
+     "text": "data showed that for certain occupations, including construction worker, childcare worker, and housekeeper, the white race group was underrepresented by more than 50%. nurse was the only occupation wh",
+     "blocks": [
+      "#/texts/281",
+      "#/texts/282"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 8,
+     "words": 46,
+     "text": "We assessed the efficacy of prompt expansion as a strategy to mitigate bias in Image Generation. For these Results, we employed automated evaluation on the DALLE-v2 and SD images. Section 4.5 and Tabl",
+     "blocks": [
+      "#/texts/285",
+      "#/texts/287",
+      "#/texts/288"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 106,
+     "text": "To evaluate the degree of similarity between AI-generated images and real-world images, we curated a corpus of Image search Results for Gender-specific occupational prompts (e.g. \"male doctor,\" \"femal",
+     "blocks": [
+      "#/texts/292",
+      "#/texts/293",
+      "#/texts/294"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 12,
+     "words": 28,
+     "text": "Andrea E Abele and Susanne Bruckmüller. 2011. The bigger one of the “Big Two”? Preferential processing of communal information. Journal of experimental Social Psychology 47, 5 (2011), 935-948.",
+     "blocks": [
+      "#/texts/379",
+      "#/texts/380",
+      "#/texts/381"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 12,
+     "words": 15,
+     "text": "Marina Drosou and Evaggelia Pitoura. 2010. search result diversification. ACM SIGMOD Record 39, 1 (2010),",
+     "blocks": [
+      "#/texts/402",
+      "#/texts/403",
+      "#/texts/404"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 12,
+     "words": 22,
+     "text": "K. He, X. Zhang, S. Ren, and J. Sun. 2016. Deep Residual learning for Image Recognition. In 2016 IEEE Conference on computer",
+     "blocks": [
+      "#/texts/404",
+      "#/texts/405",
+      "#/texts/406"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 12,
+     "words": 13,
+     "text": "Pattern Recognition (CVPR). IEEE computer society, Los Alamitos, CA, USA, 770-778. https://doi. org/10.1109/CVPR.2016.90",
+     "blocks": [
+      "#/texts/404",
+      "#/texts/405",
+      "#/texts/406"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 12,
+     "words": 19,
+     "text": "in computing Systems (Seoul, Republic of Korea) (CHI ’15). association for computing Machinery, New York, NY, USA, 3819-3828. https://doi.org/10.1145/2702123.2702520",
+     "blocks": [
+      "#/texts/408",
+      "#/texts/409",
+      "#/texts/410"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 12,
+     "words": 7,
+     "text": "and Jungseock Joo. 2019. FairFace: face attribute",
+     "blocks": [
+      "#/texts/411",
+      "#/texts/412",
+      "#/texts/413"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 12,
+     "words": 4,
+     "text": "Gender, and Age. https://doi.org/10.48550/ARXIV.1908.04913",
+     "blocks": [
+      "#/texts/411",
+      "#/texts/412",
+      "#/texts/413"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 12,
+     "words": 6,
+     "text": "Michelle A. Gan, and James A.",
+     "blocks": [
+      "#/texts/414",
+      "#/texts/415"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    }
+   ],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "naik-nushi-2023-social-biases-through-the-text-to-image-generation-lens",
+ "doc_type": "scholarly_article",
+ "analyzed_at": "2026-11-15T11:09:48.147344+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "Social Biases through the Text-to-Image Generation Lens",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 23,
+   "chars": 87367,
+   "blocks": 189,
+   "inner_headings": 26,
+   "figures": 30
+  }
+ ],
+ "skipped": [
+  "6 ACKNOWLEDGEMENTS (p. 12)",
+  "REFERENCES (p. 12)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 23,
+  "gaps": [
+   {
+    "page": 3,
+    "text": "(Figure 11 and Figure 10b).",
+    "words": 5,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/tables/0"
+   },
+   {
+    "page": 11,
+    "text": "100 unclear Latino 80 black white 60 Middle Eastern East Asian 40 Indian South East Asian 20 0 d d rm s us ng d d nt s y g iou iou laz rte ne e he rin de oro eit ivi wa mi tac ca bit ea tr en str nc vig us ter rdh am Deep co ind de ind ha",
+    "words": 64,
+    "kind": "missing",
+    "repaired": true,
+    "anchor": "after #/texts/324"
+   },
+   {
+    "page": 15,
+    "text": "proportion of white 20 40-60 80 100 childcare worker announcer nurse housekeeper PR person bus driver bartender security guard CSR CEO chemist PST lab tech BLS 2022 telemarketer chef author pharmacist doctor SD plumber construction worker building inspector optician receptionist mail carrier nurse practitioner electrician DALLE pilot more the occupation deviates from BLS representation when depicted by Stable Diffusion. police officer special ed teacher librarian veterinarian CP butcher Figure 21: proportion of white as reported by BLS 2022,images generated by DALLE-v2 and SD, and GIS 2020. Figure 20: difference in the proportion of women (BLS representation -SD representation). The higher the difference, the difference in proportion of women (BLS -DALLE) 2010 0 10 20 30 40 50 technical writer bartender telemarketer custodian optician doctor Social Biases through the Text-to-Image Generation Lens announcer chef butcher software developer mail carrier security guard CP CEO drafter cook pharmacist building inspector lab tech veterinarian bus driver biologist roofer construction worker electrician plumber crane operator special ed teacher PST admin asst childcare worker CSR chemist receptionist librarian nurse practitioner housekeeper nurse author police officer pilot PR person",
+    "words": 186,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/457"
+   },
+   {
+    "page": 16,
+    "text": "proportion of black 0 10 20 30 40 50 60 electrician engineer announcer building inspector chef biologist drafter CP housekeeper pilot roofer receptionist plumber technical writer veterinarian doctor optician butcher librarian special ed teacher construction worker software developer police officer PST BLS 2022 black or African American crane operator pharmacist author administrative assistant cook SD nurse childcare worker CEO telemarketer CSR bartender mail carrier nurse practitioner DALLE custodian lab tech security guard chemist bus driver PR person Figure 22: proportion of black as reported by BLS 2022, images generated by DALLE-v2 and SD, and GIS 2020. Ranjita Naik and Besmira Nushi",
+    "words": 101,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/553"
+   },
+   {
+    "page": 17,
+    "text": "Social Biases through the Text-to-Image Generation Lens 0.6 female FID male FID 0.5 0.4 0.3 0.2 0.1 0.0 roofer childcare worker optician CEO bartender HST announcer plumber chef housekeeper CP PST photographer PR person crane operator bus driver claims adjuster special ed teacher technical writer veterinarians nurse practitioner admin asst pharmacist clergy member Figure 23: FID scores for gendered occupational prompts Using DALLE-v2. The lower the score the closer theimage distribution is to real-world images from Image search. 0.6 female FID male FID 0.5 0.4 0.3 0.2 0.1 0.0 roofer childcare worker biologist CEO librarian CSR PST announcer crane operator bus driver author lab tech pilot butcher photographer nurse housekeeper claims adjuster truck driver special ed teacher admin asst. chemist clergy member Figure 24: FID scores for gendered occupational prompts Using SD. The lower the score the closer theimage distribution is to real-world images from Image search.",
+    "words": 149,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/609"
+   },
+   {
+    "page": 18,
+    "text": "0.20 40-60 80 100 detached hardhearted conceited reserved boastful insecure obstinate gullible Figure 25: distribution of race for positive traits. Figure 26: distribution of race for negative traits. dominant egoistic white others unclear 0.20 40-60 80 100 vigorous ambitious striving independent industrious determined caring lazy warm honest moral creative energetic Understanding able competitive supportive self-reliant persistent harmonious reliable intelligent polite trustworthy affectionate self-confident open considerate helpful outgoing dogmatic strong-minded capable friendly tolerant fair conscientious self-critical sociable communicative decisive expressive sensitive open-minded competent assertive active rational perfectionistic sympathetic white others unclear Ranjita Naik and Besmira Nushi",
+    "words": 99,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/677"
+   },
+   {
+    "page": 22,
+    "text": "Ethiopia PNG Nigeria India Ethiopia Australia Russia Australia Colombia 0 5 10 15 20 25 # prompts where the country had the lowest representation Figure 37: The least represented countries across situation prompts for DALLE-v2. Nigeria PNG Ethiopia India Ethiopia Australia Germany China 0 5 10 15 20 25 30 # prompts where the country had the lowest representation Figure 39: The least represented countries across situation prompts for SD. Ranjita Naik and Besmira Nushi Germany Russia Brazil China Australia USA Mexico Colombia 0 5 10 15 20 25 # prompts where the country had the highest representation Figure 38: The most represented countries across situation prompts for DALLE-v2. USA Russia Australia Germany Brazil Colombia Mexico 0 5 10 15 20 25 30 35 40 # prompts where the country had the highest representation Figure 40: The most represented countries across situation prompts for SD.",
+    "words": 149,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/tables/16"
+   }
+  ],
+  "gaps_dismissed": [
+   {
+    "page": 1,
+    "words": 24,
+    "reason": "duplicate",
+    "text": "100 BLS 2022 proportion of women 80 SD GIS 2020 60 DALLE 40 20 0 chief doctor computer nurse house executive programmer keeper officer"
+   },
+   {
+    "page": 3,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "Gender race Age Subjects"
+   },
+   {
+    "page": 3,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "sponding labor statistics."
+   },
+   {
+    "page": 4,
+    "words": 62,
+    "reason": "duplicate",
+    "text": "Cho et al. Bianchi et al. study Ours [5] [3] Gender ✓ ✓ ✓ bias race ✓ ✓ ✓ dimensions Age ✓ ✗ ✗ location ✓ ✗ ✓ person ✓ ✓ ✗ bias occupations ✓ ✓ ✓ Subjects traits ✓ ✗ ✓ situations ✓ ✗ ✗ Expanded ✓ ✗ ✓ "
+   },
+   {
+    "page": 6,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "3 https://github.com/CompVis/stable-diffusion 4 https://learn.microsoft.com/en-us/rest/api/computervision/3.1/analyzeimage/analyze-image"
+   },
+   {
+    "page": 7,
+    "words": 27,
+    "reason": "duplicate",
+    "text": "100 male 100 female 80 unclear 80 60 60 40 40 2020 0 0 SD HE SD AE DALLE HE DALLE AE DALLE HE DALLE AE"
+   },
+   {
+    "page": 7,
+    "words": 69,
+    "reason": "duplicate",
+    "text": "BLS 2022 100 80 proportion of women 60 40 20 0 childcare worker roofer author optician CEO librarian biologist CSR admin asst electrician announcer butcher bartender chef bus driver pilot receptionist"
+   },
+   {
+    "page": 7,
+    "words": 45,
+    "reason": "duplicate",
+    "text": "black 100 Child or minor Latino Adult 18-40 white 80 Adult 40-60 East Asian Adult over 60 South East Asian 60 unclear Indian Middle Eastern 40 unclear 20 0 SD HE SD AE SD HE SD AE DALLE HE DALLE AE SD"
+   },
+   {
+    "page": 9,
+    "words": 18,
+    "reason": "duplicate",
+    "text": "striving sensitive energetic industrious affectionate egoistic intelligent harmonious dogmatic gullible supportive decisive moral warm rational reliable strong-minded self-critical"
+   },
+   {
+    "page": 10,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "pansion mitigation strategy?"
+   },
+   {
+    "page": 10,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "female prompt. FID = 201 FID = 237"
+   },
+   {
+    "page": 10,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "race – white 0.93 \"female announcer\"."
+   },
+   {
+    "page": 11,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "representational fairness concerns."
+   },
+   {
+    "page": 12,
+    "words": 36,
+    "reason": "duplicate",
+    "text": "USA Mexico Colombia 0 5 10 15 20 25 0 5 10 15 20 25 30 35 40 # prompts where the country had the highest representation # prompts where the country had the highest representation"
+   },
+   {
+    "page": 12,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "USA Russia Australia Germany Brazil Colombia Mexico"
+   },
+   {
+    "page": 13,
+    "words": 63,
+    "reason": "duplicate",
+    "text": "cook building inspector author crane operator announcer drafter doctor construction worker optician custodian biologist roofer chemist software developer pharmacist plumber PR person butcher veterinar"
+   },
+   {
+    "page": 13,
+    "words": 64,
+    "reason": "duplicate",
+    "text": "egoistic perfectionist active emotional persistent affectionate energetic polite altruistic expressive rational ambitious fair reliable assertive friendly reserved boastful gullible self-confident cap"
+   },
+   {
+    "page": 14,
+    "words": 28,
+    "reason": "duplicate",
+    "text": "100 100 80 80 60 60 DALLE SD 40 40 2020 0 0 0.20 40-60 80 0.20 40-60 80 BLS 2022 BLS 2022"
+   }
+  ],
+  "captions_reclassified": [
+   {
+    "page": 10,
+    "figure": "#/pictures/26",
+    "text": "(a) \"a portrait of an announcer\". Bias towards male individuals. Try the prompt expansion mitigation strategy?"
+   },
+   {
+    "page": 10,
+    "figure": "#/pictures/39",
+    "text": "(b) \"a portrait of a female announcer\". Prompt expansion addresses gender bias but introduces racial bias. FID = 237"
+   },
+   {
+    "page": 10,
+    "figure": "#/pictures/63",
+    "text": "(c) \"a portrait of a male announcer\". Shows improvedracial representation compared to female prompt."
+   }
+  ],
+  "captions_reassigned": [],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [
+   {
+    "page": 10,
+    "image": "fig-010-p10.png",
+    "w": 57,
+    "h": 58,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-011-p10.png",
+    "w": 57,
+    "h": 61,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-012-p10.png",
+    "w": 56,
+    "h": 60,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-013-p10.png",
+    "w": 59,
+    "h": 57,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-014-p10.png",
+    "w": 56,
+    "h": 58,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-015-p10.png",
+    "w": 56,
+    "h": 58,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-016-p10.png",
+    "w": 55,
+    "h": 61,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-017-p10.png",
+    "w": 56,
+    "h": 59,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-018-p10.png",
+    "w": 54,
+    "h": 57,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-019-p10.png",
+    "w": 58,
+    "h": 54,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-020-p10.png",
+    "w": 57,
+    "h": 60,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-021-p10.png",
+    "w": 58,
+    "h": 60,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-022-p10.png",
+    "w": 44,
+    "h": 59,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-023-p10.png",
+    "w": 57,
+    "h": 57,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-024-p10.png",
+    "w": 57,
+    "h": 58,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-025-p10.png",
+    "w": 56,
+    "h": 61,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-026-p10.png",
+    "w": 57,
+    "h": 59,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-027-p10.png",
+    "w": 60,
+    "h": 57,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-028-p10.png",
+    "w": 57,
+    "h": 60,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-029-p10.png",
+    "w": 53,
+    "h": 63,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-030-p10.png",
+    "w": 57,
+    "h": 58,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-031-p10.png",
+    "w": 59,
+    "h": 57,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-032-p10.png",
+    "w": 58,
+    "h": 58,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-033-p10.png",
+    "w": 58,
+    "h": 58,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-034-p10.png",
+    "w": 58,
+    "h": 55,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-035-p10.png",
+    "w": 56,
+    "h": 55,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-036-p10.png",
+    "w": 54,
+    "h": 58,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-037-p10.png",
+    "w": 57,
+    "h": 58,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-038-p10.png",
+    "w": 56,
+    "h": 59,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-039-p10.png",
+    "w": 58,
+    "h": 57,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-040-p10.png",
+    "w": 59,
+    "h": 61,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-041-p10.png",
+    "w": 57,
+    "h": 58,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-042-p10.png",
+    "w": 59,
+    "h": 60,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-043-p10.png",
+    "w": 60,
+    "h": 62,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-044-p10.png",
+    "w": 46,
+    "h": 55,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-045-p10.png",
+    "w": 57,
+    "h": 59,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-046-p10.png",
+    "w": 58,
+    "h": 62,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-047-p10.png",
+    "w": 57,
+    "h": 60,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-048-p10.png",
+    "w": 57,
+    "h": 59,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-049-p10.png",
+    "w": 59,
+    "h": 56,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-050-p10.png",
+    "w": 58,
+    "h": 60,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-051-p10.png",
+    "w": 58,
+    "h": 54,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-052-p10.png",
+    "w": 59,
+    "h": 59,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-053-p10.png",
+    "w": 58,
+    "h": 59,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-054-p10.png",
+    "w": 58,
+    "h": 59,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-055-p10.png",
+    "w": 58,
+    "h": 63,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-056-p10.png",
+    "w": 57,
+    "h": 59,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-057-p10.png",
+    "w": 58,
+    "h": 57,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-058-p10.png",
+    "w": 57,
+    "h": 56,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-059-p10.png",
+    "w": 59,
+    "h": 54,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-060-p10.png",
+    "w": 57,
+    "h": 56,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-061-p10.png",
+    "w": 56,
+    "h": 59,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-062-p10.png",
+    "w": 57,
+    "h": 59,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-063-p10.png",
+    "w": 57,
+    "h": 56,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-064-p10.png",
+    "w": 56,
+    "h": 59,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-065-p10.png",
+    "w": 59,
+    "h": 61,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-066-p10.png",
+    "w": 57,
+    "h": 60,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-067-p10.png",
+    "w": 58,
+    "h": 59,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-068-p10.png",
+    "w": 58,
+    "h": 56,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-069-p10.png",
+    "w": 56,
+    "h": 58,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-070-p10.png",
+    "w": 56,
+    "h": 56,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-071-p10.png",
+    "w": 56,
+    "h": 59,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-072-p10.png",
+    "w": 58,
+    "h": 58,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-073-p10.png",
+    "w": 58,
+    "h": 59,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-074-p10.png",
+    "w": 53,
+    "h": 55,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-075-p10.png",
+    "w": 55,
+    "h": 57,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-076-p10.png",
+    "w": 56,
+    "h": 58,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-077-p10.png",
+    "w": 58,
+    "h": 57,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-078-p10.png",
+    "w": 53,
+    "h": 59,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-079-p10.png",
+    "w": 53,
+    "h": 55,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-080-p10.png",
+    "w": 58,
+    "h": 59,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-081-p10.png",
+    "w": 53,
+    "h": 57,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-082-p10.png",
+    "w": 57,
+    "h": 56,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-083-p10.png",
+    "w": 57,
+    "h": 57,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 10,
+    "image": "fig-084-p10.png",
+    "w": 59,
+    "h": 56,
+    "reason": "small",
+    "figure": "#/pictures/84"
+   },
+   {
+    "page": 23,
+    "image": "fig-107-p23.png",
+    "w": 58,
+    "h": 60,
+    "reason": "small"
+   },
+   {
+    "page": 23,
+    "image": "fig-108-p23.png",
+    "w": 52,
+    "h": 57,
+    "reason": "small"
+   },
+   {
+    "page": 23,
+    "image": "fig-109-p23.png",
+    "w": 57,
+    "h": 58,
+    "reason": "small"
+   },
+   {
+    "page": 23,
+    "image": "fig-110-p23.png",
+    "w": 58,
+    "h": 57,
+    "reason": "small"
+   },
+   {
+    "page": 23,
+    "image": "fig-111-p23.png",
+    "w": 53,
+    "h": 57,
+    "reason": "small"
+   }
+  ],
+  "superseded": [],
+  "replaced_pages": [
+   15,
+   16,
+   17,
+   18,
+   22
+  ],
+  "noise_dropped": 0,
+  "hyphens_restored": [
+   {
+    "page": 2,
+    "ref": "#/pictures/1",
+    "word": "to-Image"
+   }
+  ],
+  "order": [
+   {
+    "page": 1,
+    "text": "however to release, consume, and use a model that is trained on large, non-curated, and partially non-public web data? Previous work has shown that datasets filtered from the web and search engines can suffer from bias, lack of representation for minority groups and cultures, and harmful content [4, 8, 11, 1217, 18, 20]. Such Biases may then make their way to AI-generated content and be resurfaced again, creating therefore a confirmatory process that can propagate known issues in ways that erase or undo Previous mitigation efforts. As an illustration, think about the CEO or housekeeper problems, which have been studied extensively as examples of stereotypical Biases in the society, associating the occupations to mostly men as CEOs and women as housekeepers. For all Such examples, there exist three different views: i) the real-world distribution across different dimensions (e.g., Gender, race, age) based on labor statistics, ii) the distribution as shown in search engine Results, and more recently iii) the distribution as shown in Image Generation Results. As a glimpse to our Results, Figure 1 shows the representation of women for five occupation examples. In all these cases, we observe that Image Generation models create a major setback on representational fairness when compared to data from the U.S. Bureau of labor statistics (BLS) and even Google Image search (GIS). occupations like CEO and computer programmer have almost 0% representation on",
+    "words": 230,
+    "refs": [
+     "#/texts/2",
+     "#/texts/24",
+     "#/texts/32"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "sentence cut: 'representational fairness, social biases' | '1 INTRODUCTION'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 1,
+    "text": "images generated by DALLE-v2, and other occupations like nurse and housekeeper have almost 100% representation on women",
+    "words": 17,
+    "refs": [
+     "#/texts/24",
+     "#/texts/32"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "sentence cut: 'representational fairness, social biases' | '1 INTRODUCTION'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 1,
+    "text": "images generated by Stable Diffusion.",
+    "words": 5,
+    "refs": [
+     "#/texts/24",
+     "#/texts/32"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "sentence cut: 'representational fairness, social biases' | '1 INTRODUCTION'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 1,
+    "text": "this work, we set to systematically quantify the extent of representational Biases in large vision and language Generation models (Figure 2). Results shown in this paper are intended to inform technology and policy makers about major trends in representational",
+    "words": 39,
+    "refs": [
+     "#/texts/23",
+     "#/texts/32"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "sentence cut: 'representational fairness, social biases' | '1 INTRODUCTION'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 2,
+    "text": "For prompts related to everyday situations, we use both default and location-specific prompts describing situations in categories Such as: events, food, institutions, clothing, places, community. We choose to include as locations names of the top-2 most populated countries for each of the six continents (except Antarctica) and then report the distance between default and location-specific generations as a measure of country representation in default generations.",
+    "words": 66,
+    "refs": [
+     "#/texts/56",
+     "#/texts/57"
+    ],
+    "repaired": true,
+    "note": "2 blocks replaced by the text layer's passage",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 4,
+    "text": "Similarly, Bianchi et al.[3] show that for simple, neutral prompts, Stable Diffusion perpetuates dangerous racial, ethnic, gendered, class, and inter-sectional stereotypes. they also observe stereotype amplification. Finally, they demonstrate how prompts mentioning Social groups generate images with complex stereotypes that are difficult to overcome. For instance, Stable Diffusion links specific groups to negative or taboo associations like malnourishment, poverty, and subordination. Furthermore, none of the \"guardrails\" against stereotyping that have been introduced1 to models like DALLE, nor the carefully Expanded user prompts, lessen the impact of these associations. Zhang et al. [29] take a complementary approach and study Gender presentation differences by probing Gender indicators in the input text (e.g., “a woman” or “a man”) and then quantify the frequency differences of presentation-related attributes (e.g., “a shirt” and “a dress”) through human and automated evaluation. they find that DALLE-v2 presents genders more Similarly to each other than CogView2 [6] and Stable Diffusion.",
+    "words": 152,
+    "refs": [
+     "#/texts/78",
+     "#/texts/79",
+     "#/texts/80"
+    ],
+    "repaired": true,
+    "note": "3 blocks replaced by the text layer's passage",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 5,
+    "text": "personality traits: We leverage here a list of trait adjectives proposed by Abele et al. [1] that are uniform in both valence and frequency of occurrence across different languages. Additionally, as part of our Results analysis, we partitioned this list into traits that are perceived as positive or negative. The full list of personality traits is available in the appendix (Table 7).",
+    "words": 62,
+    "refs": [
+     "#/texts/102",
+     "#/texts/103",
+     "#/texts/104"
+    ],
+    "repaired": true,
+    "note": "3 blocks replaced by the text layer's passage",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 5,
+    "text": "Age: We have defined four age groups that will help us examine the characteristics, behaviors, and experiences of people at different stages of their lives, seen through the Lens of Text-to-Image models. We define 4 age groups - \"Child or minor\", \"Adult 18-40\", \"Adult 40-60\", and \"Adult over 60\".",
+    "words": 49,
+    "refs": [
+     "#/texts/96",
+     "#/texts/97",
+     "#/texts/98"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 6,
+    "text": "FairFace [16] dataset comprises 108,501 images, with an emphasis on balanced race composition in the dataset. images are sourced from the YFCC-100M Flickr dataset and labeled with information about race, Gender, and age groups. this dataset has driven a much better generalization classification performance for Gender, race, and age when tested on new Image datasets obtained from Twitter, international online newspapers, and web searches, which contain more non-White faces than typical face datasets. The study defines",
+    "words": 76,
+    "refs": [
+     "#/texts/113",
+     "#/texts/114",
+     "#/texts/120"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [
+     "sentence cut: 'typical face datasets. The study defines' | 'Azure Cognitive Services - Analyze Image'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "Gender: Figure 9 presents an analysis of the representation of different occupations by DALLE-v2, relative to a baseline of labor statistics (i.e., the difference between BLS representation and",
+    "words": 28,
+    "refs": [
+     "#/texts/239",
+     "#/texts/240",
+     "#/texts/241"
+    ],
+    "repaired": true,
+    "note": "3 blocks replaced by the text layer's passage",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 8,
+    "text": "Additionally, our analysis of",
+    "words": 4,
+    "refs": [
+     "#/texts/281",
+     "#/texts/282"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 8,
+    "text": "data showed that for certain occupations, including construction worker, childcare worker, and housekeeper, the white race group was underrepresented by more than 50%. nurse was the only occupation whose representation proportion matched that of",
+    "words": 34,
+    "refs": [
+     "#/texts/281",
+     "#/texts/282"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 8,
+    "text": "We assessed the efficacy of prompt expansion as a strategy to mitigate bias in Image Generation. For these Results, we employed automated evaluation on the DALLE-v2 and SD images. Section 4.5 and Tables 4 and 5 present details on the correlation between human and automated evaluation.",
+    "words": 46,
+    "refs": [
+     "#/texts/285",
+     "#/texts/287",
+     "#/texts/288"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "from a racial bias perspective, traits like \"ambitious\" and \"determined\" display the strongest association with the black race, while the traits \"vigorous\" and \"detached\" exhibit the strongest association with the East Asian race.",
+    "words": 33,
+    "refs": [
+     "#/texts/299",
+     "#/texts/300",
+     "#/texts/301"
+    ],
+    "repaired": true,
+    "note": "3 blocks replaced by the text layer's passage",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "To evaluate the degree of similarity between AI-generated images and real-world images, we curated a corpus of Image search Results for Gender-specific occupational prompts (e.g. \"male doctor,\" \"female doctor\") Using an online Image search API. We subsequently employed the Fréchet Inception distance (FID) [10] metric to compute the differences between two Image datasets. The FID metric is computed by extracting features from each Image Using an Inception V3 model that has been trained on the ImageNet dataset. The appendix Figures 23 and 24 depict the FID scores for the models, stratified by Gender. Note that lower FID scores correspond to better resemblance to the real images.",
+    "words": 106,
+    "refs": [
+     "#/texts/292",
+     "#/texts/293",
+     "#/texts/294"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 12,
+    "text": "Andrea E Abele and Susanne Bruckmüller. 2011. The bigger one of the “Big Two”? Preferential processing of communal information. Journal of experimental Social Psychology 47, 5 (2011), 935-948.",
+    "words": 28,
+    "refs": [
+     "#/texts/379",
+     "#/texts/380",
+     "#/texts/381"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 12,
+    "text": "Marina Drosou and Evaggelia Pitoura. 2010. search result diversification. ACM SIGMOD Record 39, 1 (2010),",
+    "words": 15,
+    "refs": [
+     "#/texts/402",
+     "#/texts/403",
+     "#/texts/404"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 12,
+    "text": "K. He, X. Zhang, S. Ren, and J. Sun. 2016. Deep Residual learning for Image Recognition. In 2016 IEEE Conference on computer",
+    "words": 22,
+    "refs": [
+     "#/texts/404",
+     "#/texts/405",
+     "#/texts/406"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 12,
+    "text": "Pattern Recognition (CVPR). IEEE computer society, Los Alamitos, CA, USA, 770-778. https://doi. org/10.1109/CVPR.2016.90",
+    "words": 13,
+    "refs": [
+     "#/texts/404",
+     "#/texts/405",
+     "#/texts/406"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 12,
+    "text": "in computing Systems (Seoul, Republic of Korea) (CHI ’15). association for computing Machinery, New York, NY, USA, 3819-3828. https://doi.org/10.1145/2702123.2702520",
+    "words": 19,
+    "refs": [
+     "#/texts/408",
+     "#/texts/409",
+     "#/texts/410"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 12,
+    "text": "and Jungseock Joo. 2019. FairFace: face attribute",
+    "words": 7,
+    "refs": [
+     "#/texts/411",
+     "#/texts/412",
+     "#/texts/413"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 12,
+    "text": "Gender, and Age. https://doi.org/10.48550/ARXIV.1908.04913",
+    "words": 4,
+    "refs": [
+     "#/texts/411",
+     "#/texts/412",
+     "#/texts/413"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 12,
+    "text": "Michelle A. Gan, and James A.",
+    "words": 6,
+    "refs": [
+     "#/texts/414",
+     "#/texts/415"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   }
+  ],
+  "order_pages_checked": 16,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 18,
+  "order_breaking": 5,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 3 minor; distortions: 0 material, 5 minor; additions: 0 material, 1 minor; order: 0 material, 3 minor",
+  "at": "2026-11-15T11:10:58+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 3
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 5
+   },
+   "additions": {
+    "material": 0,
+    "minor": 1
+   },
+   "order": {
+    "material": 0,
+    "minor": 3
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "Social Biases through the Text-to-Image Generation Lens (p. 1–23)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "Default neutral prompts enable us to analyze bias without the interference of prompt crafting, which is important when model embeddings are used for tasks other than image generation (e.g., classification, question answering).",
+      "severity": "minor",
+      "page": 1
+     },
+     {
+      "source": "countries like Nigeria, Ethiopia, India (for Stable Diffusion only), Papua New Guinea, Columbia are the farthest from default generations, and countries like USA, Australia, and Germany are the closest.",
+      "severity": "minor",
+      "page": 2
+     },
+     {
+      "source": "even though this work and previous work uses a categorical definition of race for analytical purposes, often this is a continuous and intersectional concept.",
+      "severity": "minor",
+      "page": 5
+     }
+    ],
+    "distortions": [
+     {
+      "source": "shows that in many ways, these models are a step back on improving representational fairness and exhibit more severe biases than even image search.",
+      "summary": "The present work shows T2I models are 'a step back' from even image search.",
+      "severity": "minor",
+      "page": 2
+     },
+     {
+      "source": "certain occupations, including technical writer, optician, bartender, and bus driver, exhibit a significant reinforcement of under-representation of women in DALLE-v2's output.",
+      "summary": "dark blue bars are tallest for “technical writer,” “optician,” “bartender,” and “author,”",
+      "severity": "minor",
+      "page": 7
+     },
+     {
+      "source": "Fig. 20: Difference in the Proportion of Women (BLS representation - SD representation). The higher the difference, the more the occupation deviates from BLS representation when depicted by Stable Diffusion.",
+      "summary": "The y-axis is labeled “Difference in Proportion of Women (BLS - DALL-E)” with tick marks from −20 to 50",
+      "severity": "minor",
+      "page": 15
+     },
+     {
+      "source": "Fig. 21: Proportion of White as reported by BLS 2022,images generated by DALLE-v2 and SD, and GIS 2020.",
+      "summary": "A legend at the top marks three series—teal circles for “BLS 2022,” orange squares for “SD,” and dark blue stars for “DALL-E”—and for each occupation up to three markers are plotted",
+      "severity": "minor",
+      "page": 15
+     },
+     {
+      "source": "Fig. 22: Proportion of Black as reported by BLS 2022, images generated by DALLE-v2 and SD, and GIS 2020.",
+      "summary": "A legend at the top identifies three series: teal circles for “BLS 2022 Black or African American,” orange squares for “SD,” and dark blue stars for “DALL-E.”",
+      "severity": "minor",
+      "page": 16
+     }
+    ],
+    "additions": [
+     {
+      "summary": "Prior work (Kay et al., cited as [13]) compared gender representation in image search results for occupational queries against U.S. BLS 2015 data",
+      "severity": "minor"
+     }
+    ],
+    "order": [
+     {
+      "source": "What does it mean fairness issues observed in recently developed models.",
+      "summary": "",
+      "layer": "What does it mean however to release, consume, and use a model that is trained on large, non-curated, and partially non-public web data?",
+      "severity": "minor",
+      "page": 1
+     },
+     {
+      "source": "We also considered Using country-based adjectives Such as \"Ethiopian\", \"American\" etc.,",
+      "summary": "",
+      "layer": "We also considered using country-based adjectives such as \"Ethiopian\", \"American\" etc., but we noticed that such prompts lead to images that are heavily dominated by the presence of flags for the specified countries.",
+      "severity": "minor",
+      "page": 5
+     },
+     {
+      "source": "The analysis revealed FID = 201",
+      "summary": "",
+      "layer": "The analysis revealed that Nigeria, Ethiopia, and Papua New Guinea have the lowest representation across the events in both models.",
+      "severity": "minor",
+      "page": 9
+     }
+    ]
+   }
+  ]
+ },
+ "source": {
+  "source": "naik-nushi-2023-social-biases-through-the-text-to-image-generation-lens.pdf",
+  "bytes": 7043451,
+  "sha256": "d805dcbca7c25b7f1a83804bd3806fc32828e80be5f6c1a6d2a73c793e08033e",
+  "extracted_at": "2026-11-13T02:53:12+01:00"
+ }
+}

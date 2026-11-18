@@ -1,0 +1,441 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 13.8% of 2245 words, ceiling 20%, longest run 42 words; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 42,
+     "text": "a pick a sample of size s from the generated distribution b use an automated measure of image similarity to flag the 20 most similar pairs in the sample c visually inspect the flagged pairs and check for duplicates d repeat if"
+    },
+    {
+     "words": 22,
+     "text": "at least one collision among m i i d samples is γ then for ρ 1 o 1 there exists a subset"
+    },
+    {
+     "words": 18,
+     "text": "the distribution puts significant probability on noise patterns a form of underfitting also reported in the dcgan paper"
+    },
+    {
+     "words": 16,
+     "text": "images in 10 classes airplane automobile bird cat deer dog frog horse ship truck with 6k"
+    },
+    {
+     "words": 13,
+     "text": "with probability 50 a batch of about 400 samples contains at least one"
+    }
+   ],
+   "value": 0.1376,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "1 of 2 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "Do GANs actually learn the distribution? An empirical study (p. 1–10)",
+     "page": 5,
+     "expected_items": 3,
+     "first_item": "DCGAN -unconditional, with JSD objective as described in [1] and [9].",
+     "output_lists": [
+      2
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "8 of 45 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "Do GANs actually learn the distribution? An empirical study (p. 1–10)",
+     "page": 2,
+     "number": "1.1"
+    },
+    {
+     "section": "Do GANs actually learn the distribution? An empirical study (p. 1–10)",
+     "page": 4,
+     "number": "33"
+    },
+    {
+     "section": "Do GANs actually learn the distribution? An empirical study (p. 1–10)",
+     "page": 4,
+     "number": "42"
+    },
+    {
+     "section": "Do GANs actually learn the distribution? An empirical study (p. 1–10)",
+     "page": 5,
+     "number": "2.1"
+    },
+    {
+     "section": "Do GANs actually learn the distribution? An empirical study (p. 1–10)",
+     "page": 5,
+     "number": "2.1.1"
+    },
+    {
+     "section": "Do GANs actually learn the distribution? An empirical study (p. 1–10)",
+     "page": 6,
+     "number": "12"
+    },
+    {
+     "section": "Do GANs actually learn the distribution? An empirical study (p. 1–10)",
+     "page": 6,
+     "number": "2.2"
+    },
+    {
+     "section": "Do GANs actually learn the distribution? An empirical study (p. 1–10)",
+     "page": 7,
+     "number": "2.3"
+    }
+   ],
+   "value": 8.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "10 of 10 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "Do GANs actually learn the distribution? An empirical study (p. 1–10)",
+     "page": 1,
+     "heading": "Abstract"
+    },
+    {
+     "section": "Do GANs actually learn the distribution? An empirical study (p. 1–10)",
+     "page": 1,
+     "heading": "1 Introduction"
+    },
+    {
+     "section": "Do GANs actually learn the distribution? An empirical study (p. 1–10)",
+     "page": 2,
+     "heading": "1.1 Birthday paradox test for support size"
+    },
+    {
+     "section": "Do GANs actually learn the distribution? An empirical study (p. 1–10)",
+     "page": 4,
+     "heading": "2 Birthday paradox test for GANs: Experimental details"
+    },
+    {
+     "section": "Do GANs actually learn the distribution? An empirical study (p. 1–10)",
+     "page": 5,
+     "heading": "2.1 Results on CelebA dataset"
+    },
+    {
+     "section": "Do GANs actually learn the distribution? An empirical study (p. 1–10)",
+     "page": 5,
+     "heading": "2.1.1 Diversity vs Discriminator Size"
+    },
+    {
+     "section": "Do GANs actually learn the distribution? An empirical study (p. 1–10)",
+     "page": 6,
+     "heading": "2.2 Results for CIFAR-10"
+    },
+    {
+     "section": "Do GANs actually learn the distribution? An empirical study (p. 1–10)",
+     "page": 7,
+     "heading": "2.3 Exploratory results on Bedroom dataset"
+    },
+    {
+     "section": "Do GANs actually learn the distribution? An empirical study (p. 1–10)",
+     "page": 8,
+     "heading": "3 Birthday paradox test for VAEs"
+    },
+    {
+     "section": "Do GANs actually learn the distribution? An empirical study (p. 1–10)",
+     "page": 9,
+     "heading": "4 Conclusions"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "5 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "5 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "1 quoted texts in 1 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Fig. 2",
+     "page": 7,
+     "image": "fig-002-p7.png",
+     "quotes": [
+      "\"×10^6\""
+     ]
+    }
+   ],
+   "value": 1.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "15 page references valid (printed-folio pages 1–11)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "11 pages checked, 0 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "1 passages out of order break a sentence (1 of 1 not repairable; listed, not gated)",
+   "findings": [
+    {
+     "page": 4,
+     "words": 4,
+     "text": "From which we obtain",
+     "blocks": [
+      "#/texts/35",
+      "#/texts/38",
+      "#/texts/45"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "sentence start detached: 'that generate sharper, realistic images.' | 'from which we obtain'"
+     ],
+     "section": ""
+    }
+   ],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "arora-zhang-2017-do-gans-actually-learn-the-distribution-an-empirical-study",
+ "doc_type": "scholarly_article",
+ "analyzed_at": "2026-11-15T11:13:31.525966+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "Do GANs actually learn the distribution? An empirical study",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 10,
+   "chars": 21652,
+   "blocks": 64,
+   "inner_headings": 10,
+   "figures": 5
+  }
+ ],
+ "skipped": [
+  "Acknowledgements (p. 10)",
+  "References (p. 10)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 11,
+  "gaps": [],
+  "gaps_dismissed": [
+   {
+    "page": 3,
+    "words": 37,
+    "reason": "duplicate",
+    "text": "ρ 2ρ (M − 1)ρ ≥ 1 − 1 × (1 − ) × (1 − ) × · · · × (1 − ) N N N M 2ρ ≥ 1 − exp(− ) (1) 2N"
+   },
+   {
+    "page": 3,
+    "words": 12,
+    "reason": "debris",
+    "text": "≤ q 24 1 2 (−3+ 9+ M ln 1−γ )−2M (1−ρ)"
+   },
+   {
+    "page": 3,
+    "words": 13,
+    "reason": "debris",
+    "text": "M2 M3 Pr[T ≥ M ] ≥ exp(− − 2) (2) 2β 6β"
+   },
+   {
+    "page": 3,
+    "words": 33,
+    "reason": "duplicate",
+    "text": "] M2 M3 = 1 − γ ≥ exp(− − 2) (3) 2β 6β which immediately implies 2M β≤ q = β∗ (4) 24 1 −3 + 9 + M ln 1−γ 3"
+   },
+   {
+    "page": 4,
+    "words": 20,
+    "reason": "debris",
+    "text": "2M ρ2 N≤ q (6) 24 1 (−3 + 9 + M ln 1−γ ) − 2M (1 − ρ)2"
+   }
+  ],
+  "captions_reclassified": [],
+  "captions_reassigned": [],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [],
+  "superseded": [],
+  "replaced_pages": [],
+  "noise_dropped": 0,
+  "hyphens_restored": [],
+  "order": [
+   {
+    "page": 4,
+    "text": "From which we obtain",
+    "words": 4,
+    "refs": [
+     "#/texts/35",
+     "#/texts/38",
+     "#/texts/45"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "sentence start detached: 'that generate sharper, realistic images.' | 'from which we obtain'"
+    ],
+    "section": ""
+   }
+  ],
+  "order_pages_checked": 11,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 1,
+  "order_breaking": 1,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 4 minor; distortions: 0 material, 5 minor; additions: 0 material, 0 minor; order: 0 material, 1 minor",
+  "at": "2026-11-15T11:14:47+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 4
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 5
+   },
+   "additions": {
+    "material": 0,
+    "minor": 0
+   },
+   "order": {
+    "material": 0,
+    "minor": 1
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "Do GANs actually learn the distribution? An empirical study (p. 1–10)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "the training does succeed in learning the underlying distribution arbitrarily closely (measured in Jensen-Shannon divergence)",
+      "severity": "minor",
+      "page": 1
+     },
+     {
+      "source": "It left open the possibility that real-life GANs training avoids such solutions thanks to some not-as-yet-understood property of backpropagation or hyperparameter choices. Thus further experimental investigation is necessary.",
+      "severity": "minor",
+      "page": 2
+     },
+     {
+      "source": "such nonuniformity (a lot of probability being assigned to a few images) is the only failure mode of the birthday paradox test calculation",
+      "severity": "minor",
+      "page": 3
+     },
+     {
+      "source": "Figure 1 give examples duplicates and their nearest neighbors samples (that we could fine) in training set.",
+      "severity": "minor",
+      "page": 5
+     }
+    ],
+    "distortions": [
+     {
+      "source": "The foundational paper of (Goodfellow et al 2014) suggested they do",
+      "summary": "The original GAN paper (Goodfellow et al. 2014) claimed they do",
+      "severity": "minor",
+      "page": 1
+     },
+     {
+      "source": "we found Euclidean distance in pixel space works well as a heuristic similarity measure, probably because the samples are centered and aligned",
+      "summary": "Euclidean distance in pixel space works well because samples are centered and aligned",
+      "severity": "minor",
+      "page": 4
+     },
+     {
+      "source": "the results of Section 2.1.1 below suggests that the discriminator size has a strong effect on diversity of the learnt distribution",
+      "summary": "since discriminator size strongly affects diversity",
+      "severity": "minor",
+      "page": 5
+     },
+     {
+      "source": "ALI (or BiGANs) appear to be somewhat more diverse",
+      "summary": "ALI/BiGANs are somewhat more diverse",
+      "severity": "minor",
+      "page": 5
+     },
+     {
+      "source": "which suggests the issue with GANs is indeed lack of diversity (low support size) instead of memorizing training set",
+      "summary": "confirming the issue is lack of diversity (low support size) rather than memorization",
+      "severity": "minor",
+      "page": 7
+     }
+    ],
+    "additions": [],
+    "order": [
+     {
+      "source": "To estimate the largest possible N such that inequality 4 holds, we let [Section 2 heading and experimental text follow] ... Thus our experiments work best with GANs that generate sharper, realistic images. from which we obtain",
+      "summary": "",
+      "layer": "To estimate the largest possible N such that inequality 4 holds, we let 1 ≤ β∗ ... (5) from which we obtain N ≤ ... (6) Birthday paradox test for GANs: Experimental Details",
+      "severity": "minor",
+      "page": 4
+     }
+    ]
+   }
+  ]
+ },
+ "source": {
+  "source": "arora-zhang-2017-do-gans-actually-learn-the-distribution-an-empirical-study.pdf",
+  "bytes": 3209369,
+  "sha256": "2a947017420352c8c6b4e2736b19cb1ea55081ab66d058b82bf94dbfadc79ba0",
+  "extracted_at": "2026-11-13T02:23:18+01:00"
+ }
+}

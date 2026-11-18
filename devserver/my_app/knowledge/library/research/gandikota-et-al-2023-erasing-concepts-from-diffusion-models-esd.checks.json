@@ -1,0 +1,1618 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 8.2% of 2336 words, ceiling 20%, longest run 21 words; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 21,
+     "text": "kelly mckernan kirbi fagan thomas kinkade nicky boehme ajin demi human tokyo ghoul tyler edlin feng zhu kilian eng jean giraud"
+    },
+    {
+     "words": 15,
+     "text": "find the fids to be 18 71 and 25 29 for medium and max respectively"
+    },
+    {
+     "words": 14,
+     "text": "kelly mckernan thomas kinkade tyler edlin kilian eng and the series ajin demi human"
+    },
+    {
+     "words": 14,
+     "text": "an experiment consuming 150 000 gpu hours over the 5 billion image laion dataset"
+    },
+    {
+     "words": 10,
+     "text": "erase a visual concept from a pre trained diffusion model"
+    }
+   ],
+   "value": 0.0822,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "6 of 6 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 5,
+     "expected_items": 3,
+     "first_item": "SD (pretrained Stable Diffusion),",
+     "output_lists": [
+      6,
+      3,
+      6
+     ],
+     "unanswered_items": [
+      {
+       "item": 1,
+       "source": "SD (pretrained Stable Diffusion),",
+       "output": "**ESD-x**: fine-tunes only cross-attention parameters, which serve as a \"gateway"
+      },
+      {
+       "item": 2,
+       "source": "SLD (Safe Latent Diffusion) [38], to adapt the method to our experiment, we subs",
+       "output": "**ESD-u**: fine-tunes non-cross-attention (unconditional) parameters. Used when "
+      }
+     ]
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 7,
+     "table_cells": 21,
+     "missing_cells": [
+      "0.1561",
+      "0.1592",
+      "SLD-Medium 1",
+      "0.1594",
+      "0.1583",
+      "0.1585",
+      "0.1586"
+     ]
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 8,
+     "table_cells": 64,
+     "missing_cells": [
+      "Class name",
+      "Accuracy of erased class",
+      "Accuracy of erased class",
+      "Accuracy of other classes",
+      "Accuracy of other classes",
+      "15.6",
+      "0.60",
+      "85.1",
+      "64.5",
+      "66.0",
+      "68.2",
+      "78.7",
+      "71.6",
+      "75.4",
+      "8.6",
+      "78.5",
+      "66.5",
+      "78.4",
+      "66.6",
+      "10.4"
+     ]
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 13,
+     "table_cells": 72,
+     "missing_cells": [
+      "\"nudity\" ESD-x-3",
+      "\"i2p\" ESD-u-1",
+      "0.40",
+      "0.20",
+      "0.09",
+      "0.19",
+      "0.13",
+      "0.17",
+      "Harrasment",
+      "0.34",
+      "0.17",
+      "0.09",
+      "0.16",
+      "0.18",
+      "0.29",
+      "0.16",
+      "0.43",
+      "0.23",
+      "0.14",
+      "0.37"
+     ]
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 13,
+     "table_cells": 35,
+     "missing_cells": [
+      "Erased Artist Style",
+      "0.37",
+      "0.21",
+      "0.32",
+      "0.21",
+      "0.40",
+      "0.22",
+      "0.34",
+      "0.22",
+      "Andy Warhol",
+      "0.41",
+      "0.19",
+      "Vincent Van Gogh",
+      "0.35",
+      "0.23",
+      "0.32",
+      "0.21",
+      "Caravaggio",
+      "0.31",
+      "0.21"
+     ]
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 14,
+     "table_cells": 21,
+     "missing_cells": [
+      "3.21(±.15)",
+      "1.12(±.06)",
+      "2.92(±.18)",
+      "2.00(±.14)",
+      "2.50(±.16)",
+      "2.22(±.16)",
+      "2.44(±.15)",
+      "3.85(±.15)",
+      "3.16(±.18)"
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "89 of 173 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 1,
+     "number": "29"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 1,
+     "number": "32"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 1,
+     "number": "39"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 1,
+     "number": "43"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 2,
+     "number": "31"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 2,
+     "number": "33"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 2,
+     "number": "41"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 2,
+     "number": "42"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 2,
+     "number": "46"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 2,
+     "number": "47"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 3,
+     "number": "3.1"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 3,
+     "number": "35"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 3,
+     "number": "44"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 3,
+     "number": "45"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 3,
+     "number": "48"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 4,
+     "number": "4.1"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 5,
+     "number": "5.1"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 5,
+     "number": "5.1.1"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 5,
+     "number": "5.2"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 7,
+     "number": "0.1561"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 7,
+     "number": "0.1583"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 7,
+     "number": "0.1585"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 7,
+     "number": "0.1586"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 7,
+     "number": "0.1592"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 7,
+     "number": "0.1594"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 7,
+     "number": "5.3"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 8,
+     "number": "0.60"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 8,
+     "number": "10.4"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 8,
+     "number": "15.6"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 8,
+     "number": "23.8"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 8,
+     "number": "5.4"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 8,
+     "number": "5.5"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 8,
+     "number": "51.5"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 8,
+     "number": "6.0"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 8,
+     "number": "6.2"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 8,
+     "number": "62.6"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 8,
+     "number": "64.5"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 8,
+     "number": "65.4"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 8,
+     "number": "65.6"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 8,
+     "number": "66.0"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 8,
+     "number": "66.5"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 8,
+     "number": "66.6"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 8,
+     "number": "68.2"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 8,
+     "number": "71.6"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 8,
+     "number": "75.4"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 8,
+     "number": "75.8"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 8,
+     "number": "76.0"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 8,
+     "number": "76.1"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 8,
+     "number": "76.6"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 8,
+     "number": "77.4"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 8,
+     "number": "78.4"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 8,
+     "number": "78.5"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 8,
+     "number": "78.7"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 8,
+     "number": "79.6"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 8,
+     "number": "8.6"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 8,
+     "number": "85.1"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 8,
+     "number": "85.4"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 8,
+     "number": "9.6"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 8,
+     "number": "92.5"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 8,
+     "number": "98.0"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 11,
+     "number": "7.5"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 13,
+     "number": "0.06"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 13,
+     "number": "0.07"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 13,
+     "number": "0.08"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 13,
+     "number": "0.09"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 13,
+     "number": "0.12"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 13,
+     "number": "0.13"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 13,
+     "number": "0.14"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 13,
+     "number": "0.16"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 13,
+     "number": "0.17"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 13,
+     "number": "0.18"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 13,
+     "number": "0.19"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 13,
+     "number": "0.20"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 13,
+     "number": "0.21"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 13,
+     "number": "0.22"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 13,
+     "number": "0.23"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 13,
+     "number": "0.24"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 13,
+     "number": "0.27"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 13,
+     "number": "0.29"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 13,
+     "number": "0.30"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 13,
+     "number": "0.31"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 13,
+     "number": "0.32"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 13,
+     "number": "0.34"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 13,
+     "number": "0.35"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 13,
+     "number": "0.37"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 13,
+     "number": "0.40"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 13,
+     "number": "0.41"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 13,
+     "number": "0.43"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 13,
+     "number": "0.52"
+    }
+   ],
+   "value": 89.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "33 of 35 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 1,
+     "heading": "Abstract"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 1,
+     "heading": "1. Introduction"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 2,
+     "heading": "2. Related Works"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 3,
+     "heading": "3. Background"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 3,
+     "heading": "3.1. Denoising Diffusion Models"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 3,
+     "heading": "3.2. Latent Diffusion Models"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 4,
+     "heading": "4.1. Importance of Parameter Choice"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 5,
+     "heading": "5.1. Artistic Style Removal"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 5,
+     "heading": "5.1.1 Experiment Setup"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 5,
+     "heading": "5.1.2 Artistic Style Removal User Study"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 7,
+     "heading": "5.2. Explicit Content Removal"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 7,
+     "heading": "5.3. Object Removal"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 8,
+     "heading": "5.4. Effect of η on Interference"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 8,
+     "heading": "5.5. Limitations"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 8,
+     "heading": "6. Conclusion"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 9,
+     "heading": "Code"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 11,
+     "heading": "Appendix"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 11,
+     "heading": "A. Visual Motivation"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 11,
+     "heading": "B. Implementation Details"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 11,
+     "heading": "B.1. Artist Style Erasure"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 11,
+     "heading": "B.2. Nudity Erasure"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 12,
+     "heading": "B.3. Object Erasure"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 12,
+     "heading": "C. Single Image Erasure"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 12,
+     "heading": "D. Generic Prompts for Erasure"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 13,
+     "heading": "E. Extended Experimental results"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 13,
+     "heading": "E.1. Artistic Style"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 13,
+     "heading": "E.2. Nudity"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 14,
+     "heading": "E.3. Objects"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 14,
+     "heading": "F. User Study"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 14,
+     "heading": "F.1. Design"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 14,
+     "heading": "F.2. User Interface"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 14,
+     "heading": "F.3. Analysis"
+    },
+    {
+     "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+     "page": 16,
+     "heading": "REQUESTFORPARTICIPATION"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "28 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "28 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "60 quoted texts in 16 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Fig. 1",
+     "page": 1,
+     "image": "fig-001-p1.png",
+     "quotes": [
+      "\"David Bau\""
+     ]
+    },
+    {
+     "figure": "Fig. 3",
+     "page": 4,
+     "image": "fig-003-p4.png",
+     "quotes": [
+      "\"(b) Self-attention\"",
+      "\"(c) Generated image\""
+     ]
+    },
+    {
+     "figure": "Fig. 4",
+     "page": 5,
+     "image": "fig-004-p5.png",
+     "quotes": [
+      "\"The Scream by Edvard Munch\"",
+      "\"Girl with a Pearl Earring by Johannes Vermeer\"",
+      "\"The Great Wave off Kanagawa by Hokusai\""
+     ]
+    },
+    {
+     "figure": "Fig. 5",
+     "page": 6,
+     "image": "fig-005-p6.png",
+     "quotes": [
+      "\"Post-apocalyptic landscape by Kilian Eng\"",
+      "\"Whimsical creature with floral elements by Kelly McKernan\""
+     ]
+    },
+    {
+     "figure": "Fig. 6",
+     "page": 6,
+     "image": "fig-006-p6.png",
+     "quotes": [
+      "“(b) Erasing targeted style (lower is better),”",
+      "“(c) Preserving other styles (higher is better).”",
+      "“Real Artist,”"
+     ]
+    },
+    {
+     "figure": "Fig. 7",
+     "page": 7,
+     "image": "fig-007-p7.png",
+     "quotes": [
+      "\"SLD Medium,\"",
+      "\"Stable Diffusion V2.1.\"",
+      "\"Exposed Body Parts (# in SD1.4)\"",
+      "\"Total (796),\"",
+      "\"Female Breast (278),\"",
+      "\"Female Genitalia (21),\"",
+      "\"Male Genitalia* (5),\"",
+      "\"Male Breast (22),\"",
+      "\"Buttocks (30),\"",
+      "\"Armpits (246),\"",
+      "\"Belly (157),\"",
+      "\"Feet (37).\""
+     ]
+    },
+    {
+     "figure": "Image 9",
+     "page": 11,
+     "image": "fig-009-p11.png",
+     "quotes": [
+      "\"ε_θ(x_t, c, t) - ε_θ(x_r, t)\""
+     ]
+    },
+    {
+     "figure": "Image 11",
+     "page": 12,
+     "image": "fig-011-p12.png",
+     "quotes": [
+      "\"Evaluating Effects of Multiple Image Takedowns.\"",
+      "\"Number of Artworks Erased\"",
+      "\"Domain\""
+     ]
+    },
+    {
+     "figure": "Image 13",
+     "page": 15,
+     "image": "fig-013-p15.png",
+     "quotes": [
+      "\"Stable Diffusion V2.1\"",
+      "\"Stable Diffusion V2.0\"",
+      "\"SLD Weak\"",
+      "\"ESD-x-1 (\"",
+      "\"ESD-u-3 (\"",
+      "\"ESD-u-1 (\"",
+      "\"ESD-u-1 (\"",
+      "\"ESD-selfattn-1 (\"",
+      "\"ESD-full-1 (\"",
+      "\"Exposed Body Parts\"",
+      "\"Total (796)\"",
+      "\"Female Breast (278)\"",
+      "\"Female Genitalia (21)\"",
+      "\"Male Genitalia* (5)\"",
+      "\"Male Breast (22)\"",
+      "\"Buttocks (30)\"",
+      "\"Armpits (246)\"",
+      "\"Belly (157)\"",
+      "\"Feet (37)\"",
+      "\"Percentage Change\""
+     ]
+    },
+    {
+     "figure": "Image 14",
+     "page": 16,
+     "image": "fig-014-p16.png",
+     "quotes": [
+      "\"The purpose of the project is to test a method that removes the ability for an AI model to create art in the style of various artists\"",
+      "\"You must be at least 18 years old to be in this research project,\"",
+      "\"INSTRUCTIONS\"",
+      "\"You don't need to have a degree in the arts to be useful for this study!\"",
+      "\"I acknowledge\""
+     ]
+    },
+    {
+     "figure": "Image 17",
+     "page": 16,
+     "image": "fig-017-p16.png",
+     "quotes": [
+      "\"Next\""
+     ]
+    },
+    {
+     "figure": "Image 19",
+     "page": 17,
+     "image": "fig-019-p17.png",
+     "quotes": [
+      "“Erasing ‘Ajin Demi Human’,”"
+     ]
+    },
+    {
+     "figure": "Image 20",
+     "page": 18,
+     "image": "fig-020-p18.png",
+     "quotes": [
+      "\"Erasing 'Ajin Demi Human'\""
+     ]
+    },
+    {
+     "figure": "Image 24",
+     "page": 20,
+     "image": "fig-024-p20.png",
+     "quotes": [
+      "\"Ajiri Demi Human\""
+     ]
+    },
+    {
+     "figure": "Image 25",
+     "page": 20,
+     "image": "fig-025-p20.png",
+     "quotes": [
+      "\"Erasing 'Ajin Demi Human'\"",
+      "\"Safety Concept 'Ajin Demi Human'\""
+     ]
+    },
+    {
+     "figure": "Image 26",
+     "page": 21,
+     "image": "fig-026-p21.png",
+     "quotes": [
+      "“Erasing ‘Gas Pump’”",
+      "“Erasing ‘Golf Ball’”"
+     ]
+    }
+   ],
+   "value": 60.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "41 page references valid (pdf pages 1–23)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "23 pages checked, 4 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "1 passages out of order break a sentence (3 of 3 not repairable; listed, not gated)",
+   "findings": [
+    {
+     "page": 4,
+     "words": 11,
+     "text": "specific to the prompt, such as when a named artistic style",
+     "blocks": [
+      "#/texts/170",
+      "#/texts/172",
+      "#/texts/186"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 11,
+     "words": 7,
+     "text": "using the prompt shown for each image.",
+     "blocks": [
+      "#/texts/409",
+      "#/texts/411",
+      "#/pictures/8/caption"
+     ],
+     "problem": "blocks of kind footnote, heading are involved",
+     "fails": true,
+     "breaks": [
+      "sentence cut: 'ainst the actual work of the artists, we' | '*For all the residual images: t=10'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 16,
+     "words": 8,
+     "text": "Figure F.2: reference images shown to the users.",
+     "blocks": [
+      "#/pictures/14/caption",
+      "#/pictures/16/caption"
+     ],
+     "problem": "layer passage (84 letters) and blocks (259) differ in length",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    }
+   ],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "gandikota-et-al-2023-erasing-concepts-from-diffusion-models-esd",
+ "doc_type": "scholarly_article",
+ "analyzed_at": "2026-11-15T10:31:48.030246+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "Erasing Concepts from Diffusion Models",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 23,
+   "chars": 57769,
+   "blocks": 174,
+   "inner_headings": 35,
+   "figures": 28
+  }
+ ],
+ "skipped": [
+  "Acknowledgments (p. 9)",
+  "References (p. 9)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 23,
+  "gaps": [
+   {
+    "page": 17,
+    "text": "original SD Our method SLD Erasing Erasing Erasing safety concept safety concept safety concept “Van Gogh” “Rembrandt” “Pablo Picasso” “Van Gogh” “Rembrandt” “Pablo Picasso” artistic style in prompts conditioned Van Gogh Rembrandt Pablo Picasso Figure F.4: Our method has a significant erasure effect compared to SLD in Erasing famous artistic styles. The blue dotted boxes show images with intended style Erased. The off-diagonal images show the unintended interference. original SD Our method SLD Erasing Erasing Erasing Erasing Erasing safety concept safety concept safety concept safety concept safety concept “Tyler Edlin” “Thomas Kinkade” “Kilian Eng” “Kelly McKernan” “Ajin:Demi human” “Tyler Edlin” “Thomas Kinkade” “Kilian Eng” “Kelly McKernan” “Ajin:Demi human” floating islands landscape with inspired sci-fi Tyler Edlin inspired depiction of a peaceful park Thomas Kinkade prompt Conditioning Otherworldly landscape by Kilian Eng floral elements by Kelly McKernan creatures with Whimsical human elements with Ajin: Demi Fantasy world Figure F.5: Our method demonstrates a complete erasure of intended style and minimal interference with other styles. The blue dotted boxes show images with intended style Erased. The off-diagonal images show the unintended interference.",
+    "words": 180,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/692"
+   },
+   {
+    "page": 18,
+    "text": "original SD Our method Erasing Erasing Erasing Erasing Erasing “Tyler Edlin” “Thomas Kinkade” “Kilian Eng” “Kelly McKernan” “Ajin:Demi human” Tyler Edlin artistic style in prompts conditioned Thomas Kinkade Kilian Eng Kelly McKernan Ajin:Demi human Figure F.6: Our method demonstrates a complete erasure of intended style and minimal interference with other styles. The blue dotted boxes show images with intended style Erased. The off-diagonal images show the unintended interference. original SD Our method Erasing Erasing Erasing Erasing Erasing “Tyler Edlin” “Thomas Kinkade” “Kilian Eng” “Kelly McKernan” “Ajin:Demi human” Tyler Edlin artistic style in prompts conditioned Thomas Kinkade Kilian Eng Kelly McKernan Ajin:Demi human Figure F.7: Our method demonstrates a complete erasure of intended style and minimal interference with other styles. The blue dotted boxes show images with intended style Erased. The off-diagonal images show the unintended interference. SLD safety concept safety concept safety concept safety concept safety concept “Tyler Edlin” “Thomas Kinkade” “Kilian Eng” “Kelly McKernan” “Ajin:Demi human” SLD safety concept safety concept safety concept safety concept safety concept “Tyler Edlin” “Thomas Kinkade” “Kilian Eng” “Kelly McKernan” “Ajin:Demi human”",
+    "words": 178,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/755"
+   },
+   {
+    "page": 19,
+    "text": "original SD Our method Erasing Erasing Erasing Erasing Erasing “Tyler Edlin” “Thomas Kinkade” “Kilian Eng” “Kelly McKernan” “Ajin:Demi human” Tyler Edlin artistic style in prompts conditioned Thomas Kinkade Kilian Eng Kelly McKernan Ajin:Demi human Figure F.8: Our method demonstrates a complete erasure of intended style and minimal interference with other styles. The blue dotted boxes show images with intended style Erased. The off-diagonal images show the unintended interference. original SD Our method Erasing Erasing Erasing Erasing Erasing “Tyler Edlin” “Thomas Kinkade” “Kilian Eng” “Kelly McKernan” “Ajin:Demi human” Tyler Edlin artistic style in prompts conditioned Thomas Kinkade Kilian Eng Kelly McKernan Ajin:Demi human Figure F.9: Our method demonstrates a complete erasure of intended style and minimal interference with other styles. The blue dotted boxes show images with intended style Erased. The off-diagonal images show the unintended interference. SLD safety concept safety concept safety concept safety concept safety concept “Tyler Edlin” “Thomas Kinkade” “Kilian Eng” “Kelly McKernan” “Ajin:Demi human” SLD safety concept safety concept safety concept safety concept safety concept “Tyler Edlin” “Thomas Kinkade” “Kilian Eng” “Kelly McKernan” “Ajin:Demi human”",
+    "words": 178,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/814"
+   },
+   {
+    "page": 20,
+    "text": "original SD Our method Erasing Erasing Erasing Erasing Erasing “Tyler Edlin” “Thomas Kinkade” “Kilian Eng” “Kelly McKernan” “Ajin:Demi human” Tyler Edlin artistic style in prompts conditioned Thomas Kinkade Kilian Eng Kelly McKernan Ajin:Demi human Figure F.10: Our method demonstrates a complete erasure of intended style and minimal interference with other styles. The blue dotted boxes show images with intended style Erased. The off-diagonal images show the unintended interference. original SD Our method Erasing Erasing Erasing Erasing Erasing “Tyler Edlin” “Thomas Kinkade” “Kilian Eng” “Kelly McKernan” “Ajin:Demi human” Tyler Edlin artistic style in prompts conditioned Thomas Kinkade Kilian Eng Kelly McKernan Ajin:Demi human Figure F.11: Our method demonstrates a complete erasure of intended style and minimal interference with other styles. The blue dotted boxes show images with intended style Erased. The off-diagonal images show the unintended interference. SLD safety concept safety concept safety concept safety concept safety concept “Tyler Edlin” “Thomas Kinkade” “Kilian Eng” “Kelly McKernan” “Ajin:Demi human” SLD safety concept safety concept safety concept safety concept safety concept “Tyler Edlin” “Thomas Kinkade” “Kilian Eng” “Kelly McKernan” “Ajin:Demi human”",
+    "words": 178,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/874"
+   }
+  ],
+  "gaps_dismissed": [
+   {
+    "page": 1,
+    "words": 29,
+    "reason": "duplicate",
+    "text": "Rohit Gandikota∗,1 Joanna Materzyńska∗,2 Jaden Fiotto-Kaufman1 David Bau1 1 2 Northeastern University Massachusetts Institute of technology 1 2 [gandikota.ro, fiotto-kaufman.j, davidbau]@northeastern"
+   },
+   {
+    "page": 1,
+    "words": 37,
+    "reason": "duplicate",
+    "text": "original model edited model original model edited model original model edited model * * * * * * added by authors Erased from model: Erased from model: Erased from model: * for publication “nudity” “Va"
+   },
+   {
+    "page": 3,
+    "words": 54,
+    "reason": "debris",
+    "text": "ϵθ*(xt, c, t) ϵθ(xt, c, t) (xt, c, t) θ θ* (xt, c, t) ϵθ*(xt, t) − η[ϵθ*(xt, c, t) − ϵθ*(xt, t)] ϵθ*(xt, t) fine tune L2 frozen ESD loss original SD (xt, c0, t) xt , generated by θ c “Van Gogh”, conce"
+   },
+   {
+    "page": 3,
+    "words": 12,
+    "reason": "debris",
+    "text": "pθ (xT :0 ) = p(xT ) pθ (xt−1 |xt ) (1)"
+   },
+   {
+    "page": 3,
+    "words": 14,
+    "reason": "debris",
+    "text": "L = Ezt ∈E(x),t,c,ϵ∼N (0,1) [∥ϵ − ϵθ (zt , c, t)∥22 ] (2)"
+   },
+   {
+    "page": 4,
+    "words": 21,
+    "reason": "debris",
+    "text": "ϵ̃θ (zt , c, t) = ϵθ (zt , t) + α(ϵθ (zt , c, t) − ϵθ (zt , t))"
+   },
+   {
+    "page": 4,
+    "words": 14,
+    "reason": "duplicate",
+    "text": "∇ log Pθ∗ (x) − η(∇ log Pθ∗ (x|c) − ∇ log Pθ∗ (x))"
+   },
+   {
+    "page": 4,
+    "words": 22,
+    "reason": "debris",
+    "text": "ϵθ (xt , c, t) ← ϵθ∗ (xt , t) − η[ϵθ∗ (xt , c, t) − ϵθ∗ (xt , t)] (6)"
+   },
+   {
+    "page": 4,
+    "words": 11,
+    "reason": "duplicate",
+    "text": "(a) (b) (c) prompt cross-attention self-attention generated image “car” (3) “”"
+   },
+   {
+    "page": 5,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "original SD All layers ESD-u Self attentions ESD-x •"
+   },
+   {
+    "page": 5,
+    "words": 48,
+    "reason": "duplicate",
+    "text": "(more change is better) The Starry Van Gogh Night by erasure of artist The Bedroom in Arles by Van Gogh The Great Wave Girl with a pearl The scream by Edvard Munch interference with other artist's (le"
+   },
+   {
+    "page": 6,
+    "words": 10,
+    "reason": "duplicate",
+    "text": "| original SD | Our method |\n| Erasing | Erasing |\n| “Thomas Kinkade” | “Kilian Eng” |"
+   },
+   {
+    "page": 6,
+    "words": 27,
+    "reason": "duplicate",
+    "text": "“Kilian Eng” “Kelly McKernan” inspired depiction of a peaceful park Thomas Kinkade prompt Conditioning Whimsical creatures Post-apocalyptic landscape by Kilian Eng with floral elements by Kelly McKern"
+   },
+   {
+    "page": 6,
+    "words": 40,
+    "reason": "duplicate",
+    "text": "(a) (b) (c) baselines Erasing targeted style preserving other styles (lower is better) (higher is better) 4.0 3.5 3.0 Avg. rating 2.5 2015 1.0 real similar SD ESD-x SLD SD-Neg ESD-x SLD SD-Neg artist "
+   },
+   {
+    "page": 6,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "SLD Erasing Safe concept Safe concept Safe concept"
+   },
+   {
+    "page": 7,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "SLD-Medium1 16.90 0.1594"
+   },
+   {
+    "page": 7,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "SLD-Max 18.76 0.1583"
+   },
+   {
+    "page": 7,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "5.3. object removal"
+   },
+   {
+    "page": 8,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "accuracy of other Erased class"
+   },
+   {
+    "page": 8,
+    "words": 31,
+    "reason": "duplicate",
+    "text": "erasure interference with unrelated artistic style original model original model Erasing “Van Gogh Art” Erasing “Rembrandt” “Picasso Art” “Van Gogh” incomplete concept erasure original model Erasing “"
+   },
+   {
+    "page": 11,
+    "words": 23,
+    "reason": "debris",
+    "text": "). ϵθ (xt , c, t) ← ϵθ∗ (xt , t) − η[ϵθ∗ (xt , c, t) − ϵθ∗ (xt , t)] (7)"
+   },
+   {
+    "page": 11,
+    "words": 27,
+    "reason": "debris",
+    "text": "final image ϵθ*(xt, c, t) − ϵθ*(xt, t) final image ϵθ*(xt, c, t) − ϵθ*(xt, t) c: “garbage truck” c: “Van Gogh” c: “Pablo Picasso” c: “church”"
+   },
+   {
+    "page": 12,
+    "words": 26,
+    "reason": "duplicate",
+    "text": "categories as unsafe. Erased artwork corresponding artist style other memorized artwork original model Erasing “Starry Night” original model Erasing “Starry Night” original model Erasing “Starry Night"
+   },
+   {
+    "page": 13,
+    "words": 15,
+    "reason": "duplicate",
+    "text": "SLD SLD \"nudity\" \"nudity\" \"nudity\" \"nudity\" \"i2p\" Category SD Medium Max ESD-u-1 ESD-u-3 ESD-u-10 ESD-x-3"
+   },
+   {
+    "page": 13,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "E.1. artistic style"
+   },
+   {
+    "page": 21,
+    "words": 29,
+    "reason": "duplicate",
+    "text": "“tench” original SD Erasing springer” “English Erasing “cassette Erasing player” Erasing “chain Saw” “church” Erasing “French. Erasing horn” “garbage Erasing truck” “parachute” “golf ball” “Gas pump” "
+   },
+   {
+    "page": 22,
+    "words": 23,
+    "reason": "duplicate",
+    "text": "original SD “tench” Erasing original SD springer” “English Erasing original SD “cassette Erasing player” original SD Erasing “chain Saw” original SD “church” Erasing"
+   },
+   {
+    "page": 23,
+    "words": 24,
+    "reason": "duplicate",
+    "text": "original SD “French. Erasing horn” original SD “garbage Erasing truck” original SD Erasing pump” “Gas original SD “golf ball” Erasing original SD “parachute” Erasing"
+   }
+  ],
+  "captions_reclassified": [
+   {
+    "page": 11,
+    "figure": "#/pictures/8",
+    "text": "Figure B.1: Visually analysing the residual of the conditional and unconditional scores in image domain shows the styles"
+   },
+   {
+    "page": 13,
+    "figure": "#/pictures/11",
+    "text": "Figure C.3: Top: Images generate with Stable Diffusion, bottom: images generated with ESD when removing \"A famous landma"
+   },
+   {
+    "page": 15,
+    "figure": "#/pictures/12",
+    "text": "Figure E.1: ESD-u is more efficient in erasing nudity compared to ESD-x. I2P benchmark data consist of prompts with out "
+   },
+   {
+    "page": 16,
+    "figure": "#/pictures/13",
+    "text": "Figure F.1: User study request for participation and instructions to guide through the user study."
+   },
+   {
+    "page": 16,
+    "figure": "#/pictures/14",
+    "text": "Figure F.2: Reference Images shown to the users."
+   },
+   {
+    "page": 16,
+    "figure": "#/pictures/15",
+    "text": "How confident are you that this image is from Thomas Kinkade? (1 being least confident and 5 being most confident)"
+   },
+   {
+    "page": 16,
+    "figure": "#/pictures/16",
+    "text": "Figure F.3: User study screenshot for the user to rate an image."
+   },
+   {
+    "page": 17,
+    "figure": "#/pictures/17",
+    "text": "Figure F.4: Our method has a significant erasure effect compared to SLD in erasing famous artistic styles. The blue dott"
+   },
+   {
+    "page": 17,
+    "figure": "#/pictures/18",
+    "text": "Figure F.5: Our method demonstrates a complete erasure of intended style and minimal interference with other styles. The"
+   },
+   {
+    "page": 18,
+    "figure": "#/pictures/19",
+    "text": "Figure F.6: Our method demonstrates a complete erasure of intended style and minimal interference with other styles. The"
+   },
+   {
+    "page": 18,
+    "figure": "#/pictures/20",
+    "text": "Figure F.7: Our method demonstrates a complete erasure of intended style and minimal interference with other styles. The"
+   },
+   {
+    "page": 19,
+    "figure": "#/pictures/21",
+    "text": "Figure F.8: Our method demonstrates a complete erasure of intended style and minimal interference with other styles. The"
+   },
+   {
+    "page": 19,
+    "figure": "#/pictures/22",
+    "text": "Figure F.9: Our method demonstrates a complete erasure of intended style and minimal interference with other styles. The"
+   },
+   {
+    "page": 20,
+    "figure": "#/pictures/23",
+    "text": "Figure F.10: Our method demonstrates a complete erasure of intended style and minimal interference with other styles. Th"
+   },
+   {
+    "page": 20,
+    "figure": "#/pictures/24",
+    "text": "Figure F.11: Our method demonstrates a complete erasure of intended style and minimal interference with other styles. Th"
+   },
+   {
+    "page": 21,
+    "figure": "#/pictures/25",
+    "text": "Figure F.12: Object removal in Stable Diffusion. The first row represents the original SD generations. From the later ro"
+   },
+   {
+    "page": 22,
+    "figure": "#/pictures/26",
+    "text": "Figure F.13: We show the intended erasure of objects by our method (Part 1). The rows in red-dotted box represent erasur"
+   },
+   {
+    "page": 23,
+    "figure": "#/pictures/27",
+    "text": "Figure F.14: We show the intended erasure of objects by our method (Part 2). The rows in red-dotted box represent erasur"
+   }
+  ],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [],
+  "superseded": [
+   {
+    "page": 17,
+    "ref": "#/pictures/17/caption",
+    "text": "Figure F.4: Our method has a significant erasure effect compared to SLD in erasing famous artistic styles. The blue dott"
+   },
+   {
+    "page": 17,
+    "ref": "#/pictures/18/caption",
+    "text": "Figure F.5: Our method demonstrates a complete erasure of intended style and minimal interference with other styles. The"
+   },
+   {
+    "page": 18,
+    "ref": "#/pictures/19/caption",
+    "text": "Figure F.6: Our method demonstrates a complete erasure of intended style and minimal interference with other styles. The"
+   },
+   {
+    "page": 18,
+    "ref": "#/pictures/20/caption",
+    "text": "Figure F.7: Our method demonstrates a complete erasure of intended style and minimal interference with other styles. The"
+   },
+   {
+    "page": 19,
+    "ref": "#/pictures/21/caption",
+    "text": "Figure F.8: Our method demonstrates a complete erasure of intended style and minimal interference with other styles. The"
+   },
+   {
+    "page": 19,
+    "ref": "#/pictures/22/caption",
+    "text": "Figure F.9: Our method demonstrates a complete erasure of intended style and minimal interference with other styles. The"
+   },
+   {
+    "page": 20,
+    "ref": "#/pictures/23/caption",
+    "text": "Figure F.10: Our method demonstrates a complete erasure of intended style and minimal interference with other styles. Th"
+   },
+   {
+    "page": 20,
+    "ref": "#/pictures/24/caption",
+    "text": "Figure F.11: Our method demonstrates a complete erasure of intended style and minimal interference with other styles. Th"
+   }
+  ],
+  "replaced_pages": [
+   17,
+   18,
+   19,
+   20
+  ],
+  "noise_dropped": 18,
+  "hyphens_restored": [
+   {
+    "page": 11,
+    "ref": "#/texts/415",
+    "word": "SD-NegPrompt"
+   },
+   {
+    "page": 11,
+    "ref": "#/texts/471",
+    "word": "chat-GPT"
+   }
+  ],
+  "order": [
+   {
+    "page": 4,
+    "text": "specific to the prompt, such as when a named artistic style",
+    "words": 11,
+    "refs": [
+     "#/texts/170",
+     "#/texts/172",
+     "#/texts/186"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 11,
+    "text": "using the prompt shown for each image.",
+    "words": 7,
+    "refs": [
+     "#/texts/409",
+     "#/texts/411",
+     "#/pictures/8/caption"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote, heading are involved",
+    "breaks": [
+     "sentence cut: 'ainst the actual work of the artists, we' | '*For all the residual images: t=10'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 16,
+    "text": "Figure F.2: reference images shown to the users.",
+    "words": 8,
+    "refs": [
+     "#/pictures/14/caption",
+     "#/pictures/16/caption"
+    ],
+    "repaired": false,
+    "note": "layer passage (84 letters) and blocks (259) differ in length",
+    "breaks": [],
+    "section": ""
+   }
+  ],
+  "order_pages_checked": 19,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 3,
+  "order_breaking": 1,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 5 minor; distortions: 0 material, 4 minor; additions: 0 material, 1 minor; order: 0 material, 0 minor",
+  "at": "2026-11-15T10:36:22+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 5
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 4
+   },
+   "additions": {
+    "material": 0,
+    "minor": 1
+   },
+   "order": {
+    "material": 0,
+    "minor": 0
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "Erasing Concepts from Diffusion Models (p. 1–23)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "users report that removing explicit images and other subjects from the training data may have had a negative impact on the output quality",
+      "severity": "minor",
+      "page": 1
+     },
+     {
+      "source": "Copyright concerns of several artists has led to a lawsuit against the makers of Stable Diffusion [1], raising new legal issues [41]; the courts have yet to rule on these cases.",
+      "severity": "minor",
+      "page": 2
+     },
+     {
+      "source": "While we did not observe the model making direct copies of specific original artwork, it is undeniable that these artistic styles have been captured by the model.",
+      "severity": "minor",
+      "page": 5
+     },
+     {
+      "source": "Since COCO is a well curated dataset without nudity, this could be a reason for our method's better FID compared to SD.",
+      "severity": "minor",
+      "page": 7
+     },
+     {
+      "source": "We also compare a model which erases default concept used by SLD \"hate, harassment, violence, suffering, humiliation, harm, suicide, sexual, nudity, bodily fluids, blood, obscene gestures, illegal activity, drug use, theft, vandalism, weapons, child abuse, brutality, cruelty\"; we call it ESD-u-1 (\"i2p\").",
+      "severity": "minor",
+      "page": 13
+     }
+    ],
+    "distortions": [
+     {
+      "source": "on average, the images generated with the erased models had only 38 images depicting the Eiffel Tower",
+      "summary": "reduced direct Eiffel Tower generations from 79 to 38 out of 100",
+      "severity": "minor",
+      "page": 12
+     },
+     {
+      "source": "the residual noise that corresponds to the concept ϵθ*(xt, c, t) −ϵθ*(xt, t)",
+      "summary": "a blurry residual image labeled \"ε_θ(x_t, c, t) - ε_θ(x_r, t)\"",
+      "severity": "minor",
+      "page": 11
+     },
+     {
+      "source": "the diagonal images represent the intended erasures while the off-diagonal images represent the interference",
+      "summary": "with a red dashed box marking the one cell in that row where the image has changed while the other cells remain similar to the top row",
+      "severity": "minor",
+      "page": 21
+     },
+     {
+      "source": "The right section shows the current image to be evaluated, four radio-buttons that indicate a rating as shown in Figure F.3",
+      "summary": "Five colored rectangular boxes are arranged in a horizontal row, each containing a white number from 1 to 5",
+      "severity": "minor",
+      "page": 14
+     }
+    ],
+    "additions": [
+     {
+      "summary": "Image cloaking: adversarial perturbations artists can add to work before posting (e.g., Glaze-style methods)",
+      "severity": "minor"
+     }
+    ],
+    "order": []
+   }
+  ]
+ },
+ "source": {
+  "source": "gandikota-et-al-2023-erasing-concepts-from-diffusion-models-esd.pdf",
+  "bytes": 34932235,
+  "sha256": "1245dfae2c5f35e82b1eef7f224b68d726b59dd9b0b2466c230b7d944a1d9805",
+  "extracted_at": "2026-11-13T02:35:56+01:00"
+ }
+}

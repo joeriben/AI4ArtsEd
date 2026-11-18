@@ -21,10 +21,12 @@ and a strategy: `factor_a` on
 the CLIP block, `factor_b` for T5's rows 0..76 mixed into it cell by cell, `factor_c`
 on the T5 block, `t5_rows` for the layout of that block, "full" (rows 0..511 under
 the CLIP rows, 589 in all, the layout SD 3.5 runs on its own) or "tail" (rows 77.., the
-layout of 2025), and, since 2026-09-17, `pooled` for the pooled vector, "clip" (as the
-two CLIP encoders compute it) or "zero" (zeros in its place). AI4ArtsEdSD3ThreeFactors
-of the same node family carries them; the negative goes the same way under the same
-factors, layout and pooled vector. The three come together or not at
+layout of 2025), since 2026-09-17 `pooled` for the pooled vector, "clip" (as the
+two CLIP encoders compute it) or "zero" (zeros in its place), and, since 2026-11-15,
+`clip_encoder` for which CLIP encoders fill the CLIP block and the pooled vector,
+"both", or "clip_l" / "clip_g" alone (the other one's columns and pooled half zeros).
+AI4ArtsEdSD3ThreeFactors of the same node family carries them; the negative goes the
+same way under the same factors, layout, pooled vector and CLIP encoders. The three come together or not at
 all, and never alongside an alpha or a strategy. `alpha_factor` and `fusion_strategy`
 stay for the Canvas and for stored runs.
 
@@ -34,8 +36,8 @@ on the twin; the twin's `pooled=zero` option is its own switch, read only there,
 this chunk's parameter `pooled` is the surface's: a name carrying one is refused with the option named, so that no run is
 attributed to a mechanism that did not run.
 
-Input: prompt (TEXT_1), alpha_factor + fusion_strategy or factor_a/b/c + t5_rows + pooled,
-optional clip_prompt/t5_prompt
+Input: prompt (TEXT_1), alpha_factor + fusion_strategy or factor_a/b/c + t5_rows + pooled
++ clip_encoder, optional clip_prompt/t5_prompt
 Output: dict with base64 image data + generation metadata
 """
 
@@ -65,6 +67,7 @@ DEFAULTS = {
     "fusion_strategy": "dual_alpha",
     "t5_rows": "full",
     "pooled": "clip",
+    "clip_encoder": "both",
     "sampler_name": "euler",
     "scheduler": "normal",
 }
@@ -97,13 +100,17 @@ def _fusion_named(fusion_strategy):
 T5_ROWS = ("full", "tail")
 # The pooled vector: CLIP's own, or zeros in its place (the node's POOLED).
 POOLED = ("clip", "zero")
+# The CLIP encoders the block and the pooled vector are read from (the node's
+# CLIP_ENCODERS).
+CLIP_ENCODERS = ("both", "clip_l", "clip_g")
 
 
-def _factors_named(factor_a, factor_b, factor_c, t5_rows, pooled=None):
-    """The three factors as floats, the layout and the pooled vector by name,
-    or the reason they cannot run: all three together, each a number, the
-    layout one of T5_ROWS (left out: full), the pooled vector one of POOLED
-    (left out: clip)."""
+def _factors_named(factor_a, factor_b, factor_c, t5_rows, pooled=None, clip_encoder=None):
+    """The three factors as floats, the layout, the pooled vector and the CLIP
+    encoders by name, or the reason they cannot run: all three together, each
+    a number, the layout one of T5_ROWS (left out: full), the pooled vector one
+    of POOLED (left out: clip), the CLIP encoders one of CLIP_ENCODERS (left
+    out: both)."""
     given = {"factor_a": factor_a, "factor_b": factor_b, "factor_c": factor_c}
     missing = [name for name, value in given.items() if value is None]
     if missing:
@@ -124,14 +131,18 @@ def _factors_named(factor_a, factor_b, factor_c, t5_rows, pooled=None):
     pool = pooled or DEFAULTS["pooled"]
     if pool not in POOLED:
         raise ValueError(f"pooled {pool!r}: one of {', '.join(POOLED)}")
-    return (named[0], named[1], named[2], rows, pool)
+    encoders = clip_encoder or DEFAULTS["clip_encoder"]
+    if encoders not in CLIP_ENCODERS:
+        raise ValueError(f"clip_encoder {encoders!r}: one of {', '.join(CLIP_ENCODERS)}")
+    return (named[0], named[1], named[2], rows, pool, encoders)
 
 
 def _build_workflow(clip_prompt, t5_prompt, negative_prompt, checkpoint, strategy,
                     alpha, width, height, steps, cfg, seed, sampler_name, scheduler,
                     factors=None):
     """The graph one run submits: the encodes, a fusion each for the positive and
-    the negative, one sampler branch. With `factors` (a, b, c, t5_rows, pooled)
+    the negative, one sampler branch. With `factors` (a, b, c, t5_rows, pooled,
+    clip_encoder)
     the two fusion nodes are AI4ArtsEdSD3ThreeFactors instead, and `strategy`
     and `alpha` are not read."""
     from schemas.engine.comfyui_chunk_support import (
@@ -143,10 +154,12 @@ def _build_workflow(clip_prompt, t5_prompt, negative_prompt, checkpoint, strateg
     # length of its own text: the encoders then read the loader directly.
     clip_from = "7" if strategy == "original" else CLIP_NODE
     if factors is not None:
-        a, b, c, rows, pool = factors
-        fuse_positive = sd3_three_factors(["10", 0], a, b, c, rows, pool, "Three factors")
+        a, b, c, rows, pool, encoders = factors
+        fuse_positive = sd3_three_factors(["10", 0], a, b, c, rows, pool, "Three factors",
+                                          clip_encoder=encoders)
         fuse_negative = sd3_three_factors(["14", 0], a, b, c, rows, pool,
-                                          "Three factors on the negative")
+                                          "Three factors on the negative",
+                                          clip_encoder=encoders)
     else:
         fuse_positive = sd3_fusion(["10", 0], ["10", 0], alpha, strategy, "Fuse CLIP and T5")
         fuse_negative = sd3_fusion(["14", 0], ["14", 0], alpha, strategy,
@@ -222,6 +235,7 @@ async def execute(
     factor_c: float = None,
     t5_rows: str = None,
     pooled: str = None,
+    clip_encoder: str = None,
     **kwargs
 ) -> dict:
     """Returns dict with base64 image -- uses the extended Python chunk dict-return path."""
@@ -257,8 +271,8 @@ async def execute(
     # and take the place of alpha and strategy: a run naming both would be a
     # run attributed to two mechanisms.
     factors = None
-    if any(v is not None for v in (factor_a, factor_b, factor_c, t5_rows, pooled)):
-        factors = _factors_named(factor_a, factor_b, factor_c, t5_rows, pooled)
+    if any(v is not None for v in (factor_a, factor_b, factor_c, t5_rows, pooled, clip_encoder)):
+        factors = _factors_named(factor_a, factor_b, factor_c, t5_rows, pooled, clip_encoder)
         if alpha_factor is not None or fusion_strategy is not None:
             raise ValueError(
                 "the three factors and alpha_factor/fusion_strategy do not run "
@@ -306,7 +320,8 @@ async def execute(
 
     if factors is not None:
         logger.info(
-            "[SURREALIZER-COMFY] a=%s, b=%s, c=%s, t5_rows=%s, pooled=%s, steps=%s, size=%sx%s, "
+            "[SURREALIZER-COMFY] a=%s, b=%s, c=%s, t5_rows=%s, pooled=%s, clip_encoder=%s, "
+            "steps=%s, size=%sx%s, "
             "seed=%s, model=%s", *factors, steps, w, h, seed, model_id,
         )
     else:
@@ -339,6 +354,7 @@ async def execute(
             'clip_prompt': prompt,
             't5_prompt': t5_prompt,
             **({'factor_a': factors[0], 'factor_b': factors[1], 'factor_c': factors[2],
-                't5_rows': factors[3], 'pooled': factors[4]} if factors is not None else {}),
+                't5_rows': factors[3], 'pooled': factors[4], 'clip_encoder': factors[5]}
+               if factors is not None else {}),
         }
     }

@@ -1,0 +1,600 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 9.5% of 2090 words, ceiling 20%, longest run 26 words; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 26,
+     "text": "the size of the neighborhood k is a compromise between covering the entire manifold large values and overestimating its volume as little as possible small values"
+    },
+    {
+     "words": 14,
+     "text": "the distance to its k th nearest neighbor together these hyperspheres define a volume"
+    },
+    {
+     "words": 12,
+     "text": "with radius equal to the distance to its k th nearest neighbor"
+    },
+    {
+     "words": 12,
+     "text": "them into a high dimensional feature space using a pre trained classifier"
+    },
+    {
+     "words": 12,
+     "text": "is available at https github com kynkaat improved precision and recall metric"
+    }
+   ],
+   "value": 0.0947,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "0 lists/tables complete",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "17 of 48 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "Improved Precision and Recall Metric for Assessing Generative Models (p. 1–16)",
+     "page": 1,
+     "number": "21"
+    },
+    {
+     "section": "Improved Precision and Recall Metric for Assessing Generative Models (p. 1–16)",
+     "page": 1,
+     "number": "26"
+    },
+    {
+     "section": "Improved Precision and Recall Metric for Assessing Generative Models (p. 1–16)",
+     "page": 1,
+     "number": "29"
+    },
+    {
+     "section": "Improved Precision and Recall Metric for Assessing Generative Models (p. 1–16)",
+     "page": 1,
+     "number": "30"
+    },
+    {
+     "section": "Improved Precision and Recall Metric for Assessing Generative Models (p. 1–16)",
+     "page": 1,
+     "number": "31"
+    },
+    {
+     "section": "Improved Precision and Recall Metric for Assessing Generative Models (p. 1–16)",
+     "page": 2,
+     "number": "1.1"
+    },
+    {
+     "section": "Improved Precision and Recall Metric for Assessing Generative Models (p. 1–16)",
+     "page": 2,
+     "number": "24"
+    },
+    {
+     "section": "Improved Precision and Recall Metric for Assessing Generative Models (p. 1–16)",
+     "page": 2,
+     "number": "27"
+    },
+    {
+     "section": "Improved Precision and Recall Metric for Assessing Generative Models (p. 1–16)",
+     "page": 3,
+     "number": "28"
+    },
+    {
+     "section": "Improved Precision and Recall Metric for Assessing Generative Models (p. 1–16)",
+     "page": 3,
+     "number": "33"
+    },
+    {
+     "section": "Improved Precision and Recall Metric for Assessing Generative Models (p. 1–16)",
+     "page": 5,
+     "number": "1300"
+    },
+    {
+     "section": "Improved Precision and Recall Metric for Assessing Generative Models (p. 1–16)",
+     "page": 5,
+     "number": "22"
+    },
+    {
+     "section": "Improved Precision and Recall Metric for Assessing Generative Models (p. 1–16)",
+     "page": 6,
+     "number": "4.1"
+    },
+    {
+     "section": "Improved Precision and Recall Metric for Assessing Generative Models (p. 1–16)",
+     "page": 7,
+     "number": "19"
+    },
+    {
+     "section": "Improved Precision and Recall Metric for Assessing Generative Models (p. 1–16)",
+     "page": 8,
+     "number": "5.1"
+    },
+    {
+     "section": "Improved Precision and Recall Metric for Assessing Generative Models (p. 1–16)",
+     "page": 9,
+     "number": "23"
+    },
+    {
+     "section": "Improved Precision and Recall Metric for Assessing Generative Models (p. 1–16)",
+     "page": 9,
+     "number": "34"
+    }
+   ],
+   "value": 17.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "15 of 15 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "Improved Precision and Recall Metric for Assessing Generative Models (p. 1–16)",
+     "page": 1,
+     "heading": "Abstract"
+    },
+    {
+     "section": "Improved Precision and Recall Metric for Assessing Generative Models (p. 1–16)",
+     "page": 1,
+     "heading": "1 Introduction"
+    },
+    {
+     "section": "Improved Precision and Recall Metric for Assessing Generative Models (p. 1–16)",
+     "page": 2,
+     "heading": "1.1 Background"
+    },
+    {
+     "section": "Improved Precision and Recall Metric for Assessing Generative Models (p. 1–16)",
+     "page": 3,
+     "heading": "2 Improved precision and recall metric using k -nearest neighbors"
+    },
+    {
+     "section": "Improved Precision and Recall Metric for Assessing Generative Models (p. 1–16)",
+     "page": 4,
+     "heading": "3 Precision and recall of state-of-the-art generative models"
+    },
+    {
+     "section": "Improved Precision and Recall Metric for Assessing Generative Models (p. 1–16)",
+     "page": 6,
+     "heading": "4 Using precision and recall to analyze and improve StyleGAN"
+    },
+    {
+     "section": "Improved Precision and Recall Metric for Assessing Generative Models (p. 1–16)",
+     "page": 6,
+     "heading": "4.1 Network architectures and training configurations"
+    },
+    {
+     "section": "Improved Precision and Recall Metric for Assessing Generative Models (p. 1–16)",
+     "page": 7,
+     "heading": "5 Estimating the quality of individual samples"
+    },
+    {
+     "section": "Improved Precision and Recall Metric for Assessing Generative Models (p. 1–16)",
+     "page": 8,
+     "heading": "5.1 Quality of interpolations"
+    },
+    {
+     "section": "Improved Precision and Recall Metric for Assessing Generative Models (p. 1–16)",
+     "page": 9,
+     "heading": "6 Conclusion"
+    },
+    {
+     "section": "Improved Precision and Recall Metric for Assessing Generative Models (p. 1–16)",
+     "page": 10,
+     "heading": "A Pseudocode and implementation details"
+    },
+    {
+     "section": "Improved Precision and Recall Metric for Assessing Generative Models (p. 1–16)",
+     "page": 11,
+     "heading": "Algorithm 1 k -NN precision and recall pseudocode."
+    },
+    {
+     "section": "Improved Precision and Recall Metric for Assessing Generative Models (p. 1–16)",
+     "page": 11,
+     "heading": "B Precision and recall with synthetic dataset"
+    },
+    {
+     "section": "Improved Precision and Recall Metric for Assessing Generative Models (p. 1–16)",
+     "page": 12,
+     "heading": "C Analysis of truncation methods"
+    },
+    {
+     "section": "Improved Precision and Recall Metric for Assessing Generative Models (p. 1–16)",
+     "page": 13,
+     "heading": "D Quality of samples and interpolations"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "17 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "17 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "7 quoted texts in 4 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Fig. 1",
+     "page": 2,
+     "image": "fig-001-p2.png",
+     "quotes": [
+      "“P_g”",
+      "“P_r.”"
+     ]
+    },
+    {
+     "figure": "Fig. 3",
+     "page": 4,
+     "image": "fig-003-p4.png",
+     "quotes": [
+      "“Truncation ψ,”",
+      "“Truncation ψ”"
+     ]
+    },
+    {
+     "figure": "Fig. 5",
+     "page": 5,
+     "image": "fig-005-p5.png",
+     "quotes": [
+      "\"Truncation ψ\""
+     ]
+    },
+    {
+     "figure": "Fig. 10",
+     "page": 11,
+     "image": "fig-010-p11.png",
+     "quotes": [
+      "\"F_{1,k}\"",
+      "\"F_k\""
+     ]
+    }
+   ],
+   "value": 7.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "8 page references valid (printed-folio pages 1–16)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "16 pages checked, 1 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "15 pages checked, 0 passages put back in order",
+   "findings": [],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "kynkaanniemi-et-al-2019-improved-precision-and-recall-metric-for-assessing-generative-models",
+ "doc_type": "scholarly_article",
+ "analyzed_at": "2026-11-15T11:59:46.434157+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "Improved Precision and Recall Metric for Assessing Generative Models",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 16,
+   "chars": 37441,
+   "blocks": 90,
+   "inner_headings": 15,
+   "figures": 17
+  }
+ ],
+ "skipped": [
+  "7 Acknowledgements (p. 9)",
+  "References (p. 9)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 16,
+  "gaps": [
+   {
+    "page": 14,
+    "text": "Border Collie Lakeside Norwich Terrier Persian cat Panda Siamese cat (a) high-quality samples Border Collie Lakeside Norwich Terrier Persian cat Panda Siamese cat (b) low-quality samples Figure 12: examples of (a) high and (b) low-quality BigGAN samples according to our realism scores. 14",
+    "words": 44,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/571"
+   }
+  ],
+  "gaps_dismissed": [
+   {
+    "page": 1,
+    "words": 11,
+    "reason": "duplicate",
+    "text": "Tero Karras Samuli Laine Aalto University NVIDIA NVIDIA NVIDIA tkarras@nvidia.com slaine@nvidia.com"
+   },
+   {
+    "page": 1,
+    "words": 11,
+    "reason": "duplicate",
+    "text": "tuomas.kynkaanniemi@aalto.fi Jaakko Lehtinen Timo Aila Aalto University NVIDIA NVIDIA taila@nvidia.com jlehtinen@nvidia.com"
+   },
+   {
+    "page": 2,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "Pr Pg (a) example distributions (b) Precision (c) Recall"
+   },
+   {
+    "page": 3,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "(a) true manifold (b) Approx. manifold"
+   },
+   {
+    "page": 3,
+    "words": 34,
+    "reason": "debris",
+    "text": "1, if φ − φ0 2 ≤ φ0 − NNk φ0 , Φ 2 for at least one φ0 ∈ Φ \u001a \u0001 f (φ, Φ) = (1) 0, otherwise, where NNk φ0 ,"
+   },
+   {
+    "page": 3,
+    "words": 33,
+    "reason": "debris",
+    "text": "1 X 1 X precision(Φr , Φg ) = f (φg , Φr ) recall(Φr , Φg ) = f (φr , Φg ) (2) |Φg | |Φr | φg ∈Φg φr ∈Φr"
+   },
+   {
+    "page": 4,
+    "words": 57,
+    "reason": "duplicate",
+    "text": "1.00 33.34 1.0 Precision Recall FID 0.8 k=2 0.75 25.01 k=2 k=3 Precision / Recall 0.6 k=3 k=5 FID 0.50 16.67 k=5 0.4 k=7 k=7 0.25 8.34 k=10 0.2 k=10 0.00 0.00 0.0 10000 20000 30000 40000 50000 60000 7"
+   },
+   {
+    "page": 4,
+    "words": 30,
+    "reason": "duplicate",
+    "text": "4 1.0 0.8 k=2 k=2 k=3 0.6 k=3 k=5 k=5 0.4 k=7 k=7 k=10 0.2 k=10 0.0 0.8 1000 0.2 0.4 0.6 0.8 1.0 truncation Ã (c)Varying k, Inception-v3"
+   },
+   {
+    "page": 5,
+    "words": 36,
+    "reason": "duplicate",
+    "text": "Precision 1.0 D C A B B 0.8 A C 0.6 D 0.4 0.0 0.2 0.4 0.6 0.8 1.0 Recall A (FID = 91.7) B (FID = 16.9) C (FID = 4.5) D (FID = 16.7)"
+   },
+   {
+    "page": 5,
+    "words": 49,
+    "reason": "duplicate",
+    "text": "1.0 1.0 Precision Precision Recall Recall 0.8 0.8 0.6 0.6 0.4 0.4 0.2 0.2 0.0 0.0 0.0 0.2 0.4 0.6 0.8 1000 0.2 0.4 0.6 0.8 1.0 ψ = 0.0 ψ = 0.3 ψ = 0.7 ψ = 1.0 truncation Ã truncation Ã (a) (b) Our met"
+   },
+   {
+    "page": 6,
+    "words": 66,
+    "reason": "duplicate",
+    "text": "1.0 great Pyrenees Broccoli 0.9 Egyptian cat Lemon (a) Baseball player Precision Bubble 0.8 Trumpet great Pyrenees Broccoli Egyptian cat Lemon Park bench (FID = 30.0) (FID = 40.2) (FID = 39.2) (FID = "
+   },
+   {
+    "page": 7,
+    "words": 97,
+    "reason": "duplicate",
+    "text": "0.75 0.83 0.81 configuration FID 0.74 0.79 0.73 0.77 A) StyleGAN 4.43 Precision 0.75 B) No mb. std. 8.58 Precision 0.72 0.73 0.71 C) B + low γ 10.34 0.71 0.69 D) No growing 6.14 0.70 0.67 training sna"
+   },
+   {
+    "page": 7,
+    "words": 22,
+    "reason": "debris",
+    "text": "( ) kφr − NNk (φr , Φr )k2 R(φg , Φr ) = max . (3) φr φg − φr 2"
+   },
+   {
+    "page": 8,
+    "words": 15,
+    "reason": "duplicate",
+    "text": "Red wine Alp Golden Retriever Ladybug Lighthouse Tabby cat Monarch butterfly Cocker Spaniel Best-2 Worst-2"
+   },
+   {
+    "page": 9,
+    "words": 25,
+    "reason": "duplicate",
+    "text": "2.0 A B C A 1.5 D realism Score R B 1.0 0.5 C 0.0 0.0 0.2 0.4 0.6 0.8 1.0 D interpolation parameter t"
+   },
+   {
+    "page": 11,
+    "words": 63,
+    "reason": "duplicate",
+    "text": "1.0 1.0 Precision F1=8 0.9 0.9 10 4 7 Recall F8 0.8 0.8 0.7 0.7 2 8 0.6 0.6 3 5 0.5 0.5 0.4 0.4 6 0.3 0.3 1 9 0.2 0.2 0.1 0.1 0.0 0.0 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 covered modes covered mo"
+   },
+   {
+    "page": 11,
+    "words": 10,
+    "reason": "debris",
+    "text": "φ − φ0 2 ≤ rφ0 for any φ0 ∈"
+   },
+   {
+    "page": 12,
+    "words": 63,
+    "reason": "duplicate",
+    "text": "0.90 0.88 0.86 0.84 0.82 0.80 Precision Precision A) Reject by Distance B) Reject by density 0.78 0.76 0.74 0.72 A) Reject dist. E) Interp. Z 0.70 B) Reject dens. F) Trunc. Z 0.68 C) Clamp dens. G) re"
+   },
+   {
+    "page": 12,
+    "words": 44,
+    "reason": "duplicate",
+    "text": "0.90 0.88 0.86 0.84 0.82 0.80 0.78 0.76 0.74 0.72 A) Reject dist. E) Interp. Z 0.70 B) Reject dens. F) Trunc. Z 0.68 C) Clamp dens. G) replace D) Interp. mean 0.66 80 70 60 50 40 30 20 10 0 FID (c)"
+   }
+  ],
+  "captions_reclassified": [
+   {
+    "page": 15,
+    "figure": "#/pictures/13",
+    "text": "(a) High-quality samples"
+   },
+   {
+    "page": 15,
+    "figure": "#/pictures/14",
+    "text": "(b) Low-quality samples"
+   },
+   {
+    "page": 16,
+    "figure": "#/pictures/15",
+    "text": "(a) High-quality interpolations"
+   },
+   {
+    "page": 16,
+    "figure": "#/pictures/16",
+    "text": "(b) Low-quality interpolations"
+   }
+  ],
+  "captions_reassigned": [],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [],
+  "superseded": [
+   {
+    "page": 14,
+    "ref": "#/texts/578",
+    "text": "(a) High-quality samples"
+   },
+   {
+    "page": 14,
+    "ref": "#/texts/585",
+    "text": "(b) Low-quality samples"
+   }
+  ],
+  "replaced_pages": [
+   14
+  ],
+  "noise_dropped": 0,
+  "hyphens_restored": [],
+  "order": [],
+  "order_pages_checked": 15,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 0,
+  "order_breaking": 0,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 5 minor; distortions: 0 material, 2 minor; additions: 0 material, 0 minor; order: 0 material, 0 minor",
+  "at": "2026-11-15T12:01:53+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 5
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 2
+   },
+   "additions": {
+    "material": 0,
+    "minor": 0
+   },
+   "order": {
+    "material": 0,
+    "minor": 0
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "Improved Precision and Recall Metric for Assessing Generative Models (p. 1–16)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "In particular, they make effects in the 'null space' of FID clearly visible.",
+      "severity": "minor",
+      "page": 3
+     },
+     {
+      "source": "Parallel with our work, Simon et al. [27] extend Sajjadi's formulation to arbitrary probability distributions and provide a practical algorithm that estimates precision and recall by training a post hoc classifier.",
+      "severity": "minor",
+      "page": 2
+     },
+     {
+      "source": "Our findings highlight that recall alone is not enough to judge the quality of the distribution - it only measures the extent.",
+      "severity": "minor",
+      "page": 12
+     },
+     {
+      "source": "The final recall value approximates the fraction of training set the generator can reproduce (generally well below 100%).",
+      "severity": "minor",
+      "page": 5
+     },
+     {
+      "source": "We see potential in using the realism score for measuring the shape of this region in W with greater accuracy, possibly allowing the exclusion of unrealistic images in a more refined manner than with truncation-like methods.",
+      "severity": "minor",
+      "page": 8
+     }
+    ],
+    "distortions": [
+     {
+      "source": "We have tested both approaches and found that feature space, used by Brock at al., works considerably better for the purposes of our metric, presumably because it places less emphasis on the exact spatial arrangement",
+      "summary": "The authors chose the VGG-16 feature space (as used by Brock et al.) over Zhang et al.'s perceptual metric because it places less emphasis on exact spatial arrangement.",
+      "severity": "minor",
+      "page": 3
+     },
+     {
+      "source": "We have inspected the generated images visually and confirmed that clamping appears to generally yield the best tradeoff.",
+      "summary": "visual inspection confirms clamping yields the best tradeoff.",
+      "severity": "minor",
+      "page": 12
+     }
+    ],
+    "additions": [],
+    "order": []
+   }
+  ]
+ },
+ "source": {
+  "source": "kynkaanniemi-et-al-2019-improved-precision-and-recall-metric-for-assessing-generative-models.pdf",
+  "bytes": 10490223,
+  "sha256": "ee4efa06f67bfeec5bd7486e37ebebe47e2bded3a6821fe46ee8c8a7d2b795ee",
+  "extracted_at": "2026-11-13T02:39:16+01:00"
+ }
+}

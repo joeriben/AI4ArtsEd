@@ -21,6 +21,8 @@ test starts from an empty schema.
 Run: python3 -m pytest devserver/tests/test_lab_auth.py -q
 (from the worktree root; also works from devserver/ directly)
 """
+import hashlib
+import inspect
 import os
 import sys
 import tempfile
@@ -40,8 +42,9 @@ from flask import Flask
 
 from my_app.lab.db import Base, engine, SessionLocal, init_db
 from my_app.lab import models as M
-from my_app.lab.auth_service import hash_password
-from my_app.lab.seed import seed_admin, SETTINGS_PASSWORD_FILE
+from my_app.lab.auth_service import hash_password, verify_password, UNUSABLE_PASSWORD_HASH
+from my_app.lab.terms import TERMS_VERSION
+from my_app.lab.seed import report_copied_settings_hash, seed_admin
 from my_app.routes.auth_routes import auth_bp
 
 
@@ -90,13 +93,8 @@ def _make_educator(email="edu@example.org", password="secret12", active=True):
 # ---------------------------------------------------------------------------
 # Seed idempotency
 # ---------------------------------------------------------------------------
-def test_seed_idempotent(monkeypatch):
-    """2x create_all + seed => exactly one admin. Uses a known hash so no
-    dependency on the real settings_password.key."""
-    monkeypatch.setattr(
-        "my_app.lab.seed.SETTINGS_PASSWORD_FILE",
-        Path("/nonexistent/settings_password.key"),
-    )
+def test_seed_idempotent():
+    """2x create_all + seed => exactly one admin."""
     init_db()
     seed_admin()
     init_db()
@@ -108,27 +106,53 @@ def test_seed_idempotent(monkeypatch):
     assert admins[0].username == "admin"
 
 
-def test_seed_reuses_settings_hash(monkeypatch, tmp_path):
-    """When settings_password.key exists, the admin reuses its hash verbatim
-    (so the legacy login and the new login agree)."""
-    known_hash = hash_password("mkjdU4dz8H3!F")
-    keyfile = tmp_path / "settings_password.key"
-    keyfile.write_text(known_hash)
-    monkeypatch.setattr("my_app.lab.seed.SETTINGS_PASSWORD_FILE", keyfile)
-
+def test_seed_gives_the_admin_no_password():
+    """A seeded admin has no password: no password opens it until
+    scripts/set_admin_account.py sets one. seed_admin neither writes a
+    password into the code nor copies the settings password onto the account."""
     seed_admin()
     db = SessionLocal()
     admin = db.query(M.User).filter(M.User.role == M.Role.admin).first()
     assert admin is not None
-    assert admin.password_hash == known_hash
+    assert admin.password_hash == UNUSABLE_PASSWORD_HASH
+    for attempt in ("", "admin", "admin-password-1", UNUSABLE_PASSWORD_HASH):
+        assert not verify_password(admin.password_hash, attempt)
+    source = inspect.getsource(seed_admin)
+    assert "hash_password(" not in source
+    assert "read_text" not in source
+
+
+def test_a_copied_settings_hash_is_reported(tmp_path):
+    """The trace versions before 2026-11-15 left: the admin account carries
+    the hash of settings_password.key. It is found and only reported."""
+    seed_admin()
+    copied = hash_password("a-settings-password-1")
+    key_file = tmp_path / "settings_password.key"
+    key_file.write_text(copied + "\n")
+    assert report_copied_settings_hash(key_file) == 0
+    db = SessionLocal()
+    admin = db.query(M.User).filter(M.User.role == M.Role.admin).one()
+    admin.password_hash = copied
+    db.commit()
+    assert report_copied_settings_hash(key_file) == 1
+    assert report_copied_settings_hash(tmp_path / "missing.key") == 0
+    SessionLocal.remove()
+    admin = SessionLocal().query(M.User).filter(M.User.role == M.Role.admin).one()
+    assert admin.password_hash == copied
 
 
 # ---------------------------------------------------------------------------
 # Login happy path + failures
 # ---------------------------------------------------------------------------
+# An account with a password signs in with its agreement to the conditions of
+# use (lab/terms.py, 2026-11-15); the first sign-in without it is covered in
+# test_sign_in_gate.py.
+AGREE = {"accept_terms": TERMS_VERSION, "language": "en"}
+
+
 def test_login_happy_path(client):
     _make_educator()
-    resp = client.post("/api/auth/login", json={"identifier": "edu@example.org", "password": "secret12"})
+    resp = client.post("/api/auth/login", json={"identifier": "edu@example.org", "password": "secret12", **AGREE})
     assert resp.status_code == 200
     body = resp.get_json()
     assert body["user"]["role"] == "educator"
@@ -155,6 +179,29 @@ def test_login_inactive_user_401(client):
     assert resp.status_code == 401
 
 
+def test_login_finds_an_address_typed_in_another_case(client):
+    _make_educator()
+    resp = client.post("/api/auth/login", json={"identifier": "Edu@Example.ORG", "password": "secret12", **AGREE})
+    assert resp.status_code == 200
+    assert resp.get_json()["user"]["identifier"] == "edu@example.org"
+
+
+def test_login_refuses_a_published_password(client, monkeypatch):
+    """A password earlier versions built into the code opens no account, also
+    where it is the account's own; the answer is the same for every account."""
+    from my_app.lab import auth_service
+    monkeypatch.setattr(auth_service, "PUBLISHED_PASSWORD_DIGESTS",
+                        frozenset({hashlib.sha256(b"published-test-value").hexdigest()}))
+    _make_educator(password="published-test-value")
+    for identifier in ("edu@example.org", "nobody@example.org"):
+        resp = client.post("/api/auth/login", json={"identifier": identifier,
+                                                    "password": "published-test-value", **AGREE})
+        assert resp.status_code == 403
+        assert resp.get_json()["error"] == "published_password"
+    with client.session_transaction() as sess:
+        assert "user_id" not in sess
+
+
 def test_login_missing_fields_400(client):
     resp = client.post("/api/auth/login", json={"identifier": "", "password": ""})
     assert resp.status_code == 400
@@ -171,7 +218,7 @@ def test_me_without_session(client):
 
 def test_me_with_session_then_logout(client):
     _make_educator()
-    client.post("/api/auth/login", json={"identifier": "edu@example.org", "password": "secret12"})
+    client.post("/api/auth/login", json={"identifier": "edu@example.org", "password": "secret12", **AGREE})
     resp = client.get("/api/auth/me")
     assert resp.status_code == 200
     assert resp.get_json()["user"]["identifier"] == "edu@example.org"
@@ -236,7 +283,7 @@ def test_require_role_educator_passes_own_role():
     app = _role_probe_app()
     c = app.test_client()
     _make_educator()
-    c.post("/api/auth/login", json={"identifier": "edu@example.org", "password": "secret12"})
+    c.post("/api/auth/login", json={"identifier": "edu@example.org", "password": "secret12", **AGREE})
     assert c.get("/probe/educator").status_code == 200
     # Educator is NOT admin.
     assert c.get("/probe/admin").status_code == 403
@@ -274,7 +321,7 @@ def test_require_role_admin_passes_everything():
     a = M.User(username="admin", role=M.Role.admin, password_hash=hash_password("secret12"))
     db.add(a)
     db.commit()
-    c.post("/api/auth/login", json={"identifier": "admin", "password": "secret12"})
+    c.post("/api/auth/login", json={"identifier": "admin", "password": "secret12", **AGREE})
     assert c.get("/probe/educator").status_code == 200
     assert c.get("/probe/admin").status_code == 200
 
@@ -284,7 +331,9 @@ def test_require_role_admin_passes_everything():
 # ---------------------------------------------------------------------------
 def test_settings_admin_bridge_grants_admin():
     """A request already authenticated as the legacy settings-admin is treated
-    as the seeded admin user — including for admin-gated routes."""
+    as the seeded admin user — including for admin-gated routes. It is no
+    sign-in of the app since 2026-11-15: /me answers no one, and the gate in
+    front of every route (lab/sign_in_gate.py) lets it nowhere."""
     seed_admin()  # ensure a seeded admin exists
     app = _role_probe_app()
     c = app.test_client()
@@ -294,9 +343,7 @@ def test_settings_admin_bridge_grants_admin():
         sess["settings_authenticated"] = True
 
     assert c.get("/probe/admin").status_code == 200
-    me = c.get("/api/auth/me").get_json()
-    assert me["user"] is not None
-    assert me["user"]["role"] == "admin"
+    assert c.get("/api/auth/me").get_json()["user"] is None
 
 
 def test_settings_admin_bridge_without_seeded_admin_is_anonymous():
@@ -318,7 +365,7 @@ def test_logout_ends_the_settings_sign_in():
     c = app.test_client()
     with c.session_transaction() as sess:
         sess["settings_authenticated"] = True
-    assert c.get("/api/auth/me").get_json()["user"]["role"] == "admin"
+    assert c.get("/probe/admin").status_code == 200
     assert c.post("/api/auth/logout").status_code == 200
     assert c.get("/api/auth/me").get_json()["user"] is None
     assert c.get("/probe/admin").status_code == 401

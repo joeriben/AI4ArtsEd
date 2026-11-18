@@ -579,6 +579,7 @@ WAYS = {
     ("favorites_routes.py", "add_favorite"): way(INTAKE),
     ("favorites_routes.py", "update_favorite"): way(INTAKE),
     ("favorites_routes.py", "remove_favorite"): nothing("removes a favourite"),
+    ("favorites_routes.py", "get_keeper"): nothing("says whether a run is kept and whether the asker may change it"),
     # --- Research and the machine room ---------------------------------------
     ("dev_routes.py", "research_sweep_launch"): research_only("the research sweep"),
     ("dev_routes.py", "kickin_image"): research_only("a picture of the sweep"),
@@ -747,7 +748,7 @@ FIELDS = {
     "token": _C, "staging_token": _C, "unload_comfyui": _C, "unload_llm": _C,
     "unload_ollama": _C, "axes": _C, "dimension_offsets": _C, "fusion_strategy": _C,
     "algebra_encoder": _C, "probing_encoder": _C, "combine_at": _C, "normalize_weights": _C,
-    "pooled": _C, "t5_rows": _C, "transfer_dims": _C, "block_range": _C, "cells": _C,
+    "pooled": _C, "t5_rows": _C, "clip_encoder": _C, "transfer_dims": _C, "block_range": _C, "cells": _C,
     "kickin_step": _C, "layer_bands": _C, "layer_entry": _C, "probe_block_range": _C,
     "probe_step_range": _C, "probe_stream": _C, "step_bands": _C, "step_window": _C,
     "up_to_block": _C, "dataset_id": _C, "sweep_types": _C, "pattern": _C, "voice": _C,

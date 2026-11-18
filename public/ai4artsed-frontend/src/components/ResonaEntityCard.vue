@@ -6,6 +6,8 @@
   and a strategy the group kept, a note Resona wrote and a passage she opened
   left no trace at all. A name on the front, an excerpt on the back
   (ResonaEntityCardBack); the turning, the bar and the corner are FlowCard's.
+  Since 2026-11-15 also a teaching scenario of the use reports, opened with
+  read_scenario, whole on the back: no page of the platform shows them.
 -->
 <template>
   <div class="ec">
@@ -25,7 +27,7 @@ const props = defineProps<{
 
 const { t } = useI18n()
 
-const KINDS = ['apparatus', 'note', 'document', 'page']
+const KINDS = ['apparatus', 'note', 'document', 'page', 'scenario']
 
 const kindLabel = computed(() =>
   KINDS.includes(props.kind) ? t(`resonaEntityCard.${props.kind}`) : props.kind

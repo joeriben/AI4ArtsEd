@@ -11,8 +11,10 @@ Two kinds, kept apart and never argued for each other:
   its description, every `###` section names its pages and every page
   reference exists, the extraction has no unrepaired gaps. Numbers and source
   headings missing from the summary are listed and counted, not gated
-  (2026-11-13), and so are list items (2026-11-15, issue #140): whether what
-  is missing matters is the review's judgement (knowledge_review).
+  (2026-11-13), and so are list items and passages the extraction read out of
+  order (2026-11-15, issue #140): whether what is missing matters, and whether
+  the summary carries a changed order, is the review's judgement
+  (knowledge_review).
 
 A failed check keeps the document a draft (knowledge_processing.process_document
 writes the label into the front matter key `checks` and the full report into
@@ -725,6 +727,18 @@ def unconfirmed_quotes(description: str, witness: str) -> List[str]:
 
 _OUT_PAGE_REF_RE = re.compile(r"\((?:S\.|pp?\.)\s*(\d+)(?:\s*[–-]\s*(\d+))?\)")
 _SECTION_LINE_RE = re.compile(r"^###\s+(.*)$", re.MULTILINE)
+# A line of a unit's figure list: `*<ident> (<page>):* <caption> — <description>`
+# (knowledge_processing.figure_line).
+_FIGURE_LINE_RE = re.compile(r"^\*([^*\n]+?)(?: \([^)\n]*\))?:\*")
+
+
+def _without_figure_lines(output: str, idents: Sequence[str]) -> str:
+    """The section without the lines of its figure list. The page there is
+    the code's; the page numbers in a caption or description are the ones the
+    figure shows (a table of contents shown as an image lists its own)."""
+    known = set(idents)
+    return "\n".join(line for line in output.splitlines()
+                     if not ((m := _FIGURE_LINE_RE.match(line)) and m.group(1) in known))
 
 
 def check_page_refs(pairs: Sequence[SectionPair], first: int, last: int,
@@ -734,14 +748,15 @@ def check_page_refs(pairs: Sequence[SectionPair], first: int, last: int,
     heading carries its pages. ``kind`` says which numbering the references
     use (``printed-labels``, ``printed-folio``, ``pdf``; see
     knowledge_extract.detect_page_numbering). A source without pages (DOCX,
-    markdown, ``last`` 0) carries no page reference."""
+    markdown, ``last`` 0) carries no page reference. The figure lists are not
+    read (_without_figure_lines)."""
     findings: List[Dict[str, Any]] = []
     total = 0
     pages = last
     for p in pairs:
         if p.missing:
             continue
-        for m in _OUT_PAGE_REF_RE.finditer(p.output):
+        for m in _OUT_PAGE_REF_RE.finditer(_without_figure_lines(p.output, p.figure_idents)):
             total += 1
             a = int(m.group(1))
             b = int(m.group(2) or a)
@@ -796,7 +811,13 @@ def check_reading_order(integrity: IntegrityReport, source: str) -> CheckResult:
     (OrderFinding.breaks_text). The rest is listed and does not fail: an
     order that differs while every sentence runs on, and anything in the
     bibliography or the apparatus (notes, contents), whose order is judged
-    there. A markdown or DOCX source has no page layout to compare with."""
+    there. A markdown or DOCX source has no page layout to compare with.
+
+    A count, not a gate (2026-11-15): the finding concerns the extraction,
+    and a summary can give the source right where the extraction is out of
+    order (issue #140, kunstlabore-klappklaus). Whether the summary carries
+    the changed meaning is the review's `order` finding, which reads the text
+    layer of these pages beside the source (knowledge_review)."""
     if source == "markdown":
         return CheckResult("reading_order", QUALITY, True, "markdown source, no page layout")
     if not integrity.order_pages_checked:
@@ -811,14 +832,14 @@ def check_reading_order(integrity: IntegrityReport, source: str) -> CheckResult:
     repaired = len(integrity.order) - len(left)
     if breaking:
         summary = (f"{len(breaking)} passages out of order break a sentence "
-                   f"({len(left)} of {len(integrity.order)} not repairable)")
+                   f"({len(left)} of {len(integrity.order)} not repairable; listed, not gated)")
     elif left:
         summary = (f"{len(left)} of {len(integrity.order)} passages out of order not "
                    f"repairable, none breaks a sentence of the body text")
     else:
         summary = (f"{integrity.order_pages_checked} pages checked, "
                    f"{repaired} passages put back in order")
-    return CheckResult("reading_order", QUALITY, not breaking, summary, findings)
+    return CheckResult("reading_order", QUALITY, True, summary, findings)
 
 
 # --------------------------------------------------------------------------

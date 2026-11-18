@@ -237,6 +237,7 @@ import LabReferences, { type LabReference } from '@/components/LabReferences.vue
 import { apiBase } from '@/services/labApi'
 import { safetyBlockOf, safetyBlockMessageKey } from '@/composables/useGenerationStream';
 import { useSafetyEventStore } from '@/stores/safetyEvent';
+import { suspectSignIn, watchAxios } from '@/lib/signInLapse';
 
 const { t } = useI18n();
 
@@ -412,6 +413,9 @@ const uploadClient = axios.create({
   baseURL: API_BASE,
   timeout: 300000, // 5 minutes for large file uploads over WiFi
 });
+// Its refusals for want of a sign-in are reported like those of the default
+// instance (lib/signInLapse.ts).
+watchAxios(uploadClient);
 
 onMounted(() => {
   checkStatus();
@@ -420,6 +424,10 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
+  // A reconnect still waiting would open the stream again for a page that
+  // is gone (a sign-in that ended sends the page to the sign-in at once).
+  unmounted = true;
+  window.clearTimeout(reconnectTimer);
   if (eventSource) eventSource.close();
   stopDescribePoll();
   releaseThumbs();
@@ -778,7 +786,11 @@ const deleteProject = async () => {
   }
 };
 
+let reconnectTimer: number | undefined;
+let unmounted = false;
+
 const connectSSE = () => {
+  if (unmounted) return;
   if (eventSource) eventSource.close();
   
   console.log("Connecting to Event Stream...");
@@ -813,10 +825,14 @@ const connectSSE = () => {
   eventSource.onerror = (err) => {
     console.error("SSE Error (Timeout?):", err);
     eventSource?.close();
+    // An EventSource does not say why it was refused; the sign-in may have
+    // ended (lib/signInLapse.ts).
+    suspectSignIn();
     
     // Auto-Reconnect Logic if we think training is still running
     if (is_training.value) {
-        setTimeout(() => {
+        window.clearTimeout(reconnectTimer);
+        reconnectTimer = window.setTimeout(() => {
             console.log("Attempting reconnect...");
             connectSSE();
         }, 3000);

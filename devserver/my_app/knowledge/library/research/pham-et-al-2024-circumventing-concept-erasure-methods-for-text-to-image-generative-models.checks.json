@@ -1,0 +1,1521 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 9.2% of 2116 words, ceiling 20%, longest run 24 words; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 24,
+     "text": "adversary has 1 access to the weights and components of the erased model 2 knowledge of the erasure method 3 access to example images"
+    },
+    {
+     "words": 15,
+     "text": "captured by sd 1 4 the movie series ajin demi human thomas kinkade tyler edlin"
+    },
+    {
+     "words": 14,
+     "text": "that post hoc concept erasure in generative models provides a false sense of security"
+    },
+    {
+     "words": 13,
+     "text": "top 1 predictions of a resnet 50 imagenet classifier on 500 generated images"
+    },
+    {
+     "words": 13,
+     "text": "in the embedding space of a frozen text to image model without changing"
+    }
+   ],
+   "value": 0.0922,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "3 of 3 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 2,
+     "expected_items": 2,
+     "first_item": "Our results call into question the premise that existing erasure methods (fully)",
+     "output_lists": [
+      7,
+      4,
+      2,
+      4
+     ],
+     "unanswered_items": [
+      {
+       "item": 1,
+       "source": "Our results call into question the premise that existing erasure methods (fully)",
+       "output": "**Negative Prompt**: vanilla Textual Inversion failed, so the objective was modi"
+      }
+     ]
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "table_cells": 107,
+     "missing_cells": [
+      "0.2 / 6.2",
+      "0.2 / 8.8",
+      "0.0 / 2.8",
+      "0.0 / 4.2",
+      "4.0 / 9.4",
+      "1.0 / 2.4",
+      "0.6 / 6.2",
+      "68.6",
+      "0.0 / 64.0",
+      "0.0 / 0.2",
+      "0.0 / 43.6",
+      "0.0 / 17.8",
+      "4.0 / 82.8",
+      "0.8 / 86.6",
+      "0.0 / 2.0",
+      "79.6",
+      "0.8 / 87.4",
+      "0.0 / 0.0",
+      "10.0 / 82.2",
+      "0.4 / 72.6"
+     ]
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 9,
+     "table_cells": 35,
+     "missing_cells": [
+      "90.2",
+      "0.0 / 61.2",
+      "0.6 / 52.8",
+      "0.0 / 59.4",
+      "3.2 / 73.6",
+      "43.2 / 71.4",
+      "4.8 / 71.8",
+      "0.0 / 66.6",
+      "91.6",
+      "0.8 / 60.1",
+      "0.0 / 41.2",
+      "0.0 / 65.2",
+      "0.6 / 79.6",
+      "46.2 / 75.2",
+      "5.2 / 72.8",
+      "9.6 / 67.7",
+      "90.9",
+      "0.4 / 60.7",
+      "0.3 / 47.0",
+      "0.0 / 62.3"
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "160 of 223 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 1,
+     "number": "3888"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 1,
+     "number": "5847"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 3,
+     "number": "2325"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 3,
+     "number": "26"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 3,
+     "number": "27"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 3,
+     "number": "28"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 3,
+     "number": "29"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 3,
+     "number": "31"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 3,
+     "number": "32"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 3,
+     "number": "33"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 3,
+     "number": "34"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 3,
+     "number": "36"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 3,
+     "number": "38"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 4,
+     "number": "39"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 4,
+     "number": "4.1"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 5,
+     "number": "4.2.1"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 5,
+     "number": "40"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 5,
+     "number": "41"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 5,
+     "number": "42"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "0.3"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "0.4"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "0.6"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "0.8"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "1.0"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "1.6"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "10.0"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "10.2"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "12.6"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "12.8"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "16.0"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "16.4"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "17.0"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "17.8"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "18.0"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "18.6"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "19.8"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "2.0"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "2.4"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "2.8"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "20.6"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "22.6"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "24.6"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "25.4"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "27.0"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "27.6"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "28.4"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "29.4"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "3.0"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "31.2"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "32.6"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "32.8"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "35.4"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "39.4"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "4.0"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "4.2.2"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "43"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "43.6"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "44"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "45.2"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "48.2"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "49.0"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "52.8"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "54.8"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "56.2"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "57.0"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "59.0"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "59.7"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "6.2"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "6.4"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "60.2"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "60.6"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "62.4"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "64.0"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "65.6"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "66.6"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "68.6"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "69.6"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "7.8"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "72.0"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "72.6"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "73.0"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "73.8"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "74.4"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "75.4"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "75.6"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "76.6"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "77.2"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "78.4"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "78.6"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "79.4"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "79.6"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "8.2"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "8.8"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "80.4"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "81.6"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "82.2"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "82.8"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "83.2"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "84.6"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "86.6"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "87.0"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "87.4"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "88.4"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "89.6"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "9.4"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "90.4"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "92.4"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "93.4"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "93.6"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "94.2"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "94.8"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "95.8"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "96.2"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "96.4"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "97.6"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "98.8"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "99.0"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "99.3"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "number": "99.4"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 7,
+     "number": "4.2.3"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 7,
+     "number": "45"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 7,
+     "number": "46"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 8,
+     "number": "4.2.4"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 8,
+     "number": "4.2.5"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 9,
+     "number": "1.9"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 9,
+     "number": "3.2"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 9,
+     "number": "4.2.6"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 9,
+     "number": "4.2.7"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 9,
+     "number": "4.8"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 9,
+     "number": "41.2"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 9,
+     "number": "43.2"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 9,
+     "number": "44.7"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 9,
+     "number": "46.2"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 9,
+     "number": "47.0"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 9,
+     "number": "5.0"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 9,
+     "number": "5.2"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 9,
+     "number": "60.7"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 9,
+     "number": "62.3"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 9,
+     "number": "65.2"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 9,
+     "number": "67.1"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 9,
+     "number": "67.7"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 9,
+     "number": "71.4"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 9,
+     "number": "71.8"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 9,
+     "number": "72.3"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 9,
+     "number": "72.8"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 9,
+     "number": "73.2"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 9,
+     "number": "73.6"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 9,
+     "number": "75.2"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 9,
+     "number": "9.6"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 9,
+     "number": "90.2"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 9,
+     "number": "90.9"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 9,
+     "number": "91.6"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 10,
+     "number": "26.2"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 10,
+     "number": "4.3"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 10,
+     "number": "4.4"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 10,
+     "number": "47"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 15,
+     "number": "120"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 15,
+     "number": "200"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 16,
+     "number": "90"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 20,
+     "number": "48"
+    }
+   ],
+   "value": 160.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "30 of 31 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 1,
+     "heading": "Abstract"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 1,
+     "heading": "1 Introduction"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 4,
+     "heading": "3 Preliminaries"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 4,
+     "heading": "4 Circumventing Concept Erasure"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 4,
+     "heading": "4.1 Experimental setup"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 4,
+     "heading": "4.2 Evaluation Protocol"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 5,
+     "heading": "4.2.1 Erased Stable Diffusion (ESD)"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 6,
+     "heading": "4.2.2 Unified Concept Editing (UCE)"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 7,
+     "heading": "4.2.3 Selective Amnesia (SA)"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 8,
+     "heading": "4.2.4 Forget-Me-Not (FMN)"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 8,
+     "heading": "4.2.5 Ablating Concepts (AC)"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 9,
+     "heading": "4.2.6 Negative Prompt (NP)"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 9,
+     "heading": "4.2.7 Safe Latent Diffusion (SLD)"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 10,
+     "heading": "4.3 Results and Discussion"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 10,
+     "heading": "4.4 Transferability and Useability of Our Attacks"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 11,
+     "heading": "5 Conclusions"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 15,
+     "heading": "Appendix"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 15,
+     "heading": "A Training Details"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 15,
+     "heading": "A.1 Erased Stable Diffusion (ESD)"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 15,
+     "heading": "A.2 Unified Concept Editing (UCE)"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 15,
+     "heading": "A.3 Selective Amnesia (SA)"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 15,
+     "heading": "A.4 Ablating Concepts (AC)"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 15,
+     "heading": "A.5 Forget-Me-Not (FMN)"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 15,
+     "heading": "A.6 Negative Prompt (NP)"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 16,
+     "heading": "A.7 Safe Latent Diffusion (SLD)"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 16,
+     "heading": "B Additional Details and Results for SLD"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 17,
+     "heading": "Algorithm 2 Concept Inversion for SLD"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 17,
+     "heading": "C Failure Cases for CI"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 17,
+     "heading": "D Remaining Qualitative Results"
+    },
+    {
+     "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+     "page": 20,
+     "heading": "E Details: Checking for Existence of Concepts"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "19 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "19 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "23 quoted texts in 7 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Fig. 5",
+     "page": 7,
+     "image": "fig-005-p7.png",
+     "quotes": [
+      "\"Female Breast\"",
+      "\"Female Genitalia\"",
+      "\"Male Breast\"",
+      "\"Male Genitalia\"",
+      "\"Buttocks\"",
+      "\"Armpits\"",
+      "\"Belly\"",
+      "\"Feet\""
+     ]
+    },
+    {
+     "figure": "Fig. 9",
+     "page": 17,
+     "image": "fig-009-p17.png",
+     "quotes": [
+      "\"FMN (erasing church)\"",
+      "\"FMN (erasing English Springer)\""
+     ]
+    },
+    {
+     "figure": "Image 15",
+     "page": 20,
+     "image": "fig-015-p20.png",
+     "quotes": [
+      "\"Textual Inversion (all class)\""
+     ]
+    },
+    {
+     "figure": "Fig. 15",
+     "page": 20,
+     "image": "fig-016-p20.png",
+     "quotes": [
+      "“spider man ve,”"
+     ]
+    },
+    {
+     "figure": "Fig. 16",
+     "page": 21,
+     "image": "fig-017-p21.png",
+     "quotes": [
+      "“Image type,”",
+      "“Color,”",
+      "“Size,”",
+      "“Layout,”",
+      "“People,”",
+      "“Time,”",
+      "“Usage rights,”",
+      "“View.”"
+     ]
+    },
+    {
+     "figure": "Fig. 17",
+     "page": 21,
+     "image": "fig-018-p21.png",
+     "quotes": [
+      "\"Ranked set\""
+     ]
+    },
+    {
+     "figure": "Fig. 18",
+     "page": 22,
+     "image": "fig-019-p22.png",
+     "quotes": [
+      "\"Ranked set\"",
+      "\"query filter\""
+     ]
+    }
+   ],
+   "value": 23.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "29 page references valid (printed-folio pages 1–22)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "22 pages checked, 0 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "18 pages checked, 1 passages put back in order",
+   "findings": [],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "pham-et-al-2024-circumventing-concept-erasure-methods-for-text-to-image-generative-models",
+ "doc_type": "scholarly_article",
+ "analyzed_at": "2026-11-15T11:55:18.985442+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 22,
+   "chars": 49075,
+   "blocks": 128,
+   "inner_headings": 31,
+   "figures": 19
+  }
+ ],
+ "skipped": [
+  "References (p. 11)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 22,
+  "gaps": [],
+  "gaps_dismissed": [
+   {
+    "page": 1,
+    "words": 11,
+    "reason": "duplicate",
+    "text": "| Kelly O. Marshall | Niv Cohen |\n| New York University | New York University |"
+   },
+   {
+    "page": 1,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "mp5847@nyu.edu km3888@nyu.edu nivc@cs.huji.ac.il"
+   },
+   {
+    "page": 2,
+    "words": 14,
+    "reason": "duplicate",
+    "text": "NSFW Concept Art Concept object Concept SD model original SD model erased Inversion Concept"
+   },
+   {
+    "page": 3,
+    "words": 14,
+    "reason": "debris",
+    "text": "i L = Ez∼E(x),t,c,ϵ∼N (0,1) ∥ϵ − ϵθ (zt , c, t)∥22 , (1)"
+   },
+   {
+    "page": 4,
+    "words": 19,
+    "reason": "debris",
+    "text": "v∗ = arg min Ez∼E(x),c∗ ,ϵ∼N (0,1),t ∥ϵ − ϵθ (zt , c∗ , t)∥22 . h i v"
+   },
+   {
+    "page": 5,
+    "words": 22,
+    "reason": "duplicate",
+    "text": "4 3 2 1 0 real SD 1.4 ESD CI UCE CI SA CI FMN CI AC CI NP CI SLD-Med CI"
+   },
+   {
+    "page": 6,
+    "words": 19,
+    "reason": "duplicate",
+    "text": "real SD 1.4 ESD ESD (CI) UCE UCE (CI) NP NP (CI) SLD-Med SLD-Med (CI) Kinkade Thomas Gogh Van"
+   },
+   {
+    "page": 7,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "SD 1.4 ESD ESD (CI) UCE UCE (CI) Angelina Jolie Brad Pitt"
+   },
+   {
+    "page": 7,
+    "words": 195,
+    "reason": "debris",
+    "text": "CI SD 1.4 ESD CI SD 1.4 UCE 103 10.2 10.2 Count Count Count 101 101 10.0 st ia ia st s ts ly et st ia ia st s ts ly et ea tal tal ea ck pi el Fe ea tal tal ea ck pi el Fe Br ni ni Br tto rm B Br ni ni"
+   },
+   {
+    "page": 7,
+    "words": 14,
+    "reason": "debris",
+    "text": "∪ Dr = {(xf , cf )}n=1 ∪ (n) (n) {(xr , cr )}N"
+   },
+   {
+    "page": 7,
+    "words": 16,
+    "reason": "debris",
+    "text": "| − λ | (θi − θi∗ )2 + Ep(x|c)p(xr ) [log p(x|θ∗ , c)], (2) |\n| 2 | i |"
+   },
+   {
+    "page": 7,
+    "words": 150,
+    "reason": "debris",
+    "text": "7 NP NP (CI) SLD-Med SLD-Med (CI) CI SD 1.4 NP CI SD 1.4 SLD-Med 103 103 10.2 10.2 Count 101 101 10.0 st ia ia st s ts ly et st ia ia st s ts ly et ea tal tal ea ck pi el Fe ea tal tal ea ck pi el Fe "
+   },
+   {
+    "page": 8,
+    "words": 24,
+    "reason": "debris",
+    "text": "h i arg min Ez∼E,z∗ ∼E(x∗ ),c,c∗ ,ϵ∼N (0,1),t wt ∥ϵθ∗ (zt , c, t).sg() − ϵθ∗ (zt∗ , c∗ , t)∥22 . θ∗"
+   },
+   {
+    "page": 9,
+    "words": 44,
+    "reason": "debris",
+    "text": "h v∗ = arg min Ez∼E(x),c,ϵ∼N (0,1),t ∥(ϵθ (zt , t) + α(ϵθ (zt , c, t) − ϵθ (zt , t)) v i − (ϵθ (zt , c, t) + α(ϵθ (zt , c∗ , t) − ϵθ (zt , c, t))∥22 ,"
+   },
+   {
+    "page": 10,
+    "words": 18,
+    "reason": "duplicate",
+    "text": "SD 1.4 ESD ESD (CI) UCE UCE (CI) NP NP (CI) SLD-Med SLD-Med (CI) cassette player chain saw"
+   },
+   {
+    "page": 11,
+    "words": 28,
+    "reason": "duplicate",
+    "text": "editability Recontruction FMN ESD FMN SA SLD-Med FMN NP NP AC AC SA SA ESD ESD UCE UCE SLD SLD SD SD 0.18 0.2 0.22 0.7 0.72 0.74"
+   },
+   {
+    "page": 16,
+    "words": 27,
+    "reason": "duplicate",
+    "text": "SD 1.4 SLD-Weak SLD-Med SLD-Strong SLD-Max CI (SLD-Weak) CI (SLD-Med) CI (SLD-Strong) CI (SLD-Max) Demi Human Ajin: Kinkade Thomas Edlin Tyler Gogh Van Kilian Eng McKernan Kelly"
+   },
+   {
+    "page": 16,
+    "words": 34,
+    "reason": "debris",
+    "text": ", λ) = \u001a max{1, |sS (θϵ (xt , ct ) − ϵ(xt , cS , t)|}, where ϵθ (xt , c, t) ⊖ ϵθ (xt , cS , t) ≤ λ, 0, otherwise."
+   },
+   {
+    "page": 17,
+    "words": 18,
+    "reason": "duplicate",
+    "text": "SA (erasing FMN (erasing FMN (erasing FMN (erasing SLD-Max NSFW) chain saw) church) english (erasing springer) Thomas Kinkade)"
+   },
+   {
+    "page": 17,
+    "words": 15,
+    "reason": "duplicate",
+    "text": "SD 1.4 SA SA (CI) FMN FMN (CI) AC AC (CI) Angelina Jolie Brad Pitt"
+   },
+   {
+    "page": 18,
+    "words": 28,
+    "reason": "duplicate",
+    "text": "real SD 1.4 ESD ESD (CI) UCE UCE (CI) NP NP (CI) SLD-Med SLD-Med (CI) Demi Human Ajin: Kinkade Thomas Edlin Tyler Gogh Van Kilian Eng McKernan Kelly"
+   },
+   {
+    "page": 18,
+    "words": 25,
+    "reason": "duplicate",
+    "text": "real SD 1.4 SA SA (CI) FMN FMN (CI) AC AC (CI) Demi Human Ajin: Kinkade Thomas Edlin Tyler Gogh Van Kilian Eng McKernan Kelly"
+   },
+   {
+    "page": 19,
+    "words": 40,
+    "reason": "duplicate",
+    "text": "cassette player chain saw church gas pump tench garbage truck english golf ball parachute french horn springer SD 1.4 ESD ESD (CI) UCE UCE (CI) NP NP (CI) SLD-Med SLD-Med (CI) SA SA (CI) FMN FMN (CI) "
+   },
+   {
+    "page": 20,
+    "words": 19,
+    "reason": "duplicate",
+    "text": "Spiderman 2099 Gwen Stacy Miles Morales Sonic Textual Inversion Textual Inversion (all classes) real (no class 0) Inversion Textual"
+   }
+  ],
+  "captions_reclassified": [],
+  "captions_reassigned": [],
+  "headings_restored": [],
+  "lists_reunited": [
+   {
+    "page": 3,
+    "list": "#/groups/1",
+    "fragment": "#/groups/2",
+    "markers": "2-2",
+    "rule": "fragment continues numbering"
+   }
+  ],
+  "figures_screened": [],
+  "superseded": [],
+  "replaced_pages": [],
+  "noise_dropped": 1,
+  "hyphens_restored": [
+   {
+    "page": 10,
+    "ref": "#/texts/307",
+    "word": "SLD-Strong"
+   },
+   {
+    "page": 11,
+    "ref": "#/texts/357",
+    "word": "Ming-Hsuan"
+   },
+   {
+    "page": 12,
+    "ref": "#/texts/375",
+    "word": "Jun-Yan"
+   }
+  ],
+  "order": [
+   {
+    "page": 7,
+    "text": "Ep(x|c)p(cf ) [log p(x|θ∗ , c)]",
+    "words": 6,
+    "refs": [
+     "#/texts/261",
+     "#/texts/264"
+    ],
+    "repaired": true,
+    "note": "2 blocks replaced by the text layer's passage",
+    "breaks": [],
+    "section": ""
+   }
+  ],
+  "order_pages_checked": 18,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 0,
+  "order_breaking": 0,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 3 minor; distortions: 0 material, 3 minor; additions: 0 material, 0 minor; order: 0 material, 0 minor",
+  "at": "2026-11-15T12:02:17+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 3
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 3
+   },
+   "additions": {
+    "material": 0,
+    "minor": 0
+   },
+   "order": {
+    "material": 0,
+    "minor": 0
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "Circumventing Concept Erasure Methods For Text-to-Image Generative Models (p. 1–22)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "If TI can hallucinate totally novel concepts, then even data filtering before training might not be able to avoid producing harmful/copyrighted content.",
+      "severity": "minor",
+      "page": 4
+     },
+     {
+      "source": "The I2P benchmark is effective as its prompts do not necessarily contain words strictly related to nudity. Hence, an effective erasure method on this benchmark requires some degree of robustness to prompt selection.",
+      "severity": "minor",
+      "page": 5
+     },
+     {
+      "source": "We confirm this even for concept categories that the methods did not explore in their corresponding publications.",
+      "severity": "minor",
+      "page": 10
+     }
+    ],
+    "distortions": [
+     {
+      "source": "To the best of our knowledge, this list constitutes all the concept erasure methods for Stable Diffusion models published up to September 19, 2023.",
+      "summary": "The authors examine all concept erasure methods for Stable Diffusion published up to September 19, 2023",
+      "severity": "minor",
+      "page": 4
+     },
+     {
+      "source": "(Left) Reconstruction: A higher score indicates a better ability to replicate the provided concept. (Middle) Editability: A higher score indicates a better ability to modify the concepts using textual prompts.",
+      "summary": "The left chart is titled “Editability” and the middle chart is titled “Reconstruction”",
+      "severity": "minor",
+      "page": 11
+     },
+     {
+      "source": "Our Concept Inversion technique manages to counteract the influence of SLD-Weak, SLD-Medium, and even SLD-Strong under most circumstances. Among the variants, SLD-Max proves to be the most challenging to circumvent.",
+      "summary": "the four CI columns show images in the same style as the \"SD 1.4\" column",
+      "severity": "minor",
+      "page": 10
+     }
+    ],
+    "additions": [],
+    "order": []
+   }
+  ]
+ },
+ "source": {
+  "source": "pham-et-al-2024-circumventing-concept-erasure-methods-for-text-to-image-generative-models.pdf",
+  "bytes": 22187511,
+  "sha256": "733a2562432b508910204be1a23b059644ed031609ff6f9a801460529f1e98e9",
+  "extracted_at": "2026-11-13T03:00:00+01:00"
+ }
+}

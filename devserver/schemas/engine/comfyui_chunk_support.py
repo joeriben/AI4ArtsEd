@@ -275,15 +275,17 @@ def sd3_fusion(clip_side, t5_side, alpha, strategy, title="Fuse CLIP and T5"):
     }
 
 
-def sd3_three_factors(parts, a, b, c, t5_rows="full", pooled="clip", title="Three factors"):
+def sd3_three_factors(parts, a, b, c, t5_rows="full", pooled="clip", title="Three factors",
+                      clip_encoder="both"):
     """AI4ArtsEdSD3ThreeFactors on PARTS (a node link): a on the CLIP block, b
     for T5's rows 0..76 mixed into it cell by cell, c on the T5 block; the T5
     block complete under the CLIP rows ("full", 589 rows) or as the tail
     ("tail", rows 77.., 512 rows); the pooled vector CLIP's own ("clip") or
-    zeros ("zero")."""
+    zeros ("zero"); the CLIP block and the pooled vector from both CLIP
+    encoders ("both") or from one alone ("clip_l", "clip_g")."""
     return {
         "inputs": {"parts": parts, "a": float(a), "b": float(b), "c": float(c),
-                   "t5_rows": t5_rows, "pooled": pooled},
+                   "t5_rows": t5_rows, "pooled": pooled, "clip_encoder": clip_encoder},
         "class_type": "AI4ArtsEdSD3ThreeFactors",
         "_meta": {"title": title},
     }

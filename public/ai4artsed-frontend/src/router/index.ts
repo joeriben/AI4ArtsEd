@@ -1,12 +1,21 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, type RouteLocationNormalized } from 'vue-router'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    // --- Every page needs a sign-in; a visitor from outside sees the start
+    //     page at most (docs/DEVELOPMENT_DECISIONS.md, 2026-11-15). Four are
+    //     open: the start page, the sign-in page, the imprint, which has to
+    //     be reachable at all times
+    //     (§ 5 DDG), and the privacy notice, which belongs before the sign-in
+    //     (Art. 13 DSGVO). They carry `meta.public`; the guard below sends
+    //     every other page to the sign-in. The server holds the same line
+    //     (devserver/my_app/lab/sign_in_gate.py). ---
     {
       path: '/',
       name: 'landing',
       component: () => import('../views/LandingView.vue'),
+      meta: { public: true },
     },
     {
       path: '/about',
@@ -78,11 +87,13 @@ const router = createRouter({
       path: '/impressum',
       name: 'impressum',
       component: () => import('../views/ImpressumView.vue'),
+      meta: { public: true },
     },
     {
       path: '/datenschutz',
       name: 'datenschutz',
       component: () => import('../views/DatenschutzView.vue'),
+      meta: { public: true },
     },
     {
       path: '/dokumentation',
@@ -181,83 +192,77 @@ const router = createRouter({
       component: () => import('../views/ai_persona.vue'),
     },
     {
+      // The page of the usage agreement stood before every other page until
+      // 2026-11-15, and the agreement lived in a cookie of the browser. An
+      // account agrees to the conditions with its sign-in now
+      // (views/LoginView.vue); the address stays for bookmarks.
       path: '/usage-agreement',
-      name: 'usage-agreement',
-      component: () => import('../views/UsageAgreementView.vue'),
-      meta: { skipAgreementCheck: true },
+      redirect: '/',
     },
-    // --- Lab user/course system (Phase 0) — NEW routes only. These are the
-    //     ONLY routes gated by the auth guard below; the rest of the platform
-    //     stays fully usable without any login (hard guardrail). ---
     {
       path: '/login',
       name: 'login',
       component: () => import('../views/LoginView.vue'),
-      // reachable before the usage agreement
-      meta: { skipAgreementCheck: true },
+      meta: { public: true },
     },
     {
       path: '/account',
       name: 'account',
       component: () => import('../views/AccountView.vue'),
-      // any logged-in user (incl. participant); reachable before the agreement
-      meta: { skipAgreementCheck: true, requiresLabAuth: true },
     },
     {
       path: '/educator',
       name: 'educator-dashboard',
       component: () => import('../views/educator/EducatorDashboard.vue'),
-      meta: { skipAgreementCheck: true, requiresLabAuth: true, requiresRole: 'educator' },
+      meta: { requiresRole: 'educator' },
     },
     {
       path: '/educator/courses/:id',
       name: 'educator-course',
       component: () => import('../views/educator/CourseEditor.vue'),
-      meta: { skipAgreementCheck: true, requiresLabAuth: true, requiresRole: 'educator' },
+      meta: { requiresRole: 'educator' },
     },
     {
       path: '/admin/users',
       name: 'admin-users',
       component: () => import('../views/admin/AdminUsersView.vue'),
-      meta: { skipAgreementCheck: true, requiresLabAuth: true, requiresRole: 'admin' },
+      meta: { requiresRole: 'admin' },
     },
   ],
 })
 
-// Check usage agreement, authentication, and advanced-mode guards
+/** Whether a page is open without a sign-in (`meta.public`, above). */
+export function isPublicRoute(to: Pick<RouteLocationNormalized, 'matched'>): boolean {
+  return to.matched.length > 0 && to.matched.every((r) => r.meta.public === true)
+}
+
+// Every page but the four open ones needs a sign-in; the pages of the course
+// leaders and of the admin need the role as well.
 router.beforeEach(async (to, from, next) => {
-  // --- Lab auth/role gate (Phase 0). Gates ONLY the new lab routes
-  //     (requiresLabAuth / requiresRole); every existing route is untouched
-  //     and stays reachable without a login. ---
-  const requiresLabAuth = to.matched.some((r) => r.meta.requiresLabAuth)
+  if (isPublicRoute(to)) {
+    next()
+    return
+  }
+  const { useLabAuthStore } = await import('../stores/labAuth')
+  const auth = useLabAuthStore()
+  if (auth.user === null) await auth.fetchMe() // lazy session restore
+  // An answer that could not read the session (the request failed, or the
+  // server could not check the place) is asked once more before the page is
+  // given up; the login page leads on once it is read (views/LoginView.vue).
+  if (auth.user === null && auth.sessionUnreadable()) await auth.fetchMe()
+  if (!auth.isAuthenticated) {
+    next({ name: 'login', query: { redirect: to.fullPath } })
+    return
+  }
   const requiredRole = to.meta.requiresRole as 'educator' | 'admin' | undefined
-  if (requiresLabAuth || requiredRole) {
-    const { useLabAuthStore } = await import('../stores/labAuth')
-    const auth = useLabAuthStore()
-    if (auth.user === null) await auth.fetchMe() // lazy session restore
-    if (!auth.isAuthenticated) {
-      next({ name: 'login', query: { redirect: to.fullPath } })
-      return
-    }
-    if (requiredRole === 'educator' && !auth.isEducator) {
-      next({ name: 'account' })
-      return
-    }
-    if (requiredRole === 'admin' && !auth.isAdmin) {
-      next({ name: 'account' })
-      return
-    }
+  if (requiredRole === 'educator' && !auth.isEducator) {
+    next({ name: 'account' })
+    return
   }
-
-  // Usage agreement guard: redirect to agreement page if cookie not set
-  if (!to.meta.skipAgreementCheck) {
-    const hasAgreement = document.cookie.split(';').some(c => c.trim().startsWith('usage_agreement_accepted='))
-    if (!hasAgreement) {
-      next({ name: 'usage-agreement', query: { redirect: to.fullPath } })
-      return
-    }
+  if (requiredRole === 'admin' && !auth.isAdmin) {
+    next({ name: 'account' })
+    return
   }
-
   next()
 })
 

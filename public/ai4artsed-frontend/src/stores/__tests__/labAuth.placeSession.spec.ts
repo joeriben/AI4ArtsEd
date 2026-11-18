@@ -198,6 +198,20 @@ describe('checkPlaceSession', () => {
     expect(get).toHaveBeenCalledTimes(2)
   })
 
+  it('keeps the row for another account in this browser, and after "Close" checks its place', async () => {
+    const auth = await enteredAt(3)
+    get.mockResolvedValueOnce(signedOut)
+    await auth.checkPlaceSession()
+    const other = { ...participant, id: 9 }
+    get.mockResolvedValueOnce({ data: { user: other, course_id: 4, place: 5 } })
+    await auth.fetchMe()                         // App.vue reads the session when the row appears
+    expect(auth.endedPlace).toBe(3)
+    auth.dismissEndedPlace()
+    get.mockResolvedValueOnce(signedOut)
+    await auth.checkPlaceSession(true)
+    expect(auth.endedPlace).toBe(5)
+  })
+
   it('asks again once "Sign in" finds the device signed in', async () => {
     const auth = await enteredAt(3)
     get.mockResolvedValueOnce(signedOut)

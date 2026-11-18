@@ -1,0 +1,1627 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 17.5% of 2324 words, ceiling 20%, longest run 39 words; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 39,
+     "text": "ideas from ecology and quantum statistical mechanics to ml the vendi score is defined as the exponential of the shannon entropy of the eigenvalues of a similarity matrix induced by a user defined similarity function applied to the sample"
+    },
+    {
+     "words": 22,
+     "text": "defined as the exponential of the shannon entropy of the eigenvalues of a similarity matrix induced by a user defined similarity function"
+    },
+    {
+     "words": 15,
+     "text": "fréchet inception distance fid heusel et al 2017 which measures the wasserstein 2 distance between"
+    },
+    {
+     "words": 14,
+     "text": "include pairwise bleu shen et al 2019 d lex sim fomicheva et al 2020"
+    },
+    {
+     "words": 13,
+     "text": "presgan dieng et al 2019 and self conditioned gan liu et al 2020"
+    }
+   ],
+   "value": 0.1751,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "7 of 9 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 3,
+     "expected_items": 2,
+     "first_item": "We extend ecological diversity to ML, and propose the Vendi Score, a metric for ",
+     "output_lists": [
+      5,
+      4
+     ]
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 28,
+     "expected_items": 5,
+     "first_item": "two men in bow ties standing next to steel rafter.",
+     "output_lists": [
+      5,
+      4
+     ],
+     "unanswered_items": [
+      {
+       "item": 2,
+       "source": "several men in suits talking together in a room.",
+       "output": "**Classifier-based metrics** require labeled datasets: the Inception Score (IS; "
+      },
+      {
+       "item": 3,
+       "source": "an older man in a tuxedo standing next to a younger man in a tuxedo wearing glas",
+       "output": "**Discrete-feature metrics** such as n-gram diversity in NLP (Li et al., 2016) r"
+      },
+      {
+       "item": 4,
+       "source": "two men wearing tuxedos glance at each other.",
+       "output": "**Average pairwise similarity metrics** include pairwise-BLEU (Shen et al., 2019"
+      },
+      {
+       "item": 5,
+       "source": "older man in tuxedo sitting next to another younger man in tuxedo .",
+       "output": "**Other metrics**: the Birthday Paradox Test (Arora and Zhang, 2018) requires ma"
+      }
+     ]
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 28,
+     "expected_items": 5,
+     "first_item": "a man and woman cutting a slice of cake by trees.",
+     "output_lists": [
+      5,
+      4
+     ]
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "table_cells": 91,
+     "missing_cells": [
+      "Original vdvae",
+      "5.82",
+      "40.05",
+      "0.35",
+      "19.50 12.87",
+      "9.68",
+      "57.57",
+      "0.47",
+      "0.37",
+      "43.93 18.04",
+      "6.01",
+      "34.54",
+      "0.62",
+      "0.38",
+      "102.90",
+      "0.36",
+      "12.71",
+      "9.24",
+      "0.66",
+      "16.86"
+     ]
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 13,
+     "table_cells": 23,
+     "missing_cells": [
+      "Source",
+      "D K 1 ( ↑ )",
+      "0.82",
+      "3.12",
+      "0.27",
+      "0.42",
+      "DBS γ = 0.2",
+      "0.25",
+      "0.49",
+      "2.49",
+      "DBS γ = 0.5",
+      "2.87",
+      "DBS γ = 0.5",
+      "0.68",
+      "2.95"
+     ]
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 26,
+     "table_cells": 30,
+     "missing_cells": [
+      "0.859",
+      "501.1",
+      "char-rnn",
+      "0.856",
+      "482.4",
+      "Combinatorial",
+      "0.873",
+      "536.9",
+      "jtn",
+      "0.856",
+      "489.5",
+      "Latent gan",
+      "0.857",
+      "486.4",
+      "0.874",
+      "479.8",
+      "0.856",
+      "475.3"
+     ]
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 27,
+     "table_cells": 129,
+     "missing_cells": [
+      "VS P ↑",
+      "VS P ↑",
+      "LSUN Bedroom 256 × 256",
+      "LSUN Bedroom 256 × 256",
+      "LSUN Bedroom 256 × 256",
+      "LSUN Bedroom 256 × 256",
+      "3.52",
+      "3.10",
+      "5.82",
+      "40.05",
+      "0.35",
+      "12.87",
+      "3.34",
+      "2.55",
+      "2.35",
+      "0.59",
+      "0.48",
+      "8.76",
+      "6.01",
+      "34.54"
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "119 of 176 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 6,
+     "number": "0.5"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 6,
+     "number": "3.2"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 7,
+     "number": "0.1"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 7,
+     "number": "0.9"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 7,
+     "number": "90"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 8,
+     "number": "3.3"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 8,
+     "number": "3.4"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 8,
+     "number": "7.5"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 10,
+     "number": "4.1"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 10,
+     "number": "4.2"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 10,
+     "number": "9.1"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 11,
+     "number": "4.3"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 11,
+     "number": "4.4"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "0.17"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "0.35"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "0.36"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "0.37"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "0.38"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "0.43"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "0.47"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "0.48"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "0.51"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "0.53"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "0.58"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "0.59"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "0.62"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "0.66"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "1.90"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "10.69"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "102.90"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "12.71"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "12.87"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "14.91"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "15.59"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "16.86"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "18.04"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "19.24"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "2.35"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "2.38"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "2.55"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "2.56"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "2048"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "24.28"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "3.16"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "34.54"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "4.39"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "4.84"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "40.05"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "5.19"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "5.57"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "5.62"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "5.76"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "5.82"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "52"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "57.57"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "6.01"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "63"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "7.25"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "7.97"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "8.48"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "8.76"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "9.24"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 12,
+     "number": "9.68"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 13,
+     "number": "0.21"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 13,
+     "number": "0.22"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 13,
+     "number": "0.25"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 13,
+     "number": "0.27"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 13,
+     "number": "0.42"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 13,
+     "number": "0.49"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 13,
+     "number": "0.6"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 13,
+     "number": "0.68"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 13,
+     "number": "0.82"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 13,
+     "number": "2.49"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 13,
+     "number": "2.87"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 13,
+     "number": "2.95"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 13,
+     "number": "3.12"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 13,
+     "number": "4.5"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 14,
+     "number": "4.6"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 15,
+     "number": "9.5"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 21,
+     "number": "7.2"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 22,
+     "number": "7.3"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 22,
+     "number": "7.4"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 23,
+     "number": "10000"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 23,
+     "number": "50"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 23,
+     "number": "50000"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 23,
+     "number": "60000"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 23,
+     "number": "8.1"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 24,
+     "number": "8.2"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 25,
+     "number": "9.2"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 25,
+     "number": "9.3"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 26,
+     "number": "475.3"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 26,
+     "number": "479.8"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 26,
+     "number": "482.4"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 26,
+     "number": "486.4"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 26,
+     "number": "489.5"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 26,
+     "number": "501.1"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 26,
+     "number": "536.9"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 26,
+     "number": "856"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 26,
+     "number": "857"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 26,
+     "number": "859"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 26,
+     "number": "873"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 26,
+     "number": "874"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 26,
+     "number": "9.4"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 27,
+     "number": "2.94"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 27,
+     "number": "3.09"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 27,
+     "number": "3.10"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 27,
+     "number": "3.27"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 27,
+     "number": "3.34"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 27,
+     "number": "3.51"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 27,
+     "number": "3.52"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 27,
+     "number": "3.67"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 27,
+     "number": "4.24"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 27,
+     "number": "4.43"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 27,
+     "number": "4.53"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 27,
+     "number": "4.57"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 27,
+     "number": "4.58"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 27,
+     "number": "4.81"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 27,
+     "number": "5.83"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 31,
+     "number": "40"
+    }
+   ],
+   "value": 119.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "32 of 33 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 1,
+     "heading": "Abstract"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 2,
+     "heading": "1 Introduction"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 3,
+     "heading": "2 Are We Measuring Diversity Correctly in ML?"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 5,
+     "heading": "3 Measuring Diversity with the Vendi Score"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 5,
+     "heading": "3.1 Defining the Vendi Score"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 6,
+     "heading": "3.2 Understanding the Vendi Score"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 8,
+     "heading": "3.3 Calculating the Vendi Score"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 8,
+     "heading": "3.4 Connections to Other Areas in ML"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 9,
+     "heading": "4 Experiments"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 10,
+     "heading": "4.1 Synthetic experiments"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 10,
+     "heading": "4.2 Evaluating molecular generative models for diversity"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 11,
+     "heading": "4.3 Assessing mode collapse in GANs"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 11,
+     "heading": "4.4 Evaluating image generative models for diversity"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 13,
+     "heading": "4.5 Evaluating decoding algorithms for text for diversity"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 14,
+     "heading": "4.6 Diagnosing datasets for diversity"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 15,
+     "heading": "6 Discussion"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 21,
+     "heading": "7 Proofs"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 21,
+     "heading": "7.1 Probability-weighted Vendi Score"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 21,
+     "heading": "7.2 Proof of 3.1"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 22,
+     "heading": "7.3 Proof of 7.1"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 22,
+     "heading": "7.4 Proof of Theorem 3.1"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 22,
+     "heading": "7.5 Sample Complexity"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 23,
+     "heading": "8 Implementation Details"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 23,
+     "heading": "8.1 Images"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 24,
+     "heading": "8.2 Text"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 24,
+     "heading": "9 Additional Results"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 24,
+     "heading": "9.1 Assessing Mode Dropping in Datasets"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 25,
+     "heading": "9.2 Evaluating molecular generative models for diversity"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 25,
+     "heading": "9.3 Evaluating image generative models for diversity"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 26,
+     "heading": "9.4 Evaluating decoding algorithms for text for diversity"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 26,
+     "heading": "9.5 Diagnosing datasets for diversity"
+    },
+    {
+     "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+     "page": 30,
+     "heading": "Most diverse"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "12 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "12 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "every quoted text in the figure descriptions confirmed by the source",
+   "findings": [],
+   "value": 0.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "31 page references valid (printed-folio pages 1–32)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "32 pages checked, 0 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "5 passages out of order break a sentence (8 of 8 not repairable; listed, not gated)",
+   "findings": [
+    {
+     "page": 12,
+     "words": 14,
+     "text": "No model matches the Diversity Score of the original dataset They were trained on.",
+     "blocks": [
+      "#/texts/433",
+      "#/texts/434"
+     ],
+     "problem": "layer passage (1819 letters) and blocks (1494) differ in length",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 28,
+     "words": 6,
+     "text": "Low Vendi Score, high n-gram Diversity:",
+     "blocks": [
+      "#/texts/704",
+      "#/texts/709"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": true,
+     "breaks": [
+      "sentence start detached: ' bow ties standing next to steel rafter.' | 'several men in suits talking together in'",
+      "sentence start detached: 'men in suits talking together in a room.' | 'an older man in a tuxedo standing next t'",
+      "sentence start detached: 'younger man in a tuxedo wearing glasses.' | 'two men wearing tuxedos glance at each o'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 28,
+     "words": 8,
+     "text": "several men in suits talking together in a",
+     "blocks": [
+      "#/texts/705",
+      "#/texts/710",
+      "#/texts/711"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": true,
+     "breaks": [
+      "sentence start detached: ' bow ties standing next to steel rafter.' | 'several men in suits talking together in'",
+      "sentence start detached: 'men in suits talking together in a room.' | 'an older man in a tuxedo standing next t'",
+      "sentence start detached: 'younger man in a tuxedo wearing glasses.' | 'two men wearing tuxedos glance at each o'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 28,
+     "words": 8,
+     "text": "an older man in a tuxedo standing Next",
+     "blocks": [
+      "#/texts/706",
+      "#/texts/712"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": true,
+     "breaks": [
+      "sentence start detached: 'men in suits talking together in a room.' | 'an older man in a tuxedo standing next t'",
+      "sentence start detached: 'younger man in a tuxedo wearing glasses.' | 'two men wearing tuxedos glance at each o'",
+      "passage cut out of 'the dork with the earring stands next to'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 28,
+     "words": 8,
+     "text": "to a younger man in a tuxedo wearing",
+     "blocks": [
+      "#/texts/706",
+      "#/texts/712",
+      "#/texts/713"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": true,
+     "breaks": [
+      "sentence start detached: 'men in suits talking together in a room.' | 'an older man in a tuxedo standing next t'",
+      "sentence start detached: 'younger man in a tuxedo wearing glasses.' | 'two men wearing tuxedos glance at each o'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 28,
+     "words": 7,
+     "text": "two men wearing tuxedos glance at each",
+     "blocks": [
+      "#/texts/707",
+      "#/texts/713",
+      "#/texts/714"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": true,
+     "breaks": [
+      "sentence start detached: 'younger man in a tuxedo wearing glasses.' | 'two men wearing tuxedos glance at each o'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 28,
+     "words": 8,
+     "text": "older man in tuxedo sitting Next to an-",
+     "blocks": [
+      "#/texts/708",
+      "#/texts/714",
+      "#/texts/715"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 28,
+     "words": 5,
+     "text": "other younger man in tuxedo.",
+     "blocks": [
+      "#/texts/708",
+      "#/texts/714",
+      "#/texts/715"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    }
+   ],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "friedman-dieng-2023-the-vendi-score-a-diversity-evaluation-metric-for-machine-learning",
+ "doc_type": "scholarly_article",
+ "analyzed_at": "2026-11-15T11:25:29.773778+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 32,
+   "chars": 66099,
+   "blocks": 179,
+   "inner_headings": 33,
+   "figures": 12
+  }
+ ],
+ "skipped": [
+  "Acknowledgements (p. 15)",
+  "References (p. 16)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 32,
+  "gaps": [],
+  "gaps_dismissed": [
+   {
+    "page": 2,
+    "words": 201,
+    "reason": "duplicate",
+    "text": "VS = 2.00 VS = 3.00 VS = 4.00 IntDiv = 0.50 IntDiv = 0.67 IntDiv = 0.75 1.0 ♠ ♠ ♠ ♠ ♠ ♠ ♠ ♠ ♠ 0.8 ♠ ♠ ♣ similarity ♠ ♣ ♣ 0.6 ♠ ♣ ♣ (a) ♣ ♣ \u0007 ♣ ♣ \u0007 0.4 ♣ \u0007 \u0007 ♣ \u0007 \u0004 0.2 ♣ \u0007 \u0004 ♣ \u0007 \u0004 0.0 ♠♠♠♠♠♠♣♣♣♣♣♣ ♠♠♠♠"
+   },
+   {
+    "page": 6,
+    "words": 24,
+    "reason": "debris",
+    "text": " n  X VSk (x 1 , . . . , x n ) = exp − λi log λi , (1) i=1"
+   },
+   {
+    "page": 6,
+    "words": 24,
+    "reason": "debris",
+    "text": "K K    VSk (x 1 , . . . , x n ) = exp − tr log . (2) n"
+   },
+   {
+    "page": 7,
+    "words": 28,
+    "reason": "debris",
+    "text": "VSk (x 1 , . . . , x n , p) = VSk (x 1 , . . . , x n , p ′ ). 3."
+   },
+   {
+    "page": 7,
+    "words": 26,
+    "reason": "debris",
+    "text": "Qm VSk (S1 , . . . , Sm ) = exp(H(p1 , . . . , pm )) i=1 VSk (Si ) pi . 4."
+   },
+   {
+    "page": 7,
+    "words": 24,
+    "reason": "debris",
+    "text": "then VSk (x 1 , . . . , x n ) = VSk (x π1 , . . . , x πn )."
+   },
+   {
+    "page": 9,
+    "words": 24,
+    "reason": "debris",
+    "text": "1 X IntDiv(x 1 , . . . , x n ) = 1 − k(x i , x j ). n2 i, j"
+   },
+   {
+    "page": 9,
+    "words": 76,
+    "reason": "duplicate",
+    "text": "number of components VS IntDiv 10 1.0 5 0.50 0.0 S1 S2 S3 S4 S5 S1 S2 S3 S4 S5 S1 S2 S3 S4 S5 mixture proportions VS IntDiv 10 1.0 5 0.50 0.0 S1 S2 S3 S4 S5 S1 S2 S3 S4 S5 S1 S2 S3 S4 S5 per-component"
+   },
+   {
+    "page": 10,
+    "words": 22,
+    "reason": "duplicate",
+    "text": "HMM AAE real VS: 55.8 VS: 142.1 VS: 127.7 IntDiv: 0.853 IntDiv: 0.849 IntDiv: 0.847 1.0 0.8 0.6 similarity 0.4 0.2 0.0"
+   },
+   {
+    "page": 11,
+    "words": 20,
+    "reason": "duplicate",
+    "text": "1 1 2004): k(x, x ′ ) = y p( y | x) 2 p( y | x ′ )"
+   },
+   {
+    "page": 11,
+    "words": 10,
+    "reason": "duplicate",
+    "text": "1 mode distribution: exp H(p̂( y)), where p̂( y) ="
+   },
+   {
+    "page": 12,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "original 19.50 43.93"
+   },
+   {
+    "page": 14,
+    "words": 18,
+    "reason": "duplicate",
+    "text": "least diverse most diverse plain castle clock keyboard Inception least diverse most diverse cockroach plain man aquarium_fish pixels"
+   },
+   {
+    "page": 21,
+    "words": 26,
+    "reason": "debris",
+    "text": ": S   X VSk (x 1 , . . . , x n , p) = exp − λi log λi . (3) i=1"
+   },
+   {
+    "page": 21,
+    "words": 24,
+    "reason": "debris",
+    "text": "K K    VSk (x 1 , . . . , x n ) = exp − tr log . (4) n"
+   },
+   {
+    "page": 21,
+    "words": 72,
+    "reason": "debris",
+    "text": "tr(K /n log K /n) = tr UΛU −1 log UΛU −1 \u0001\u0001 = tr UΛU −1 U (log Λ) U −1 \u0001 = tr (Λ log Λ) Xn = λi log λi . i=1 therefore n   K K X    VSk (x 1 , . . . , x n ) = exp − λi log λi = exp − tr log . i="
+   },
+   {
+    "page": 22,
+    "words": 14,
+    "reason": "debris",
+    "text": "N X Σ̃ p = p(x i )φ(x i )φ(x i )⊤ . i=1"
+   },
+   {
+    "page": 23,
+    "words": 34,
+    "reason": "debris",
+    "text": "1   exp(H) − exp(Ĥ) ≤ exp(H) − exp H − p n 1   = exp(H) − exp(H)/ exp p n 1   = exp(H) 1 − p . n"
+   },
+   {
+    "page": 23,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "proportional to 1/"
+   },
+   {
+    "page": 23,
+    "words": 10,
+    "reason": "debris",
+    "text": "5 https://github.com/stevliu/self-conditioned-gan 6 https://github.com/openai/vdvae/ 7 https://github.com/matejgrcic/DenseFlow 8 https://github.com/openai/improved-diffusion 9 https://github.com/opena"
+   },
+   {
+    "page": 25,
+    "words": 46,
+    "reason": "duplicate",
+    "text": "mnist multinli VS VS 20 400 15 380 10 360 0.60 0.940 IntDiv 0.55 0.935 0.50 0.930 0.45 0.925 IntDiv 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 number of classes number of classes"
+   },
+   {
+    "page": 27,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "original 19.50 3.52"
+   },
+   {
+    "page": 27,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "ImageNet 64×64 original 43.93 4.43"
+   },
+   {
+    "page": 27,
+    "words": 20,
+    "reason": "duplicate",
+    "text": "Inception kernel least positive most positive 1 kernel principal components kernel principal components 2 3 4 5 6 7 8"
+   },
+   {
+    "page": 27,
+    "words": 14,
+    "reason": "duplicate",
+    "text": "pixel kernel least positive most positive 1 2 3 4 5 6 7 8"
+   },
+   {
+    "page": 28,
+    "words": 22,
+    "reason": "duplicate",
+    "text": "5.0 Beam search 4.5 diverse Beam search Human 4.0 n-gram VS 3.5 3.0 2.5 0.3 0.4 0.5 0.6 0.7 0.8 n-gram Diversity"
+   },
+   {
+    "page": 28,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "high Vendi Score, low n-gram Diversity:"
+   },
+   {
+    "page": 29,
+    "words": 28,
+    "reason": "duplicate",
+    "text": "44 sweet green 42 woody 40 fruity odor descriptors herbal 38 floral 36 34 spicy 32 fatty 30 waxy 60 80 100 120 140 160 180 molecular fingerprints"
+   },
+   {
+    "page": 29,
+    "words": 46,
+    "reason": "duplicate",
+    "text": "multinli genres Amazon reviews 95 Slate 3 stars 45 90 44 2 stars 1 stars 85 Fiction SimCSE SimCSE 43 4 stars 80 Travel 42 Telephone 75 41 Government 5 stars 70 375 380 385 390 395 375 376 377 378 379 "
+   },
+   {
+    "page": 30,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "most diverse woody herbal least diverse waxy fatty"
+   },
+   {
+    "page": 31,
+    "words": 19,
+    "reason": "duplicate",
+    "text": "least diverse most diverse Sneaker Ankle boot Bag Shirt Inception least diverse most diverse Trouser Coat Bag Sandal pixels"
+   },
+   {
+    "page": 32,
+    "words": 27,
+    "reason": "duplicate",
+    "text": "least diverse most diverse Wearing_Necktie Rosy_Cheeks Blurry Wearing_Hat Inception least diverse most diverse Blond_Hair Rosy_Cheeks Wearing_Hat Mustache pixels least diverse most diverse Rosy_Cheeks"
+   }
+  ],
+  "captions_reclassified": [],
+  "captions_reassigned": [],
+  "headings_restored": [],
+  "lists_reunited": [
+   {
+    "page": 7,
+    "list": "#/groups/1",
+    "fragment": "#/groups/2",
+    "markers": "2-2",
+    "rule": "fragment continues numbering"
+   },
+   {
+    "page": 7,
+    "list": "#/groups/1",
+    "fragment": "#/groups/3",
+    "markers": "3-3",
+    "rule": "fragment continues numbering"
+   },
+   {
+    "page": 7,
+    "list": "#/groups/1",
+    "fragment": "#/groups/4",
+    "markers": "4-4",
+    "rule": "fragment continues numbering"
+   }
+  ],
+  "figures_screened": [
+   {
+    "page": 1,
+    "image": "fig-001-p1.png",
+    "w": 81,
+    "h": 24,
+    "reason": "small"
+   }
+  ],
+  "superseded": [],
+  "replaced_pages": [],
+  "noise_dropped": 12,
+  "hyphens_restored": [
+   {
+    "page": 26,
+    "ref": "#/texts/651",
+    "word": "MS-COCO"
+   }
+  ],
+  "order": [
+   {
+    "page": 12,
+    "text": "No model matches the Diversity Score of the original dataset They were trained on.",
+    "words": 14,
+    "refs": [
+     "#/texts/433",
+     "#/texts/434"
+    ],
+    "repaired": false,
+    "note": "layer passage (1819 letters) and blocks (1494) differ in length",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 28,
+    "text": "Low Vendi Score, high n-gram Diversity:",
+    "words": 6,
+    "refs": [
+     "#/texts/704",
+     "#/texts/709"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [
+     "sentence start detached: ' bow ties standing next to steel rafter.' | 'several men in suits talking together in'",
+     "sentence start detached: 'men in suits talking together in a room.' | 'an older man in a tuxedo standing next t'",
+     "sentence start detached: 'younger man in a tuxedo wearing glasses.' | 'two men wearing tuxedos glance at each o'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 28,
+    "text": "several men in suits talking together in a",
+    "words": 8,
+    "refs": [
+     "#/texts/705",
+     "#/texts/710",
+     "#/texts/711"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [
+     "sentence start detached: ' bow ties standing next to steel rafter.' | 'several men in suits talking together in'",
+     "sentence start detached: 'men in suits talking together in a room.' | 'an older man in a tuxedo standing next t'",
+     "sentence start detached: 'younger man in a tuxedo wearing glasses.' | 'two men wearing tuxedos glance at each o'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 28,
+    "text": "an older man in a tuxedo standing Next",
+    "words": 8,
+    "refs": [
+     "#/texts/706",
+     "#/texts/712"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [
+     "sentence start detached: 'men in suits talking together in a room.' | 'an older man in a tuxedo standing next t'",
+     "sentence start detached: 'younger man in a tuxedo wearing glasses.' | 'two men wearing tuxedos glance at each o'",
+     "passage cut out of 'the dork with the earring stands next to'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 28,
+    "text": "to a younger man in a tuxedo wearing",
+    "words": 8,
+    "refs": [
+     "#/texts/706",
+     "#/texts/712",
+     "#/texts/713"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [
+     "sentence start detached: 'men in suits talking together in a room.' | 'an older man in a tuxedo standing next t'",
+     "sentence start detached: 'younger man in a tuxedo wearing glasses.' | 'two men wearing tuxedos glance at each o'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 28,
+    "text": "two men wearing tuxedos glance at each",
+    "words": 7,
+    "refs": [
+     "#/texts/707",
+     "#/texts/713",
+     "#/texts/714"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [
+     "sentence start detached: 'younger man in a tuxedo wearing glasses.' | 'two men wearing tuxedos glance at each o'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 28,
+    "text": "older man in tuxedo sitting Next to an-",
+    "words": 8,
+    "refs": [
+     "#/texts/708",
+     "#/texts/714",
+     "#/texts/715"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 28,
+    "text": "other younger man in tuxedo.",
+    "words": 5,
+    "refs": [
+     "#/texts/708",
+     "#/texts/714",
+     "#/texts/715"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": ""
+   }
+  ],
+  "order_pages_checked": 30,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 8,
+  "order_breaking": 5,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 1 minor; distortions: 0 material, 1 minor; additions: 0 material, 0 minor; order: 0 material, 2 minor",
+  "at": "2026-11-15T11:26:53+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 1
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 1
+   },
+   "additions": {
+    "material": 0,
+    "minor": 0
+   },
+   "order": {
+    "material": 0,
+    "minor": 2
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "The Vendi Score. A Diversity Evaluation Metric for Machine Learning (p. 1–32)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "One naive approach is to define diversity as the exponential of the Shannon entropy of the probability distribution defined by a machine learning model or dataset. However, this approach is limiting in that it requires a probability distribution for which entropy is tractable",
+      "severity": "minor",
+      "page": 5
+     }
+    ],
+    "distortions": [
+     {
+      "source": "We form groups of molecules corresponding to the seven most common odor descriptors, with each group consisting of 500 randomly sampled",
+      "summary": "Blue points are labeled \"waxy,\" \"fatty,\" \"fruity,\" \"spicy,\" \"floral,\" \"sweet,\" \"green,\" \"woody,\" and \"herbal.\"",
+      "severity": "minor",
+      "page": 26
+     }
+    ],
+    "additions": [],
+    "order": [
+     {
+      "source": "with each group consisting of 500 randomly sampled High Vendi Score, low n-gram diversity:",
+      "summary": "",
+      "layer": "High Vendi Score, low n-gram diversity: • two men in bow ties standing next to steel rafter.",
+      "severity": "minor",
+      "page": 26
+     },
+     {
+      "source": "| Original vdvae | 5.82 | 40.05 | 0.63 | 0.35 | 19.50 12.87 | 9.68 | 57.57 | 0.47 | 0.37 | 43.93 18.04 |",
+      "summary": "",
+      "layer": "Original ... 19.50; vdvae 5.82 40.05 0.63 0.35 12.87; Original ... 43.93; vdvae 9.68 57.57 0.47 0.37 18.04",
+      "severity": "minor",
+      "page": 12
+     }
+    ]
+   }
+  ]
+ },
+ "source": {
+  "source": "friedman-dieng-2023-the-vendi-score-a-diversity-evaluation-metric-for-machine-learning.pdf",
+  "bytes": 8771657,
+  "sha256": "6882e9fd9c43326b9e4772c432f280a56af68c639cc1d169b238d6e03aee61fb",
+  "extracted_at": "2026-11-13T02:32:15+01:00"
+ }
+}

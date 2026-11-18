@@ -584,7 +584,9 @@ def fork_from_preset():
     # The caller may hand in the text as it stands on their surface — that is the
     # whole point of "keep this": what gets kept is what is written there now,
     # not what the preset says. Without it, the preset's own text is copied.
-    context_text = data.get("context_text") or base.context
+    # A pool preset hands over one of its entries, as the chooser does.
+    from schemas.engine.config_loader import draw_from_pool
+    context_text = data.get("context_text") or draw_from_pool(base.context)
     payload = {
         "context_text": context_text,
         "pipeline": base.pipeline_name or "text_transformation",
@@ -752,7 +754,8 @@ def revert_to_preset(pid: int):
     _snapshot_version(db, p)  # snapshot own current state first
     p.base_config = p.forked_from_preset
     p.pipeline = base.pipeline_name or "text_transformation"
-    p.context_text = base.context
+    from schemas.engine.config_loader import draw_from_pool
+    p.context_text = draw_from_pool(base.context)  # a pool hands over one entry
     p.task_instruction = getattr(base, "task_instruction", None)
     p.parameters = dict(base.parameters or {})
     db.commit()

@@ -47,6 +47,7 @@ from my_app.lab.models import (
     parse_style_key, make_preset_style_key, make_custom_style_key,
 )
 from my_app.lab.auth_service import hash_password
+from my_app.lab.terms import TERMS_VERSION
 from my_app.routes.auth_routes import auth_bp
 from my_app.routes.courses_routes import courses_bp
 from my_app.routes.interception_prompts_routes import prompts_bp
@@ -133,8 +134,11 @@ def _make_user(role, username, password="secret12", email=None):
 
 
 def _login(client, identifier, password="secret12"):
+    # An account with a password signs in with its agreement to the
+    # conditions of use (lab/terms.py, 2026-11-15).
     return client.post("/api/auth/login",
-                       json={"identifier": identifier, "password": password})
+                       json={"identifier": identifier, "password": password,
+                             "accept_terms": TERMS_VERSION, "language": "en"})
 
 
 def _keep(client, text="Write it as a list of smells.", name="Mine", **extra):

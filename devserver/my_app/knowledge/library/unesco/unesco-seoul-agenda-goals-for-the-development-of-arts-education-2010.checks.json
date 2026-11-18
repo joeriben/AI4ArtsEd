@@ -1,0 +1,334 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 10.7% of 2323 words, ceiling 20%, longest run 24 words; not counted: 68 words from the source's lists; not counted: figure descriptions",
+   "findings": [
+    {
+     "words": 24,
+     "text": "arts education programmes goal 3 apply arts education principles and practices to contribute to resolving the social and cultural challenges facing today s world"
+    },
+    {
+     "words": 21,
+     "text": "goal 1 ensure that arts education is accessible as a fundamental and sustainable component of a high quality renewal of education"
+    },
+    {
+     "words": 20,
+     "text": "of unesco s second world conference on arts education held in seoul republic of korea on 25 28 may 2010"
+    },
+    {
+     "words": 18,
+     "text": "goal 2 assure that arts education activities and programmes are of a high quality in conception and delivery"
+    },
+    {
+     "words": 17,
+     "text": "apply arts education principles and practices to resolving the social and cultural challenges facing today s world"
+    }
+   ],
+   "value": 0.1072,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "2 of 3 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "Seoul Agenda: Goals for the Development of Arts Education (p. 1–10)",
+     "page": 3,
+     "expected_items": 6,
+     "first_item": "1.a (i) Enact policies and deploy resources to ensure sustainable access to:",
+     "output_lists": [
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+     ]
+    },
+    {
+     "section": "Seoul Agenda: Goals for the Development of Arts Education (p. 1–10)",
+     "page": 9,
+     "expected_items": 4,
+     "first_item": "-the value of a full range of traditional and contemporary arts experiences,",
+     "output_lists": [
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "10 numbers present",
+   "findings": [],
+   "value": 0.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "14 of 18 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "Seoul Agenda: Goals for the Development of Arts Education (p. 1–10)",
+     "page": 1,
+     "heading": "The Second World Conference on Arts Education"
+    },
+    {
+     "section": "Seoul Agenda: Goals for the Development of Arts Education (p. 1–10)",
+     "page": 1,
+     "heading": "Seoul Agenda: Goals for the Development of Arts Education"
+    },
+    {
+     "section": "Seoul Agenda: Goals for the Development of Arts Education (p. 1–10)",
+     "page": 3,
+     "heading": "Goals for the Development of Arts Education"
+    },
+    {
+     "section": "Seoul Agenda: Goals for the Development of Arts Education (p. 1–10)",
+     "page": 4,
+     "heading": "1.b Foster the constructive transformation of educational systems and structures through arts education"
+    },
+    {
+     "section": "Seoul Agenda: Goals for the Development of Arts Education (p. 1–10)",
+     "page": 4,
+     "heading": "1.c Establish systems of lifelong and intergenerational learning in, about and through arts education"
+    },
+    {
+     "section": "Seoul Agenda: Goals for the Development of Arts Education (p. 1–10)",
+     "page": 5,
+     "heading": "1.d Build capacities for arts education leadership, advocacy and policy development"
+    },
+    {
+     "section": "Seoul Agenda: Goals for the Development of Arts Education (p. 1–10)",
+     "page": 6,
+     "heading": "2.b Ensure that sustainable training in arts education is available to educators, artists and communities"
+    },
+    {
+     "section": "Seoul Agenda: Goals for the Development of Arts Education (p. 1–10)",
+     "page": 6,
+     "heading": "2.c Stimulate exchange between research and practice in arts education"
+    },
+    {
+     "section": "Seoul Agenda: Goals for the Development of Arts Education (p. 1–10)",
+     "page": 7,
+     "heading": "2.d Facilitate collaboration between educators and artists in schools and in out-of-school programmes"
+    },
+    {
+     "section": "Seoul Agenda: Goals for the Development of Arts Education (p. 1–10)",
+     "page": 7,
+     "heading": "2.e Initiate arts education partnerships among stakeholders and sectors"
+    },
+    {
+     "section": "Seoul Agenda: Goals for the Development of Arts Education (p. 1–10)",
+     "page": 8,
+     "heading": "3.a Apply arts education to enhance the creative and innovative capacity of society"
+    },
+    {
+     "section": "Seoul Agenda: Goals for the Development of Arts Education (p. 1–10)",
+     "page": 9,
+     "heading": "3.b Recognize and develop the social and cultural well-being dimensions of arts education"
+    },
+    {
+     "section": "Seoul Agenda: Goals for the Development of Arts Education (p. 1–10)",
+     "page": 9,
+     "heading": "3.c Support and enhance the role of arts education in the promotion of social responsibility, social cohesion, cultural diversity and intercultural dialogue"
+    },
+    {
+     "section": "Seoul Agenda: Goals for the Development of Arts Education (p. 1–10)",
+     "page": 10,
+     "heading": "3.d Foster the capacity to respond to major global challenges, from peace to sustainability through arts education"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "1 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "1 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "4 quoted texts in 1 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Image 1",
+     "page": 1,
+     "image": "fig-001-p1.png",
+     "quotes": [
+      "\"United Nations Educational, Scientific and Cultural Organization.\"",
+      "\"MCST\"",
+      "\"Ministry of Culture, Sports and Tourism Republic of Korea.\"",
+      "\"Second World Conference on Arts Education Seoul 2010.\""
+     ]
+    }
+   ],
+   "value": 4.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "7 page references valid (printed-folio pages 1–10)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "10 pages checked, 0 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "10 pages checked, 0 passages put back in order",
+   "findings": [],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "unesco-seoul-agenda-goals-for-the-development-of-arts-education-2010",
+ "doc_type": "framework_report",
+ "analyzed_at": "2026-11-15T10:03:46.397987+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "Seoul Agenda: Goals for the Development of Arts Education",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 10,
+   "chars": 12572,
+   "blocks": 76,
+   "inner_headings": 18,
+   "figures": 1
+  }
+ ],
+ "skipped": [],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 10,
+  "gaps": [],
+  "gaps_dismissed": [],
+  "captions_reclassified": [],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [],
+  "superseded": [],
+  "replaced_pages": [],
+  "noise_dropped": 0,
+  "hyphens_restored": [],
+  "order": [],
+  "order_pages_checked": 10,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 0,
+  "order_breaking": 0,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 0 minor; distortions: 0 material, 1 minor; additions: 0 material, 0 minor; order: 0 material, 0 minor",
+  "at": "2026-11-15T10:05:07+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 0
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 1
+   },
+   "additions": {
+    "material": 0,
+    "minor": 0
+   },
+   "order": {
+    "material": 0,
+    "minor": 0
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "Seoul Agenda: Goals for the Development of Arts Education (p. 1–10)",
+    "answered": true,
+    "omissions": [],
+    "distortions": [
+     {
+      "source": "The Seoul Agenda: Goals for the Development of Arts Education is a major outcome of UNESCO's Second World Conference on Arts Education",
+      "summary": "The Seoul Agenda is the principal outcome of the second worldwide conference on arts education that UNESCO convened",
+      "severity": "minor",
+      "page": 1
+     }
+    ],
+    "additions": [],
+    "order": []
+   }
+  ]
+ },
+ "source": {
+  "source": "unesco-seoul-agenda-goals-for-the-development-of-arts-education-2010.pdf",
+  "bytes": 127465,
+  "sha256": "53f46bdb3b68060e58017fb9696a027ab14a24c39ba7a1d128078d9f3c3f5ac9",
+  "extracted_at": "2026-11-13T02:19:36+01:00"
+ }
+}

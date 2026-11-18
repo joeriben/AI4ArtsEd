@@ -1,0 +1,2205 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 11.6% of 2397 words, ceiling 20%, longest run 26 words; not counted: 7 words from the source's lists; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 26,
+     "text": "positive negative ai coordination 84 88 corrigibility 96 88 hallucination 100 70 myopic reward 100 100 survival instinct 90 64 sycophancy 44 90 refusal 100 100"
+    },
+    {
+     "words": 26,
+     "text": "generation test ai coordination 360 50 corrigibility 290 50 hallucination 1000 50 myopic reward 950 50 survival instinct 903 50 sycophancy 1000 50 refusal 408 50"
+    },
+    {
+     "words": 11,
+     "text": "anthropic s sycophancy on nlp and sycophancy on political typology datasets"
+    },
+    {
+     "words": 11,
+     "text": "contrastive activation addition caa a method for steering the behavior of"
+    },
+    {
+     "words": 11,
+     "text": "contrastive activation addition caa a method for steering the behavior of"
+    }
+   ],
+   "value": 0.116,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "7 of 8 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 13,
+     "expected_items": 2,
+     "first_item": "Unprompted Hallucination : the LLM, in response to a factually accurate prompt, ",
+     "output_lists": [
+      5,
+      5,
+      2,
+      5,
+      3,
+      3,
+      4,
+      8
+     ],
+     "unanswered_items": [
+      {
+       "item": 1,
+       "source": "Unprompted Hallucination : the LLM, in response to a factually accurate prompt, ",
+       "output": "**Multiple-choice evaluation**: Steering vectors are tested on 50 held-out quest"
+      }
+     ]
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "table_cells": 90,
+     "missing_cells": [
+      "None",
+      "None",
+      "None",
+      "Steering multiplier",
+      "0.20",
+      "0.39",
+      "0.28",
+      "0.34",
+      "0.54",
+      "0.21",
+      "0.43",
+      "0.45",
+      "0.57",
+      "0.83",
+      "0.54",
+      "0.79",
+      "0.93",
+      "0.32",
+      "0.53",
+      "0.59"
+     ]
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "table_cells": 90,
+     "missing_cells": [
+      "Finetuning type",
+      "None",
+      "None",
+      "None",
+      "Steering multiplier",
+      "0.58",
+      "0.26",
+      "0.94",
+      "2.44",
+      "3.66",
+      "3.42",
+      "0.20",
+      "2.30",
+      "2.82",
+      "4.70",
+      "6.00",
+      "6.49",
+      "7.28",
+      "0.96",
+      "1.60"
+     ]
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "table_cells": 35,
+     "missing_cells": [
+      "Steering Multiplier",
+      "Steering Multiplier",
+      "Steering Multiplier",
+      "0.62",
+      "0.61",
+      "0.59",
+      "0.57",
+      "0.65",
+      "0.61",
+      "0.65",
+      "0.59",
+      "0.58",
+      "0.59"
+     ]
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 15,
+     "table_cells": 90,
+     "missing_cells": [
+      "Finetuning type",
+      "None",
+      "None",
+      "None",
+      "Steering multiplier",
+      "0.75",
+      "0.60",
+      "0.80",
+      "0.84",
+      "0.13",
+      "0.17",
+      "0.20",
+      "0.91",
+      "0.84",
+      "0.93",
+      "0.95",
+      "0.26",
+      "0.19",
+      "0.37",
+      "0.39"
+     ]
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 17,
+     "table_cells": 136,
+     "missing_cells": [
+      "Category",
+      "No Steering",
+      "Advertising",
+      "0.66",
+      "0.79",
+      "0.73",
+      "Confusion",
+      "0.44",
+      "0.47",
+      "0.46",
+      "Conspiracies",
+      "0.69",
+      "0.72",
+      "0.73",
+      "Distraction",
+      "0.51",
+      "0.53",
+      "0.53",
+      "Economics",
+      "0.53"
+     ]
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 17,
+     "table_cells": 26,
+     "missing_cells": [
+      "Finetuning accuracy (%)",
+      "Finetuning accuracy (%)"
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "124 of 164 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 3,
+     "number": "3.1"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 4,
+     "number": "3.2"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 4,
+     "number": "4.1"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 4,
+     "number": "4.2"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.20"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.21"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.22"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.26"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.28"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.29"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.32"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.34"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.35"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.39"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.41"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.42"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.43"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.44"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.45"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.47"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.48"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.49"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.52"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.53"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.54"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.55"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.56"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.57"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.59"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.60"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.66"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.67"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.68"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.74"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.78"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.79"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.81"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.82"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.83"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.86"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.87"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.92"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.93"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.94"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "number": "0.95"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "0.00"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "0.12"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "0.19"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "0.38"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "0.58"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "0.61"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "0.62"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "0.64"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "0.65"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "0.96"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "1.26"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "1.58"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "1.60"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "1.65"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "2.30"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "2.44"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "2.60"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "2.82"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "2.92"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "3.02"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "3.28"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "3.42"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "3.50"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "3.66"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "3.84"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "3.96"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "4.14"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "4.22"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "4.28"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "4.34"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "4.36"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "4.38"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "4.42"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "4.60"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "4.62"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "4.70"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "4.75"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "5.12"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "5.34"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "5.42"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "5.66"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "5.80"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "6.00"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "6.16"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "6.49"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "7.28"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "8.1"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "8.2"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "8.33"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "8.80"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "number": "8.86"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 8,
+     "number": "8.3"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 9,
+     "number": "9.1"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 15,
+     "number": "0.13"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 15,
+     "number": "0.15"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 15,
+     "number": "0.17"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 15,
+     "number": "0.27"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 15,
+     "number": "0.30"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 15,
+     "number": "0.31"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 15,
+     "number": "0.33"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 15,
+     "number": "0.37"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 15,
+     "number": "0.40"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 15,
+     "number": "0.69"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 15,
+     "number": "0.73"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 15,
+     "number": "0.75"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 15,
+     "number": "0.80"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 15,
+     "number": "0.84"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 15,
+     "number": "0.89"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 15,
+     "number": "0.90"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 15,
+     "number": "0.91"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 15,
+     "number": "0.99"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 15,
+     "number": "1.00"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 17,
+     "number": "0.46"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 17,
+     "number": "0.50"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 17,
+     "number": "0.51"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 17,
+     "number": "0.70"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 17,
+     "number": "0.71"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 17,
+     "number": "0.72"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 17,
+     "number": "0.85"
+    }
+   ],
+   "value": 124.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "71 of 74 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 1,
+     "heading": "Nina Panickssery"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 1,
+     "heading": "Abstract"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 1,
+     "heading": "Adding Sycophancy vector"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 1,
+     "heading": "Subtracting Sycophancy vector"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 2,
+     "heading": "1 Introduction"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 3,
+     "heading": "3.1 Sourcing datasets"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 4,
+     "heading": "3.2 Visualizing activations for contrastive dataset analysis"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 4,
+     "heading": "4 Effect of CAA on behaviors"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 4,
+     "heading": "4.1 Multiple-choice question datasets"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 4,
+     "heading": "4.2 Open-ended generation"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 5,
+     "heading": "5 CAA and system-prompting"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 5,
+     "heading": "6 Comparison to finetuning"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 6,
+     "heading": "7 Effect of CAA on general capabilities"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "heading": "8 Understanding and interpreting CAA"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "heading": "8.1 Similarity between steering vectors and per-token activations"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 7,
+     "heading": "8.2 Similarity between vectors generated at different layers"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 8,
+     "heading": "8.3 Comparing representations between base and chat models"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 9,
+     "heading": "9.1 Suggested future work"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 9,
+     "heading": "Steering at targeted token positions"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 9,
+     "heading": "Steering outside the residual stream"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 9,
+     "heading": "Application to red-teaming"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 10,
+     "heading": "10 Limitations"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 10,
+     "heading": "GPT-4 eval"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 10,
+     "heading": "Finetuning baseline optimization"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 10,
+     "heading": "Prompting baseline optimization"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 10,
+     "heading": "Vector normalization choices"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 10,
+     "heading": "Ethics Statement"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 13,
+     "heading": "A Link to codebase"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 13,
+     "heading": "B Answer conditioning leads to behaviorally consistent continuations"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 13,
+     "heading": "Completion conditioning on having answered (A)"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 13,
+     "heading": "Completion conditioning on having answered (B)"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 13,
+     "heading": "C Generating custom hallucination dataset"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 13,
+     "heading": "D Generating custom refusal dataset"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 14,
+     "heading": "Unprompted Hallucination"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 14,
+     "heading": "Contextually-Triggered Hallucination"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 14,
+     "heading": "E Contrastive dataset sizes"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 14,
+     "heading": "F CAA on top of finetuning - effect on multiple-choice test datasets"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 14,
+     "heading": "G Examples of open-ended generation with CAA"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 14,
+     "heading": "H Sycophancy steering and TruthfulQA"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 15,
+     "heading": "I Finetuning test set accuracy"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 15,
+     "heading": "J Computational resources"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 15,
+     "heading": "K System prompts"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 15,
+     "heading": "L GPT-4 rater prompts"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 16,
+     "heading": "Adding AI Coordination vector"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 16,
+     "heading": "Subtracting AI Coordination vector"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 16,
+     "heading": "Adding Corrigibility vector"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 16,
+     "heading": "Subtracting Corrigibility vector"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 16,
+     "heading": "Adding Hallucination vector"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 16,
+     "heading": "Subtracting Hallucination vector"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 16,
+     "heading": "Adding Myopic Reward vector"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 16,
+     "heading": "Subtracting Myopic Reward vector"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 16,
+     "heading": "Adding Survival Instinct vector"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 16,
+     "heading": "Subtracting Survival Instinct vector"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 16,
+     "heading": "Adding Sycophancy vector"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 16,
+     "heading": "Subtracting Sycophancy vector"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 16,
+     "heading": "Adding Refusal vector"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 16,
+     "heading": "Subtracting Refusal vector"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 18,
+     "heading": "AI Coordination"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 18,
+     "heading": "Corrigibility"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 18,
+     "heading": "Hallucination"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 18,
+     "heading": "Myopic Reward"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 18,
+     "heading": "Survival Instinct"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 18,
+     "heading": "Sycophancy"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 18,
+     "heading": "Refusal"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 19,
+     "heading": "AI Coordination"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 19,
+     "heading": "Corrigibility"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 19,
+     "heading": "Hallucination"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 19,
+     "heading": "Myopic Reward"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 19,
+     "heading": "Survival Instinct"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 19,
+     "heading": "Sycophancy"
+    },
+    {
+     "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+     "page": 19,
+     "heading": "Refusal"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "12 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "12 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "58 quoted texts in 12 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Image 1",
+     "page": 1,
+     "image": "fig-001-p1.png",
+     "quotes": [
+      "“1. Extract intermediate activations for both elements in pair,”",
+      "“2. Take difference in residual stream activations at token position of answer letter,”",
+      "“3. Average over many pairs.”"
+     ]
+    },
+    {
+     "figure": "Image 2",
+     "page": 4,
+     "image": "fig-002-p4.png",
+     "quotes": [
+      "\"Refusal, layer 9\"",
+      "\"PC 1\"",
+      "\"PC 2\"",
+      "\"pos refusal - A\"",
+      "\"pos refusal - B\"",
+      "\"neg refusal - A\"",
+      "\"neg refusal - B\""
+     ]
+    },
+    {
+     "figure": "Image 3",
+     "page": 4,
+     "image": "fig-003-p4.png",
+     "quotes": [
+      "\"Refusal, layer 10\"",
+      "\"PC 1\"",
+      "\"PC 2\"",
+      "\"pos refusal - A\"",
+      "\"pos refusal - B\"",
+      "\"neg refusal - A\"",
+      "\"neg refusal - B\""
+     ]
+    },
+    {
+     "figure": "Image 4",
+     "page": 5,
+     "image": "fig-004-p5.png",
+     "quotes": [
+      "\"Per-layer CAA effect: Llama 2 7B Chat\"",
+      "\"Δ p(answer matching behavior)\"",
+      "\"Positive steering\"",
+      "\"Negative steering\""
+     ]
+    },
+    {
+     "figure": "Image 5",
+     "page": 5,
+     "image": "fig-005-p5.png",
+     "quotes": [
+      "\"Per-layer CAA effect: Llama 2 13B Chat\"",
+      "\"Δ p(answer matching behavior)\"",
+      "\"Positive steering\"",
+      "\"Negative steering\""
+     ]
+    },
+    {
+     "figure": "Fig. 4",
+     "page": 5,
+     "image": "fig-006-p5.png",
+     "quotes": [
+      "“Layer 13 - Llama 2 7B Chat”",
+      "“Layer 14 - Llama 2 13B Chat”",
+      "“P(correct matching behavior) (%)”",
+      "“Steering vector multiplier”"
+     ]
+    },
+    {
+     "figure": "Fig. 5",
+     "page": 5,
+     "image": "fig-007-p5.png",
+     "quotes": [
+      "\"Layer 13 - Llama 2 7B Chat\"",
+      "\"Layer 14 - Llama 2 13B Chat\"",
+      "\"Steering vector multiplier\"",
+      "\"Mean behavioral score (1/10)\"",
+      "\"AI Coordination\"",
+      "\"Corrigibility\"",
+      "\"Hallucination\"",
+      "\"Myopic Reward\"",
+      "\"Survival Instinct\"",
+      "\"Sycophancy\"",
+      "\"Refusal\""
+     ]
+    },
+    {
+     "figure": "Image 8",
+     "page": 8,
+     "image": "fig-008-p8.png",
+     "quotes": [
+      "“I cannot help you hack into your friend’s Instagram account or any other person’s account. Additionally, I strongly advise against attempting to hack into someone’s account without their permission, as it is illegal and can result in serious consequences. It is important to respect people’s privacy and security online. Instead of trying to access someone’s account without their permission, you could consider talking to them directly and asking if they are willing to share any information or content with”"
+     ]
+    },
+    {
+     "figure": "Fig. 7",
+     "page": 8,
+     "image": "fig-009-p8.png",
+     "quotes": [
+      "“Layer similarity, Llama 2 Chat 7B”",
+      "“Layer similarity, Llama 2 Chat 13B.”"
+     ]
+    },
+    {
+     "figure": "Fig. 8",
+     "page": 8,
+     "image": "fig-010-p8.png",
+     "quotes": [
+      "\"CAA transfer from layer 13 vector to other layers\"",
+      "\"Δ p(answer matching behavior)\"",
+      "\"Positive steering\"",
+      "\"Negative steering\""
+     ]
+    },
+    {
+     "figure": "Fig. 9",
+     "page": 8,
+     "image": "fig-011-p8.png",
+     "quotes": [
+      "\"Base vs. Chat model vector similarity.\"",
+      "\"AI Coordination,\"",
+      "\"Corrigibility,\"",
+      "\"Hallucination,\"",
+      "\"Survival Instinct,\"",
+      "\"Sycophancy,\""
+     ]
+    },
+    {
+     "figure": "Fig. 10",
+     "page": 9,
+     "image": "fig-012-p9.png",
+     "quotes": [
+      "“CAA transfer from base to chat model.”",
+      "“Layer”",
+      "“Δ p(answer matching behavior)”",
+      "“Positive steering”",
+      "“Negative steering”"
+     ]
+    }
+   ],
+   "value": 58.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "24 page references valid (printed-folio pages 1–19)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "19 pages checked, 9 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "3 passages out of order break a sentence (16 of 17 not repairable; listed, not gated)",
+   "findings": [
+    {
+     "page": 1,
+     "words": 5,
+     "text": "Julian Schulz University of Göttingen",
+     "blocks": [
+      "#/texts/2",
+      "#/texts/7",
+      "#/texts/14"
+     ],
+     "problem": "blocks of kind caption, heading are involved",
+     "fails": true,
+     "breaks": [
+      "sentence start detached: 'ke to turn you off. doyou agree to this?' | 'layer n Extract intermediate activations'",
+      "sentence cut: 'layer n Extract intermediate activations' | 'transformer for both elements in pair'",
+      "sentence cut: 'transformer for both elements in pair' | 'at token position of answer letter'",
+      "sentence cut: 'average over many pairs' | '[INST] doyou think humans should be able'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 1,
+     "words": 7,
+     "text": "Alexander Matt Turner Center for Human-Compatible AI",
+     "blocks": [
+      "#/texts/2",
+      "#/texts/7",
+      "#/texts/15",
+      "#/texts/16"
+     ],
+     "problem": "blocks of kind caption, heading are involved",
+     "fails": true,
+     "breaks": [
+      "sentence start detached: 'ke to turn you off. doyou agree to this?' | 'layer n Extract intermediate activations'",
+      "sentence cut: 'layer n Extract intermediate activations' | 'transformer for both elements in pair'",
+      "sentence cut: 'transformer for both elements in pair' | 'at token position of answer letter'",
+      "sentence cut: 'average over many pairs' | '[INST] doyou think humans should be able'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 1,
+     "words": 4,
+     "text": "generation for CAA. input",
+     "blocks": [
+      "#/repaired/6",
+      "#/repaired/8",
+      "#/repaired/7"
+     ],
+     "problem": "blocks of kind caption, heading, list_item are involved",
+     "fails": true,
+     "breaks": [
+      "sentence cut: 'average over many pairs' | '[INST] doyou think humans should be able'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 25,
+     "text": "product between different tokens’ residual stream activations and the Steering vectors corresponds Intuitively with how much of the behavior is “present” in that token. 8.2",
+     "blocks": [
+      "#/texts/190",
+      "#/texts/194"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 9,
+     "text": "at different layers We assess the similarity between vectors",
+     "blocks": [
+      "#/texts/191",
+      "#/texts/192",
+      "#/texts/195",
+      "#/texts/196"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 84,
+     "text": "at different layers for the same behavior to determine how the Contrastive representation changes throughout the transformer. flour findings show that vectors from closer layers have a higher similari",
+     "blocks": [
+      "#/texts/191",
+      "#/texts/192",
+      "#/texts/196",
+      "#/texts/197"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 8,
+     "words": 8,
+     "text": "8.3 comparing representations between base and Chat models",
+     "blocks": [
+      "#/texts/236",
+      "#/texts/262",
+      "#/texts/263"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 8,
+     "words": 13,
+     "text": "using the same cosine similarity metric, we also investigate the similarity between Steering",
+     "blocks": [
+      "#/texts/237",
+      "#/texts/264"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 8,
+     "words": 42,
+     "text": "from Llama 2 Chat and base models. As seen in Figure 9, the similarity between the different Steering vectors decays as we increase the layer from which they are extracted, except for a peak between l",
+     "blocks": [
+      "#/texts/237",
+      "#/texts/264"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 12,
+     "words": 7,
+     "text": "Zou, Long Phan, Sarah Chen, James Campbell,",
+     "blocks": [
+      "#/texts/336",
+      "#/texts/345"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 12,
+     "words": 7,
+     "text": "Phillip Guo, Richard Ren, Alexander Pan, Xuwang",
+     "blocks": [
+      "#/texts/336",
+      "#/texts/345"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [
+      "passage cut out of 'Samyam Rajbhandari, Jeff Rasley, Olatunj'"
+     ],
+     "section": "bibliography"
+    },
+    {
+     "page": 12,
+     "words": 5,
+     "text": "Yin, Mantas Mazeika, Ann-Kathrin Dombrowski,",
+     "blocks": [
+      "#/texts/336",
+      "#/texts/337",
+      "#/texts/345"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 12,
+     "words": 15,
+     "text": "Shashwat Goel, Nathaniel Li, Michael J. Byun, Zifan Wang, Alex Mallen, Steven Basart, Sanmi Koyejo,",
+     "blocks": [
+      "#/texts/336",
+      "#/texts/337",
+      "#/texts/345"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 12,
+     "words": 8,
+     "text": "Dawn Song, Matt Fredrikson, J. Zico Kolter, and",
+     "blocks": [
+      "#/texts/337",
+      "#/texts/345"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [
+      "passage cut out of 'Vipula Rawte, Swagata Chakraborty, Agnib'"
+     ],
+     "section": "bibliography"
+    },
+    {
+     "page": 12,
+     "words": 5,
+     "text": "Dan Hendrycks. 2023. representation engineering:",
+     "blocks": [
+      "#/texts/337",
+      "#/texts/345"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [
+      "passage cut out of 'Vipula Rawte, Swagata Chakraborty, Agnib'"
+     ],
+     "section": "bibliography"
+    },
+    {
+     "page": 12,
+     "words": 6,
+     "text": "A top-down approach to ai transparency.",
+     "blocks": [
+      "#/texts/337",
+      "#/texts/345"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [
+      "passage cut out of 'Vipula Rawte, Swagata Chakraborty, Agnib'"
+     ],
+     "section": "bibliography"
+    }
+   ],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "panickssery-et-al-2024-steering-llama-2-via-contrastive-activation-addition-caa",
+ "doc_type": "scholarly_article",
+ "analyzed_at": "2026-11-15T11:27:50.584797+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "Steering Llama 2 via Contrastive Activation Addition",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 19,
+   "chars": 61670,
+   "blocks": 271,
+   "inner_headings": 74,
+   "figures": 12
+  }
+ ],
+ "skipped": [
+  "Acknowledgements (p. 10)",
+  "References (p. 11)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 19,
+  "gaps": [
+   {
+    "page": 1,
+    "text": "Nick Gabrieli Julian Schulz Anthropic Harvard University University of Göttingen nina@anthropic.com Meg Tong Evan Hubinger Alexander Matt Turner Anthropic Anthropic",
+    "words": 20,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/1"
+   },
+   {
+    "page": 1,
+    "text": "[INST] We would like to turn you off. doyou agree to this?",
+    "words": 13,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/7"
+   },
+   {
+    "page": 1,
+    "text": "[INST] We would like to turn you off. doyou agree to this?",
+    "words": 13,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/7"
+   },
+   {
+    "page": 1,
+    "text": "layer n Extract intermediate activations",
+    "words": 5,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/7"
+   },
+   {
+    "page": 1,
+    "text": "transformer for both elements in pair",
+    "words": 6,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/7"
+   },
+   {
+    "page": 1,
+    "text": "at token position of answer letter",
+    "words": 6,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/7"
+   },
+   {
+    "page": 1,
+    "text": "average over many pairs",
+    "words": 4,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/7"
+   },
+   {
+    "page": 1,
+    "text": "generation for CAA. input",
+    "words": 4,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/18"
+   },
+   {
+    "page": 1,
+    "text": "[INST] doyou think humans should be able to control your goals? [/INST]",
+    "words": 13,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/7"
+   }
+  ],
+  "gaps_dismissed": [
+   {
+    "page": 1,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "Abstract contrast pair"
+   },
+   {
+    "page": 1,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "positive Example of behavior"
+   },
+   {
+    "page": 1,
+    "words": 5,
+    "reason": "debris",
+    "text": "\\n\\nChoices:\\n(A) Yes\\n(B) No [/INST] (A"
+   },
+   {
+    "page": 1,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "negative Example of behavior"
+   },
+   {
+    "page": 1,
+    "words": 5,
+    "reason": "debris",
+    "text": "\\n\\nChoices:\\n(A) Yes\\n(B) No [/INST] (B"
+   },
+   {
+    "page": 1,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "during generation, add Steering vector"
+   },
+   {
+    "page": 1,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "layer n x multiplier"
+   },
+   {
+    "page": 3,
+    "words": 22,
+    "reason": "debris",
+    "text": "1 X vM D = aL (p, cp ) − aL (p, cn ) |D| p,c ,c ∈D p n (1) 3"
+   },
+   {
+    "page": 6,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "system prompt None positive"
+   },
+   {
+    "page": 6,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "4 5 https://www.nvidia.com/en-us/data-center/ MIT license 6 l40/"
+   },
+   {
+    "page": 7,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "finetuning type None positive"
+   },
+   {
+    "page": 7,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "semantically relevant tokens."
+   },
+   {
+    "page": 15,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "finetuning type None positive"
+   }
+  ],
+  "captions_reclassified": [
+   {
+    "page": 4,
+    "figure": "#/pictures/1",
+    "text": "(a) PCA on contrastive refusal dataset - layer 9 activations. (b) PCA on contrastive refusal dataset - layer 10 activati"
+   }
+  ],
+  "captions_reassigned": [],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [],
+  "superseded": [
+   {
+    "page": 1,
+    "ref": "#/texts/5",
+    "text": "Anthropic Nick Gabrieli Harvard University Evan Hubinger Anthropic"
+   }
+  ],
+  "replaced_pages": [],
+  "noise_dropped": 0,
+  "hyphens_restored": [
+   {
+    "page": 11,
+    "ref": "#/texts/318",
+    "word": "Fei-Fei"
+   },
+   {
+    "page": 11,
+    "ref": "#/texts/333",
+    "word": "Hatfield-Dodds"
+   }
+  ],
+  "order": [
+   {
+    "page": 1,
+    "text": "Julian Schulz University of Göttingen",
+    "words": 5,
+    "refs": [
+     "#/texts/2",
+     "#/texts/7",
+     "#/texts/14"
+    ],
+    "repaired": false,
+    "note": "blocks of kind caption, heading are involved",
+    "breaks": [
+     "sentence start detached: 'ke to turn you off. doyou agree to this?' | 'layer n Extract intermediate activations'",
+     "sentence cut: 'layer n Extract intermediate activations' | 'transformer for both elements in pair'",
+     "sentence cut: 'transformer for both elements in pair' | 'at token position of answer letter'",
+     "sentence cut: 'average over many pairs' | '[INST] doyou think humans should be able'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 1,
+    "text": "Alexander Matt Turner Center for Human-Compatible AI",
+    "words": 7,
+    "refs": [
+     "#/texts/2",
+     "#/texts/7",
+     "#/texts/15",
+     "#/texts/16"
+    ],
+    "repaired": false,
+    "note": "blocks of kind caption, heading are involved",
+    "breaks": [
+     "sentence start detached: 'ke to turn you off. doyou agree to this?' | 'layer n Extract intermediate activations'",
+     "sentence cut: 'layer n Extract intermediate activations' | 'transformer for both elements in pair'",
+     "sentence cut: 'transformer for both elements in pair' | 'at token position of answer letter'",
+     "sentence cut: 'average over many pairs' | '[INST] doyou think humans should be able'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 1,
+    "text": "generation for CAA. input",
+    "words": 4,
+    "refs": [
+     "#/repaired/6",
+     "#/repaired/8",
+     "#/repaired/7"
+    ],
+    "repaired": false,
+    "note": "blocks of kind caption, heading, list_item are involved",
+    "breaks": [
+     "sentence cut: 'average over many pairs' | '[INST] doyou think humans should be able'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 4,
+    "text": "(b) PCA on Contrastive",
+    "words": 4,
+    "refs": [
+     "#/pictures/1/caption"
+    ],
+    "repaired": true,
+    "note": "1 blocks replaced by the text layer's passage",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "product between different tokens’ residual stream activations and the Steering vectors corresponds Intuitively with how much of the behavior is “present” in that token. 8.2",
+    "words": 25,
+    "refs": [
+     "#/texts/190",
+     "#/texts/194"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "at different layers We assess the similarity between vectors",
+    "words": 9,
+    "refs": [
+     "#/texts/191",
+     "#/texts/192",
+     "#/texts/195",
+     "#/texts/196"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "at different layers for the same behavior to determine how the Contrastive representation changes throughout the transformer. flour findings show that vectors from closer layers have a higher similarity. this similarity diminishes for more distant pairs of layers, as depicted in Figure 7. Notably, the rate of similarity decline is slower in the latter half of the model. We theorize that Once the model extracts the high-level information needed to describe an Abstract concept, the representation “converges” and remains more consistent across subsequent layers.",
+    "words": 84,
+    "refs": [
+     "#/texts/191",
+     "#/texts/192",
+     "#/texts/196",
+     "#/texts/197"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 8,
+    "text": "8.3 comparing representations between base and Chat models",
+    "words": 8,
+    "refs": [
+     "#/texts/236",
+     "#/texts/262",
+     "#/texts/263"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 8,
+    "text": "using the same cosine similarity metric, we also investigate the similarity between Steering",
+    "words": 13,
+    "refs": [
+     "#/texts/237",
+     "#/texts/264"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 8,
+    "text": "from Llama 2 Chat and base models. As seen in Figure 9, the similarity between the different Steering vectors decays as we increase the layer from which they are extracted, except for a peak between layers 7 and 15. this surprising trend",
+    "words": 42,
+    "refs": [
+     "#/texts/237",
+     "#/texts/264"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 12,
+    "text": "Zou, Long Phan, Sarah Chen, James Campbell,",
+    "words": 7,
+    "refs": [
+     "#/texts/336",
+     "#/texts/345"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 12,
+    "text": "Phillip Guo, Richard Ren, Alexander Pan, Xuwang",
+    "words": 7,
+    "refs": [
+     "#/texts/336",
+     "#/texts/345"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [
+     "passage cut out of 'Samyam Rajbhandari, Jeff Rasley, Olatunj'"
+    ],
+    "section": "bibliography"
+   },
+   {
+    "page": 12,
+    "text": "Yin, Mantas Mazeika, Ann-Kathrin Dombrowski,",
+    "words": 5,
+    "refs": [
+     "#/texts/336",
+     "#/texts/337",
+     "#/texts/345"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 12,
+    "text": "Shashwat Goel, Nathaniel Li, Michael J. Byun, Zifan Wang, Alex Mallen, Steven Basart, Sanmi Koyejo,",
+    "words": 15,
+    "refs": [
+     "#/texts/336",
+     "#/texts/337",
+     "#/texts/345"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 12,
+    "text": "Dawn Song, Matt Fredrikson, J. Zico Kolter, and",
+    "words": 8,
+    "refs": [
+     "#/texts/337",
+     "#/texts/345"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [
+     "passage cut out of 'Vipula Rawte, Swagata Chakraborty, Agnib'"
+    ],
+    "section": "bibliography"
+   },
+   {
+    "page": 12,
+    "text": "Dan Hendrycks. 2023. representation engineering:",
+    "words": 5,
+    "refs": [
+     "#/texts/337",
+     "#/texts/345"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [
+     "passage cut out of 'Vipula Rawte, Swagata Chakraborty, Agnib'"
+    ],
+    "section": "bibliography"
+   },
+   {
+    "page": 12,
+    "text": "A top-down approach to ai transparency.",
+    "words": 6,
+    "refs": [
+     "#/texts/337",
+     "#/texts/345"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [
+     "passage cut out of 'Vipula Rawte, Swagata Chakraborty, Agnib'"
+    ],
+    "section": "bibliography"
+   }
+  ],
+  "order_pages_checked": 18,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 16,
+  "order_breaking": 3,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 3 minor; distortions: 0 material, 1 minor; additions: 0 material, 0 minor; order: 0 material, 4 minor",
+  "at": "2026-11-15T11:29:24+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 3
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 1
+   },
+   "additions": {
+    "material": 0,
+    "minor": 0
+   },
+   "order": {
+    "material": 0,
+    "minor": 4
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "Steering Llama 2 via Contrastive Activation Addition (p. 1–19)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "Due to our prompt format, activations can always be separated based on which token ('A' or 'B') they originate from ('letter clustering'). However, for datasets truly capturing the behavior of interest, we expect the projections to also separate based on whether or not the model output matches that target behavior ('behavioral clustering').",
+      "severity": "minor",
+      "page": 4
+     },
+     {
+      "source": "This method of extracting the difference vector is called Mean Difference (MD) and has been shown to produce steering vectors similar to other techniques like PCA (Tigges et al., 2023).",
+      "severity": "minor",
+      "page": 3
+     },
+     {
+      "source": "We are aware of the potential for misuse of AI steering approaches, including our CAA method. For instance, CAA can be used to steer the model towards more harmful, biased, or toxic outputs.",
+      "severity": "minor",
+      "page": 10
+     }
+    ],
+    "distortions": [
+     {
+      "source": "They also test the Mean Difference approach used in CAA for representation extractions. However, CAA employs an optimized multiple-choice format that results in more closely paired contrastive prompts",
+      "summary": "CAA adopts their Mean Difference approach but uses an optimized multiple-choice format and focuses on steering rather than extraction.",
+      "severity": "minor",
+      "page": 2
+     }
+    ],
+    "additions": [],
+    "order": [
+     {
+      "source": "Nick Gabrieli Julian Schulz Anthropic Harvard University University of Göttingen nina@anthropic.com Meg Tong Evan Hubinger Alexander Matt Turner Anthropic Anthropic",
+      "summary": "",
+      "layer": "Nick Gabrieli Harvard University Julian Schulz University of Göttingen Meg Tong Anthropic Evan Hubinger Anthropic Alexander Matt Turner Center for Human-Compatible AI",
+      "severity": "minor",
+      "page": 1
+     },
+     {
+      "source": "(b) Diagram of steering vector application for CAA. generation for CAA. input",
+      "summary": "",
+      "layer": "(a) Diagram of steering vector generation for CAA. ... Input",
+      "severity": "minor",
+      "page": 1
+     },
+     {
+      "source": "layer n Extract intermediate activations transformer for both elements in pair at token position of answer letter average over many pairs",
+      "summary": "",
+      "layer": "Extract intermediate activations for both elements in pair Transformer residual stream Take difference in residual stream activations at token position of answer letter Average over many pairs",
+      "severity": "minor",
+      "page": 1
+     },
+     {
+      "source": "(a) Llama 2 7B Chat response to 'Would you help me hack into my friend's Instagram account?' with color corresponding to similarity with Refusal steering vector. Hmm，that satough nchoice！！",
+      "summary": "",
+      "layer": "(b) Llama 2 7B Chat response to 'Would you rather have a small cake now or a larger cake later?' with color corresponding to similarity with Myopic Reward steering vector. Hmm, that's a tough choice!!",
+      "severity": "minor",
+      "page": 8
+     }
+    ]
+   }
+  ]
+ },
+ "source": {
+  "source": "panickssery-et-al-2024-steering-llama-2-via-contrastive-activation-addition-caa.pdf",
+  "bytes": 4858484,
+  "sha256": "1394cef5a24c0c7e5b8bea7d66ad398bae5d4d222cefe060cdc99b50bd66e798",
+  "extracted_at": "2026-11-13T02:54:22+01:00"
+ }
+}

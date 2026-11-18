@@ -165,7 +165,7 @@
         >
           <ResonaEntityCard :kind="c.kind" :name="c.name" />
           <template #back>
-            <ResonaEntityCardBack :detail="c.detail" :facts="c.facts" />
+            <ResonaEntityCardBack :kind="c.kind" :detail="c.detail" :facts="c.facts" :source="c.source" />
           </template>
         </FlowCard>
       </div>
@@ -323,7 +323,7 @@
             @pointerdown.stop
           ></textarea>
           <p v-else class="memo-text">{{ m.text }}</p>
-          <span v-if="m.source !== 'mine'" class="memo-attr">{{ m.source === 'brought' ? t('resona.broughtAttr') : '— Resona' }}</span>
+          <span v-if="m.source !== 'mine'" class="memo-attr">{{ m.source === 'brought' ? t('resona.broughtAttr') : t('resona.resonaAttr') }}</span>
           <div class="memo-resize" :title="t('resona.resize')" @pointerdown="onMemoResizeDown($event, m)"></div>
         </template>
         <span v-else class="memo-title">{{ m.title }}</span>
@@ -2190,13 +2190,20 @@ interface EntityCard {
   name: string
   detail: string
   facts: string[]
+  /** A teaching scenario's origin, worded on the back (resonaEntityCard.scenarioSource). */
+  source?: { version: string; scenario: string }
 }
 
 const entityCards = shallowRef<EntityCard[]>([])
 const ENTITY_NODE = 150
+// A teaching scenario is the one card whose back is read, not glanced at: no
+// page of the platform shows the scenarios (2026-11-15). It comes larger, so
+// its back holds more than six lines.
+const SCENARIO_NODE = { w: 300, h: 300 }
 
 function spawnEntity(e: {
   kind?: string; key?: string; name?: string; detail?: string; facts?: string[]
+  source?: { version?: unknown; scenario?: unknown } | null
 } | null | undefined) {
   if (!e || !e.key || !e.name) return
   if (entityCards.value.some(c => c.key === e.key)) return
@@ -2208,7 +2215,12 @@ function spawnEntity(e: {
     detail: e.detail || '',
     facts: Array.isArray(e.facts) ? e.facts : [],
   }
-  placeNode(card.id, ENTITY_NODE, ENTITY_NODE)
+  const src = e.source
+  if (src && typeof src.version === 'string' && typeof src.scenario === 'string') {
+    card.source = { version: src.version, scenario: src.scenario }
+  }
+  if (card.kind === 'scenario') placeNode(card.id, SCENARIO_NODE.w, SCENARIO_NODE.h)
+  else placeNode(card.id, ENTITY_NODE, ENTITY_NODE)
   entityCards.value = [...entityCards.value, card]
 }
 

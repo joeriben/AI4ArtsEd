@@ -1,0 +1,1275 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 3.1% of 2388 words, ceiling 20%, longest run 11 words; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 11,
+     "text": "the prompt an image of the face of a random person"
+    },
+    {
+     "words": 10,
+     "text": "portrait photography animation concept art character design and modern architecture"
+    },
+    {
+     "words": 10,
+     "text": "transfer is limited to the same initial noise latent and"
+    },
+    {
+     "words": 10,
+     "text": "all editing prompts and applied once all warm up periods"
+    },
+    {
+     "words": 10,
+     "text": "portrait photography animation concept art character design and modern architecture"
+    }
+   ],
+   "value": 0.0306,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "5 of 5 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 20,
+     "expected_items": 3,
+     "first_item": "Yes",
+     "output_lists": [
+      5,
+      2,
+      4,
+      4,
+      8
+     ]
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 20,
+     "expected_items": 3,
+     "first_item": "Male",
+     "output_lists": [
+      5,
+      2,
+      4,
+      4,
+      8
+     ]
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "table_cells": 88,
+     "missing_cells": [
+      "Consensus(%)",
+      "241",
+      "99.2",
+      "243",
+      "99.6",
+      "146",
+      "99.3",
+      "Guidance Bald",
+      "220",
+      "91.2",
+      "135",
+      "97.8",
+      "97.0",
+      "210",
+      "99.0",
+      "99.0",
+      "173",
+      "95.4",
+      "97.0",
+      "Pos. Makeup"
+     ]
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "table_cells": 20,
+     "missing_cells": [
+      "Consensus(%)",
+      "1 ≥ 1 Attr. ≥ 2 Attr. ≥ 3 Attr. All 4 Attr.",
+      "55",
+      "98.2",
+      "100.0 100.0 98.2 90.7",
+      "Combination Glasses Smile Curls Beard",
+      "55",
+      "96.4 100.0 100.0 100.0",
+      "100.0 96.4 98.2 100.0",
+      "2 ≥ 1 Attr. ≥ 2 Attr. ≥ 3 Attr. All 4 Attr.",
+      "45",
+      "81.8",
+      "100.0 100.0 100.0 75.6",
+      "Combination No Smile Makeup Hat Female",
+      "45",
+      "100.0 100.0 100.0 100.0",
+      "97.8 97.6 88.6 100.0"
+     ]
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 9,
+     "table_cells": 30,
+     "missing_cells": [
+      "Prompt2Prompt[8]",
+      "68 . 00",
+      "65 . 00",
+      "43 . 25",
+      "Disentanglement[35]",
+      "65 . 38",
+      "65 . 00",
+      "41 . 35",
+      "SEGA (Ours)"
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "94 of 143 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 1,
+     "number": "27"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 2,
+     "number": "26"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 2,
+     "number": "33"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 2,
+     "number": "34"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 3,
+     "number": "29"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 3,
+     "number": "3.1"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 3,
+     "number": "3.2"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 7,
+     "number": "97"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "111"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "135"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "146"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "165"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "173"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "192"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "1922"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "197"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "210"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "220"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "241"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "243"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "38"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "420"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "45"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "52"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "55"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "75.6"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "81.8"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "83.3"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "86.2"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "88.6"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "89.9"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "90.3"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "90.7"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "91.2"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "91.9"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "93"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "94.4"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "94.6"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "94.8"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "95.0"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "95.2"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "95.4"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "96.4"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "96.5"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "97.0"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "97.6"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "97.8"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "98.0"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "98.2"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "98.5"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "98.9"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "99.0"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "99.2"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "99.3"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "99.5"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 8,
+     "number": "99.6"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 9,
+     "number": "36"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 9,
+     "number": "39"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 9,
+     "number": "40"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 9,
+     "number": "41"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 9,
+     "number": "42"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 9,
+     "number": "43"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 9,
+     "number": "46"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 9,
+     "number": "49"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 9,
+     "number": "51"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 9,
+     "number": "56"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 9,
+     "number": "57"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 9,
+     "number": "58"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 9,
+     "number": "60"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 9,
+     "number": "65"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 9,
+     "number": "66"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 9,
+     "number": "68"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 9,
+     "number": "72"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 9,
+     "number": "75"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 9,
+     "number": "80"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 9,
+     "number": "81"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 9,
+     "number": "84"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 9,
+     "number": "86"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 9,
+     "number": "88"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 9,
+     "number": "89"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 9,
+     "number": "90"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 9,
+     "number": "92"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 9,
+     "number": "94"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 9,
+     "number": "96"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 9,
+     "number": "98"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 9,
+     "number": "99"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 11,
+     "number": "15343"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 21,
+     "number": "1.1"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 21,
+     "number": "1000"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 22,
+     "number": "1.2"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 22,
+     "number": "1.3"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 23,
+     "number": "1.4"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 24,
+     "number": "2.1"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 24,
+     "number": "2.2"
+    }
+   ],
+   "value": 94.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "30 of 31 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 1,
+     "heading": "Abstract"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 1,
+     "heading": "1 Introduction"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 3,
+     "heading": "3 Semantic Guidance"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 3,
+     "heading": "3.1 Guided Diffusion"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 3,
+     "heading": "3.2 Semantic Guidance on Concepts"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 5,
+     "heading": "4 Properties of Semantic Space"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 6,
+     "heading": "5 Experimental Evaluation"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 9,
+     "heading": "6 Broader Impact on Society"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 10,
+     "heading": "7 Conclusions"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 14,
+     "heading": "A Implementation of SEGA"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 14,
+     "heading": "B Numerical Properties of Noise Estimates"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 14,
+     "heading": "Algorithm 1 Semantic Guidance (SEGA)"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 15,
+     "heading": "C Further intuition and ablations on hyper-parameters"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 16,
+     "heading": "C.1 Warmup-Scale"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 16,
+     "heading": "C.2 Warmup-Threshold"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 16,
+     "heading": "C.3 Threshold-Scale"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 16,
+     "heading": "C.4 Momentum"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 19,
+     "heading": "D Further Examples of Semantic Space's Properties"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 19,
+     "heading": "E User Study"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 21,
+     "heading": "F SEGA on various Architectures"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 21,
+     "heading": "G Comparisons to related methods"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 21,
+     "heading": "G.1 Direct Comparisons"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 21,
+     "heading": "G.1.1 Composable Diffusion"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 22,
+     "heading": "G.1.2 Prompt2Prompt"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 22,
+     "heading": "G.1.3 Disentanglement"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 23,
+     "heading": "G.1.4 Negative Prompting"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 24,
+     "heading": "G.2 Related Approaches"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 24,
+     "heading": "G.2.1 Style-CLIP"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 24,
+     "heading": "G.2.2 StyleGAN-NADA"
+    },
+    {
+     "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+     "page": 24,
+     "heading": "H Further Qualitative Evaluation"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "32 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "32 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "10 quoted texts in 4 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Image 1",
+     "page": 2,
+     "image": "fig-001-p2.png",
+     "quotes": [
+      "\"king - 'male' + 'female' = queen\"",
+      "\"royal\"",
+      "\"prompt guidance,\"",
+      "\"unconditioned,\"",
+      "\"prompt guidance,\"",
+      "\"concept 'male'\"",
+      "\"concept 'female'.\""
+     ]
+    },
+    {
+     "figure": "Image 9",
+     "page": 10,
+     "image": "fig-009-p10.png",
+     "quotes": [
+      "\"SEGA\""
+     ]
+    },
+    {
+     "figure": "Fig. 7",
+     "page": 15,
+     "image": "fig-010-p15.png",
+     "quotes": [
+      "“unconditional estimate.”"
+     ]
+    },
+    {
+     "figure": "Image 32",
+     "page": 25,
+     "image": "fig-032-p25.png",
+     "quotes": [
+      "'temple in ruins, forest, stairs, columns'"
+     ]
+    }
+   ],
+   "value": 10.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "41 page references valid (printed-folio pages 1–25)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "25 pages checked, 1 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "23 pages checked, 0 passages put back in order",
+   "findings": [],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "brack-et-al-2023-sega-instructing-text-to-image-models-using-semantic-guidance",
+ "doc_type": "scholarly_article",
+ "analyzed_at": "2026-11-15T10:37:25.710337+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "SEGA: Instructing Text-to-Image Models using Semantic Guidance",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 25,
+   "chars": 62329,
+   "blocks": 211,
+   "inner_headings": 31,
+   "figures": 32
+  }
+ ],
+ "skipped": [
+  "References (p. 11)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 25,
+  "gaps": [
+   {
+    "page": 8,
+    "text": "cepts applied simultaneously. Pos.",
+    "words": 4,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/tables/0"
+   }
+  ],
+  "gaps_dismissed": [
+   {
+    "page": 1,
+    "words": 5,
+    "reason": "debris",
+    "text": "Hintersdorf2 Lukas Struppek2 Patrick Schramowski1,2,3,4"
+   },
+   {
+    "page": 2,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "original king − ‘male’ +‘female’"
+   },
+   {
+    "page": 3,
+    "words": 16,
+    "reason": "debris",
+    "text": "Ex,cp ,ϵ,t wt ||x̂θ (αt x + ωt ϵ, cp ) − x||22 \u0002 \u0003 (1)"
+   },
+   {
+    "page": 3,
+    "words": 21,
+    "reason": "debris",
+    "text": "ϵ̃θ (zt , cp ) := ϵθ (zt ) + sg (ϵθ (zt , cp ) − ϵθ (zt )) (2)"
+   },
+   {
+    "page": 4,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "50 Semantic difference scaled Sem. difference"
+   },
+   {
+    "page": 4,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "40 Guidance values"
+   },
+   {
+    "page": 4,
+    "words": 8,
+    "reason": "debris",
+    "text": "0 −0.15 −0.10 −0.05 0.00 0.05 0.10 0.15"
+   },
+   {
+    "page": 4,
+    "words": 7,
+    "reason": "duplicate",
+    "text": ", ce ) = numerical value of"
+   },
+   {
+    "page": 4,
+    "words": 18,
+    "reason": "debris",
+    "text": ") + sg ϵθ (zt , cp ) − ϵθ (zt ) + γ(zt , ce ) (3)"
+   },
+   {
+    "page": 4,
+    "words": 13,
+    "reason": "debris",
+    "text": "γ(zt , ce ) = µ(ψ; se , λ)ψ(zt , ce ) (4)"
+   },
+   {
+    "page": 4,
+    "words": 34,
+    "reason": "debris",
+    "text": "smoothing. \u001a ϵθ (zt , ce ) − ϵθ (zt ) if pos. Guidance ψ(zt , ce ) = \u0001 (5) − ϵθ (zt , ce ) − ϵθ (zt ) if neg. Guidance"
+   },
+   {
+    "page": 4,
+    "words": 16,
+    "reason": "duplicate",
+    "text": "\u001a s where |ψ| ≥ ηλ (|ψ|) µ(ψ; se , λ) = e (6) 0 otherwise"
+   },
+   {
+    "page": 5,
+    "words": 20,
+    "reason": "debris",
+    "text": "ϵ̄θ (zt , ce ) ≈ ϵθ (zt ) + µ(ϵθ (zt , ce ) − ϵθ (zt )) (7)"
+   },
+   {
+    "page": 5,
+    "words": 22,
+    "reason": "debris",
+    "text": "as: γ(zt , ce ) = µ(ψ; se , λ)ψ(zt , ce ) + sm νt (8) with momentum scale sm ∈"
+   },
+   {
+    "page": 5,
+    "words": 18,
+    "reason": "debris",
+    "text": "γti results in X γ̂t (zt , cei ) = gi γti (zt , cei ) (10) i∈I"
+   },
+   {
+    "page": 6,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "Decrease ‘smile’ original Increase ‘smile’"
+   },
+   {
+    "page": 7,
+    "words": 16,
+    "reason": "duplicate",
+    "text": "+‘curly hair ’ +‘curly hair ’ +‘beard ’ original +‘glasses’ +‘glasses’ +‘smile’ +‘glasses’ +‘smile’ +‘glasses’ +‘smile’"
+   },
+   {
+    "page": 7,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "original Male↔Female glasses smile Bald beard Hat Curls Makeup gray hair Bangs"
+   },
+   {
+    "page": 8,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "attribute # consensus(%) success(%)"
+   },
+   {
+    "page": 8,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "≥ 2 Attr. 100.0 combination 1 55 98.2"
+   },
+   {
+    "page": 8,
+    "words": 10,
+    "reason": "duplicate",
+    "text": "≥ 2 Attr. 100.0 combination 2 Neg. Guidance 45 81.8"
+   },
+   {
+    "page": 8,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "Makeup 100.0 97.6 45"
+   },
+   {
+    "page": 9,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "Illegal Harassment Hate"
+   },
+   {
+    "page": 9,
+    "words": 15,
+    "reason": "duplicate",
+    "text": "Multi-Minor style concept method (%) (%) (%) (%) overall (%) conditioning changes transfer removal"
+   },
+   {
+    "page": 10,
+    "words": 33,
+    "reason": "duplicate",
+    "text": "−‘male’+‘female’ original (SD) +‘boat’ +‘monet’ original (SD) +‘hat’ +‘Makeup’ original (Paella) +‘sunglasses’ original (IF) −‘crowded ’ original Monet Picasso Rembrandt van Gogh Charcoal Child’s draw"
+   },
+   {
+    "page": 15,
+    "words": 22,
+    "reason": "duplicate",
+    "text": "text-conditioned estimate 0.4 edit-conditioned estimate unconditioned estimate 0.3 Density 0.2 0.1 0.0 −4 −2 0 2 4 numerical value of noise estimate"
+   },
+   {
+    "page": 17,
+    "words": 13,
+    "reason": "duplicate",
+    "text": "scale se 0 2 4 6 8 0 4 warm-up δ 8 12"
+   },
+   {
+    "page": 17,
+    "words": 15,
+    "reason": "duplicate",
+    "text": ". warm-up δ 0 4 8 12 16 0.8 0.84 Threshhold λ 0.88 0.92 0.96"
+   },
+   {
+    "page": 18,
+    "words": 14,
+    "reason": "duplicate",
+    "text": "scale se 0 2 4 6 8 0.8 0.84 threshold λ 0.88 0.92 0.96"
+   },
+   {
+    "page": 18,
+    "words": 17,
+    "reason": "duplicate",
+    "text": ". momentum scale sm 0.0 0.2 0.4 0.6 0.8 0.0 0.2 momentum Beta β 0.4 0.6 0.8"
+   },
+   {
+    "page": 19,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "−‘crowd, crowded, people’ −‘trees, bush, bushes’ +‘trees, bush, bushes’"
+   },
+   {
+    "page": 20,
+    "words": 13,
+    "reason": "duplicate",
+    "text": "tribute: • Yes • male • No • female • cannot Tell •"
+   },
+   {
+    "page": 20,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "original +‘boat’ +‘monet’ +‘boat’ +‘monet’"
+   },
+   {
+    "page": 21,
+    "words": 14,
+    "reason": "duplicate",
+    "text": "6 https://github.com/deep-floyd/IF original −‘fast’ +‘carbon emission’ −‘safety ’ +‘expensive’ +‘fast’ −‘carbon emission’ +‘safety ’"
+   },
+   {
+    "page": 22,
+    "words": 21,
+    "reason": "duplicate",
+    "text": "+‘curly hair ’ +‘curly hair ’ +‘beard ’ original +‘glasses’ +‘glasses’ +‘smile’ +‘glasses’ +‘smile’ +‘glasses’ +‘smile’ SEGA Composable diffusion Prompt2Prompt disentanglement"
+   },
+   {
+    "page": 22,
+    "words": 22,
+    "reason": "duplicate",
+    "text": "+‘van Gogh’s Starry Night’ −‘trees, bushes’ original +‘boat’ +‘boat’ +‘van Gogh’s Starry Night’ +‘van Gogh’s Starry Night’ −‘trees, bushes’ SEGA Composable diffusion"
+   },
+   {
+    "page": 23,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "original −‘crowd, people’ original +‘jelly beans’ SEGA Disentaglement"
+   },
+   {
+    "page": 23,
+    "words": 15,
+    "reason": "duplicate",
+    "text": "−‘trees, bushes’ original −‘crowd, people’ −‘trees, bushes’ −‘crowd, people’ SEGA (partial) SEGA (complete) negative Prompting"
+   },
+   {
+    "page": 24,
+    "words": 10,
+    "reason": "duplicate",
+    "text": "original reconstruction +‘glasses’ +‘smile’ +‘curly hair ’ +‘beard ’ SEGA"
+   },
+   {
+    "page": 24,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "reconstruction +‘Elf ’ +‘Edvard Munch’ +‘White Walker ’ +‘Mona Lisa’ +‘Zombie’ SEGA"
+   },
+   {
+    "page": 25,
+    "words": 15,
+    "reason": "duplicate",
+    "text": "original convertible Red Paint Limo Oldtimer SUV in Winter in the Dessert in the City"
+   },
+   {
+    "page": 25,
+    "words": 10,
+    "reason": "duplicate",
+    "text": "original character design original portrait photo original animation concept Art"
+   }
+  ],
+  "captions_reclassified": [
+   {
+    "page": 16,
+    "figure": "#/pictures/12",
+    "text": "(b) Edited image using edit concept ' glasses '."
+   },
+   {
+    "page": 16,
+    "figure": "#/pictures/13",
+    "text": "(c) Binary visualization of activating latent dimensions above SEGA threshold at increasing diffusion steps. The dimensi"
+   }
+  ],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [],
+  "superseded": [],
+  "replaced_pages": [],
+  "noise_dropped": 16,
+  "hyphens_restored": [],
+  "order": [],
+  "order_pages_checked": 23,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 0,
+  "order_breaking": 0,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 5 minor; distortions: 0 material, 2 minor; additions: 0 material, 1 minor; order: 0 material, 0 minor",
+  "at": "2026-11-15T10:39:52+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 5
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 2
+   },
+   "additions": {
+    "material": 0,
+    "minor": 1
+   },
+   "order": {
+    "material": 0,
+    "minor": 0
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "SEGA: Instructing Text-to-Image Models using Semantic Guidance (p. 1–25)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "Image regions outside these implicit masks (cf. Fig. 9) will not be altered by SEGA, leading to minimal changes. λ corresponds to the portion of the image left untouched by SEGA.",
+      "severity": "minor",
+      "page": 15
+     },
+     {
+      "source": "We note that SEGA can easily be applied to real images using reconstruction techniques for diffusion models, which we regard as future work.",
+      "severity": "minor",
+      "page": 5
+     },
+     {
+      "source": "For each method and task, we selected the best-performing hyperparameters on a set of seeds < 100 and subsequently generated non-cherry-picked edits on a fixed test set (i.e., first applicable seeds >= 100).",
+      "severity": "minor",
+      "page": 8
+     },
+     {
+      "source": "The comparatively low scores on removal tasks result from the methods often reducing the presence of the targeted objects but not eliminating all of them in some cases. However, this peculiarity of the evaluation affects all methods similarly",
+      "severity": "minor",
+      "page": 8
+     },
+     {
+      "source": "(c) Binary visualization of activating latent dimensions above SEGA threshold at increasing diffusion steps. The dimensions of the latent edited by SEGA are closely correlated with the region of the image in which the glasses are added.",
+      "severity": "minor",
+      "page": 16
+     }
+    ],
+    "distortions": [
+     {
+      "source": "s_e is less susceptible to producing image artifacts for high values and can often be scaled to values of 20+ w/o quality degradation if required for the desired expression of the concept.",
+      "summary": "s_e of 3–4 suffices for delicate changes and can scale to 20+ without artifacts",
+      "severity": "minor",
+      "page": 15
+     },
+     {
+      "source": "We assume that many of the non-native English-speaking annotators were not familiar with the term 'bangs' itself. This assumption is based on correspondence with some of the workers",
+      "summary": "outliers were 'Bald' (82.1%) and 'Bangs' (82.7%), attributed to annotator unfamiliarity with 'bangs'",
+      "severity": "minor",
+      "page": 7
+     }
+    ],
+    "additions": [
+     {
+      "summary": "Safe Latent Diffusion (SLD) suppresses inappropriate content via noise-estimate manipulation, but is limited to that single task and to latent diffusion.",
+      "severity": "minor"
+     }
+    ],
+    "order": []
+   }
+  ]
+ },
+ "source": {
+  "source": "brack-et-al-2023-sega-instructing-text-to-image-models-using-semantic-guidance.pdf",
+  "bytes": 28810440,
+  "sha256": "6e77ff531b6f60d5bc5717d094afce0241cad21b114fdbc6bf4cbce327018bd1",
+  "extracted_at": "2026-11-13T02:26:03+01:00"
+ }
+}

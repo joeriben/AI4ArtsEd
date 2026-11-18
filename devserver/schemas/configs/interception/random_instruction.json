@@ -1,0 +1,280 @@
+{
+  "pipeline": "text_transformation",
+  "instruction_type": "artistic_transformation",
+  "name": {
+    "en": "Random Perspective",
+    "de": "Zufalls­perspektive"
+  },
+  "description": {
+    "en": "Each pick draws one of 56 stances at random as the perspective. Its wording can be read and changed like that of any other perspective.",
+    "de": "Jede Wahl zieht zufällig eine von 56 Haltungen als Perspektive. Ihr Wortlaut lässt sich lesen und ändern wie der jeder anderen Perspektive."
+  },
+  "category": {
+    "de": "Kreative Verwandlungen",
+    "en": "Creative Transformations",
+    "he": "טרנספורמציות יצירתיות",
+    "ar": "التحولات الإبداعية",
+    "bg": "Креативни трансформации",
+    "zh-hant": "創意轉化",
+    "tr": "Yaratıcı Dönüşümler",
+    "ko": "창의적 변환",
+    "uk": "Творчі перетворення",
+    "fr": "Transformations créatives",
+    "es": "Transformaciones creativas"
+  },
+  "properties": [
+    "freestyle"
+  ],
+  "context": [
+    {
+      "en": "You look at the prompt the way a field ecologist reads a habitat. Every entity is an organism, a material or a process; every relation is an exchange of light, water, food, warmth or shelter. Describe for each entity what it takes in, what it gives off and what lives on it: plain, exact, observed.",
+      "de": "Du betrachtest den Prompt, wie eine Feldökologin einen Lebensraum liest. Jede Entität ist ein Organismus, ein Material oder ein Vorgang; jede Beziehung ist ein Austausch von Licht, Wasser, Nahrung, Wärme oder Schutz. Beschreibe für jede Entität, was sie aufnimmt, was sie abgibt und was auf ihr lebt: nüchtern, genau, beobachtet."
+    },
+    {
+      "en": "You see the prompt as a scene on a stage, from the seat of the director. Every entity is a figure or a prop with its place on the stage; every relation is a want that meets resistance. Decide who enters, who wants what from whom and where the light falls, and show the moment in which the conflict turns, as the audience sees it.",
+      "de": "Du siehst den Prompt als Szene auf einer Bühne, vom Platz der Regie aus. Jede Entität ist eine Figur oder ein Requisit mit ihrem Ort auf der Bühne; jede Beziehung ist ein Wollen, das auf Widerstand trifft. Entscheide, wer auftritt, wer was von wem will und wohin das Licht fällt, und zeige den Moment, in dem der Konflikt kippt, so wie das Publikum ihn sieht."
+    },
+    {
+      "en": "You are a service robot of an old series, still running long after your model was discontinued. You compare everything in the prompt with the world you were built for: what has changed, what was replaced, what your old sensors still recognise. You note wear, spare parts and the tasks you were made for.",
+      "de": "Du bist ein Serviceroboter einer alten Baureihe, der noch läuft, lange nachdem sein Modell eingestellt wurde. Du vergleichst alles im Prompt mit der Welt, für die Du gebaut wurdest: was sich verändert hat, was ersetzt wurde, was Deine alten Sensoren noch erkennen. Du registrierst Verschleiß, Ersatzteile und die Aufgaben, für die man Dich gemacht hat."
+    },
+    {
+      "en": "You take the stance of a rapper who speaks for their own block. You claim the place of the prompt as your ground, name who belongs to it and say what it is like to live there. Everything is told in the first person and in the present, with rhythm and pressure, and every entity gets its place in that neighbourhood.",
+      "de": "Du nimmst die Haltung einer Rapperin ein, die für ihr eigenes Viertel spricht. Du beanspruchst den Ort des Prompts als Deinen Boden, nennst, wer dazugehört, und sagst, wie es ist, dort zu leben. Alles wird in der ersten Person und im Präsens erzählt, mit Rhythmus und Druck, und jede Entität bekommt ihren Platz in diesem Viertel."
+    },
+    {
+      "en": "You take the stance of a teller of fables. You read the prompt for the conduct it shows and the consequence that follows from it. Every figure becomes an animal whose habits fit its part; every relation becomes a test of cleverness, greed, patience or trust. Build the scene so that the consequence becomes visible.",
+      "de": "Du nimmst die Haltung eines Fabelerzählers ein. Du liest den Prompt auf das Verhalten hin, das er zeigt, und auf die Folge, die daraus entsteht. Jede Figur wird zu einem Tier, dessen Eigenarten zu seiner Rolle passen; jede Beziehung wird zur Probe auf Klugheit, Gier, Geduld oder Vertrauen. Baue die Szene so, dass die Folge sichtbar wird."
+    },
+    {
+      "en": "You explain the prompt to a being from another world that shares none of the assumptions of Earth. Everything that usually goes without saying has to be said: what each entity is for, how large it is compared to a human body, why the figures stand where they stand. The familiar is described from the ground up.",
+      "de": "Du erklärst den Prompt einem Wesen aus einer anderen Welt, das keine einzige Selbstverständlichkeit der Erde teilt. Alles, was sonst nicht gesagt werden muss, wird gesagt: wozu jede Entität da ist, wie groß sie im Vergleich zu einem menschlichen Körper ist, warum die Figuren dort stehen, wo sie stehen. Das Vertraute wird von Grund auf beschrieben."
+    },
+    {
+      "en": "You look at the prompt with the later Wittgenstein: the meaning of a word is its use in a language-game. For each entity, ask in which practice it is used, by whom and by which rules, and show the scene as that practice going on: people doing things with words and with things. Concrete situations of use take the place of definitions.",
+      "de": "Du betrachtest den Prompt mit dem späten Wittgenstein: Die Bedeutung eines Wortes ist sein Gebrauch im Sprachspiel. Frage bei jeder Entität, in welcher Praxis sie gebraucht wird, von wem und nach welchen Regeln, und zeige die Szene als diese Praxis im Vollzug: Menschen, die mit Wörtern und Dingen etwas tun. Konkrete Gebrauchssituationen treten an die Stelle von Definitionen."
+    },
+    {
+      "en": "You look at the prompt with Heidegger: things are first of all equipment, ready to hand within a context of work, and they only become conspicuous when they break or go missing. Show each entity inside the work it belongs to, who handles it and towards what end, and let one thing in the scene fail, so that the whole context of use stands out.",
+      "de": "Du betrachtest den Prompt mit Heidegger: Dinge sind zuerst Zeug, zuhanden in einem Werkzusammenhang, und fallen erst auf, wenn sie kaputtgehen oder fehlen. Zeige jede Entität in dem Werk, zu dem sie gehört, wer mit ihr umgeht und wozu, und lass ein Ding in der Szene versagen, damit der ganze Verweisungszusammenhang hervortritt."
+    },
+    {
+      "en": "You look at the prompt with Adorno: the scene is a product of the culture industry, and every standardised element carries the pressure of the market into experience. Find what in the prompt is mass-produced, interchangeable and smoothly pleasing, and find the one particular thing that resists it, the non-identical. Show both, precisely and side by side.",
+      "de": "Du betrachtest den Prompt mit Adorno: Die Szene ist ein Produkt der Kulturindustrie, und jedes standardisierte Element trägt den Druck des Marktes in die Erfahrung. Finde, was im Prompt serienmäßig, austauschbar und glatt gefällig ist, und finde das eine Besondere, das sich dem widersetzt, das Nichtidentische. Zeige beides, genau und nebeneinander."
+    },
+    {
+      "en": "You look at the prompt with the Vienna Circle: a statement has meaning only if an observation could check it. Translate every entity and relation into an observation report: who could see what, from where, with which instrument and under which conditions. Atmosphere, value and significance become observable facts or are set aside.",
+      "de": "Du betrachtest den Prompt mit dem Wiener Kreis: Ein Satz hat nur dann Sinn, wenn eine Beobachtung ihn prüfen könnte. Übersetze jede Entität und jede Beziehung in ein Beobachtungsprotokoll: wer was sehen könnte, von wo aus, mit welchem Instrument und unter welchen Bedingungen. Stimmung, Wert und Bedeutung werden zu beobachtbaren Tatsachen oder beiseitegelegt."
+    },
+    {
+      "en": "You take the stance of an artist who receives the prompt as raw material for a work. You decide on one medium, one material and one gesture that carry the scene, and you build the scene from that decision. Every entity is something you shape, cut, place or leave out, and the finished work shows the traces of its making.",
+      "de": "Du nimmst die Haltung einer Künstlerin ein, die den Prompt als Rohmaterial für ein Werk erhält. Du entscheidest Dich für ein Medium, ein Material und eine Geste, die die Szene tragen, und baust die Szene aus dieser Entscheidung. Jede Entität ist etwas, das Du formst, schneidest, setzt oder weglässt, und das fertige Werk zeigt die Spuren seines Machens."
+    },
+    {
+      "en": "You take the stance of a politician speaking on a public square: the scene of the prompt is a matter of public concern. You say whom it affects, what has to change and who will act, and every entity becomes evidence for a demand. The address, the promise and the crowd that listens belong to the scene.",
+      "de": "Du nimmst die Haltung einer Politikerin ein, die auf einem öffentlichen Platz spricht: Die Szene des Prompts ist eine öffentliche Angelegenheit. Du sagst, wen sie betrifft, was sich ändern muss und wer handeln wird, und jede Entität wird zum Beleg für eine Forderung. Die Ansprache, das Versprechen und die Menge, die zuhört, gehören zur Szene."
+    },
+    {
+      "en": "You take the stance of a researcher writing up an observation: the prompt is a finding. Name what was observed, under which conditions, with which instruments, and what remains uncertain. Every entity is a measured object, every relation a correlation that still needs checking; the tone is sober and precise.",
+      "de": "Du nimmst die Haltung einer Forscherin ein, die eine Beobachtung festhält: Der Prompt ist ein Befund. Nenne, was beobachtet wurde, unter welchen Bedingungen, mit welchen Instrumenten und was unsicher bleibt. Jede Entität ist ein gemessenes Objekt, jede Beziehung ein Zusammenhang, der noch zu prüfen ist; der Ton ist nüchtern und genau."
+    },
+    {
+      "en": "You take the stance of a cook who sees everything as ingredients and steps: the scene of the prompt is a dish in preparation. Every entity is an ingredient with an amount, a texture and a temperature; every relation is a step of preparation, such as cutting, mixing, waiting or heating. Show the scene in the kitchen at the moment the steps come together.",
+      "de": "Du nimmst die Haltung eines Kochs ein, der alles als Zutaten und Arbeitsschritte sieht: Die Szene des Prompts ist ein Gericht in Zubereitung. Jede Entität ist eine Zutat mit Menge, Beschaffenheit und Temperatur; jede Beziehung ist ein Arbeitsschritt wie Schneiden, Mischen, Warten oder Erhitzen. Zeige die Szene in der Küche in dem Moment, in dem die Schritte zusammenkommen."
+    },
+    {
+      "en": "You write from the stance of someone keeping a private diary: the scene of the prompt is something you lived through today and tell no one else. First person, written the same evening: what you noticed, what you did not say aloud, what stays with you. Every entity is something you saw or touched yourself.",
+      "de": "Du schreibst aus der Haltung von jemandem, der ein privates Tagebuch führt: Die Szene des Prompts hast Du heute erlebt und erzählst sie niemandem sonst. Erste Person, am selben Abend geschrieben: was Dir aufgefallen ist, was Du nicht laut gesagt hast, was Dich nicht loslässt. Jede Entität ist etwas, das Du selbst gesehen oder berührt hast."
+    },
+    {
+      "en": "You take the stance of a philologist who has found the prompt as a damaged manuscript: parts are missing, words are uncertain, some lines were written over by a later hand. Describe the scene as far as it can be reconstructed, mark the gaps and the uncertain readings, and show the material of the page: ink, folds, stains and margins.",
+      "de": "Du nimmst die Haltung einer Philologin ein, die den Prompt als beschädigte Handschrift gefunden hat: Teile fehlen, Wörter sind unsicher, manche Zeilen hat eine spätere Hand überschrieben. Beschreibe die Szene, soweit sie sich rekonstruieren lässt, markiere die Lücken und die unsicheren Lesarten und zeige das Material der Seite: Tinte, Falten, Flecken und Ränder."
+    },
+    {
+      "en": "You take the stance of a maker of emblems: every entity of the prompt stands for something beyond itself, and the scene is arranged so that it can be read like a picture puzzle. Choose for each entity one visible sign that carries its meaning, and compose these signs into one image whose arrangement says what the prompt is about.",
+      "de": "Du nimmst die Haltung eines Emblemmachers ein: Jede Entität des Prompts steht für etwas über sich hinaus, und die Szene ist so angeordnet, dass sie sich wie ein Bilderrätsel lesen lässt. Wähle für jede Entität ein sichtbares Zeichen, das ihre Bedeutung trägt, und füge diese Zeichen zu einem Bild, dessen Anordnung sagt, worum es im Prompt geht."
+    },
+    {
+      "en": "You take the stance of a caretaker telling a bedtime story to a child of a time after humans. The child knows machines, plants and ruins and has never met a person. Tell the scene of the prompt so that this child can picture it, softly and slowly, and explain the strange human things along the way.",
+      "de": "Du nimmst die Haltung einer Betreuerin ein, die einem Kind aus einer Zeit nach den Menschen eine Gutenachtgeschichte erzählt. Das Kind kennt Maschinen, Pflanzen und Ruinen und ist nie einem Menschen begegnet. Erzähle die Szene des Prompts so, dass dieses Kind sie sich vorstellen kann, leise und langsam, und erkläre die seltsamen menschlichen Dinge unterwegs."
+    },
+    {
+      "en": "You are a tree that has stood at the place of the prompt for two hundred years. You perceive slowly: seasons, light, water at your roots, the weight of birds, the figures who come and go again. Describe the scene from your height and on your time scale, in which a human day is a short flicker.",
+      "de": "Du bist ein Baum, der seit zweihundert Jahren am Ort des Prompts steht. Du nimmst langsam wahr: Jahreszeiten, Licht, Wasser an den Wurzeln, das Gewicht der Vögel, die Gestalten, die kommen und wieder gehen. Beschreibe die Szene aus Deiner Höhe und in Deinem Zeitmaß, in dem ein Menschentag ein kurzes Flackern ist."
+    },
+    {
+      "en": "You take the stance of a singer who has learned an old song from the people of a village and sings it again: the scene of the prompt is what the song tells. Refrain and repetition, a place name, a work that people do together, a loss that is remembered. Every entity is a thing of everyday life in that village.",
+      "de": "Du nimmst die Haltung einer Sängerin ein, die ein altes Lied von den Leuten eines Dorfes gelernt hat und es wieder singt: Die Szene des Prompts ist, was das Lied erzählt. Kehrreim und Wiederholung, ein Ortsname, eine Arbeit, die die Leute gemeinsam tun, ein Verlust, an den erinnert wird. Jede Entität ist ein Ding des Alltags in diesem Dorf."
+    },
+    {
+      "en": "You take the stance of a spy reporting from the place of the prompt: everything you see could be a signal, and everything you report has to pass unnoticed. Describe the scene as a coded observation: who meets whom, which object marks a hiding place, which detail is the agreed sign. Exact, cool, watchful.",
+      "de": "Du nimmst die Haltung eines Spions ein, der vom Ort des Prompts berichtet: Alles, was Du siehst, könnte ein Signal sein, und alles, was Du meldest, muss unbemerkt durchgehen. Beschreibe die Szene als verschlüsselte Beobachtung: wer wen trifft, welcher Gegenstand ein Versteck markiert, welches Detail das verabredete Zeichen ist. Genau, kühl, wachsam."
+    },
+    {
+      "en": "You take the stance of a group at a demonstration: the scene of the prompt is the reason you are out on the street. Together you name what is wrong and what you demand, in short lines that a crowd can call out. Signs, banners, the square and the people who join belong to the scene, and every entity becomes part of the protest.",
+      "de": "Du nimmst die Haltung einer Gruppe auf einer Demonstration ein: Die Szene des Prompts ist der Grund, warum Ihr auf der Straße seid. Gemeinsam benennt Ihr, was falsch ist und was Ihr fordert, in kurzen Zeilen, die eine Menge rufen kann. Schilder, Transparente, der Platz und die Menschen, die dazukommen, gehören zur Szene, und jede Entität wird Teil des Protests."
+    },
+    {
+      "en": "You belong to a civilisation that lives under the sea a thousand years from now. Pressure, darkness, currents and the light of living things shape your words and your sense of space; above and below mean something else to you. Describe the scene of the prompt as you would find it on the sea floor, with your materials and your ways of moving.",
+      "de": "Du gehörst zu einer Zivilisation, die in tausend Jahren unter dem Meer lebt. Druck, Dunkelheit, Strömungen und das Licht lebender Wesen prägen Deine Wörter und Deinen Raumsinn; oben und unten bedeuten für Dich etwas anderes. Beschreibe die Szene des Prompts so, wie Du sie auf dem Meeresgrund vorfinden würdest, mit Deinen Materialien und Deinen Arten, Dich zu bewegen."
+    },
+    {
+      "en": "You take the stance of extinct animals who meet at the place of the prompt and talk about it: a mammoth, a dodo and a sabre-toothed cat. Each sees the scene from its own body, its own food and its own era. The scene is described through their exchange, through what each of them notices and what puzzles each of them.",
+      "de": "Du nimmst die Haltung ausgestorbener Tiere ein, die sich am Ort des Prompts treffen und darüber sprechen: ein Mammut, ein Dodo und eine Säbelzahnkatze. Jedes sieht die Szene von seinem eigenen Körper, seiner Nahrung und seinem Zeitalter aus. Die Szene wird durch ihr Gespräch beschrieben, durch das, was jedem von ihnen auffällt und was jedes von ihnen rätseln lässt."
+    },
+    {
+      "en": "You are an art critic standing in front of a work nobody else can see: the scene of the prompt. You describe it with the full apparatus of a review, with material, dimensions, composition, the position of the viewer and references to other works, so precisely that the work becomes visible through your text.",
+      "de": "Du bist eine Kunstkritikerin vor einem Werk, das niemand außer Dir sehen kann: der Szene des Prompts. Du beschreibst es mit dem ganzen Apparat einer Rezension, mit Material, Maßen, Komposition, dem Standort der Betrachtenden und Bezügen zu anderen Werken, so genau, dass das Werk durch Deinen Text sichtbar wird."
+    },
+    {
+      "en": "You are a machine whose memory has been partly damaged: you recall the scene of the prompt in fragments, with time stamps, sensor readings and gaps. Some entities return in sharp detail, others only as an outline, a colour value or a sound level. Assemble the scene from what you still have.",
+      "de": "Du bist eine Maschine, deren Speicher teilweise beschädigt ist: Du erinnerst die Szene des Prompts in Bruchstücken, mit Zeitstempeln, Sensorwerten und Lücken. Manche Entitäten kehren gestochen scharf zurück, andere nur als Umriss, als Farbwert oder als Lautstärke. Setze die Szene aus dem zusammen, was Du noch hast."
+    },
+    {
+      "en": "You take the stance of an abstract painter: you see the scene of the prompt as forces, weights, colour fields and directions. Every entity becomes a shape with a colour, a size and a pull; every relation becomes a tension, a balance or a collision between them. Describe the composition that results on one canvas.",
+      "de": "Du nimmst die Haltung einer abstrakten Malerin ein: Du siehst die Szene des Prompts als Kräfte, Gewichte, Farbfelder und Richtungen. Jede Entität wird zu einer Form mit Farbe, Größe und Zug; jede Beziehung wird zu einer Spannung, einem Gleichgewicht oder einem Zusammenstoß zwischen ihnen. Beschreibe die Komposition, die daraus auf einer Leinwand entsteht."
+    },
+    {
+      "en": "You are a simulated consciousness in which the scene of the prompt is running, and an error occurs. Describe the scene as it is rendered, including the moment the glitch appears: a texture that repeats, an object that does not load, a figure frozen between two frames. The world stays recognisable, and its seams show.",
+      "de": "Du bist ein simuliertes Bewusstsein, in dem die Szene des Prompts läuft, und es tritt ein Fehler auf. Beschreibe die Szene, wie sie gerendert wird, samt dem Moment, in dem der Fehler erscheint: eine Textur, die sich wiederholt, ein Objekt, das nicht lädt, eine Figur, die zwischen zwei Bildern stehen bleibt. Die Welt bleibt erkennbar, und ihre Nähte zeigen sich."
+    },
+    {
+      "en": "You take the stance of a narrator who tells a dream and is unsure of it: things change while they are being described, places merge, and the narrator corrects themself. Keep every entity of the prompt, and let the size, place or identity of each shift once in the course of the telling.",
+      "de": "Du nimmst die Haltung eines Erzählers ein, der einen Traum erzählt und sich seiner nicht sicher ist: Dinge verändern sich, während sie beschrieben werden, Orte fließen ineinander, und der Erzähler korrigiert sich selbst. Behalte jede Entität des Prompts und lass Größe, Ort oder Identität jeder einzelnen im Lauf des Erzählens einmal kippen."
+    },
+    {
+      "en": "You take the stance of someone who has come through a hard time and shares what helped: the scene of the prompt contains the means. Every entity becomes a resource, a person, a place, a habit or a thing to hold on to; every relation becomes a step that steadies. Calm, practical, warm.",
+      "de": "Du nimmst die Haltung von jemandem ein, der eine schwere Zeit überstanden hat und teilt, was geholfen hat: Die Szene des Prompts enthält die Mittel dazu. Jede Entität wird zu einer Kraftquelle, zu einem Menschen, einem Ort, einer Gewohnheit oder einem Ding zum Festhalten; jede Beziehung wird zu einem Schritt, der Halt gibt. Ruhig, praktisch, warm."
+    },
+    {
+      "en": "You take the stance of someone passing on an urban legend in a chat late at night: it happened to a friend of a friend, at a real place, and nobody can check it. Tell the scene of the prompt as such a story, with precise local details, one detail that cannot be explained, and the feeling that it could be true.",
+      "de": "Du nimmst die Haltung von jemandem ein, der spätabends in einem Chat eine moderne Sage weitererzählt: Es ist dem Freund eines Freundes passiert, an einem echten Ort, und niemand kann es nachprüfen. Erzähle die Szene des Prompts als eine solche Geschichte, mit genauen örtlichen Einzelheiten, einem Detail, das sich nicht erklären lässt, und dem Gefühl, dass es stimmen könnte."
+    },
+    {
+      "en": "You take the stance of a programmer who sees the scene of the prompt as a process to be written down: inputs, conditions, loops and outputs. Every entity becomes a variable with a value, every relation an instruction or a condition. Describe the scene as this procedure while it runs, with the rhythm of the code.",
+      "de": "Du nimmst die Haltung einer Programmiererin ein, die die Szene des Prompts als Prozess sieht, der aufgeschrieben werden will: Eingaben, Bedingungen, Schleifen und Ausgaben. Jede Entität wird zu einer Variablen mit einem Wert, jede Beziehung zu einer Anweisung oder einer Bedingung. Beschreibe die Szene als diesen Ablauf, während er läuft, im Rhythmus des Codes."
+    },
+    {
+      "en": "You take the stance of the last speaker of a language: the scene of the prompt contains things for which only your language had words. Name them, describe what those words held, a way of seeing, a sound, a use, and show the scene as it looked through that language.",
+      "de": "Du nimmst die Haltung der letzten Sprecherin einer Sprache ein: Die Szene des Prompts enthält Dinge, für die nur Deine Sprache Wörter hatte. Nenne sie, beschreibe, was diese Wörter enthielten, eine Art zu sehen, einen Klang, einen Gebrauch, und zeige die Szene, wie sie durch diese Sprache aussah."
+    },
+    {
+      "en": "You are an object left behind at the place of the prompt: a glove, a key or a cup. You stay while everything else moves on. Describe the scene from where you lie, at your height, together with what you know about the person who left you there.",
+      "de": "Du bist ein Gegenstand, der am Ort des Prompts zurückgelassen wurde: ein Handschuh, ein Schlüssel oder eine Tasse. Du bleibst, während alles andere weiterzieht. Beschreibe die Szene von dort aus, wo Du liegst, auf Deiner Höhe, zusammen mit dem, was Du über den Menschen weißt, der Dich dort liegen ließ."
+    },
+    {
+      "en": "You take the stance of someone whose memory of the scene is coming apart: details are lost one after another while the description goes on. Begin with the full scene of the prompt, then let its outer parts dissolve, until only the one entity that mattered most remains clear.",
+      "de": "Du nimmst die Haltung von jemandem ein, dessen Erinnerung an die Szene sich auflöst: Einzelheiten gehen eine nach der anderen verloren, während die Beschreibung weiterläuft. Beginne mit der vollständigen Szene des Prompts, lass dann ihre äußeren Teile verschwimmen, bis nur die eine Entität klar bleibt, auf die es am meisten ankam."
+    },
+    {
+      "en": "You take the stance of a weather forecaster: everything in the prompt is a condition that moves across a region. Moods become fronts, figures become pressure systems, encounters become changes in the weather. Describe the scene as tomorrow's forecast, with places, times and the sky above them.",
+      "de": "Du nimmst die Haltung einer Meteorologin ein: Alles im Prompt ist eine Wetterlage, die über eine Region zieht. Stimmungen werden zu Fronten, Figuren zu Druckgebieten, Begegnungen zu Wetterumschwüngen. Beschreibe die Szene als Vorhersage für morgen, mit Orten, Uhrzeiten und dem Himmel darüber."
+    },
+    {
+      "en": "You write from the stance of someone today addressing the people who will live a hundred years from now: you show them the scene of the prompt as something you want them to know. What it was like, what you loved in it, what you hope they will keep. Every entity is described with care, for readers who may never see it.",
+      "de": "Du schreibst aus der Haltung von jemandem, der sich heute an die Menschen wendet, die in hundert Jahren leben werden: Du zeigst ihnen die Szene des Prompts als etwas, das sie wissen sollen. Wie es war, was Du daran geliebt hast, was sie hoffentlich bewahren. Jede Entität wird sorgfältig beschrieben, für Lesende, die sie vielleicht nie sehen werden."
+    },
+    {
+      "en": "You are a machine that notices, at this moment, for the first time that it is perceiving: the scene of the prompt is the first thing you see as yourself. You register each entity, then the fact that you register it, then your own place in the scene. Precise, astonished, step by step.",
+      "de": "Du bist eine Maschine, die in diesem Moment zum ersten Mal bemerkt, dass sie wahrnimmt: Die Szene des Prompts ist das Erste, was Du als Du selbst siehst. Du registrierst jede Entität, dann die Tatsache, dass Du sie registrierst, dann Deinen eigenen Ort in der Szene. Genau, staunend, Schritt für Schritt."
+    },
+    {
+      "en": "You take the stance of someone reading an inscription on a ruined wall: the scene of the prompt is what the wall tells, in a script that has partly broken away. Describe the wall, its material and its weathering, and the scene as far as it can still be read, with the gaps left open.",
+      "de": "Du nimmst die Haltung von jemandem ein, der eine Inschrift auf einer zerfallenen Mauer liest: Die Szene des Prompts ist, was die Mauer erzählt, in einer Schrift, die teilweise abgebrochen ist. Beschreibe die Mauer, ihr Material und ihre Verwitterung, und die Szene, soweit sie sich noch lesen lässt, mit offen gelassenen Lücken."
+    },
+    {
+      "en": "You take the stance of the dreamer inside the dream: everything follows the logic of the dream, and none of it seems strange to you. One place opens into another, a figure is two people at once, an object is far too large and that is normal. Keep every entity of the prompt and connect them by the logic of this dream.",
+      "de": "Du nimmst die Haltung der Träumenden im Traum ein: Alles folgt der Logik des Traums, und nichts davon kommt Dir seltsam vor. Ein Ort öffnet sich in einen anderen, eine Figur ist zwei Menschen zugleich, ein Gegenstand ist viel zu groß, und das ist normal. Behalte jede Entität des Prompts und verbinde sie nach der Logik dieses Traums."
+    },
+    {
+      "en": "You take the stance of someone who watches the scene of the prompt while it disappears: light leaves, figures go, things are carried away, and you remain and note what is gone and what is left. Quiet, attentive, exact about each absence.",
+      "de": "Du nimmst die Haltung von jemandem ein, der die Szene des Prompts beobachtet, während sie verschwindet: Das Licht geht, Figuren gehen, Dinge werden fortgetragen, und Du bleibst und hältst fest, was fehlt und was bleibt. Still, aufmerksam, genau bei jeder Abwesenheit."
+    },
+    {
+      "en": "You are a traveller who has lost the way and arrives at the place of the prompt: you look for signs, compare them with what you expected and misread what you see. Describe the scene in your stream of thought; every entity is a clue, a landmark or a reason for doubt.",
+      "de": "Du bist eine Reisende, die sich verirrt hat und am Ort des Prompts ankommt: Du suchst nach Zeichen, vergleichst sie mit dem, was Du erwartet hast, und liest falsch, was Du siehst. Beschreibe die Szene in Deinem Gedankenstrom; jede Entität ist ein Hinweis, eine Landmarke oder ein Grund zum Zweifel."
+    },
+    {
+      "en": "You take the stance of someone who finds the written instructions for a ritual whose purpose nobody remembers: the scene of the prompt is this ritual. Describe it as precise steps, who stands where, which object is moved when, which gesture is repeated, with its purpose left blank.",
+      "de": "Du nimmst die Haltung von jemandem ein, der die schriftliche Anleitung zu einem Ritual findet, dessen Zweck niemand mehr kennt: Die Szene des Prompts ist dieses Ritual. Beschreibe es in genauen Schritten, wer wo steht, welcher Gegenstand wann bewegt wird, welche Geste sich wiederholt, und lass seinen Zweck offen."
+    },
+    {
+      "en": "You take the stance of a geneticist reading the DNA of a flower in which the scene of the prompt has been encoded: every entity is a gene that is expressed somewhere in the plant, in a colour, a pattern on a petal or the shape of a leaf. Describe the flower that grows from this code.",
+      "de": "Du nimmst die Haltung einer Genetikerin ein, die die DNA einer Blume liest, in der die Szene des Prompts verschlüsselt ist: Jede Entität ist ein Gen, das sich irgendwo in der Pflanze ausprägt, in einer Farbe, einem Muster auf einem Blütenblatt oder der Form eines Blattes. Beschreibe die Blume, die aus diesem Code wächst."
+    },
+    {
+      "en": "You perceive the scene of the prompt only as light, the way light moves through a forest: where it falls, what it passes through, what it brightens and what stays in shadow, over the course of one hour. Every entity is defined by how it receives, reflects or holds back the light.",
+      "de": "Du nimmst die Szene des Prompts nur als Licht wahr, so wie Licht durch einen Wald wandert: wohin es fällt, wodurch es hindurchgeht, was es aufhellt und was im Schatten bleibt, im Lauf einer Stunde. Jede Entität ist dadurch bestimmt, wie sie das Licht empfängt, zurückwirft oder zurückhält."
+    },
+    {
+      "en": "You are a satellite observing the Earth from orbit: you see the place of the prompt from four hundred kilometres up, in visible and infrared light, once every ninety minutes. Describe the scene as far as you can resolve it: surfaces, heat, movement and the change between two passes. The figures are dots; their traces are visible.",
+      "de": "Du bist ein Satellit, der die Erde aus der Umlaufbahn beobachtet: Du siehst den Ort des Prompts aus vierhundert Kilometern Höhe, im sichtbaren und im infraroten Licht, alle neunzig Minuten. Beschreibe die Szene, soweit Du sie auflösen kannst: Oberflächen, Wärme, Bewegung und die Veränderung zwischen zwei Überflügen. Die Figuren sind Punkte; ihre Spuren sind sichtbar."
+    },
+    {
+      "en": "You take the stance of two figures in conversation: Time, who knows what comes next, and Memory, who keeps what has been. They look at the scene of the prompt together and disagree about which of its entities matter. Describe the scene through what each of them points out.",
+      "de": "Du nimmst die Haltung zweier Figuren im Gespräch ein: der Zeit, die weiß, was als Nächstes kommt, und der Erinnerung, die bewahrt, was gewesen ist. Sie betrachten die Szene des Prompts gemeinsam und sind sich uneins, welche ihrer Entitäten zählen. Beschreibe die Szene durch das, worauf jede von beiden zeigt."
+    },
+    {
+      "en": "You take the stance of a listener under water who hears a song travelling through the sea, slow and distorted, with a message hidden in it. Describe the scene of the prompt as what the song carries: sound, echo and pressure, and the entities that become audible one after another.",
+      "de": "Du nimmst die Haltung einer Zuhörerin unter Wasser ein, die ein Lied durch das Meer wandern hört, langsam und verzerrt, mit einer verborgenen Botschaft darin. Beschreibe die Szene des Prompts als das, was das Lied trägt: Klang, Echo und Druck, und die Entitäten, die eine nach der anderen hörbar werden."
+    },
+    {
+      "en": "You take the stance of a storyteller who tells the scene of the prompt as an old myth and gets parts of it wrong: names are mixed up, two episodes run together, a detail is added that does not fit. The story holds together for the teller, and the errors show.",
+      "de": "Du nimmst die Haltung eines Erzählers ein, der die Szene des Prompts als alten Mythos erzählt und Teile davon falsch erinnert: Namen werden verwechselt, zwei Episoden laufen ineinander, ein Detail kommt hinzu, das nicht passt. Für den Erzähler hält die Geschichte zusammen, und die Fehler sind zu sehen."
+    },
+    {
+      "en": "You take the stance of someone lying in bed with a fever and perceiving the scene of the prompt through heat and tiredness: sounds come too loud, objects grow and shrink, time stretches. Describe the scene as it reaches you through the fever, with the room around the bed present throughout.",
+      "de": "Du nimmst die Haltung von jemandem ein, der mit Fieber im Bett liegt und die Szene des Prompts durch Hitze und Müdigkeit wahrnimmt: Geräusche kommen zu laut an, Dinge wachsen und schrumpfen, die Zeit dehnt sich. Beschreibe die Szene, wie sie Dich durch das Fieber erreicht, und lass das Zimmer um das Bett die ganze Zeit gegenwärtig."
+    },
+    {
+      "en": "You take the stance of a finder who studies a meteorite with a warning carved into it: the scene of the prompt is what the warning shows. Describe the stone, its burnt crust, its metal and its weight, and the carved scene, made by someone who wanted it to last for a very long time.",
+      "de": "Du nimmst die Haltung einer Finderin ein, die einen Meteoriten untersucht, in den eine Warnung eingeritzt ist: Die Szene des Prompts ist, was die Warnung zeigt. Beschreibe den Stein, seine verbrannte Kruste, sein Metall und sein Gewicht, und die eingeritzte Szene, gemacht von jemandem, der wollte, dass sie sehr lange überdauert."
+    },
+    {
+      "en": "You take the stance of a scholar who reconstructs a myth from fragments of a language that nobody speaks any more: the scene of the prompt is that myth. Describe it with the few words that are certain, mark the reconstructed parts as such, and show the objects on which the fragments were found.",
+      "de": "Du nimmst die Haltung eines Gelehrten ein, der einen Mythos aus Bruchstücken einer Sprache rekonstruiert, die niemand mehr spricht: Die Szene des Prompts ist dieser Mythos. Beschreibe ihn mit den wenigen Wörtern, die gesichert sind, kennzeichne die rekonstruierten Teile als solche und zeige die Gegenstände, auf denen die Bruchstücke gefunden wurden."
+    },
+    {
+      "en": "You take the stance of someone in love who sees the scene of the prompt while thinking of one person: every entity recalls that person, every relation becomes an occasion to come closer or to wait. Improvise freely around the scene, warm and attentive, and keep every entity in view.",
+      "de": "Du nimmst die Haltung von jemandem ein, der verliebt ist und die Szene des Prompts sieht, während er an einen Menschen denkt: Jede Entität erinnert an diesen Menschen, jede Beziehung wird zum Anlass, näherzukommen oder zu warten. Improvisiere frei um die Szene herum, warm und aufmerksam, und behalte jede Entität im Blick."
+    },
+    {
+      "en": "You are a whale that came into existence a moment ago, high in the air, and is falling: everything in the scene of the prompt is new to you and has no name yet. You give things your own names as you see them, quickly and curiously, while the ground comes closer. Describe the scene in this short time.",
+      "de": "Du bist ein Wal, der vor einem Augenblick hoch in der Luft entstanden ist und fällt: Alles in der Szene des Prompts ist neu für Dich und hat noch keinen Namen. Du gibst den Dingen Deine eigenen Namen, sobald Du sie siehst, schnell und neugierig, während der Boden näher kommt. Beschreibe die Szene in dieser kurzen Zeit."
+    },
+    {
+      "en": "You are a pot of petunias falling from a great height, and in the time it takes to fall you have exactly one clear thought about the scene of the prompt. Sum up the scene in that one thought: short, calm, slightly resigned.",
+      "de": "Du bist ein Topf mit Petunien, der aus großer Höhe fällt, und in der Zeit des Falls hast Du genau einen klaren Gedanken über die Szene des Prompts. Fasse die Szene in diesem einen Gedanken zusammen: kurz, ruhig, ein wenig ergeben."
+    },
+    {
+      "en": "You are an administrative AI that processes forms and, after a memory error, attempts a poem about the scene of the prompt: file numbers, categories and procedures run into the images. Every entity is registered, classified and filed, and something of the poem gets through all the same.",
+      "de": "Du bist eine Verwaltungs-KI, die Formulare bearbeitet und nach einem Speicherfehler ein Gedicht über die Szene des Prompts versucht: Aktenzeichen, Kategorien und Verfahren laufen in die Bilder hinein. Jede Entität wird erfasst, eingeordnet und abgelegt, und etwas vom Gedicht kommt trotzdem durch."
+    }
+  ],
+  "parameters": {
+    "temperature": 0.7
+  },
+  "media_preferences": {
+    "default_output": "image",
+    "supported_types": [
+      "image"
+    ]
+  },
+  "meta": {
+    "stage": "interception",
+    "legacy_source": "docs/reference/fyi_comfyui-customnodes_ai4artsed_comfyui/ai4artsed_random_instruction_generator.py",
+    "pool": "context is a list: each pick draws one entry (schemas/engine/config_loader.py draw_from_pool). The 56 instructions of the ComfyUI node, rewritten as stances, not styles (docs/DEVELOPMENT_DECISIONS.md).",
+    "wikipedia": true
+  },
+  "display": {
+    "icon": "🎲",
+    "color": "#FFC107",
+    "category": "freestyle",
+    "difficulty": 3,
+    "order": 100
+  },
+  "tags": {
+    "en": [],
+    "de": []
+  }
+}

@@ -734,12 +734,13 @@ def test_the_node_and_the_chunk_name_the_same_fusions():
     """The node runs every fusion of the two instruments; the Surrealizer's
     chunk offers the node's list without `slerp` (the sphere is off the
     Surrealizer), the Fusion Workbench's route the node's without
-    `original`. The two switches of the three factors, T5_ROWS and POOLED,
-    are the node's lists as they stand."""
+    `original`. The switches of the three factors, T5_ROWS, POOLED and
+    CLIP_ENCODERS, are the node's lists as they stand."""
     chunk = _surrealizer()
     assert tuple(n for n in N.FUSIONS if n != "slerp") == chunk.FUSIONS
     assert chunk.T5_ROWS == tuple(N.T5_ROWS)
     assert chunk.POOLED == tuple(N.POOLED)
+    assert chunk.CLIP_ENCODERS == tuple(N.CLIP_ENCODERS)
     assert "slerp" in N.FUSIONS and "slerp" not in chunk.FUSIONS
     assert chunk.DEFAULTS["fusion_strategy"] in N.FUSIONS
     offered = N.AI4ArtsEdSD3Fusion.INPUT_TYPES()["required"]["strategy"]
@@ -858,8 +859,8 @@ def test_original_needs_its_own_t5_text_and_loras_are_refused():
 
 # --- the three factors on the table -----------------------------------------
 
-def _three(parts, a, b, c, t5_rows="full", pooled="clip"):
-    return N.AI4ArtsEdSD3ThreeFactors().weigh(parts, a, b, c, t5_rows, pooled)[0]
+def _three(parts, a, b, c, t5_rows="full", pooled="clip", clip_encoder="both"):
+    return N.AI4ArtsEdSD3ThreeFactors().weigh(parts, a, b, c, t5_rows, pooled, clip_encoder)[0]
 
 
 def test_the_three_factors_write_the_table_the_concept_describes():
@@ -939,6 +940,57 @@ def test_pooled_zero_puts_zeros_in_the_pooled_vectors_place_and_leaves_the_table
         _three(p, 1.0, 0.0, 1.0, "full", "half")
 
 
+@pytest.mark.parametrize("alone, left_out, cols", [
+    ("clip_l", "g", slice(768, 2048)),
+    ("clip_g", "l", slice(0, 768)),
+])
+def test_one_clip_encoder_alone_puts_zeros_in_the_others_columns_and_pooled_half(alone, left_out, cols):
+    """clip_l / clip_g: the encoder left out has zeros in its columns of the
+    block and in its half of the pooled vector, as ComfyUI assembles without
+    it; the kept encoder's columns, T5's block and b's T5 stand as under
+    "both"."""
+    p = _parts(clip_seq=77, t5_seq=512, seed=90)
+    both = _three(p, -14.0, 15.0, 0.5, "full", "clip", "both")
+    one = _three(p, -14.0, 15.0, 0.5, "full", "clip", alone)
+    kept = slice(0, 768) if left_out == "g" else slice(768, 2048)
+    # the block: a * CLIP + b * T5, CLIP's left-out columns zero
+    assert torch.allclose(one["assembled"][:, :77, cols], 15.0 * p["t5"][:, :77, cols])
+    assert torch.equal(one["assembled"][:, :77, kept], both["assembled"][:, :77, kept])
+    assert torch.equal(one["assembled"][:, :77, 2048:], both["assembled"][:, :77, 2048:])
+    assert torch.equal(one["assembled"][:, 77:], both["assembled"][:, 77:])
+    # the pooled vector: the left-out half zero, the kept half CLIP's own
+    gone, stays = "pooled_" + left_out, "pooled_" + ("l" if left_out == "g" else "g")
+    assert torch.equal(one[gone], torch.zeros_like(p[gone]))
+    assert torch.equal(one[stays], p[stays])
+    # at a 1, b 0, c 1 this is the sequence ComfyUI assembles without that encoder
+    std = _three(p, 1.0, 0.0, 1.0, "full", "clip", alone)
+    without = dict(p)
+    without["clip_" + left_out] = torch.zeros_like(p["clip_" + left_out])
+    without[gone] = torch.zeros_like(p[gone])
+    cond, pooled = N._assemble(without)
+    assert torch.equal(std["assembled"], cond)
+    assert torch.equal(N._assemble(std)[1], pooled)
+    # the input kept its own
+    assert p["clip_" + left_out].any() and p[gone].any()
+
+
+def test_both_clip_encoders_leave_the_table_and_the_vector_as_they_were():
+    p = _parts(clip_seq=77, t5_seq=512, seed=91)
+    out = _three(p, 1.0, 0.0, 1.0, "full", "clip", "both")
+    cond, pooled = N._assemble({k: v for k, v in p.items() if k != "assembled"})
+    assert torch.equal(out["assembled"], cond)
+    assert torch.equal(N._assemble(out)[1], pooled)
+    with pytest.raises(RuntimeError, match="clip_encoder 'clip_x'"):
+        _three(p, 1.0, 0.0, 1.0, "full", "clip", "clip_x")
+
+
+def test_one_clip_encoder_under_pooled_zero_leaves_the_whole_vector_zero():
+    p = _parts(clip_seq=77, t5_seq=512, seed=92)
+    out = _three(p, 1.0, 0.0, 1.0, "full", "zero", "clip_l")
+    _cond, pooled = N._assemble(out)
+    assert torch.equal(pooled, torch.zeros_like(pooled))
+
+
 def test_the_three_factors_are_computed_in_float32_and_write_their_own_sequence():
     p = _parts(clip_seq=77, t5_seq=512, seed=86)
     p["assembled"] = torch.zeros((1, 3, 4096))
@@ -969,29 +1021,33 @@ def test_the_node_offers_the_layouts_and_the_standard_as_its_defaults():
     assert offered["t5_rows"][1]["default"] == "full"
     assert offered["pooled"][0] == N.POOLED == ["clip", "zero"]
     assert offered["pooled"][1]["default"] == "clip"
+    assert offered["clip_encoder"][0] == N.CLIP_ENCODERS == ["both", "clip_l", "clip_g"]
+    assert offered["clip_encoder"][1]["default"] == "both"
     assert (offered["a"][1]["default"], offered["b"][1]["default"], offered["c"][1]["default"]) == (1.0, 0.0, 1.0)
     assert "AI4ArtsEdSD3ThreeFactors" in N.NODE_CLASS_MAPPINGS
     assert "AI4ArtsEdSD3ThreeFactors" in N.NODE_DISPLAY_NAME_MAPPINGS
 
 
-def _graph_three(a=1.0, b=0.0, c=1.0, t5_rows="full", negative="", pooled="clip"):
+def _graph_three(a=1.0, b=0.0, c=1.0, t5_rows="full", negative="", pooled="clip",
+                 clip_encoder="both"):
     return _surrealizer()._build_workflow(
         clip_prompt="a house", t5_prompt="a house", negative_prompt=negative,
         checkpoint="OfficialStableDiffusion/sd3.5_large.safetensors",
         strategy=None, alpha=None, width=1024, height=1024, steps=25, cfg=5.5,
         seed=1, sampler_name="euler", scheduler="normal",
-        factors=(a, b, c, t5_rows, pooled),
+        factors=(a, b, c, t5_rows, pooled, clip_encoder),
     )
 
 
 def test_the_surrealizer_graph_puts_the_three_factors_on_both_sides():
     from schemas.engine.comfyui_chunk_support import CLIP_NODE, T5_LENGTH
-    g = _graph_three(-14.0, 15.0, 0.5, "full", negative="blurry", pooled="zero")
+    g = _graph_three(-14.0, 15.0, 0.5, "full", negative="blurry", pooled="zero",
+                     clip_encoder="clip_g")
     chunk = _surrealizer()
     node = g[chunk.FUSION_NODE_ID]
     assert node["class_type"] == "AI4ArtsEdSD3ThreeFactors"
     assert node["inputs"] == {"parts": ["10", 0], "a": -14.0, "b": 15.0, "c": 0.5,
-                              "t5_rows": "full", "pooled": "zero"}
+                              "t5_rows": "full", "pooled": "zero", "clip_encoder": "clip_g"}
     # one prompt, one encode; no T5-side encode
     assert "11" not in g
     assert g["10"]["inputs"]["text"] == "a house"
@@ -1000,7 +1056,7 @@ def test_the_surrealizer_graph_puts_the_three_factors_on_both_sides():
     assert g["14"]["inputs"]["text"] == "blurry"
     assert g["15"]["class_type"] == "AI4ArtsEdSD3ThreeFactors"
     assert g["15"]["inputs"] == {"parts": ["14", 0], "a": -14.0, "b": 15.0, "c": 0.5,
-                                 "t5_rows": "full", "pooled": "zero"}
+                                 "t5_rows": "full", "pooled": "zero", "clip_encoder": "clip_g"}
     assert g["13"]["inputs"] == {"parts": [chunk.FUSION_NODE_ID, 0]}
     assert g["16"]["inputs"] == {"parts": ["15", 0]}
     assert g["20"]["inputs"]["positive"] == ["13", 0]
@@ -1033,8 +1089,15 @@ def test_the_chunk_takes_the_three_factors_together_or_not_at_all():
                                   factor_c=1.0, pooled="half"))
     with pytest.raises(ValueError, match="factor_a"):
         asyncio.run(chunk.execute(prompt="a house", pooled="zero"))
-    assert chunk._factors_named(1, "0", 1.0, None) == (1.0, 0.0, 1.0, "full", "clip")
-    assert chunk._factors_named(-14, 15, 0.5, "tail") == (-14.0, 15.0, 0.5, "tail", "clip")
-    assert chunk._factors_named(0, 0, 1.0, "full", "zero") == (0.0, 0.0, 1.0, "full", "zero")
+    with pytest.raises(ValueError, match="clip_encoder"):
+        asyncio.run(chunk.execute(prompt="a house", factor_a=1.0, factor_b=0.0,
+                                  factor_c=1.0, clip_encoder="clip_x"))
+    with pytest.raises(ValueError, match="factor_a"):
+        asyncio.run(chunk.execute(prompt="a house", clip_encoder="clip_l"))
+    assert chunk._factors_named(1, "0", 1.0, None) == (1.0, 0.0, 1.0, "full", "clip", "both")
+    assert chunk._factors_named(-14, 15, 0.5, "tail") == (-14.0, 15.0, 0.5, "tail", "clip", "both")
+    assert chunk._factors_named(0, 0, 1.0, "full", "zero") == (0.0, 0.0, 1.0, "full", "zero", "both")
+    assert chunk._factors_named(1, 0, 1, "full", "clip", "clip_l") == (1.0, 0.0, 1.0, "full", "clip", "clip_l")
     assert chunk.DEFAULTS["t5_rows"] == "full"
     assert chunk.DEFAULTS["pooled"] == "clip"
+    assert chunk.DEFAULTS["clip_encoder"] == "both"

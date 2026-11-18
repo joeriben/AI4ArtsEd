@@ -1,0 +1,510 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 6.7% of 1642 words, ceiling 20%, longest run 14 words; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 14,
+     "text": "the percentage of male female socially biased words among the k nearest neighbors of"
+    },
+    {
+     "words": 14,
+     "text": "the percentage of male female socially biased words among the k nearest neighbors of"
+    },
+    {
+     "words": 11,
+     "text": "for quantifying and removing bias are insufficient and other aspects of"
+    },
+    {
+     "words": 10,
+     "text": "man is to computer programmer as woman is to x"
+    },
+    {
+     "words": 9,
+     "text": "gender information in the last coordinate of each vector"
+    }
+   ],
+   "value": 0.067,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "1 of 1 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "Lipstick on a Pig: Debiasing Methods Cover up Systematic Gender Biases in Word Embeddings But do not Remove Them (p. 609–613)",
+     "page": 613,
+     "expected_items": 3,
+     "first_item": "Words with strong previous gender bias (with the same direction) are easy to clu",
+     "output_lists": [
+      2,
+      5
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "17 of 48 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "Lipstick on a Pig: Debiasing Methods Cover up Systematic Gender Biases in Word Embeddings But do not Remove Them (p. 609–613)",
+     "page": 610,
+     "number": "6"
+    },
+    {
+     "section": "Lipstick on a Pig: Debiasing Methods Cover up Systematic Gender Biases in Word Embeddings But do not Remove Them (p. 609–613)",
+     "page": 611,
+     "number": "7"
+    },
+    {
+     "section": "Lipstick on a Pig: Debiasing Methods Cover up Systematic Gender Biases in Word Embeddings But do not Remove Them (p. 609–613)",
+     "page": 611,
+     "number": "8"
+    },
+    {
+     "section": "Lipstick on a Pig: Debiasing Methods Cover up Systematic Gender Biases in Word Embeddings But do not Remove Them (p. 609–613)",
+     "page": 611,
+     "number": "9"
+    },
+    {
+     "section": "Lipstick on a Pig: Debiasing Methods Cover up Systematic Gender Biases in Word Embeddings But do not Remove Them (p. 609–613)",
+     "page": 612,
+     "number": "11"
+    },
+    {
+     "section": "Lipstick on a Pig: Debiasing Methods Cover up Systematic Gender Biases in Word Embeddings But do not Remove Them (p. 609–613)",
+     "page": 612,
+     "number": "12"
+    },
+    {
+     "section": "Lipstick on a Pig: Debiasing Methods Cover up Systematic Gender Biases in Word Embeddings But do not Remove Them (p. 609–613)",
+     "page": 612,
+     "number": "16"
+    },
+    {
+     "section": "Lipstick on a Pig: Debiasing Methods Cover up Systematic Gender Biases in Word Embeddings But do not Remove Them (p. 609–613)",
+     "page": 612,
+     "number": "25"
+    },
+    {
+     "section": "Lipstick on a Pig: Debiasing Methods Cover up Systematic Gender Biases in Word Embeddings But do not Remove Them (p. 609–613)",
+     "page": 612,
+     "number": "30"
+    },
+    {
+     "section": "Lipstick on a Pig: Debiasing Methods Cover up Systematic Gender Biases in Word Embeddings But do not Remove Them (p. 609–613)",
+     "page": 612,
+     "number": "31"
+    },
+    {
+     "section": "Lipstick on a Pig: Debiasing Methods Cover up Systematic Gender Biases in Word Embeddings But do not Remove Them (p. 609–613)",
+     "page": 612,
+     "number": "467"
+    },
+    {
+     "section": "Lipstick on a Pig: Debiasing Methods Cover up Systematic Gender Biases in Word Embeddings But do not Remove Them (p. 609–613)",
+     "page": 612,
+     "number": "53"
+    },
+    {
+     "section": "Lipstick on a Pig: Debiasing Methods Cover up Systematic Gender Biases in Word Embeddings But do not Remove Them (p. 609–613)",
+     "page": 612,
+     "number": "64"
+    },
+    {
+     "section": "Lipstick on a Pig: Debiasing Methods Cover up Systematic Gender Biases in Word Embeddings But do not Remove Them (p. 609–613)",
+     "page": 612,
+     "number": "65"
+    },
+    {
+     "section": "Lipstick on a Pig: Debiasing Methods Cover up Systematic Gender Biases in Word Embeddings But do not Remove Them (p. 609–613)",
+     "page": 612,
+     "number": "88"
+    },
+    {
+     "section": "Lipstick on a Pig: Debiasing Methods Cover up Systematic Gender Biases in Word Embeddings But do not Remove Them (p. 609–613)",
+     "page": 612,
+     "number": "96"
+    },
+    {
+     "section": "Lipstick on a Pig: Debiasing Methods Cover up Systematic Gender Biases in Word Embeddings But do not Remove Them (p. 609–613)",
+     "page": 612,
+     "number": "98"
+    }
+   ],
+   "value": 17.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "7 of 7 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "Lipstick on a Pig: Debiasing Methods Cover up Systematic Gender Biases in Word Embeddings But do not Remove Them (p. 609–613)",
+     "page": 609,
+     "heading": "Abstract"
+    },
+    {
+     "section": "Lipstick on a Pig: Debiasing Methods Cover up Systematic Gender Biases in Word Embeddings But do not Remove Them (p. 609–613)",
+     "page": 609,
+     "heading": "1 Introduction"
+    },
+    {
+     "section": "Lipstick on a Pig: Debiasing Methods Cover up Systematic Gender Biases in Word Embeddings But do not Remove Them (p. 609–613)",
+     "page": 609,
+     "heading": "2 Gender Bias in Word Embeddings"
+    },
+    {
+     "section": "Lipstick on a Pig: Debiasing Methods Cover up Systematic Gender Biases in Word Embeddings But do not Remove Them (p. 609–613)",
+     "page": 610,
+     "heading": "Remaining bias after using debiasing methods"
+    },
+    {
+     "section": "Lipstick on a Pig: Debiasing Methods Cover up Systematic Gender Biases in Word Embeddings But do not Remove Them (p. 609–613)",
+     "page": 611,
+     "heading": "3 Experimental Setup"
+    },
+    {
+     "section": "Lipstick on a Pig: Debiasing Methods Cover up Systematic Gender Biases in Word Embeddings But do not Remove Them (p. 609–613)",
+     "page": 611,
+     "heading": "4 Experiments and Results"
+    },
+    {
+     "section": "Lipstick on a Pig: Debiasing Methods Cover up Systematic Gender Biases in Word Embeddings But do not Remove Them (p. 609–613)",
+     "page": 613,
+     "heading": "5 Discussion and Conclusion"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "2 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "2 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "9 quoted texts in 1 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Image 2",
+     "page": 612,
+     "image": "fig-002-p4.png",
+     "quotes": [
+      "\"Debiased\"",
+      "\"warrior\"",
+      "\"skipper\"",
+      "\"captain\"",
+      "\"nurse\"",
+      "\"nanny\"",
+      "\"coach\"",
+      "\"colonel\"",
+      "\"inventor\""
+     ]
+    }
+   ],
+   "value": 9.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "8 page references valid (printed-folio pages 609–614)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "6 pages checked, 0 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "4 of 4 passages out of order not repairable, none breaks a sentence of the body text",
+   "findings": [
+    {
+     "page": 1,
+     "words": 76,
+     "text": "swer the analogy “man is to Computer programmer as woman is to x” with “x = homemaker”. Caliskan et al. (2017) further demonstrate association between female/male names and groups of words stereotypic",
+     "blocks": [
+      "#/texts/1",
+      "#/texts/3",
+      "#/texts/6",
+      "#/texts/8"
+     ],
+     "problem": "blocks of kind footnote, heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 1,
+     "words": 129,
+     "text": "in Word Embeddings, both as a post-processing step (Bolukbasi et al., 2016b) and as part of the training procedure (Zhao et al., 2018). both works substantially reduce the bias with respect to the sam",
+     "blocks": [
+      "#/texts/1",
+      "#/texts/3",
+      "#/texts/8",
+      "#/texts/9"
+     ],
+     "problem": "blocks of kind footnote, heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 3,
+     "words": 3,
+     "text": "(right hand-side) Debiasing.",
+     "blocks": [
+      "#/texts/37",
+      "#/texts/76"
+     ],
+     "problem": "blocks of kind caption, footnote are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 4,
+     "words": 10,
+     "text": "(b) The plots for GN-G LOV E embedding, before (top)",
+     "blocks": [
+      "#/texts/172",
+      "#/texts/177",
+      "#/texts/179"
+     ],
+     "problem": "blocks of kind caption, footnote are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    }
+   ],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "gonen-goldberg-2019-lipstick-on-a-pig-debiasing-methods-cover-up-systematic-gender-biases",
+ "doc_type": "scholarly_article",
+ "analyzed_at": "2026-11-15T11:27:46.956747+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "Lipstick on a Pig: Debiasing Methods Cover up Systematic Gender Biases in Word Embeddings But do not Remove Them",
+   "part": 1,
+   "parts": 1,
+   "page_from": 609,
+   "page_to": 613,
+   "chars": 19070,
+   "blocks": 65,
+   "inner_headings": 7,
+   "figures": 2
+  }
+ ],
+ "skipped": [
+  "Acknowledgments (p. 613)",
+  "References (p. 613)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 6,
+  "gaps": [],
+  "gaps_dismissed": [
+   {
+    "page": 1,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "labor-force participation data."
+   }
+  ],
+  "captions_reclassified": [],
+  "captions_reassigned": [],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [],
+  "superseded": [],
+  "replaced_pages": [],
+  "noise_dropped": 0,
+  "hyphens_restored": [
+   {
+    "page": 6,
+    "ref": "#/texts/204",
+    "word": "Kai-Wei"
+   }
+  ],
+  "order": [
+   {
+    "page": 1,
+    "text": "swer the analogy “man is to Computer programmer as woman is to x” with “x = homemaker”. Caliskan et al. (2017) further demonstrate association between female/male names and groups of words stereotypically assigned to females/males (e.g. arts vs. Science). In addition, they demonstrate that Word Embeddings reflect actual Gender gaps in reality by showing the correlation between the Gender association of occupation words and labor-force participation data. Recently, some work has been done to reduce the",
+    "words": 76,
+    "refs": [
+     "#/texts/1",
+     "#/texts/3",
+     "#/texts/6",
+     "#/texts/8"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote, heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 1,
+    "text": "in Word Embeddings, both as a post-processing step (Bolukbasi et al., 2016b) and as part of the training procedure (Zhao et al., 2018). both works substantially reduce the bias with respect to the same definition: the projection − → −→ on the Gender direction (i.e. he − she), introduced in the former. they also show that performance on Word similarity tasks is not hurt. Weargue that current Debiasing Methods, which lean on the above definition for Gender bias and directly target it, are mostly hiding the bias rather than removing it. We show that even when drastically reducing the Gender bias according to This definition, it is still reflected in the geometry of the representation of “gender-neutral” words, and a lot of the bias information can be recovered.2",
+    "words": 129,
+    "refs": [
+     "#/texts/1",
+     "#/texts/3",
+     "#/texts/8",
+     "#/texts/9"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote, heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 3,
+    "text": "(right hand-side) Debiasing.",
+    "words": 3,
+    "refs": [
+     "#/texts/37",
+     "#/texts/76"
+    ],
+    "repaired": false,
+    "note": "blocks of kind caption, footnote are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 4,
+    "text": "(b) The plots for GN-G LOV E embedding, before (top)",
+    "words": 10,
+    "refs": [
+     "#/texts/172",
+     "#/texts/177",
+     "#/texts/179"
+    ],
+    "repaired": false,
+    "note": "blocks of kind caption, footnote are involved",
+    "breaks": [],
+    "section": ""
+   }
+  ],
+  "order_pages_checked": 6,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 4,
+  "order_breaking": 0,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 2 minor; distortions: 0 material, 1 minor; additions: 0 material, 0 minor; order: 0 material, 1 minor",
+  "at": "2026-11-15T11:39:15+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 2
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 1
+   },
+   "additions": {
+    "material": 0,
+    "minor": 0
+   },
+   "order": {
+    "material": 0,
+    "minor": 1
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "Lipstick on a Pig: Debiasing Methods Cover up Systematic Gender Biases in Word Embeddings But do not Remove Them (p. 609–613)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "They also show that performance on word similarity tasks is not hurt.",
+      "severity": "minor",
+      "page": 609
+     },
+     {
+      "source": "Both works provide very compelling results as evidence of reducing the bias without hurting the performance of the embeddings for standard tasks.",
+      "severity": "minor",
+      "page": 610
+     }
+    ],
+    "distortions": [
+     {
+      "source": "Clustering for GN-GLOVE embedding, before (left hand-side) and after (right hand-side) debiasing.",
+      "summary": "This is a scatter plot labeled \"Original\" at the top left. It shows two distinct clusters of data points: a purple cluster on the left side and a cyan cluster on the right side.",
+      "severity": "minor",
+      "page": 611
+     }
+    ],
+    "additions": [],
+    "order": [
+     {
+      "source": "according to the original bias (500 male- Debiased ... biased and 500 female-biased 9 ), and cluster them into two clusters using k-means",
+      "summary": "",
+      "layer": "according to the original bias (500 male-biased and 500 female-biased9), and cluster them into two clusters using k-means",
+      "severity": "minor",
+      "page": 611
+     }
+    ]
+   }
+  ]
+ },
+ "source": {
+  "source": "gonen-goldberg-2019-lipstick-on-a-pig-debiasing-methods-cover-up-systematic-gender-biases.pdf",
+  "bytes": 674273,
+  "sha256": "5fefd9438c884d8ff6fa774446239e6db64144e9d000118867ce2d25b3097a0d",
+  "extracted_at": "2026-11-13T01:28:49+01:00"
+ }
+}

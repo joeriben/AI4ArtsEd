@@ -97,6 +97,10 @@ class UsageTracker:
             "stage": stage,
             "input_tokens": input_tokens,
             "output_tokens": output_tokens,
+            # The process that made the call: a knowledge run counts its own
+            # calls against its ceiling while runs of the same model write
+            # into this file at the same time (knowledge_run.UsageLedger).
+            "pid": os.getpid(),
         }
         if cache_read_tokens:
             record["cache_read_tokens"] = cache_read_tokens

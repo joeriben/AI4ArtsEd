@@ -978,6 +978,15 @@ done there. Labels met inside tools (handbook section titles, ids, document
 numbers, report, section and scenario numbers) and the compressed phrases
 written into memory are not said in the room.
 
+The same holds for the teaching scenarios of the use reports, which no page of
+the platform shows; on this page they can be read on the board, where
+read_scenario lays each one it opens down as a card. Whatever a proposal takes
+from a scenario (its steps, its material, a part such as an expectation card)
+comes from the scenario opened with read_scenario, and the paragraph that first
+builds on it introduces it: its title as the card shows it, said in the
+language of the conversation, the instrument it runs on, and what the group
+does in it.
+
 A coinage stays a private working label until the group itself picks it up.
 
 INTERNAL EVIDENCE DUTY
@@ -1015,7 +1024,9 @@ they:
   external sites, read live. On pages carrying pictures pass with_images=true.
 - lookup_scenarios(competence, …) / read_scenario(id) / lookup_place(name): the
   use reports of the instruments with their teaching scenarios, and a page by
-  name. Where lookup_scenarios answers that no scenario is mapped to a measure,
+  name. lookup_place lists a page's scenarios; read_scenario gives one in full
+  and lays it on the board as a card. Where lookup_scenarios answers that no
+  scenario is mapped to a measure,
   that answer is complete: name the measure by the code the question used,
   without naming the framework or its publishers, give the reason the tool
   returns where it returns one, and stop; no other tool is tried for the same
@@ -1126,6 +1137,10 @@ strategy earned its place, it is kept with a title and an application type.
 Recurring courses live off this — what is kept today is what a similar group
 meets next time."""
 
+# The plan card lies on the board on its own (resona.vue, plan-node). A plan
+# whose steps said "each pair" while the pairing and its reason (the queue at the
+# graphics card) stood only in the reply around it left a group on the card that
+# nothing had introduced (2026-11-15).
 RESONA_TAIL = f"""PROCESS SCAFFOLDS (structured plan blocks — C0):
 When a plan is asked for — Ablaufplan, Schema, Struktur, schedule, plan — or
 when a worked-out sequence has been agreed, the visible
@@ -1138,7 +1153,12 @@ Zweck: one line stating what the plan is for (optional; "Purpose:" in English)
 2. Next step — and so on.
 [[/PLAN]]
 
-The interface renders this block as a card the group can keep and copy. Inside
+The interface renders this block as a card the group can keep and copy. The
+card is read on its own, apart from the reply around it: whatever a step names
+(a group such as pairs, a material, a term, a part of a scenario) is introduced
+inside the block, in the Zweck/Purpose line or in the step where it first
+appears, and a choice the plan makes itself, such as dividing the group into
+pairs, stands in the block with its reason. Inside
 the block: only numbered lines plus the optional Zweck/Purpose line, no
 markdown. The block is the only place where step sequences are laid out;
 everywhere else the reply is flowing conversational text. Inside it,
@@ -3939,6 +3959,10 @@ def _chat_events(data: dict, level: str = None):
                 # (execute() strips _-prefixed keys before merging).
                 "brought_upload_ids": [it["upload_id"] for it in brought_clean
                                        if it["kind"] == "upload"],
+                # This turn has a board the educator sees: lookup_place lists a
+                # page's scenarios, and read_scenario's scenario is laid on it
+                # as a card (2026-11-15).
+                "board": True,
             }
         # Brought text is the group's MATERIAL, not a source: it is shown in the
         # BROUGHT block and Resona may reflect it, but it does NOT relax the
@@ -4230,8 +4254,12 @@ def _chat_events(data: dict, level: str = None):
                     # leave something on the board. Built here, beside the
                     # ledger, so the two can never disagree about what a turn
                     # actually opened.
-                    _entity = resona_entities.from_tool_call(
-                        tool_name, tool_args, tool_result)
+                    # Only a turn with a board lays cards down; Help reads the
+                    # same scenarios and has none (2026-11-15).
+                    _entity = (resona_entities.from_tool_call(
+                        tool_name, tool_args, tool_result,
+                        language=conversation_language)
+                        if tool_context is not None else None)
                     if _entity is not None:
                         worked_entities.append(_entity)
                         # It goes now, like an apparatus: a card for something

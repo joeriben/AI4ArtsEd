@@ -3,6 +3,7 @@ id: unesco-ai-competency-framework-for-teachers-2024
 titel: AI competency framework for teachers
 autor: UNESCO
 jahr: 2024
+quelle: "UNESCO, Paris, 2024, ISBN 978-92-3-100707-1"
 sprache: en
 tier: F
 sparten: [uebergreifend]
@@ -10,427 +11,246 @@ themen: [ai, education, competency, teachers]
 lizenz: CC BY-SA 3.0 IGO
 url: "https://unesdoc.unesco.org/ark:/48223/pf0000391104"
 status: published
-analyzed_at: "2026-07-18T12:45:03.790464+00:00"
+checks: passed
+review: passed
+analyzed_at: "2026-11-15T10:08:00.601581+00:00"
 analysis_lang: en
-analysis_model: openrouter/z-ai/glm-5.2
+analysis_model: openrouter/z-ai/glm-5.3
+doc_type: framework_report
+seitenzahlen: gedruckt
 ---
 
 # AI competency framework for teachers
 
 ## PROFIL
 
-- The document presents the "AI competency framework for teachers" (AI CFT), a 'master framework' designed to inform the development of national, state-level, and institutional frameworks for teacher training.
-- It defines 15 competencies across five dimensions—Human-centred mindset, Ethics of AI, AI foundations and applications, AI pedagogy, and AI for professional learning—categorized into three progression levels: Acquire, Deepen, and Create.
-- The text extends the ICT competency framework for teachers (ICT CFT) and aligns with the 2021 UNESCO report *Reimagining our futures together: A new social contract for education*, the Recommendation on the Ethics of Artificial Intelligence (2022 a), and the Beijing Consensus (2019).
-- It addresses the shift to a teacher-AI-student dynamic, establishing four main tenets for human-AI interaction, including debunking AI hype and ensuring human and social values prevail.
-- For an arts-education platform, the framework applies to generalist teachers integrating AI tools into core subject areas, rather than specialized AI teachers.
-- It is relevant for policy-makers, teacher education providers, and school leaders designing curricula, assessment systems, and continuous professional learning programs across disciplines.
+- "AI competency framework for teachers", issued by UNESCO in 2024, is presented as the first worldwide framework spelling out what teachers must know and be able to do in the age of AI. It is anchored in UNESCO's stewardship of the Education 2030 Agenda and SDG 4, and its central claim is that AI has turned the formerly two-party teacher-student relationship into a "teacher-AI-student" configuration, while as of 2022 only seven countries had produced teacher-focused AI frameworks or programmes.
+- The framework defines 15 competencies across five dimensions — Human-centred mindset, Ethics of AI, AI foundations and applications, AI pedagogy, and AI for professional learning — organized along three progression levels: Acquire, Deepen, and Create. It serves as a reference model for national or institutional frameworks, an operational tool for teacher educators, and a benchmarking matrix for evaluating teachers' AI competencies; intended users span ministries, teacher-education providers, unions, school leadership, teachers, and researchers. It targets teachers using AI to support learning in ordinary subjects, not specialists teaching advanced AI.
+- The document opens with a foreword and an introduction stating the rationale, purpose, and four features distinguishing AI from earlier ICT; Chapter 2 sets out key principles (inclusive digital futures, a human-centred approach, protection of teachers' rights, trustworthy and environmentally sustainable AI, applicability for all teachers, lifelong professional learning); Chapter 3 presents the framework's matrix structure; Chapter 4 specifies each of the fifteen blocks per level with curricular goals, learning objectives, and contextual activities; Chapter 5 proposes implementation strategies covering regulation of trustworthy tools, enabling policies, localization of competency frameworks, training design, and performance-based assessment.
+- The framework builds on UNESCO's ICT Competency Framework for Teachers (2018), whose architecture it follows, and draws on the *Recommendation on the Ethics of Artificial Intelligence* (2022), the Beijing Consensus on AI and Education (2019), *AI and education: Guidance for policy-makers*, the *Guidance for generative AI in education and research*, and *Reimagining our futures together* (2021); it cites regulatory instruments such as the EU's GDPR and AI Act and China's 2023 regulation on generative AI, and examples including the AI4T project and Singapore's AI Singapore platform.
+- Its stance is that technology can never substitute for teachers, whose rights and working conditions must be protected as AI spreads through education. It is usable across disciplines and situations of arts education wherever teachers integrate AI into subject-specific planning, teaching, and assessment, from unplugged and low-tech contexts to AI-rich environments, and from pre-service preparation through in-service training and continuing professional development.
 
 ## WISSEN
 
-### AI competency framework for teachers
+### Publication context and short summary (p. 3–5)
 
-Published in 2024 (ISBN: 978-92-3-100707-1). By 2022, only seven countries had developed AI frameworks or programmes for teachers. The framework defines 15 competencies across five dimensions:
-- Human-centred mindset
-- Ethics of AI
-- AI foundations and applications
-- AI pedagogy
-- AI for professional learning
+Issued by UNESCO in 2024 (ISBN 978-92-3-100707-1, openly licensed under CC-BY-SA 3.0 IGO), this publication is the first worldwide framework to spell out what teachers must know and be able to do in the age of AI. UNESCO anchors it in its stewardship of the Education 2030 Agenda and of SDG 4, which commits countries to "inclusive and equitable quality education" and lifelong learning for everyone. The document's central claim is that AI has turned the formerly two-party teacher-student relationship into a "teacher-AI-student" configuration, yet as of 2022 just seven countries had produced AI-related frameworks or programmes aimed at teachers. The framework sets out 15 competencies spanning five dimensions — Human-centred mindset, Ethics of AI, AI foundations and applications, AI pedagogy, and AI for professional learning — organized along three mastery stages: Acquire, Deepen, and Create. It is intended to serve worldwide as a reference point for building national frameworks, shaping teacher training, and designing assessment criteria.
 
-Competencies are categorized into three progression levels: Acquire, Deepen, and Create. It addresses the shift to a teacher-AI-student dynamic and aligns with the 2021 UNESCO report *Reimagining our futures together: A new social contract for education*. Developed alongside a competency framework for students.
+### Foreword (p. 6)
 
-<!-- quelle: UNESCO - a global leader in education … Foreword -->
+The foreword argues that AI forces basic questions about how much discretion teachers retain — whether and under what conditions they can judge wisely about deploying the technology. It locates the framework within UNESCO's earlier work: the ICT Competency Framework for Teachers, *AI and education: Guidance for policy-makers*, the *Guidance for generative AI in education and research*, and the 2021 report *Reimagining our futures together: A new social contract for education*. Inputs came from Member States (sharing experience with AI school curricula), an international working group, four consultation meetings held internationally, and several rounds of online consultation. A companion framework covering student competencies was developed in parallel.
 
-### AI competency framework for teachers
+### Chapter 1: Introduction — why an AI competency framework, purpose, and technological rationale (p. 13–15)
 
-- 2022: Only seven countries had developed frameworks or programmes on AI for teachers (UNESCO, 2023 a).
-- The AI CFT targets teachers applying AI in core subject areas, not specialized AI teachers.
-- Structure: five aspects and three mastery levels.
-- Objectives: reference framework for national/state/institutional frameworks; operational framework for teacher educators; benchmarking matrix for assessment.
-- Target audience: policy-makers, teacher education providers, teachers' unions, school leaders, teachers, educational experts.
-- Aligned with the 2018 UNESCO ICT CFT.
-- Enabling environments: inclusive access to connectivity and content, human-centred policies, conducive curriculum and assessment systems, inter-sectoral support for teachers, engagement with teaching communities.
+**Why the framework (1.1, p. 13).** AI can handle information at a scale no human can match, produce new content across symbolic forms, detect patterns in varied data, and support decisions through prediction — opening genuinely new possibilities for teaching, learning and the management of education. Yet it also brings serious dangers: it can erode human autonomy, worsen the climate crisis, breach data privacy, reinforce entrenched inequality and exclusion, and generate novel forms of discrimination. In classrooms it risks collapsing teaching into computation, sidelining the teacher's influence and weakening bonds with learners; shrinking education to whatever AI can model and deliver; and aggravating the global shortage of qualified teachers when money flows to technology instead of people. Teachers are AI's main users in education and are expected to design and guide students' learning with AI, safeguard ethical and safe practice in AI-saturated settings, and model lifelong learning about the technology. A UNESCO survey (2023) found only seven countries with teacher-focused AI frameworks or programmes in 2022. The framework's stance is that technology can never substitute for teachers, whose rights and working conditions must be protected as AI spreads through education, workplaces and society.
 
-<!-- quelle: 1.1 Why an AI competency framework? … 1.3 Alignment with the ICT competency framework for teachers -->
+**Purpose and audience (1.2, p. 14).** The AI CFT serves teachers who use AI to support learning in ordinary subjects; it does not target specialists who teach advanced AI as a subject (though its aspects and levels could be extended for that purpose). It pursues three aims: (1) a reference model for shaping AI competency frameworks or training schemes at national, state or institutional level; (2) an operational tool for teacher educators planning AI courses; (3) a benchmarking matrix for evaluating teachers' AI competencies and professional learning. Intended users range across ministries and policy-makers, providers of teacher education, unions, school leadership, teachers themselves, and educational researchers.
 
-### AI competency framework for teachers
+**Alignment with the ICT CFT (1.3, p. 14).** The AI CFT follows the architecture of the 2018 UNESCO ICT Competency Framework for Teachers, which remains valid, and shares its vision of empowering teachers to use technology well. Both span pre-service preparation, in-service training and continuing support so that growth is sustained and practical. Like the ICT CFT, it also names the enabling conditions required: inclusive connectivity and content, policies centred on people, fit-for-purpose curriculum and assessment regimes, support for teachers from across sectors, and engagement with teaching communities.
 
-The AI CFT extends the ICT CFT. AI mimics human behaviour and replaces human decisionmaking via pattern predictions from past data, risking the atrophy of teachers' essential competencies. AI data mining threatens privacy and deepens inequalities. Unlike deterministic ICT tools, AI-generated content is stochastic, producing different outputs for the same inputs, making it less trustworthy for factual knowledge. AI provides general-purpose foundation models; generative AI supports domain-specific models. Teachers must understand AI training, 'black box' methods, and social impacts. The AI CFT establishes four main tenets for human-AI interaction:
-- Debunking AI hype
-- Understanding threats inherent to the design of AI
-- Ensuring human and social values prevail
-- Steering AI for human capacity development
+**What makes AI different from earlier ICT (1.4, p. 15).** Four features distinguish AI and drive new competency demands:
+1. AI imitates human behaviour and displaces human judgement with predictions derived from large datasets of past cases — unlike earlier tools that merely assisted routine work — so over-dependence could let teachers' core skills wither. This demands renewed emphasis on teacher agency and a mindset that keeps AI in service of human development.
+2. The data extraction behind AI platforms actively harvests personal information, frequently without consent, and commercial incentives trade privacy for "benefits" — a far more aggressive posture than earlier ICT tools, deepening inequality and raising the stakes for teachers' ethical understanding.
+3. AI output is stochastic rather than deterministic: identical inputs can produce different results, making generated content less reliable, particularly for factual and conceptual teaching. Teachers therefore need to grasp how AI is trained and works, and to verify the accuracy of what it produces before weaving it into pedagogy.
+4. AI systems adapt across many problem domains; general-purpose foundation models — especially generative AI — can be retrained for specific fields and personalized, potentially reshaping business, social and personal practices. Teachers must therefore grasp AI's societal effects and what citizenship means in emerging AI societies, and be supported to keep learning.
 
-<!-- quelle: 1.4 Technological advances in AI and implications for teacher competencies … 2.1 Ensuring inclusive digital futures -->
+### Chapter 2: Key principles (p. 16–20)
 
-### AI competency framework for teachers
+**2.1 Ensuring inclusive digital futures (p. 16).** Four starting tenets:
+- **Debunking AI hype**: humans design and deploy AI, and can build it either to protect and extend human capacities or to embed harmful aims and unintended biases. Teachers must weigh potential gains against dangers and recognize that only deliberate "ethics by design" plus well-regulated rollout can truly serve inclusion, sustainability and human capability.
+- **Understanding threats inherent to AI design**: current algorithmic models sharply challenge rights and privacy, and AI-generated content erodes indigenous knowledge, cultures and languages; teachers must understand how these systems are built to defend human agency and diversity.
+- **Ensuring human and social values prevail**: profit-driven algorithms foster isolation from the real world and from other people; empathy, altruism, justice, intercultural compassion and solidarity must be preserved, and technology must not cut people off from one another or from non-digital ways of living and knowing.
+- **Steering AI for human capacity development**: without pedagogical guidance, AI may weaken students' intellectual growth; its educational purpose should be inquiry enrichment and capacity building, not just information access and standardized answers.
 
-The AI CFT builds on UNESCO's Recommendation on the Ethics of Artificial Intelligence (2022 a), Beijing Consensus (2019), and 2022/2023 guidance. Core principles: AI strengthens human capacities/sustainable development; equitable/inclusive access; explainable, safe, do no harm models; human controlled/accountable use.
+**2.2 A human-centred approach to AI (p. 17–18).** Drawing on UNESCO's *Recommendation on the Ethics of Artificial Intelligence* (2022), the Beijing Consensus on AI and Education (2019) and the two guidance documents, the approach rests on four principles: AI should strengthen human capacities and sustainable development; its availability and deployment must be equitable and inclusive; the models in use must be explainable, safe and harmless; and humans must retain control over, and answer for, how AI is selected, used and monitored. Regulators, providers and institutions must share governance responsibility before teachers can be asked to apply these principles. The framework elaborates them for teachers:
+- **Empowering teachers' human-accountable use of AI**: responsibility for AI's design and use belongs to people; AI must not take over teachers' answerability for pedagogical decisions, and policy-makers, training institutions and schools must first equip and support teachers.
+- **Promoting inclusivity**: because bias is often built into AI, teachers must watch for it and ensure every student — whatever their gender, ethnicity, ability, socio-economic or migration background — can use and benefit from AI, while fostering social inclusion and cultural pluralism.
+- **Recognizing users' right to question the explainability of AI tools**: convincing-looking outputs may conceal unexplainable processes and hidden risks; teachers need the knowledge to evaluate tools' explainability and safety and step in when something goes wrong.
+- **Understanding and monitoring the human-controlled impact of AI**: because designers' choices affect rights, dignity, and social and environmental well-being, teachers should recognize the intent behind tools and manage, within their role, any harm to students' learning and welfare.
 
-Teacher-focused principles:
-- Empowering teachers' human-accountable use of AI: Teachers remain accountable for pedagogical decisions.
-- Promoting inclusivity: Ensure AI use is inclusive regardless of gender, ethnicity, abilities, socio-economic or migration status.
-- Recognizing users' right to question explainability: Equip teachers to critically evaluate AI tools.
-- Understanding and monitoring human-controlled impact: Develop awareness of design intent and control adverse impacts.
+**2.3 Protecting teachers' rights and redefining teachers' roles (p. 18).** Human interaction and collaboration between teachers and learners remain the heart of education. Legal protections and sustained funding must guarantee teachers access to technological environments and basic AI tools. Because AI increasingly mediates preparation, teaching, learning and assessment, the teacher-student relationship is becoming effectively three-sided; teachers should grow into collaborative knowledge producers and guides to citizenship, supported by the framework's attention to AI's social impacts and its evolving character in education.
 
-Validation priorities:
-- Mandating 'do no harm' principle.
-- Prioritizing environmentally-friendly AI tools.
-- Validating trustworthy AI for educational purposes, including age-appropriateness and pedagogical utility.
-- Human accountable design and development.
+**2.4 Trustworthy and environmentally sustainable AI (p. 18–19).** AI systems should be proven safe and trustworthy before teachers are held responsible for ethical compliance: an "ethics by design" requirement, enforced through strict national or institutional validation (and whitelisting of trustworthy tools) prior to adoption, shields teachers from accountability beyond their remit. Validation should prioritize:
+- Mandating "do no harm": tools must be designed with full awareness of their effects on rights, dignity, safety, social well-being and environmental sustainability.
+- Prioritizing environmentally friendly tools, given the damage AI's life cycle and value chain can do to the climate — an awareness that also matters for students' understanding of climate change.
+- Validating trustworthy AI for education: systems must be free of malicious intent and harmful effects, resistant to manipulation, protective of learners' privacy and sensitive data, and checked for age-appropriateness and pedagogical value — including for students with special needs — before large-scale adoption.
+- Human accountable design and development: institutions and providers must answer for the transparency and explainability of what AI does and causes.
 
-<!-- quelle: 2.2 A human-centred approach to AI … 2.4 Promoting trustworthy and environmentally sustainable AI for education -->
+**2.5 Applicability for all teachers and digital evolution (p. 19).** In the AI era, AI literacy approaches the status of a basic right, and AI competency is becoming an entry requirement for teaching. The framework is meant to fit every teacher and every context, whatever their starting digital expertise, and prescribes progressive training that can carry teachers from no AI knowledge upward — using whatever is locally accessible and affordable, from unplugged and low-tech options through to AI-rich environments. It also helps teachers move confidently from older digital tools to AI, and builds transferable competencies that survive rapid technological upgrading.
 
-### AI competency framework for teachers
+**2.6 Lifelong professional learning (p. 20).** Teacher development is framed as career-long growth. Four components:
+- **Navigate personal progression through transferable competencies**: staged competencies and training methods help teachers stay current with emerging technologies and their pedagogical, ethical and societal ramifications.
+- **Guide continuous reflection and improvement**: reviewing exemplar lessons, reflecting on one's own knowledge and practice, internalizing values, and repeating cycles of lesson design, delivery, reflection and redesign.
+- **Streamline training and support**: coherent linking of pre-service preparation, in-service training and ongoing coaching; professional development communities and organizational capacity-building; peer-coaching and agile learning responsive to AI's evolution.
+- **Adapt policies**: management policies must give teachers time and resources for training, and reward responsible, innovative AI use; curriculum and assessment systems must open room for piloting validated tools and new methods, and be reviewed for any excessive constraints on human-centred AI use.
 
-The AI CFT specifies a progressive approach from basic to advanced levels, spanning unplugged and low-tech solutions to AI-rich settings. It advocates a holistic approach to continuous learning:
-- Navigate personal progression through transferable competencies
-- Guide continuous reflection and improvement of practical performance (iterate cycles of lesson design, implementation, reflection and redesign)
-- Streamline training and support programmes (pre-service preparation, in-service training, ongoing coaching, peer-coaching, agile learning)
-- Adapt policies to support lifelong professional learning (allocate time/resources, pilot tests of validated AI tools)
+### Chapter 3: Structure of the framework — five aspects, three levels, fifteen blocks (p. 21–27)
 
-<!-- quelle: 2.5 Ensuring applicability for all teachers and reflecting digital evolution … 2.6 Lifelong professional learning for teachers -->
+**3.1 Dimensions (p. 21–22).** The framework takes the form of a matrix: five competency aspects crossed with three stages of progression, yielding fifteen blocks (Table 1):
 
-### AI competency framework for teachers
+| Aspect | Acquire | Deepen | Create |
+|---|---|---|---|
+| 1. Human-centred mindset | Human agency | Human accountability | Social responsibility |
+| 2. Ethics of AI | Ethical principles | Safe and responsible use | Co-creating ethical rules |
+| 3. AI foundations and applications | Basic AI techniques and applications | Application skills | Creating with AI |
+| 4. AI pedagogy | AI-assisted teaching | AI-pedagogy integration | AI-enhanced pedagogical transformation |
+| 5. AI for professional development | AI enabling lifelong professional learning | AI to enhance organizational learning | AI to support professional transformation |
 
-The AI CFT is a two-dimensional matrix of five competency aspects across three progression levels, forming fifteen blocks.
+The aspects are mutually reinforcing and interdependent. Progression is offered as a reference pathway rather than a rigid sequence, and realizing the competencies also depends on external conditions — digital infrastructure and internet access, availability of AI resources, data security and privacy rules, policy guidance and incentives, professional development opportunities, and the trustworthiness, performance and workload effects of the tools adopted (addressed in Chapter 5).
 
-**Progression levels:**
-- Acquire: essential competencies to evaluate, select, and use AI tools.
-- Deepen: intermediate competencies to design pedagogical strategies integrating AI.
-- Create: advanced competencies for creative configuration and innovative use of AI.
+**3.2 The five aspects (p. 23–24).**
+1. **Human-centred mindset**: the values and critical dispositions teachers need in engaging with AI, keeping human rights and human flourishing at the centre and cultivating critical evaluation of AI's benefits and risks.
+2. **Ethics of AI**: the ethical values, principles, regulations, institutional laws and practical rules that teachers must grasp, put into practice and help revise.
+3. **AI foundations and applications**: conceptual knowledge (what AI is, how models are trained, data and algorithms, the main technology categories) and transferable skills to judge, select, operate and creatively adapt AI tools for student-centred environments.
+4. **AI pedagogy**: the capacity to vet and choose suitable AI tools and weave them into pedagogical strategies covering course preparation, teaching, learning, socialization, social caring and assessment.
+5. **AI for professional development**: the capacity to deploy AI in driving one's own lifelong learning, collaborative development and professional transformation.
 
-**Competency aspects and their blocks:**
-1. Human-centred mindset: Human agency; Human accountability; Social responsibility.
-2. Ethics of AI: Ethical principles; Safe and responsible use; Co-creating ethical rules.
-3. AI foundations and applications: Basic AI techniques and applications; Application skills; Creating with AI.
-4. AI pedagogy: AI-assisted teaching; AI-pedagogy integration; AI-enhanced pedagogical transformation.
-5. AI for professional development: AI enabling lifelong professional learning; AI to enhance organizational learning; AI to support professional transformation.
+These aspects interlock: skill in AI pedagogy depends on foundational understanding, awareness of policy and commitment to ongoing development; ethical judgement draws on foundations and practice; strength in one area feeds the others.
 
-<!-- quelle: 3.1 Dimensions of the AI CFT … 3.2.4  Aspect 4: AI pedagogy -->
+**3.3 Progression levels (p. 24–27).** The levels serve to locate a teacher's current competencies and set learning targets. Movement will not be even across aspects — someone might be intermediate in foundations while still beginner-level in ethics — so diagnostic instruments should profile strengths and weaknesses per aspect and tailor training accordingly.
 
-### AI competency framework for teachers
+- **Acquire (p. 25)**: the entry stage, amounting to basic "teachers' AI literacy," open to every teacher including complete beginners. Teachers should be able to: (1) grasp critically that AI is made and steered by people, whose choices at company and individual level deeply affect autonomy and rights, and see why human agency matters when judging and using AI tools; (2) reach a basic understanding of typical ethical questions around AI and human-AI interaction — human rights, personal data, human agency, linguistic and cultural diversity, inclusion and environmental sustainability; (3) gain elementary knowledge of what AI is, how models are trained, data and algorithms, the main technology categories with examples, plus the ability to judge a tool's fitness for education and use validated ones; (4) spot and exploit the pedagogical gains AI offers for subject-specific planning, teaching and assessment while managing the risks; (5) try out AI tools to strengthen professional development and reflection, gauge learning needs and chart personalized learning routes in a fast-changing landscape.
+- **Deepen (p. 26)**: teachers now integrate AI proficiently, with emphasis on human accountability and safe, responsible use — following national and local policy, protecting stakeholders' safety, privacy and rights, and vetting tools ethically. They should be able to: (1) show a deepened grasp of human accountability and determination in AI deployment, viewing sceptically inflated claims that AI can stand in for humans in high-stakes educational decisions; (2) absorb the core ethical rules — data privacy, intellectual property and other legal provisions — and bring this lens to assessing tools, data and AI-generated content; (3) operate fluently the AI tools adopted in their settings, deepening ethically informed knowledge of technology categories, data and algorithms relevant to their role; (4) weave AI skilfully into student-centred design and facilitation — boosting engagement, supporting differentiated learning and richer teacher-student interaction, and cultivating empathy, critical thinking and problem-solving; (5) use AI tools with confidence to participate in professional learning communities, exchange resources, learn from peers and adapt together.
+- **Create (p. 26–27)**: the expert stage, marked by critical understanding of AI's social impact and of civic responsibility. Teachers should be able to: (1) help build inclusive AI societies, promoting design and use of AI that advances welfare, inclusion and social justice; (2) champion AI ethics through advocacy and empathy — leading discussion and action on ethical, sociocultural and environmental concerns from design through use, and helping co-create ethical standards for AI in education; (3) customize or modify AI tools (including open-source and adaptable toolkits) with advanced conceptual knowledge to build inclusive learning environments and tackle broader local challenges; (4) appraise AI's effects on teaching, learning and assessment, run AI-immersed learning scenarios for subject-specific or interdisciplinary work, critical thinking and problem-solving, and use data and feedback to keep innovating in student-centred ways; (5) adapt AI tools for their own development and keep testing and validating approaches to meet their own and their communities' transformative development needs.
 
-The AI CFT defines three progression levels: 'Acquire' (basic AI literacy), 'Deepen' (proficient integration), and 'Create' (transformative application). Progression is asynchronous across the five competency aspects.
+### Chapter 4: Specifications — progression level 1, Acquire (p. 28–32)
 
-'Acquire' level catalogue:
-- Cultivate critical understanding that AI is human-led.
-- Develop basic understanding of ethical issues related to AI (human rights, data, agency, diversity).
-- Acquire basic knowledge of AI technology, models, data, algorithms, and assess tool appropriateness.
-- Identify and leverage pedagogical benefits of AI for lesson planning, teaching, and assessment.
-- Explore AI tools to enhance professional development and assess learning needs.
+The overarching curricular goal at this level is to bring every teacher to the baseline of AI competency the profession requires, whatever their context. Each of the five blocks is unpacked into the teacher competency, curricular goals (CG) for training programmes, learning objectives (LO) for teachers, and contextual activities evidencing attitudinal or behavioural change.
 
-'Deepen' level catalogue:
-- Demonstrate deepened understanding of human accountability in AI deployment.
-- Internalize ethical rules for safe AI use (data privacy, intellectual property).
-- Proficiently operate AI tools, deepening knowledge of technologies, data, and algorithms.
-- Adeptly integrate AI into student-centred teaching to foster engagement and differentiated learning.
-- Confidently utilize AI for collaborative professional learning communities and peer-to-peer learning.
+**Block 1.1 Human agency (p. 28).** Teachers understand critically that AI is human-made and that its creators' choices — corporate and individual — bear heavily on human autonomy and rights.
+- CGs: (1.1.1) build critical thinking by having teachers debate the tension between AI's benefits and the danger of eroded autonomy and agency, examining concrete tools in local settings and against their own duties; (1.1.2) walk through the main stages of an AI system's life cycle, showing how creators' decisions shape impact; (1.1.3) draw attention to how leaning too heavily on AI can degrade thinking skills and agency; (1.1.4) practise writing simple tips for safeguarding agency when AI is used in education, with particular focus on students with special needs.
+- LOs: (1.1.1) weigh up the benefits, limits and dangers of particular AI tools for their own settings, subjects and grade levels; (1.1.2) show awareness that AI is human-led and that creators' decisions touch rights, agency, individual lives and societies; (1.1.3) describe the human role across the basic steps of AI development — from gathering and processing data, through algorithm and functionality design, to deployment and use; (1.1.4) know the basic safeguards for agency in design and use: honouring data ownership, collecting data with consent, labelling and cleaning data without bias, keeping algorithms free of discrimination, and providing accessible functions and interfaces.
+- Contextual activities: puncture AI hype via simple risk-benefit analysis that keeps humans central; grasp why certain tools warrant banning because they can diminish agency and threaten rights; enumerate the ways particular tools (for instance large language models used for essay writing) can undercut teachers' and students' agency; draft everyday dos and don'ts that protect agency for teachers and students alike.
 
-<!-- quelle: 3.2.5    Aspect 5: AI for professional development … 3.3.2  Progression level 2: Deepen -->
+**Block 2.1 Ethical principles (p. 29).** Teachers reach a basic grasp of the ethical questions AI raises and of the principles governing ethical human-AI interaction — human rights, human agency, linguistic and cultural diversity, inclusion and environmental sustainability.
+- CGs: (2.1.1) bring ethical controversies to the surface by scrutinizing real cases of AI use in education; (2.1.2) teach the core principles through case-based examination of six subtopics — "do no harm"; proportionality; non-discrimination; sustainability; human determination in human-AI interaction; and transparency and explainability — showing why each matters and what harm follows from neglect; (2.1.3) connect principles to standards via local, national or international AI-ethics regulations, discussing what they mean for individuals and how principles appear in local or national law; (2.1.4) argue for inclusive AI use, examining risks particular tools pose to equity — especially for learners with disabilities or from marginalized groups — and how teachers can mitigate them individually.
+- LOs: (2.1.1) illustrate fundamental ethical controversies raised by concrete tools, viewed through the lenses of agency, security, privacy, and linguistic and cultural relevance; (2.1.2) explain the core principles (per CG2.1.2) and make them one's own through personal choices about AI; (2.1.3) align key regulatory articles with the principles and work out their educational consequences; (2.1.4) rank actions that limit AI's negative effects on equity and inclusion, attending especially to students with disabilities or from marginalized backgrounds.
+- Contextual activities: adopt an ethical standpoint on school AI use by weighing the dilemmas it poses around privacy, agency, equity, inclusion, local cultures and languages, and climate change; map the principles visually (with paper worksheets or digital concept-mapping apps), linking them to controversies, regulations and tools used in schools; check whether local AI regulation is keeping up with technological iterations and test regulations against principles and context; stay alert to biases in school AI tools that could exclude or marginalize learners, and flag the risks to managers or the responsible agencies.
 
-### Progression level 3: Create
+**Block 3.1 Basic AI techniques and applications (p. 30).** Teachers build elementary conceptual knowledge: what AI is, how models are trained, data and algorithms, the main technology categories with examples, and the ability to judge a tool's fitness for education and to operate validated tools.
+- CGs: (3.1.1) pitch the difficulty of foundational AI content to teachers' duties and prior exposure, showing how a given tool is built from data and algorithms and how it processes inputs into outputs; (3.1.2) give hands-on experience with tools relevant to teachers' work, letting them try different types and appreciate how far AI has moved beyond earlier ICT generations and what distinguishes each category; (3.1.3) introduce a simple method for judging a tool's reliability and local appropriateness and have teachers trial it; (3.1.4) help teachers begin assembling their own set of AI tools — starting from recommended exemplars and moving toward a curated, trustworthy collection suited to their needs and context, with open-source options particularly in view.
+- LOs: (3.1.1) show conceptual knowledge suited to their role on how AI systems are built from data, algorithms and computing architecture — covering problem-scoping, design, training, testing, deployment, feedback and iteration — with related understanding of data, algorithms and programming; (3.1.2) distinguish what AI is from what it is not, name the main technique and technology categories, describe AI's new capabilities relative to earlier ICT tools, and characterize the core functions of each tool category; (3.1.3) find and run the AI tools their daily work requires locally; (3.1.4) argue for evaluating tools on accessibility, inclusivity and reliability, and carry out elementary appropriateness analyses attentive to students with special needs; (3.1.5) begin building a personal, trustworthy toolkit fit for local language and culture, and probe the availability of locally relevant open-source tools.
+- Contextual activities: draw and continually revise concept maps (on paper or digitally) of how AI systems are built and how decisions about specific school tools are made; broaden and sharpen operational skills on tools relevant to one's duties; develop a "navigation compass" for telling AI from non-AI tools and comparing the strengths and weaknesses of ICT versus AI options locally; work with colleagues and school managers to vet tools recommended by providers, deciding together on adoption, and pool validated and open-source tools into a shared, trustworthy collection.
 
-At the 'Create' level, teachers:
+**Block 4.1 AI-assisted teaching (p. 31).** Teachers learn to spot and harness the pedagogical value of AI tools for subject-specific planning, teaching and assessment while keeping risks in check.
+- CGs: (4.1.1) use exemplar classroom videos of AI use as the basis for lesson analysis — probing appropriateness, efficacy, fit with pedagogical methods, and inclusion of students with different abilities — and prompt self-reflection on teachers' own AI-assisted lessons; (4.1.2) direct teachers toward the research literature, exposing them to selected evidence-based studies of the pros and cons of AI-assisted teaching; (4.1.3) bridge foundational AI knowledge and classroom practice using locally available, validated tools (including institutionally deployed systems), teaching teachers how to search for and vet suitable educational AI; (4.1.4) support pedagogical validation and instructional design — reinforcing domain-specific methodology and basic design approaches (such as the human-agent interaction model in UNESCO's *Guidance for generative AI in education and research*) — with hands-on rehearsal of the design-implementation-reflection cycle: judging AI's fit for one's subject and grade, deciding whether and with which tools to proceed, building and delivering AI-assisted activities (materials preparation, delivery, assessment, support for students with special needs), then reflecting on the result in line with CG4.1.1.
+- LOs: (4.1.1) bring a human-centred outlook, ethical principles, subject-appropriate methodology and AI knowledge to bear in analysing sample lessons, justifying choices about whether AI belongs in them and which tools; (4.1.2) describe the principal categories of AI systems supporting teaching, learning and assessment, along with their promise and their limits; (4.1.3) apply basic instructional design to decide whether, when and with which tools to use AI, and plan and deliver AI-assisted teaching, assessment and special-needs support with confidence; (4.1.4) locate and work with elementary educational AI tools and with the AI systems their institution has deployed.
+- Contextual activities: begin from concrete teaching needs, treating them as the first criterion of a tool's appropriateness — does it meet the need, add value, or fit the situation?; improve through repeated loops of "design-implementation-reflection" — studying exemplar lessons, then planning, delivering and reviewing one's own; judge effectiveness against needs, acquiring direct experience of what AI can and cannot deliver in practice.
 
-- Contribute to AI-in-education policy planning and co-creation of ethical standards
-- Combine or modify open-source/customizable AI toolkits for local educational challenges
-- Critically assess AI's impact on teaching, learning, and assessment
-- Plan AI-immersed learning scenarios supporting subject-specific or interdisciplinary learning, critical thinking, and problem-solving
-- Use AI for transformative professional development and synthesize tools for professional communities
-- Champion AI ethics through critical advocacy, addressing ethical, sociocultural, and environmental concerns
-- Build inclusive AI societies promoting human welfare, inclusion, and social justice
+**Block 5.1 Enabling lifelong professional learning (p. 32).** Teachers begin using AI tools to strengthen their development and reflective practice, gauge their learning needs and personalize their routes through a shifting landscape.
+- CGs: (5.1.1) kindle motivation for career-long learning by discussing what rapid AI development means for education, the new roles and competencies it demands, and the value of being a lifelong learner while knowing one's rights and agency will be safeguarded; (5.1.2) lead self-assessment of AI readiness and competency gaps, using paper-based or AI-assisted instruments; (5.1.3) raise awareness of teacher-facing AI by presenting general and specific tools that can support professional growth — attending especially to teachers with disabilities or who teach students with disabilities — and show how to find and use them; (5.1.4) enable use of AI for professional learning, for instance by explaining how recommendation platforms infer interests from inputs to suggest peer mentors and training resources, while making clear the dangers of data bias, algorithmic discrimination, and the way "cocoons of AI-manipulated information" could let competencies decay.
+- LOs: (5.1.1) trace how teachers' rights, working conditions, qualifications and expected competencies are evolving locally in the AI era, and argue for the value of learning about AI throughout one's career; (5.1.2) name the new knowledge, skills and values the profession now demands locally and measure the distance between one's own experience and those requirements; (5.1.3) enumerate AI tools — including locally relevant open-source ones — that can serve self-assessment, reflection and professional learning, with attention to accessibility for teachers with disabilities; (5.1.4) find and use affordable, relevant teacher-facing AI tools for self-assessment and for personal learning on subject content, pedagogy and peer exchange.
+- Contextual activities: spell out the entitlements teachers should enjoy in the AI era — protected rights, decent working conditions, access to guidance and training — alongside their responsibility to use AI ethically and effectively; assess one's own readiness and gaps and sketch a development roadmap toward ethical, effective AI-assisted teaching; use AI under human direction to widen professional horizons — letting AI-assisted social media surface fresh ideas and put one in touch with like-minded peers, potential coaches or mentors — while learning to spot and counter the distorting effects of AI-curated information cocoons.
 
-<!-- quelle: 3.3.3  Progression level 3: Create … Chapter 4: The AI CFT specifications -->
+### Figures (p. 2–6)
 
-### AI competency framework for teachers — Progression level 1: Acquire
+*Image 2 (p. 2):* — This is a flat vector illustration. A woman with dark hair sits on a chair at a desk using a laptop. Behind her are two screens: one displays blue horizontal bars, and the other shows a purple background with white line graphs. A light blue robot with a smiling face stands to the right with both hands raised. No text in the image is legible.
 
-Progression level 1: **Acquire** — basic AI competency for all teachers.
+*Image 4 (p. 3):* — This is a logo graphic. At the top is a blue square containing a white line drawing of a classical building with columns. Below the square, the word "unesco" appears in large blue lowercase letters, followed by the text "United Nations Educational, Scientific and Cultural Organization" in smaller blue letters.
 
-**1.1 Human-centred mindset — Human agency**
+*Image 9 (p. 6):* — This is a photograph of a woman with short, light-colored hair wearing a light gray jacket, seated with her hands clasped in front of her. Behind her is a light blue flag bearing a white emblem of a world map surrounded by olive branches. The background is a plain, light-colored wall.
 
-Curricular goals:
-- Foster critical thinking on benefits vs. risks of diminishing human autonomy
-- Illustrate AI system life cycle steps; how creator decisions affect impact
-- Highlight how overreliance undermines thinking skills and human agency
-- Practice writing tips to protect human agency, focusing on students with special needs
+<!-- quelle: AI competency framework for teachers (p. 2–32) -->
 
-Learning objectives:
-- Critically reflect on specific AI tools in local settings, subjects, grade levels
-- Demonstrate awareness AI is human-led; creator decisions affect human rights
-- Outline human role: data collection/processing, algorithm design, deployment
-- Understand measures: data ownership, consent, anti-bias labelling, discrimination-free algorithms, user-friendly interfaces
+### 4.2 Progression Level 2: Deepen (p. 33–37)
 
-Contextual activities:
-- Unpack hype through risk-benefit analysis
-- Understand why some AI tools should be banned
-- Spotlight risks (e.g., large language models for essay writing)
-- Know basic dos and don'ts: daily tips for human agency
+The 'Deepen' level aims to support teachers to become fully competent or master teachers in using AI: they should demonstrate human-centred perspectives, ethically sound behaviours, deepened conceptual understanding of AI, and the capacity to apply AI to pedagogical activities and professional learning. The level is organized in five competency blocks, each with curricular goals (CG), learning objectives (LO) and contextual activities.
 
-**2.1 Ethics of AI — Ethical principles**
+**Human-centred mindset – 1.2 Human accountability.** Teachers must show a deepened understanding of human accountability and human determination in deploying AI, and critically assess AI's role in human-AI decision loops as well as overhyped claims about AI substituting humans in high-stakes educational decisions. Curricular goals: (CG1.2.1) deepen understanding of risks from absent human accountability through use cases in educational management, assessment, teaching strategies and student interactions; (CG1.2.2) establish that human accountability is a legal obligation, through debates and reviews of local and international regulatory frameworks; (CG1.2.3) link accountability to teachers' rights, stressing that teachers' central role is not replicable and their accountability and autonomy cannot be usurped by AI; (CG1.2.4) uncover risks of missing user accountability, including AI's explainable limitations (AI cannot understand the real world or make value judgements) and unexplainable hallucinations, and risks to students, especially those with special needs (weakening intellectual development, critical thinking, human interaction, knowledge construction, independent expression). Learning objectives: understand accountability as a legal obligation (LO1.2.1); apply regulatory frameworks to examine whether an AI tool diminishes human accountability (LO1.2.2); defend teachers' accountability and resist AI outputs usurping teachers' decisions and students' thinking (LO1.2.3); demonstrate accountability in decision loops, including age-appropriate methodology and human interaction supporting autonomous learning (LO1.2.4). Contextual activities: draw a concept map of duty-bearers and their accountabilities; draft a report on regulations protecting teachers' rights; map the feasible roles teachers play in validating AI tools, designing pedagogy, driving human interaction and supporting students with diverse abilities.
 
-Six core ethical subtopics:
-- 'do no harm'; proportionality; non-discrimination; sustainability; human determination in human-AI interaction; transparency and explainability
+**Ethics of AI – 2.2 Safe and responsible use.** Teachers internalize ethical rules (data privacy, intellectual property, legal frameworks) and habitually incorporate them into evaluations and uses of AI tools, data and AI-generated content. Curricular goals: (CG2.2.1) analyse AI safety threats across 'safety by design' and 'safety by use', at institutional and personal levels; (CG2.2.2) analyse legal duties and consequences of breaching them — copyright violation, privacy disclosure, disinformation, hate speech, AI-amplified discrimination or bullying against people with disabilities or vulnerable groups; (CG2.2.3) connect regulations to local work contexts and have teachers draft their own institutional, classroom or personal rules by adapting international regulations. Learning objectives: explain AI safety issues including data ownership, data sovereignty, privacy, the right to decline forgoing personal privacy, avoiding detailed personal data in prompts, and preventing data and algorithmic biases (LO2.2.1); know locally applicable regulations and suggest mitigation strategies (LO2.2.2); safeguard their own and students' data privacy across collection, use, sharing, archiving and deletion, with attention to hidden risks for students with special needs (LO2.2.3); apply guidelines for responsible use — copyright, bias mitigation, combating deepfakes and AI-amplified hate speech, protection from AI-manipulated bullying (LO2.2.4). Contextual activities: keep a personal AI safety tracker; whitelist personal collections of AI tools by reviewing owners, design ethics, data sources, algorithms, accessibility and functionality; iteratively update lists of dos and don'ts and explain ethical and legal principles to students.
 
-Curricular goals:
-- Surface ethical controversies through AI use cases in education
-- Facilitate understanding of six principles through use cases
-- Associate principles with local/national/international regulations
-- Advocate inclusivity; discuss risks to learners with disabilities and/or marginalized groups
+**AI foundations and applications – 3.2 Application skills.** Teachers proficiently operate AI tools, deepen knowledge of AI categories (symbolic, predictive, generative) and skills in data, algorithms and coding, infused with ethical principles. Curricular goals: (CG3.2.1) enrich 'operation and comparison' experiences of typical tools; (CG3.2.2) scaffold research-based learning on how a selected AI system (e.g. a large language model) is trained and tested, including models, algorithms and datasets; (CG3.2.3) problem-based learning of data, algorithms and coding tailored to teachers' prior knowledge and roles; (CG3.2.4) hands-on assessment of 'ethics by design' — reviewing and adapting criteria to assess data security, privacy, user safety, accessibility, biases (including gender discrimination) and harms to vulnerable groups. Learning objectives: proficiently operate common tools and explain their educational implications (LO3.2.1); visually represent how selected AI systems work (LO3.2.2); demonstrate transferable knowledge of data, algorithms and coding (LO3.2.3); critically assess the ethics rooted in AI design (LO3.2.3, repeated in source). Contextual activities: skillful uses of AI tools in schools; visualized 'know-how' concept maps; facilitating students' or peer teachers' learning of data, algorithms and coding; 'informed whistleblowing' — investigating and reporting evidence-based findings of biases or ethical risks.
 
-Learning objectives:
-- Exemplify ethical controversies: human agency, security, privacy, linguistic/cultural relevance
-- Explain and internalize core principles through personal AI use
-- Match regulation articles with ethical principles and education implications
+**AI pedagogy – 4.2 AI-pedagogy integration.** Teachers adeptly integrate AI into student-centred learning design to foster engagement, differentiated learning and teacher-student interaction, promoting empathy, critical thinking and problem-solving. Curricular goals: (CG4.2.1) organize learning from exemplar videos of AI-enhanced practice and support self-reflection; (CG4.2.2) deepen understanding of AI's impact on students' agency, thinking, learning, interactions, outcomes and social-emotional learning through research reports or action studies; (CG4.2.3) support integrated deployment of AI knowledge for teaching, learning and assessment, including reviewing school-adopted AI-assisted learning systems; (CG4.2.4) support the shift from instructional design to learning design through iterative cycles of design, facilitation, reflection and redesign. Learning objectives: integrate ethical principles, student-centred methodologies and interdisciplinary perspectives into learning design (LO4.2.1); critically evaluate whether AI tools advantage micro-curricula co-design, student-centric teaching, formative assessment, learning monitoring, personalized engagement and augmented human interaction, blending tools where validated (LO4.2.2); critically examine appropriateness of AI in formative assessment and high-stakes examinations, ensuring human-accountable decision loops (LO4.2.3). Contextual activities: mapping AI tools and pedagogical affordances; examining pedagogical assumptions behind AI tools; designing students' use of AI for higher-order thinking and social-emotional learning; human-accountable AI-assisted assessments — debunking myths of automated grading, analysing trade-offs in summative assessment, and preventing AI judgements about learners' social, ethical and psychometric development.
 
-<!-- quelle: 4.1 Progression level 1: Acquire -->
+**AI for professional development – 5.2 AI to enhance organizational learning.** Teachers confidently use AI tools for collaborative professional learning communities, sharing resources, peer-to-peer learning and dynamic adaptation. Curricular goals: (CG5.2.1) motivate continuous learning via case studies of master teachers in AI-rich settings; (CG5.2.2) expand knowledge of locally accessible emerging tools, including provisions for teachers with disabilities; (CG5.2.3) deepen skills in data analytics to track professional development and enable data-informed self-diagnosis; (CG5.2.4) assess deeper ethical issues of AI systems for professional learning, including risks of algorithms in social media, content-recommendation platforms and teacher-facing tools to human rights, privacy and collaboration. Learning objectives: critically analyse their roles balancing their fundamentally human role with AI competency obligations (LO5.2.1); use AI tools to track and analyse their own development (LO5.2.2); expand skills with emerging and open-source tools, promoting those supporting teachers with disabilities (LO5.2.3); evaluate ethical risks of platform algorithms and implement guidelines for finding resources and communities of practice (LO5.2.4). Contextual activities: autonomous upskilling and peer coaching; data analytics for self-regulated professional development; generative AI simulations (e.g. an AI coach simulating a difficult class or local regulations); human-controlled uses of AI for collaborative professional development, uncovering ethical risks of AI-manipulated platforms.
 
-### 3.1 Basic AI techniques and applications
+### 4.3 Progression Level 3: Create (p. 38–42)
 
-- **Curricular Goals (CG)**: Adapt difficulty to experience; illustrate AI development via data/algorithms; support hands-on operation/testing of AI tools for local contexts; guide curation of trustable, open-source tools.
-- **Learning Objectives (LO)**: Demonstrate knowledge of AI development steps (problem-scoping, design, training, testing, deployment, feedback, iteration); exemplify AI categories vs previous ICT; operate necessary tools; evaluate accessibility, inclusivity, reliability, and impact on students with special needs; consolidate personal collection of trustable, locally relevant open-source tools.
+The 'Create' level empowers teachers with sound AI knowledge to become expert teachers and agents of change who innovatively use AI for education and engage with communities to drive transformation of teaching and learning practices.
 
-<!-- quelle: 3 .1 Basic AI techniques and applications: … LEARNING OBJECTIVES (LO) (Teachers can …) -->
+**Human-centred mindset – 1.3 Social responsibility.** Teachers participate in building inclusive AI societies guided by critical understanding of AI's implications for societal norms, promoting AI for human welfare, inclusion and social justice. Curricular goals: (CG1.3.1) foster critical understanding of protecting social and emotional well-being from commercially-driven AI manipulation — how AI companies profit by reinforcing addiction, isolation, individualism and ranking of social identities — framing human rights and social justice as cornerstones of AI ethics; (CG1.3.2) reimagine safe, inclusive, just and climate-friendly AI societies through workshops and collaborative activities; (CG1.3.3) internalize social responsibilities as citizens in an AI society, defining citizenship and evolving legal and social responsibilities. Learning objectives: critically evaluate AI's implications for education, work, interpersonal interaction and human connections with each other and the environment (LO1.3.1); contribute to policy formation at institutional, local and/or national level (LO1.3.2); personalize and actualize civic responsibilities in the AI era (LO1.3.3). Contextual activities: write thought pieces on profit-driven AI's threats to human and planetary well-being; champion dialogues on desirable social relations and social cohesion; engage in drafting policies defining citizens' rights, obligations and responsibilities in the AI era.
 
-### AI competency framework for teachers: AI-assisted teaching (4.1)
+**Ethics of AI – 2.3 Co-creating ethical rules.** Teachers champion AI ethics through critical advocacy, leading discussions on ethical, sociocultural and environmental concerns and co-creating ethical rules for AI in education. Curricular goals: (CG2.3.1) research-based reviews of the social impact of selected AI tools on local economies, social justice, climate change, and risks of discriminating against linguistic and cultural communities or groups with special needs; (CG2.3.2) critically examine providers' users' guidance for risks of marginalizing people with disabilities, amplifying discrimination and threatening linguistic and cultural diversity, drafting feedback notes; (CG2.3.3) upgrade knowledge of AI ethics by reviewing multistakeholder negotiations behind regulations (such as Europe's AI Act), simulating debates from the perspectives of policy-makers, regulators, lawyers, researchers, AI companies and users, and drafting a memorandum of shared understanding or dispute. Learning objectives: analyse AI's social impact globally and locally on equity, inclusion, diversity, safety, children's development and planetary well-being (LO2.3.1); assess the sufficiency of users' guidance against ethical risks and frame recommendations (LO2.3.2); advocate for regulations designed by and for human stakeholders (LO2.3.3). Contextual activities: a localized global view on AI's social impact; spotlighting ethical gaps in users' guidance and filing complaints with providers and regulators (e.g. data protection authorities); master teachers as advocates launching awareness campaigns; co-designing ethical prototypes of AI tools for education with teachers, students and technologists.
 
-Competency 4.1 "AI-assisted teaching" (Acquire dimension, AI pedagogy).
+**AI foundations and applications – 3.3 Creating with AI.** Teachers customize or modify AI tools proficiently, creating AI-assisted inclusive learning environments and addressing broader educational challenges. Curricular goals: (CG3.3.1) nurture adaptability and creativity in customizing tools, focusing on different abilities and protecting linguistic and cultural diversity; (CG3.3.2) foster critical views on open-source AI versus commercial tools, learning to review, adapt and iterate open-source tools; (CG3.3.3) simulate co-creation through project-based learning — adapting 'off-the-shelf' commercial models, semi-finished tools and open-source toolkits to assemble new tools for real-world problems, enhancing adaptability, resilience and risk-taking; (CG3.3.4) embed values into repositories of educational AI tools, examining ethical and pedagogical appropriateness. Learning objectives: demonstrate expert-level knowledge of AI system design and analyse limitations in local contexts (LO3.3.1); customize, assemble or fine-tune tools to create relevant and affordable local solutions (LO3.3.2); revise or define criteria for testing and iterating self-created tools (LO3.3.3); contribute to repositories of user-created tools (LO3.3.4). Contextual activities: driving the design of AI tools for inclusion (e.g. accessibility for people with disabilities); co-creating tools for climate-friendly actions, such as hackathons on tracking carbon emissions of AI platforms or school energy consumption; coordinating repositories of trustable and self-created AI tools (e.g. shared on GitHub), potentially as school-based AI coordinators.
 
-Curricular goals:
-- CG4.1.1: Lesson analysis via exemplar videos; self-reflection on AI-assisted lessons
-- CG4.1.2: Exposure to evidence-based studies on AI-assisted teaching
-- CG4.1.3: Transferability using locally accessible/validated tools; searching for and validating educational AI tools
-- CG4.1.4: References "human-agent interaction" (UNESCO's Guidance for generative AI in education and research); hands-on design-implementation-reflection cycle
+**AI pedagogy – 4.3 AI-enhanced pedagogical innovation.** Teachers critically assess AI's impact on teaching, learning and assessment; plan AI-immersed learning scenarios supporting subject-specific or interdisciplinary learning, critical thinking and problem-solving; and leverage data and feedback for continuous pedagogical innovation. Curricular goals: (CG4.3.1) inspire scenarios of AI for students' development through exemplar videos of open learning options such as co-creation and inquiry- and project-based learning; (CG4.3.2) scaffold insights into the interplay between pedagogical principles and transformations AI could trigger — deliberating what core values must not be undermined (human rights, inclusion, social relationships), what pedagogical principles should be upheld (intellectual development, creativity, plural opinions, social-emotional skills), and how AI may disrupt methodologies; (CG4.3.3) support creating new AI tools or expanding existing ones for inquiry- and project-based learning; (CG4.3.4) incubate the transfer from learning design to scenario design, analysing the pros and cons of novel triangular interactions of students, teachers and AI systems. Learning objectives: critically examine the dynamic interaction between AI advancement and pedagogical evolution, conducting evidence-based tests of open learning options (LO4.3.1); assemble or co-create AI applications for inclusive accessibility, linguistic and cultural relevance, personalized learning and project-based learning (LO4.3.2); adeptly design AI-augmented scenarios promoting higher-order inquiry, open exploration, critical thinking and co-creation while ensuring students control their learning paths and take accountability for AI-assisted decisions (LO4.3.3); integrate AI to support learning analytics and adjustment of teaching strategies (LO4.3.4); use AI to generate text, audio and video content for co-created textbooks and curricular resources validated by curriculum developers (LO4.3.5); streamline AI for administrative tasks, teaching, and engagement with parents and communities (LO4.3.6). Contextual activities: guiding pedagogical uses of AI while leveraging it to open new pedagogical horizons; engineering triangular teacher-AI-student interactions; AI empowering students with special needs through assistive tools; a human-AI hybrid approach to developing curricular resources with human-accountable validation.
 
-Learning objectives:
-- LO4.1.1: Human-centred mindset, ethical principles, domain-appropriate pedagogical methodologies
-- LO4.1.2: Main categories of AI systems for teaching/learning/assessment
-- LO4.1.3: Basic instructional design methods for AI use decisions
-- LO4.1.4: Finding/using educational AI tools or institutionally deployed systems
+**AI for professional development – 5.3 AI to support professional development.** Teachers customize and modify AI tools to enhance their professional development and continuously test and validate strategies for their own and their communities' needs. Curricular goals: (CG5.3.1) motivate teachers as agents of change through case studies of expert teachers championing transformation; (CG5.3.2) enhance skills to co-create AI tools tracking institutional professional development for data-informed monitoring and diagnosis; (CG5.3.3) customize or assemble tools enabling access for peers with disabilities or special needs; (CG5.3.4) nurture creative users of AI for self-actualization, building communities for co-creation. Learning objectives: commit to co-creating AI tools fulfilling professional and social responsibilities (LO5.3.1); blend AI tools and human coaching for self-reflection, goal setting and mobilization of mentors (LO5.3.2); configure AI solutions to monitor organization-wide professional learning (LO5.3.3); understand AI's role in self-actualization and personalized citizenship, contributing to communities' co-creation (LO5.3.4). Contextual activities: build a human-AI hybrid coach for teachers (e.g. simulating meeting the needs of students with learning difficulties or ethical dilemmas); AI-enhanced design of training programmes validated by human master-trainers; lead or engage in communities co-creating AI tools, pedagogical innovations or ethical rules.
 
-Contextual activities:
-- Conceptual mapping of AI workflow (paper-based or digital concept maps)
-- "Navigation compass" for AI vs non-AI tool selection
-- Cooperative curation of validated, trustable AI tools
+### Chapter 5: Suggested implementation strategies (p. 43–51)
 
-<!-- quelle: CONTEXTUAL ACTIVITIES (Teachers can demonstrate the following attitudinal or behavioural changes) -->
+The AI CFT is a global reference framework for teachers, policy-makers, teacher education providers and school leaders. It serves three objectives: guiding the design of specific AI competency frameworks across contexts, steering teacher professional development design, and supporting benchmarking specifications for teachers' self-assessment.
 
-### Enabling lifelong professional learning
+**5.1 Regulate AI and ensure trustworthy AI tools for education (p. 43–45).** The precondition for responsible AI use in education is regulation ensuring trustworthy tools and safeguarding learners and teachers; AI systems must be validated before introduction at scale. National regulatory frameworks should include robust data protection laws akin to the EU's 2016 GDPR and regulations addressing appropriateness for users of different ages and abilities, regularly updated for emerging technologies. Examples cited: China's official regulation on generative AI (July 2023) and the EU AI Act (introduced March 2024), which identifies four risk levels: (1) unacceptable risk — banned; (2) high risk — strictly regulated (most AI applications for education fall here); (3) limited risk — transparency obligations; (4) minimal risk — freely used. Regulatory agencies should cooperate with educational institutions, teacher unions and parent associations on validation through trials, simulations and model-centred approaches. Drawing on UNESCO's 2023 *Guidance for generative AI in education and research* (Box 1), regulations must specify responsibilities of four stakeholders: (1) **governmental regulatory agencies** — intersectoral coordination through a national body; alignment of national/local regulations; balancing regulation of generative AI with innovation promotion; risk-level identification with corresponding regulations; data privacy protection; defining and enforcing age limits for unsupervised chat with AI platforms; enhancing national data ownership and containing data poverty; (2) **providers of AI systems and services** — guaranteeing human accountability for AI incidents; trustworthy data and models; non-discriminatory content generation; explainability and transparency; proper labelling of AI-generated content; security and safety compliance; specifications on appropriate access and use; acknowledging limitations and preventing predictable risks; complaint and remedy mechanisms; monitoring and reporting unlawful use; (3) **institutional users** — auditing AI algorithms, data and outputs; validating proportionality and protecting users' well-being; reviewing long-term impacts; monitoring age-appropriateness; (4) **individual users** (teachers and students) — awareness of terms of reference; compliance with ethical principles; personal responsibility for monitoring and reporting unlawful applications. At minimum, validation criteria should cover: security; bias; accuracy of outputs; human accountability for data privacy and legal data ownership; explainability of AI models; linguistic and cultural representativeness of training data; appropriateness for different ages and abilities; collection and exploitation of users' data; intended business models; and impact on teachers' rights and human agency.
 
-- Engage teachers on new roles and competencies in AI-rich settings.
-- Guide self-assessment on AI readiness using paperbased or AI-assisted instruments.
-- Introduce teacher-facing AI tools, including locally relevant open-source tools, with special attention to accessibility for teachers with disabilities.
-- Use contentrecommendation platforms and AI-assisted social media to recommend peer mentors.
-- Mitigate risks of data biases, algorithmic discrimination, and AI-manipulated information cocoons.
+**5.2 Build enabling policies and conditions for the use of AI in education (p. 45–47).** Defining competencies alone is insufficient; policies must address barriers. The framework does not address teachers' personal motivation, AI affordability and access, or balancing AI among policy priorities. Policies have three functions: (1) help institutions weigh AI against other options and priorities, starting with cost-benefit analysis — noting that "AI is unlikely to solve any of the major problems confronting education systems", such as inadequate infrastructure or teacher shortages — with decisions informed by evidence-based research and multistakeholder dialogue, keeping human agency at the core; (2) support and motivate responsible use, through professional qualification frameworks, mitigating AI's impact on teachers' workloads and well-being, well-funded needs-based training, recognizing forerunner teachers, and recognizing innovative AI practice in performance evaluation; (3) address access and affordability through inclusive internet access, validated trustworthy affordable tools, upgrading obsolete infrastructure, and free or affordable applications and hardware via academia and private-sector engagement. Box 2 presents the Republic of Korea's National Strategy for AI (Ministry of Science and ICT, 2019) with three focus areas — reliable AI infrastructure, expanded AI utilization across sectors, and proactive response to social changes — prioritizing strengthening teachers' software/AI capabilities (AI courses in initial training and recruitment; revised teacher qualification standards; AI content integrated into teaching majors; new post-graduate majors in AI-integrated education) and securing school infrastructure (high-speed wireless networks in at least four classrooms in each elementary and middle school since 2020, plus opportunities beyond schools, nurturing AI-gifted students and supporting vulnerable and rural communities).
 
-<!-- quelle: 5 .1 Enabling lifelong professional learning: … CONTEXTUAL ACTIVITIES (Teachers can demonstrate the following attitudinal or behavioural changes) -->
+**5.3 Formulate and adopt local AI competency frameworks for teachers (p. 47–48).** The AI CFT is designed to be localized to specific digital readiness and competency levels. Formulation involves multiple stages: assessing AI readiness (tools available and median teacher competency levels); assessing gaps between intended competencies and existing training programmes; articulating key aspects and mastery levels. Local frameworks should align with existing digital competency or professional qualification frameworks, have binding effects for certifications where appropriate, and be developed and endorsed by governmental agencies through a coordinated approach — rather than driven mainly by academic institutes, companies and international organizations as at present. Box 3 gives non-governmental examples: **AI4T**, a European Commission-funded Erasmus+ K3 project (launched 2021, with France, Ireland, Italy, Luxembourg and Slovenia) with three competence categories — 'Teaching for AI' (drawn from the EU's DigComp 2.2), 'Teaching with AI' (drawing on the European Commission's 2022 *Ethical guidelines on the use of artificial intelligence (AI) and data in teaching and learning for educators*), and 'Teaching about AI' (drawn mainly from AI4K12's 'Five Big Ideas for AI Education'); and the Republic of Korea's **AI Education Alliance and Policy Lab (AIEDAP)** framework covering three domains — AI and digital fundamentals, implementation of AI and digital education, and professional development — divided into eight competencies (utilization of AI and digital technologies; practice of AI and digital ethics; educational context analysis; instructional design; development of educational resources; implementation of lessons; educational evaluation and reflection; professional development), each with behavioural indicators for assessment tools.
 
-### Progression Level 2: Deepen
+**5.4 Design and streamline training and support programmes on AI competencies (p. 48–49).** The AI CFT's curricular goals frame the knowledge, skills and values of training programmes, suggest relevant training methods, and suggest practical organization. Programmes must span teachers' careers: pre-service preparation, in-service training, school-based support, and peer mentorship and communities of practice. Box 4 gives examples: the EU's **AI4T MOOC** with four modules — 'AI in education' (introduction), 'What is meant by AI' (foundations), 'How does AI work' (technical aspects and ethics), and 'AI at our service as teachers' (human-centred mindset and ethics) — though limited in active learning and tailoring; and Singapore's **AI Singapore** platform (launched 2017), enabling teachers to access AI tools and models, with MOOC-style courses emphasizing community engagement, focused on AI foundations, prompts, data science and tool usage.
 
-Curricular goal: support teachers to become fully competent or master teachers in using AI, demonstrating human-centred perspectives, ethically sound behaviours, and deepened conceptual understanding of AI applied to pedagogical activities and professional learning.
+**5.5 Develop contextual performance-based assessment tools (p. 49–50).** The AI CFT guides the construction of assessment and self-assessment tools, profiling teachers' AI skills, attitudes and behaviours across levels from 'Acquire' to 'Create'. Table 5 illustrates designing an assessment for 'Human-centred mindset' at the 'Acquire' level (competency: human agency): adapt learning objectives (LO1.1.1–LO1.1.4, covering critical reflection on AI tools' benefits, limitations and risks; awareness that AI is human-led and creators' decisions impact human rights and agency; outlining humans' roles in AI development steps; and measures protecting human agency such as data ownership, consent, anti-bias labelling, discrimination-free algorithms and user-friendly interfaces) to the target group; design assessment methods such as an essay on facial recognition or generative AI auto-correct in education, a poster on AI creators' decisions affecting teachers' rights, exemplifying a tool that should be banned under the EU AI Act, or drafting daily tips promoting autonomous AI use; and specify grading criteria accordingly.
 
-**Human-centred mindset — Competency 1.2: Human accountability**
+**5.6 Conclusion (p. 51).** The AI CFT affirms teachers' critical roles in ethical and effective AI adoption and informs stakeholders of evolving competencies. UNESCO calls on Member States to accelerate national AI competency frameworks and teacher training programmes supporting lifelong professional learning. Because AI is a general-purpose technology advancing at exponential pace, its development will likely outpace iterations of the framework; UNESCO therefore positions the AI CFT as a 'master framework' rather than a prescriptive blueprint — an overarching framing tool and open-ended roadmap for continuously fine-tuning competency definitions and inspiring capacity development. This first edition is expected to be updated through a participatory approach, with stakeholders encouraged to share experiences to co-create subsequent iterations.
 
-Teachers demonstrate deepened understanding of human accountability and human determination in AI deployment, and critical capacity to assess AI's capabilities in human-AI decision loops and overhyped claims about AI substituting humans in high-stakes educational decisions.
+### Framework overview statement (p. 53)
 
-Curricular goals:
-- Examine use cases of AI for decision loops in educational management, assessment, teaching strategies, and student interactions with AI; consolidate human accountability as core to the entire AI life cycle.
-- Establish human accountability as a legal obligation; debate whether humans or AI should take accountability in AI-assisted decision loops; review how local and international regulatory frameworks define human accountability in AI design and AI service provision including education.
-- Associate human accountability with teachers' rights; emphasize that the central role of teachers is not replicable and that accountabilities and autonomy cannot be usurped by AI; review whether local policies protect teachers' rights and accountability in the AI era.
-- Examine explainable limitations of specific AI tools (AI cannot understand the real world or make judgements on values) and unexplainable hallucinations, incorrect answers, and misrepresentations of facts in current-generation AI tools; discuss risks AI poses to student learning, especially for students with special needs (weakening intellectual development, critical thinking, human interactions, knowledge construction, and ability to formulate and express independent opinions).
+The AI competency framework for teachers presents the first global vision of how AI competencies can be defined and developed for the ethical and effective use of AI in teaching, learning and assessment. It provides a blueprint on the AI ethical principles, knowledge and skills to be covered and how domain-specific methodologies can be leveraged in teacher training, insisting that preparing teachers' AI competencies must be based on inclusivity, the centrality of human agency, non-discrimination, and respect for linguistic and cultural diversity.
 
-Learning objectives:
-- Understand that human accountability in human-AI decision loops is a legal obligation.
-- Apply local and/or international regulatory frameworks to examine whether the design or use of a specific AI tool diminishes human accountability.
-- Reference international or local policies to defend teachers' accountability in using AI in education; demonstrate resistance to use of AI outputs and predictions to usurp human teachers' decisions and students' thinking processes, knowledge construction, and self-expression.
-- Demonstrate teachers' accountability in decision loops, including determining appropriateness of AI tools in teaching, designing age-appropriate pedagogical methodologies, and providing necessary human interaction to encourage autonomous learning processes with specific support for those with special needs.
+### Figures (p. 53)
 
-Contextual activities:
-- Draw a concept map of key duty-bearers and their roles in the design, deployment, and use of AI in education; delineate their human accountabilities.
-- Draft a report on the most relevant regulation(s), responsible institution(s), and procedure(s) that can protect teachers' rights and accountability when adopting AI in education.
-- Draw a concept map on feasible roles teachers can play in validating and selecting appropriate AI tools, designing pedagogical methodologies, driving human interaction, facilitating students' use of AI, and supporting students with diverse abilities.
+*Image 12 (p. 53):* — The image is a close-up of a barcode consisting of vertical black bars of varying widths on a white background. Beneath the barcode, the numbers "9 789231 007071" are printed in black text. A thin blue line is visible along the top edge of the image.
 
-<!-- quelle: 4.2 Progression Level 2: Deepen -->
+<!-- quelle: 4.2 Progression Level 2: Deepen (p. 33–53) -->
 
-### AI competency framework for teachers
+## LITERATUR
 
-- **CG5.2.2**: Introduce locally accessible emerging AI tools; promote tools with provisions for teachers with disabilities and/or students with disabilities.
-- **CG5.2.3**: Deepen operational skills in data analytics to track professional development across subject knowledge, pedagogy, and practical performance for data-informed self-diagnoses.
-- **CG5.2.4**: Apply 'ethics by design' to analyse risks of AI algorithms in social media, content-recommendation platforms, and teacher-facing AI tools regarding human rights, data privacy, and professional collaboration.
-- **LO5.2.3**: Use locally relevant open-source tools repurposed for professional development.
-- **Contextual activities**: Generative AI simulations for professional development—e.g., dealing with a difficult class, training on local regulations, or simulating students having difficulties.
-- **Progression Level 3: Create**: Empower teachers with sound AI competency to become expert teachers and agents of change.
+<!-- quelle: References (p. 52–53) -->
 
-<!-- quelle: TEACHER COMPETENCY … 4.3 Progression Level 3: Create -->
-
-### AI competency framework for teachers — Progression level 3: Create
-
-Progression level **3: Create** contains competency blocks with coded objectives.
-
-**Human-centred mindset — 1.3 Social responsibility**: Teachers actively contribute to building inclusive AI societies through critical understanding of AI's societal implications.
-
-Curricular goals:
-- CG1.3.1: Protect social-emotional well-being from commercially-driven AI manipulation; examine how AI companies profit by reinforcing addiction, isolation, individualism, and ranking of social identities; frame human rights and social justice as cornerstones of AI ethics.
-- CG1.3.2: Reimagine safe, inclusive, just, and climate-friendly AI societies; identify threats AI poses to social norms and compacts/regulations needed.
-- CG1.3.3: Internalize social responsibilities as citizens in an AI society; define citizenship, explore evolving legal/social responsibilities, uphold core social rights.
-
-Learning objectives:
-- LO1.3.1: Critically evaluate AI implications for education, work, interpersonal interaction, and human-environment connections.
-- LO1.3.2: Contribute to AI-in-education policies at institutional, local, and/or national level.
-- LO1.3.3: Personalize civic responsibilities in the AI era and promote them through education.
-
-Contextual activities: writing thought pieces/essays/blogs on profit-driven AI threats to human and planetary well-being; championing dialogues on social cohesion in the AI era; contributing to drafting policies defining citizen rights, obligations, and responsibilities.
-
-**Ethics of AI — 2.3 Co-creating ethical rules**: Teachers champion AI ethics through critical advocacy, leading discussions on ethical, sociocultural, and environmental concerns, and co-creating ethical rules for AI practices in education. (Curricular goals CG2.3.1 onward not fully provided in source.)
-
-<!-- quelle: Table 4. Competency blocks, objectives and examples for progression level 3: Create -->
-
-### 3.3 Creating with AI
-
-- **3.3 Creating with AI**
-- Customize/assemble existing tools or fine-tune open-source AI systems.
-- Review, adapt, iterate open-source AI vs commercial AI.
-- Co-create via project-based learning using 'off-the-shelf' commercial models, semi-finished tools, and open-source toolkits.
-- **Use cases**: Design tools for people with disabilities; co-create tools for climate education (e.g., track carbon emissions of AI platforms or school energy consumption).
-
-<!-- quelle: TEACHER COMPETENCY … Promoting the co-creation of AI tools to support climate-friendly actions: -->
-
-### AI competency framework for teachers
-
-- **Repository building**: Create a repository of selected trustable and self-created AI tools for education, shared via school web spaces or publicly (e.g. GitHub). School-based AI coordinators provide training for other teachers on repository use.
-
-- **Competency 4.3 — AI-enhanced pedagogical innovation**: Teachers critically assess AI's impact on teaching, learning and assessment; plan AI-immersed learning scenarios; leverage data and feedback for student-centred pedagogical innovation.
-
-- **Curricular goals**:
-  - CG4.3.1: Design scenario analyses from exemplar videos of AI-enhanced open learning (co-creation, inquiry- and project-based learning); assess teacher readiness in competencies, AI resources, and assessment.
-  - CG4.3.2: Deliberate on core values not to be undermined by AI (human rights, inclusion, social relationships) and pedagogical principles to uphold (intellectual development, creativity, plural opinions, social-emotional skills).
-  - CG4.3.3: Improvise skills to create or expand AI tools; assemble or co-create AI tools for inquiry- and project-based learning.
-  - CG4.3.4: Transfer learning design to scenario design; co-design human-AI interactive scenarios for the learning-assessment-feedback-adaption cycle; analyse triangular interactions of students, teachers and AI systems.
-
-- **Learning objectives**: LO4.3.1–4.3.6 cover evidence-based tests of open learning options; assembling/co-creating AI tools for inclusive accessibility and linguistic/cultural relevance; designing AI-augmented scenarios ensuring human interaction; learning analytics; AI-generated content for textbooks/curricular resources (validated by curriculum developers); streamlining AI for administrative, teaching, and parent/community engagement tasks.
-
-<!-- quelle: Coordinating the building and use of repositories -->
-
-### AI competency framework for teachers
-
-- EU AI Act (March 2024) four risk levels:
-  - Unacceptable risk (banned)
-  - High risk (strict regulation; most education AI falls here)
-  - Limited risk (transparency obligations)
-  - Minimal-risk (freely used)
-- Named regulations: GDPR (EU, 2016); China generative AI regulation (July 2023).
-- UNESCO's 2023 Guidance for generative AI in education and research responsibilities: governmental regulatory agencies, providers, institutional users, individual users.
-- Governmental regulatory agencies key elements:
-  - Intersectoral coordination
-  - Alignment of regulations
-  - Balance between regulation and innovation
-  - Identification of risk levels
-  - Protection of data privacy
-  - Definition and enforcement of age limit for unsupervised chat with AI
-  - Enhancing national data ownership and containing risk of data poverty
-- Curricular Goals (CG5.3.1-5.3.4) and Learning Objectives (LO5.3.1-5.3.4): teachers co-create AI tools, customize AI for peers with disabilities, blend AI with human coaching.
-
-<!-- quelle: TEACHER COMPETENCY … (1) Governmental regulatory agencies -->
-
-### AI competency framework for teachers
-
-**Validation criteria (UNESCO, 2023b):**
-- security
-- bias
-- accuracy of outputs
-- human accountability for the protection of data privacy and legal data ownership
-- explainability of AI models
-- linguistic and cultural representativeness of data used to train the AI models for target users
-- appropriateness for users at different ages and with different abilities
-- collection and exploitation of users' data
-- intended business models
-- impact on teachers' rights and human agency
-
-**Providers:** human accountability; trustworthy data/models; non-discriminatory algorithms; explainability; content labelling; security/safety; access specifications; risk prevention; complaints mechanisms; unlawful-use monitoring.
-
-**Institutional users:** algorithm/data/output auditing; proportionality validation; long-term impact review; age-appropriateness monitoring.
-
-**Individual users:** terms-of-reference awareness; ethical compliance; reporting unlawful use.
-
-**Republic of Korea (2019):** National Strategy for AI — reliable infrastructure, utilization expansion, social change response. Since 2020: AI in teacher training; wireless in ≥4 classrooms per elementary/middle school.
-
-<!-- quelle: (2) Providers of AI systems and AI services … Box 2: The Republic of Korea's National Strategy for Artificial Intelligence -->
-
-### AI competency framework for teachers
-
-### 5.3 Formulate and adopt local AI competency frameworks
-- **AI4T (2021)**: Erasmus+ K3 project (France, Ireland, Italy, Luxembourg, Slovenia). Three categories: 'Teaching for AI', 'Teaching with AI', 'Teaching about AI'. Draws from DigComp2.2, 2022 Ethical guidelines, AI4K12 'Five Big Ideas for AIEducation'.
-- **Republic of Korea**: AI Education Alliance and Policy Lab (AIEDAP). Three domains: AI and digital fundamentals, implementation of AI and digital education, professional development. Eight competencies:
-  - utilization of AI and digital technologies
-  - practice of AI and digital ethics
-  - educational context analysis utilizing AI and digital technologies
-  - instructional design utilizing AI and digital technologies
-  - development of educational resources using AI and digital technologies
-  - implementation of lessons using AI and digital technologies
-  - educational evaluation and reflection using AI and digital technologies
-  - professional development
-
-### 5.4 Design and streamline training and support programmes
-- **EU's AI4T MOOC**: four modules: (1) 'AI in education', (2) 'What is meant by AI', (3) 'How does AI work', (4) 'AI at our service as teachers'.
-- **Singapore**: 'AI Singapore' (2017). Platform provides AI tools, models, MOOC-style courses.
-- Programmes span career stages: pre-service, in-service, school-based support, peer mentorship.
-
-### 5.5 Develop contextual performance-based assessment tools
-- Assessment tools structured across progression levels from 'Acquire' to 'Create'.
-
-<!-- quelle: 5.3 Formulate and adopt local AI competency frameworks for teachers … 5.5 Develop contextual performance-based assessment tools -->
-
-### AI competency framework for teachers
-
-Table 5 exemplifies assessment design for the 'Human-centred mindset' competency at the 'Acquire' level, organized across four columns: teacher competency, adapted learning objectives, assessment methods/items, and grading criteria.
-
-- **Learning objectives (LO1.1.1–LO1.1.4):** critically reflect on benefits/limitations/risks of specific AI tools in local settings; demonstrate awareness that AI is human-led and creator decisions impact human rights and agency; outline the human role across AI development steps (data collection/processing, algorithm design, deployment); understand protective measures (data ownership, consent-based collection, anti-bias labelling/cleaning, discrimination-free algorithms, user-friendly interfaces).
-- **Assessment items:** essay on facial recognition or auto-correct generative AI in education; poster/digital presentation on how AI creators' decisions affect teachers' rights and teacher/student agency; example of an AI tool banned under the EU AI Act with explanation; list of daily tips promoting teachers' autonomous AI use and student agency.
-- **Grading criteria:** to be specified per adapted objectives and assessment type.
-
-UNESCO positions the AI CFT as a 'master framework' rather than a prescriptive blueprint, intended to frame national/state/institutional frameworks. This is the first edition; updates via participatory approach with stakeholders. Foundational principles: inclusivity, centrality of human agency, non-discrimination, respect for linguistic and cultural diversity.
-
-<!-- quelle: Table 5. An example of designing assessment tools based on the AI CFT … AI competency framework for teachers -->
+- European Commission. 2022. Ethical guidelines on the use of artificial intelligence (AI) and data in teaching and learning for educators . Brussels, Publications Office of the European Union. Available at: https://data.europa.eu/ doi/10.2766/153756 (Accessed 17 July 2024.)
+- -. 2024. Laying down harmonised rules on artificial intelligence (Artificial Intelligence Act) and amending certain union legislative acts. Brussels, European Commission. Available at: https://artificialintelligenceact.eu (Accessed 25 July 2024.)
+- European Union. 2016. Regulation (EU) 2016/679 of the European Parliament and of the Council of 27 April 2016 on the protection of natural persons with regard to the processing of personal data and on the free movement of such data, and repealing Directive 95/46/EC (General Data Protection Regulation) . Brussels, Official Journal of the European Union. Available at: http://data.europa.eu/eli/reg/2016/679/oj (Accessed 16 July 2024).
+- -. 2023. Teachers' competences - Briefing report No. 1. Brussels, European Union. Available at: https://www.ai4t.eu/wp-content/ uploads/2023/08/AI-squad-output_brief-ing-report-1.pdf (Accessed 2 September 2024.)
+- Ministry of Education, People's Republic of China. 2014. 教育部办公厅关于印发《中小学教 师信息技术应用能力标准（试行）》的 通知 [Information Technology Application Ability Standards for School Teachers]. Beijing, Ministry of Education, People's Republic of China. (In Chinese.) Available at: http://www. moe.gov.cn/srcsite/A10/s6991/201405/ t20140528_170123.html (Accessed 17 July 2024.)
+- -. 2019. 教育部办公厅关于印发《教育移动 互联网应用程序备案管理办法》的通知 [CACs on the Registration and Management of Educational Mobile Applications]. Beijing, Ministry of Education, People's Republic of China. (In Chinese.) Available at: http://www. moe.gov.cn/srcsite/A16/s3342/201911/ t20191122_409333.html (Accessed 16 July 2024.)
+- -. 2022. 教育部关于发布《教师数字素养》 教育行业标准的通知 [Education Sector Standard on Teachers' Digital Literacy]. Beijing,
+- Ministry of Education, People's Republic of China. (In Chinese.) Available at: http://www. moe.gov.cn/srcsite/A16/s3342/202302/ t20230214_1044634.html (Accessed 17 July 2024).
+- Ministry of Science and ICT, Republic of Korea. 2019. ' IT 강국을 넘어 AI 강국으로!' 범정부 역량 을 결집하여 AI 시대 미래 비전과 전략을 담은 'AI 국가전략 발표 ['Beyond an IT powerhouse, to an AI powerhouse!' Announcement of the 'AI National Strategy' containing the vision and strategy for the future of the AI era by consolidating the capabilities of the entire government]. Sejong-si, Ministry of Science and ICT, Republic of Korea. (In Korean.) Available at: https://doc.msit.go.kr/SynapDocViewServer/ viewer/doc.html?key=3035e1e0a5df4f1a9395b5284512a908 (Accessed 17 July 2024.)
+- UNESCO. 2018. UNESCO ICT competency framework for teachers . Paris, UNESCO. Available at: https://unesdoc.unesco.org/ark:/48223/ pf0000265721 (Accessed 16 July 2024.)
+- -. 2019. Beijing Consensus on Artificial Intelligence and Education. Paris, UNESCO. Available at: https://unesdoc.unesco.org/ ark:/48223/pf0000368303 (Accessed 16 July 2024.)
+- -. 2021. Reimagining our Futures Together: a new social contract for education. Paris, UNESCO. Available at: https://unesdoc.unesco. org/ark:/48223/pf0000379707 (Accessed 16 July 2024.)
+- -. 2022 a . Recommendation on the Ethics of Artificial Intelligence. Paris, UNESCO. Available at: https://unesdoc.unesco.org/ark:/48223/ pf0000381137 (Accessed 16 July 2024.)
+- -. 2022 b . AI and education: guidance for policy-makers. Paris, UNESCO. Available at: https://unesdoc.unesco.org/ark:/48223/ pf0000376709 (Accessed 16 July 2024.)
+- -. 2023 a . Survey for the governmental use of AI as a public good for education. Unpublished (Submitted to UNESCO).
+- -. 2023 b . Guidance for generative AI in education and research. Paris, UNESCO. Available at: https://unesdoc.unesco.org/ark:/48223/ pf0000386693 (Accessed 16 July 2024.)
+- 54
+- References
+- AI competency framework for teachers -
 
 ## GLOSSAR
 
-- **teacher-AI-student dynamic** — The educational interaction model where AI mediates the traditional relationship between teacher and student.
-- **Acquire, Deepen, and Create** — The three progression levels categorizing the 15 teacher competencies in the framework.
-- **AI CFT** — The AI competency framework for teachers, designed as a universally applicable reference for specifying AI competencies and planning curricula.
-- **ICT CFT** — The 2018 UNESCO ICT competency Framework for Teachers, with which the AI CFT is aligned.
-- **five aspects and three mastery levels** — The structural organization of the AI CFT.
-- **stochastic** — Producing different outputs for the same inputs, making AI-generated content potentially less trustworthy for factual and conceptual knowledge.
-- **general-purpose foundation models** — AI models adaptive to diverse problem spaces that have the potential to drive transformation across various sectors.
-- **atrophy of teachers' essential competencies** — The potential decline in teachers' skills due to over-reliance on AI replacing human decisionmaking.
-- **ethics by design** — A principle mandating strict validation of AI tools at national or institutional levels before adoption in educational settings.
-- **human-accountable use** — The principle that ethical and legal responsibilities for designing and using AI should be attributed to individuals.
-- **unplugged and low-tech solutions** — Locally accessible and affordable educational methods that do not rely on advanced AI systems.
-- **agile learning** — A responsive learning approach adapted to the rapid evolution of AI technologies.
-- **Acquire, Deepen, Create** — The three scaffolded progression levels of teacher competency development in the framework.
-- **Human-centred mindset** — A competency block emphasizing social responsibility, critical evaluation of AI's societal impact, and advocacy for human welfare, inclusion, and social justice in AI societies.
-- **AI pedagogy** — The set of competencies required for purposeful and effective integration of AI tools into pedagogical strategies.
-- **Acquire** — The foundational mastery level in the AI CFT progression, at which teachers demonstrate awareness and basic understanding of AI-related concepts.
-- **Deepen** — The second progression level targeting teachers with some AI knowledge to maximize their capacity to enhance teaching and learning.
-- **Create** — The highest of three progression levels in the AI CFT, where teachers critically engage with AI, customize tools, and contribute to policy and ethical standards.
-- **AI-immersed learning scenarios** — Teaching situations designed with embedded AI tools to support student-centred, interdisciplinary, or subject-specific learning.
-- **Ethics of AI** — A competency block covering ethical principles for human-AI interaction including human rights, human agency, linguistic and cultural diversity, inclusion, and environmental sustainability.
-- **problem-scoping, design, training, testing, deployment, feedback and iteration** — The key sequential steps involved in developing AI systems.
-- **previous generations of ICT tools** — Earlier information and communication technology tools used as a baseline for comparing AI's novel capabilities.
-- **human-agent interaction** — A pedagogical approach proposed by UNESCO's Guidance for generative AI in education and research, referenced as a basic instructional design method for AI-assisted teaching.
-- **design-implementation-reflection cycle** — An iterative loop of analysing exemplar lessons, designing and implementing lesson plans, and assessing and reflecting on implementation, used to develop AI-assisted teaching competence.
-- **teacher-facing AI** — AI tools designed for use by teachers to support their professional development.
-- **AI-manipulated information cocoons** — Filter bubbles created by AI algorithms that can lead to the atrophy of teachers' competencies.
-- **human-AI decision loops** — Iterative cycles in which human judgement and AI outputs interact to produce decisions, where human accountability must be preserved throughout.
-- **human accountability** — The legal and ethical obligation of humans to remain responsible for AI-assisted decisions across the entire AI life cycle, which cannot be transferred to AI systems.
-- **human determination** — The principle that humans retain ultimate authority and agency in decisions involving AI, ensuring AI serves rather than replaces human judgement.
-- **Progression Level 3: Create** — The highest tier in the competency framework, targeting expert teachers who innovatively use AI and drive transformation of teaching practices.
-- **Co-creating ethical rules** — A competency at Create level where teachers lead critical advocacy and collaborative development of ethical rules for AI practices in education.
-- **off-the-shelf** — Commercial AI models/tools adapted for accessibility and affordability.
-- **semi-finished tools** — Partially developed AI models requiring assembly to create new tools.
-- **open-source AI** — AI systems available for critical review, adaptation, and iteration compared to commercial tools.
-- **AI-enhanced pedagogical innovation** — Teacher competency involving critical assessment of AI's impact and facilitation of AI-immersed learning scenarios for student-centred innovation.
-- **triangular interactions** — The dynamic interplay among students, teachers, and AI systems throughout teaching and learning processes.
-- **human-centred pedagogical principles** — Guiding principles for AI use in pedagogy that protect human rights, agency, student autonomy, linguistic and cultural diversity, and plural expression.
-- **Human-AI hybrid coach** — An AI-assisted agent or coach customized for teachers' professional development to support self-assessment and simulate specific scenarios.
-- **EU AI Act** — EU regulation introduced in March 2024 that identifies four levels of risk posed by AI systems and stipulates legal regulations for each.
-- **AI4T** — A European Commission-funded Erasmus+ K3 project launched in 2021 to train teachers on AI in education.
+- **AI CFT (AI competency framework for teachers)** — UNESCO's 2024 global reference framework defining the knowledge, skills, and values teachers need for safe, effective, ethical use of AI in teaching and professional development.
+- **Teacher-AI-student dynamic** — the transformed relationship in education in which AI systems mediate preparation, teaching, learning, and assessment, making teacher-student interaction effectively three-sided.
+- **Human-centred mindset** — the values and attitudinal orientation teachers need toward human-AI interactions, placing human rights and human flourishing at the focus of AI in education.
+- **Ethics of AI (aspect)** — the ethical values, principles, regulations, institutional laws, and practical rules teachers need to understand, apply, and help adapt.
+- **AI foundations and applications** — conceptual knowledge of AI (definition, training of models, data, algorithms, technology categories) and transferable skills to evaluate, select, operate, and customize AI tools.
+- **AI pedagogy** — competencies to validate and select AI tools and integrate them with pedagogical methods for course preparation, teaching, learning, socialization, social caring, and assessment.
+- **AI for professional development** — competencies to use AI for lifelong professional learning, collaborative development, and professional transformation.
+- **Acquire** — the first progression level — the essential set of AI competencies ("teachers' AI literacy") all teachers need to evaluate, select, and use AI tools appropriately.
+- **Deepen** — the second progression level — intermediate competencies to design meaningful pedagogical strategies that integrate AI with human accountability and safe, responsible use.
+- **Create** — the third progression level — advanced competencies for creative configuration of AI systems, co-creation of ethical standards, and innovative, transformative use of AI.
+- **Competency blocks** — the fifteen units formed by crossing the five competency aspects with the three progression levels.
+- **Ethics by design** — the requirement that AI tools be intentionally designed ethically and validated at national/institutional levels before adoption in educational settings.
+- **Do no harm** — the core validation principle requiring AI tools to be designed with clear understanding of their impacts on human rights, dignity, safety, social well-being, and environmental sustainability.
+- **Human accountability** — the principle that ethical and legal responsibility for AI design and use rests with humans — AI tools must not replace teachers' legitimate accountability for pedagogical decisions.
+- **AI-manipulated information cocoons** — filtered information environments created by AI recommendation systems whose reliance could lead to atrophy of teachers' competencies.
+- **Progression levels (Acquire, Deepen, Create)** — the three mastery levels of the framework; 'Deepen' targets fully competent/master teachers, 'Create' targets expert teachers and agents of change.
+- **Human-AI decision loops** — processes in which AI assists human decisions, where human accountability is a legal obligation that cannot be usurped by AI.
+- **Safety by design / safety by use** — the two dimensions along which AI safety threats are analysed — threats rooted in a tool's design versus in how it is used.
+- **Triangular interactions (teacher-AI-student)** — the novel interaction dynamics among teachers, students and AI systems that teachers must engineer, leveraging advantages and mitigating risks.
+- **Agents of change** — expert teachers who inform and champion the transformation of education that AI may trigger.
+- **Master framework** — UNESCO's positioning of the AI CFT as an open-ended framing tool and roadmap rather than a prescriptive blueprint, to be localized and iterated over time.
+- **Data poverty** — the risk, named in regulatory responsibilities, of unequal national access to and ownership of data, which governments should contain.

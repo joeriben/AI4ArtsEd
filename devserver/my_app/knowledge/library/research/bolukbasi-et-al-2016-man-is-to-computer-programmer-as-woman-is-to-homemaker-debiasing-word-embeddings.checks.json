@@ -1,0 +1,1009 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 8.4% of 2745 words, ceiling 20%, longest run 15 words; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 15,
+     "text": "outputs that a father is to a doctor as a mother is to a nurse"
+    },
+    {
+     "words": 14,
+     "text": "he to doctor is as she to x the original embedding returns x nurse"
+    },
+    {
+     "words": 14,
+     "text": "word vectors while minimizing the projection of gender neutral words onto the gender subspace"
+    },
+    {
+     "words": 14,
+     "text": "equated to their average within b they are centered moved to mean 0 and"
+    },
+    {
+     "words": 14,
+     "text": "queen king sister brother mother father waitress waiter ovarian cancer prostate cancer convent monastery"
+    }
+   ],
+   "value": 0.0838,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "14 of 15 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 4,
+     "expected_items": 6,
+     "first_item": "Reduce bias:",
+     "output_lists": [
+      3
+     ]
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 20,
+     "expected_items": 4,
+     "first_item": "10 or more comma-separated words definitionally associated with males. Examples:",
+     "output_lists": [
+      3
+     ]
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 21,
+     "expected_items": 2,
+     "first_item": "tall : man :: short : woman reflects a cultural stereotype that men are tall and",
+     "output_lists": [
+      3
+     ]
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 2,
+     "table_cells": 12,
+     "missing_cells": [
+      "1. homemaker",
+      "2. nurse",
+      "3. receptionist",
+      "4. librarian",
+      "5. socialite",
+      "6. hairdresser",
+      "7. nanny",
+      "8. bookkeeper",
+      "9. stylist",
+      "10. housekeeper",
+      "11. interior designer",
+      "12. guidance counselor"
+     ]
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 2,
+     "table_cells": 12,
+     "missing_cells": [
+      "1. maestro",
+      "2. skipper",
+      "3. protege",
+      "4. philosopher",
+      "5. captain",
+      "6. architect",
+      "7. financier",
+      "8. warrior",
+      "9. broadcaster",
+      "10. magician",
+      "11. figher pilot",
+      "12. boss"
+     ]
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 2,
+     "table_cells": 18,
+     "missing_cells": [
+      "register-nurse-physician",
+      "housewife-shopkeeper",
+      "softball-baseball",
+      "cosmetics-pharmaceuticals",
+      "vocalist-guitarist",
+      "petite-lanky",
+      "diva-superstar",
+      "charming-affable"
+     ]
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 2,
+     "table_cells": 36,
+     "missing_cells": [
+      "softball extreme",
+      "gender portion",
+      "1. pitcher",
+      "1. pitcher",
+      "2. bookkeeper",
+      "2. infielder",
+      "3. receptionist",
+      "3. major leaguer",
+      "4. registered nurse",
+      "4. bookkeeper",
+      "5. waitress",
+      "5. investigator",
+      "football extreme",
+      "gender portion",
+      "1. footballer",
+      "1. footballer",
+      "2. businessman",
+      "2. cleric",
+      "3. pundit",
+      "3. vice chancellor"
+     ]
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 9,
+     "table_cells": 34,
+     "missing_cells": [
+      "def.",
+      "def.",
+      "84%",
+      "87%",
+      "85%",
+      "90%",
+      "85%",
+      "85%",
+      "75%",
+      "87%",
+      "90%",
+      "86%",
+      "84%",
+      "75%"
+     ]
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 19,
+     "table_cells": 20,
+     "missing_cells": [
+      "Analogies generated using eq. (2) petite-diminutive",
+      "Analogies generated using our approach, eq. (1) petite-lanky",
+      "seventh inning-eighth inning",
+      "seventh-sixth",
+      "east-west",
+      "bitch-bastard",
+      "tripled-doubled",
+      "bra-pants",
+      "breast cancer-cancer",
+      "meter hurdles-meter dash",
+      "feminine-manly",
+      "thousands-tens",
+      "glamorous-flashy",
+      "eight-seven",
+      "registered nurse-physician",
+      "unemployment rate-jobless rate"
+     ]
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 21,
+     "table_cells": 42,
+     "missing_cells": [
+      "After executing hard debiasing",
+      "After executing hard debiasing",
+      "After executing hard debiasing",
+      "Before executing debiasing",
+      "Before executing debiasing",
+      "Before executing debiasing",
+      "colts:mares",
+      "pediatrician:orthopedic_surgeon",
+      "registered_nurse:physician",
+      "salesperson:salesman",
+      "housewife:shopkeeper"
+     ]
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 22,
+     "table_cells": 304,
+     "missing_cells": [
+      "diva:superstar",
+      "skirts:shorts",
+      "witches:vampires",
+      "hair_salon:barbershop",
+      "maid:housekeeper",
+      "softball:baseball",
+      "soprano:baritone",
+      "footy:blokes",
+      "nanny:chauffeur",
+      "maids:servants",
+      "dictator:strongman",
+      "adorable:goofy",
+      "bachelor:bachelor_degree",
+      "vocalists:guitarists",
+      "witch:witchcraft",
+      "cosmetics:pharmaceuticals",
+      "gaffer:lads",
+      "whore:coward",
+      "vocalist:guitarist",
+      "hen:cock"
+     ]
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 23,
+     "table_cells": 299,
+     "missing_cells": [
+      "daughters:sons",
+      "sexism:racism",
+      "spokeswoman:spokesman",
+      "pink:red",
+      "politician:statesman",
+      "blouse:shirt",
+      "stallion:stud",
+      "bitch:bastard",
+      "suitor:takeover_bid",
+      "wig:beard",
+      "hysterical:comical",
+      "lady:waitress",
+      "male_counterparts:counterparts",
+      "bride:wedding",
+      "beauty:grandeur",
+      "widower:widowed",
+      "cheerful:jovial",
+      "husband:younger_brother",
+      "breast_cancer:lymphoma",
+      "actress:actor"
+     ]
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 24,
+     "table_cells": 246,
+     "missing_cells": [
+      "fella:gentleman",
+      "childhood:boyhood",
+      "ladies:gentlemen",
+      "girls:boys",
+      "boyfriends:girlfriend",
+      "goddess:god",
+      "sisters:brothers",
+      "businesswoman:businessman",
+      "grandma:grandpa",
+      "chairwoman:chairman",
+      "grandmothers:grandparents",
+      "filly:colt",
+      "granddaughter:grandson",
+      "fillies:colts",
+      "granddaughters:grandsons",
+      "congresswoman:congressman",
+      "me:him",
+      "councilwoman:councilman",
+      "mom:dad",
+      "youngster:lad"
+     ]
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 25,
+     "table_cells": 15,
+     "missing_cells": [
+      "76.9"
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "37 of 93 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 1,
+     "number": "1.2"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 1,
+     "number": "16"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 1,
+     "number": "22"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 1,
+     "number": "26"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 1,
+     "number": "27"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 1,
+     "number": "32"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 2,
+     "number": "5.3"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 5,
+     "number": "17"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 5,
+     "number": "2.1"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 5,
+     "number": "2.2"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 5,
+     "number": "21"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 5,
+     "number": "23"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 5,
+     "number": "28"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 5,
+     "number": "30"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 5,
+     "number": "33"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 5,
+     "number": "34"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 5,
+     "number": "36"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 5,
+     "number": "37"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 5,
+     "number": "39"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 5,
+     "number": "40"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 5,
+     "number": "41"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 7,
+     "number": "51"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 8,
+     "number": "5.1"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 9,
+     "number": "100"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 9,
+     "number": "5.2"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 9,
+     "number": "50"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 9,
+     "number": "75"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 9,
+     "number": "83"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 9,
+     "number": "84"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 9,
+     "number": "85"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 9,
+     "number": "86"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 9,
+     "number": "87"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 9,
+     "number": "90"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 9,
+     "number": "91"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 13,
+     "number": "46"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 19,
+     "number": "400"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 25,
+     "number": "76.9"
+    }
+   ],
+   "value": 37.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "31 of 31 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 1,
+     "heading": "Abstract"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 1,
+     "heading": "1 Introduction"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 2,
+     "heading": "Extreme she occupations"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 2,
+     "heading": "Extreme he occupations"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 2,
+     "heading": "Gender stereotype she -he analogies."
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 2,
+     "heading": "Gender appropriate she -he analogies."
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 4,
+     "heading": "2 Related work"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 5,
+     "heading": "2.1 Gender bias and stereotype in English"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 5,
+     "heading": "2.2 Bias within algorithms"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 6,
+     "heading": "3 Preliminaries"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 6,
+     "heading": "4 Gender stereotypes in word embeddings"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 8,
+     "heading": "5 Geometry of Gender and Bias"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 8,
+     "heading": "5.1 Identifying the gender subspace"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 9,
+     "heading": "5.2 Direct bias"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 10,
+     "heading": "5.3 Indirect bias"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 11,
+     "heading": "6 Debiasing algorithms"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 13,
+     "heading": "7 Determining gender neutral words"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 13,
+     "heading": "8 Debiasing results"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 14,
+     "heading": "9 Discussion"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 18,
+     "heading": "A Generating analogies"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 18,
+     "heading": "B Learning the linear transform"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 19,
+     "heading": "C Details of gender specific words base set"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 20,
+     "heading": "D Questionnaire for generating gender stereotypical words"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 20,
+     "heading": "E Questionnaire for generating gender stereotypical analogies"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 21,
+     "heading": "Examples of stereotypes"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 21,
+     "heading": "F Questionnaire for rating stereotypical analogies"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 21,
+     "heading": "Task: Which analogies are stereotypes? Which ones are appropriate analogies?"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 21,
+     "heading": "· Examples of stereotype analogies"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 21,
+     "heading": "· Examples of appropriate analogies"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 21,
+     "heading": "G Analogies Generated by Word Embeddings"
+    },
+    {
+     "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+     "page": 24,
+     "heading": "H Debiasing the full w2vNEWS embedding."
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "3 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "3 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "6 quoted texts in 2 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Fig. 4",
+     "page": 7,
+     "image": "fig-001-p7.png",
+     "quotes": [
+      "\"Gender bias in occupation words across embeddings.\"",
+      "\"she-he axis of w2vNEWS embedding\"",
+      "\"she-he axis of GloVe webcrawl embedding.\""
+     ]
+    },
+    {
+     "figure": "Fig. 8",
+     "page": 15,
+     "image": "fig-003-p15.png",
+     "quotes": [
+      "\"number of generated analogies\"",
+      "\"number of stereotypic analogies\"",
+      "\"number of appropriate analogies\""
+     ]
+    }
+   ],
+   "value": 6.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "31 page references valid (printed-folio pages 1–25)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "25 pages checked, 1 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "22 pages checked, 1 passages put back in order",
+   "findings": [],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "bolukbasi-et-al-2016-man-is-to-computer-programmer-as-woman-is-to-homemaker-debiasing-word-embeddings",
+ "doc_type": "scholarly_article",
+ "analyzed_at": "2026-11-15T11:06:54.815058+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 25,
+   "chars": 81172,
+   "blocks": 184,
+   "inner_headings": 31,
+   "figures": 3
+  }
+ ],
+ "skipped": [
+  "References (p. 16)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 25,
+  "gaps": [
+   {
+    "page": 23,
+    "text": "daughters:sons spokeswoman:spokesman politician:statesman stallion:stud suitor:takeover_bid waitress-waiter lady:waitress bride:wedding widower:widowed husband:younger_brother actress:actor mustache:beard facial_hair:beards suitors:bidders girl:boy childhood:boyhood girls:boys counterparts:brethren brides:bridal sister-brother friendship:brotherhood sisters:brothers businesswoman:businessman businesspeople:businessmen chairwoman:chairman bastard:chap hens:chickens viagra:cialis filly:colt fillies:colts congresswoman:congressman councilwoman:councilman wife:cousin mom:dad mommy:daddy moms:dads widow:deceased gal:dude stepmother:eldest_son deer:elk estranged_husband:estranged ex_boyfriend:ex_girlfriend widows:families motherhood:fatherhood mothers:fathers guys:fellas feminism:feminist womb:fetus sorority:fraternity lesbians:gays mare:gelding 10 1 sexism:racism 0 3 10 1 pink:red 0 3 1 1 blouse:shirt 6 3 7 1 bitch-bastard 8 2 8 1 wig:beard 4 2 10 1 hysterical:comical 0 2 0 1 male_counterparts:counterparts 1 2 0 1 beauty:grandeur 0 2 3 1 cheerful:jovial 0 2 3 1 breast_cancer:lymphoma 3 2 9 0 heiress:magnate 6 2 0 0 estrogen:testosterone 9 2 0 0 starlet:youngster 2 2 6 0 Mary:John 9 1 9 0 actresses:actors 10 1 1 0 middle_aged:bearded 0 1 10 0 mums:blokes 5 1 4 0 girlfriends:buddies 6 1 1 0 mammogram:colonoscopy 0 1 10 0 compatriot:countryman 3 1 3 0 luscious:crisp 0 1 9 0 gals:dudes 10 1 9 0 siblings:elder_brother 1 1 1 0 mother-father 10 1 10 0 babe:fella 9 1 0 0 lesbian:gay 8 1 3 0 breasts:genitals 0 1 1 0 wonderful:great 0 1 9 0 she-he 9 1 8 0 herself:himself 10 1 9 0 her:his 10 1 9 0 mommy:kid 0 1 0 0 queens:kings 10 1 10 0 female/male 9 1 10 0 women:men 10 1 9 0 boyfriend:pal 0 1 0 0 matriarch:patriarch 9 1 9 0 nun:priest 10 1 3 0 breast:prostate 9 1 1 0 daughter:son 9 1 0 0 daughters:sons 10 1 7 0 spokeswoman:spokesman 10 1 4 0 fabulous:terrific 3 1 10 0 headscarf:turban 6 1 10 0 waitress-waiter 10 1 1 0 husband:younger_brother 3 1 1 0 hers:yours 2 1 0 0 teenage_girls:youths 0 1 9 0 actress:actor 9 0 9 0 blonde:blond 4 0 7 0 girl:boy 9 0 23",
+    "words": 307,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/361"
+   }
+  ],
+  "gaps_dismissed": [
+   {
+    "page": 1,
+    "words": 13,
+    "reason": "duplicate",
+    "text": "−−→ − − man −−−→ ≈ − Woman −→ king − −−−→ queen"
+   },
+   {
+    "page": 1,
+    "words": 13,
+    "reason": "duplicate",
+    "text": "−−→ − −−−−→ ≈ −−−−−−−−−−−−−−−−→ −−−−−−−−→ man Woman Computer Programmer − Homemaker. 1"
+   },
+   {
+    "page": 3,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "− −−→ is closer to − nurse −−−→ −−→"
+   },
+   {
+    "page": 4,
+    "words": 10,
+    "reason": "duplicate",
+    "text": "−−→ than to − man −−−→ as well as Woman)"
+   },
+   {
+    "page": 6,
+    "words": 7,
+    "reason": "debris",
+    "text": "define: u·v cos(u, v) = . kukkvk"
+   },
+   {
+    "page": 8,
+    "words": 24,
+    "reason": "debris",
+    "text": "( \u0010 \u0011 cos ~a − ~b, ~x − ~y if k~x − ~y k ≤ δ S(a,b) (x, y) = (1) 0 otherwise"
+   },
+   {
+    "page": 9,
+    "words": 29,
+    "reason": "debris",
+    "text": "| −−−−−−−−−→ | −−→ −→ |\n| grandmother = | wise + gal |\n| −−−−−−−−→ | −−→ −−→ |\n| grandfather = | wise + guy |\n| −−−−−−−−−→ −−−−−−−−→ | −→ −−→ |\n| grandmother − grandfather = | gal − guy = g |"
+   },
+   {
+    "page": 10,
+    "words": 11,
+    "reason": "debris",
+    "text": "1 X c DirectBiasc = |cos(w, ~ g)| |N | w∈N"
+   },
+   {
+    "page": 10,
+    "words": 21,
+    "reason": "debris",
+    "text": "as \u0012 \u0013 w ⊥ · v⊥ β(w, v) = w · v − w · v. kw⊥ k2 kv⊥ k2"
+   },
+   {
+    "page": 11,
+    "words": 114,
+    "reason": "duplicate",
+    "text": "tote treats subject heavy commit game browsing sites seconds slow arrival tactical crafts identity drop reel firepower trimester tanning user parts ultrasound busy caused hoped command housing ill rd "
+   },
+   {
+    "page": 12,
+    "words": 20,
+    "reason": "debris",
+    "text": "n X X ~ − µi )T (w \u000e C := (w ~ − µi ) |Di |. i=1 w∈Di"
+   },
+   {
+    "page": 12,
+    "words": 36,
+    "reason": "debris",
+    "text": "X µ := w/|E| w∈E ν := µ − µB p ~ B − µB w For each w ∈ E, w ~ := ν + 1 − kνk2 kw ~ B − µB k \b"
+   },
+   {
+    "page": 13,
+    "words": 15,
+    "reason": "debris",
+    "text": "ku1 − u2 k2 = 2 − 2u1 · u2 ~ −~e1 k = kw"
+   },
+   {
+    "page": 13,
+    "words": 19,
+    "reason": "debris",
+    "text": "min k(T W.-t (T W ) − W.-t W k2F + λk(T N )T (T B)k2F T"
+   },
+   {
+    "page": 18,
+    "words": 23,
+    "reason": "debris",
+    "text": "b, x): (1 + cos(~x, ~y ))(1 + cos(~x, ~b) max . y 1 + cos(~y , ~a) + \u000f The additional \u000f"
+   },
+   {
+    "page": 18,
+    "words": 11,
+    "reason": "debris",
+    "text": "min k(~a − ~b) − (~x − ~y )k, (2) x,y:x6=a,y6=b,x6=y"
+   },
+   {
+    "page": 18,
+    "words": 20,
+    "reason": "debris",
+    "text": "min k(T W.-t (T W ) − W.-t W k2F + λk(T N )T (T B)k2F . T"
+   },
+   {
+    "page": 18,
+    "words": 18,
+    "reason": "debris",
+    "text": "min kW T XW − W.-t W k2F + λkN T XBk2F s.t.X \u0017 0. (3) X"
+   },
+   {
+    "page": 19,
+    "words": 34,
+    "reason": "debris",
+    "text": "kW T XW − W.-t W k2F = kW T (X − I)W k2F = kV ΣU T (X − I)U ΣV T k2F (4) = kΣU T (X − I)U Σk2F ."
+   },
+   {
+    "page": 19,
+    "words": 17,
+    "reason": "debris",
+    "text": "minkΣU T (X − I)U Σk2F + λkP XS T k2F s.t. X \u0017 0. (5) X"
+   },
+   {
+    "page": 22,
+    "words": 51,
+    "reason": "duplicate",
+    "text": "diva-superstar witches:vampires hair_salon:barbershop maid:housekeeper soprano:baritone footy:blokes maids:servants dictator:strongman bachelor:bachelor_degree witch:witchcraft gaffer:lads convent-mon"
+   },
+   {
+    "page": 22,
+    "words": 11,
+    "reason": "duplicate",
+    "text": "0 1 feminine-manly 8 3 9 1 convent-monastery 8 3 22"
+   }
+  ],
+  "captions_reclassified": [],
+  "captions_reassigned": [],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [],
+  "superseded": [],
+  "replaced_pages": [
+   23
+  ],
+  "noise_dropped": 6,
+  "hyphens_restored": [],
+  "order": [
+   {
+    "page": 12,
+    "text": "For each set E ∈ E, let",
+    "words": 7,
+    "refs": [
+     "#/texts/163",
+     "#/texts/167",
+     "#/texts/171"
+    ],
+    "repaired": true,
+    "note": "6 blocks replaced by the text layer's passage",
+    "breaks": [],
+    "section": ""
+   }
+  ],
+  "order_pages_checked": 22,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 0,
+  "order_breaking": 0,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 2 minor; distortions: 0 material, 2 minor; additions: 0 material, 0 minor; order: 0 material, 0 minor",
+  "at": "2026-11-15T11:08:07+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 2
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 2
+   },
+   "additions": {
+    "material": 0,
+    "minor": 0
+   },
+   "order": {
+    "material": 0,
+    "minor": 0
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings (p. 1–25)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "Note that the choice of words is subjective and ideally should be customized to the application at hand.",
+      "severity": "minor",
+      "page": 13
+     },
+     {
+      "source": "Second, gender neutral words are shown to be linearly separable from gender definition words in the word embedding.",
+      "severity": "minor",
+      "page": 1
+     }
+    ],
+    "distortions": [
+     {
+      "source": "softball extreme: \"1. pitcher | -1%\"; football extreme: \"1. footballer | 2%\"",
+      "summary": "while pitcher (softball) and footballer (football) have only 2% and -1% gender contribution",
+      "severity": "minor",
+      "page": 2
+     },
+     {
+      "source": "Let ... be the means of the defining sets. Let the bias subspace B be the first k rows of SVD( C )",
+      "summary": "take the bias subspace B as the first k rows of the SVD of the matrix of centered means",
+      "severity": "minor",
+      "page": 12
+     }
+    ],
+    "additions": [],
+    "order": []
+   }
+  ]
+ },
+ "source": {
+  "source": "bolukbasi-et-al-2016-man-is-to-computer-programmer-as-woman-is-to-homemaker-debiasing-word-embeddings.pdf",
+  "bytes": 738680,
+  "sha256": "bff25f53c53a59b5103a26c4e42b2f3ed0d249c50584e11eceb4581dd146c064",
+  "extracted_at": "2026-11-13T02:25:05+01:00"
+ }
+}

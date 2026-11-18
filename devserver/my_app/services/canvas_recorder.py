@@ -187,31 +187,38 @@ class CanvasRecorder:
         node_id: str,
         url: str,
         config_id: str,
-        seed: Optional[int] = None
+        seed: Optional[int] = None,
+        *,
+        level,
     ) -> Optional[int]:
         """
-        Download image from URL and save as entity.
+        Read the generated image behind `url` and save it as an entity.
 
         Args:
             node_id: Canvas node ID
-            url: Image URL to download
+            url: Image URL, as the generation returned it
             config_id: Generation config used
             seed: Optional seed value
+            level: Safety level of the run; the picture is read only where
+                delivery hands it to that level
 
         Returns:
             Sequence number of saved entity, or None if failed
         """
         try:
-            # Canvas media URLs return RELATIVE (e.g. /api/media/image/<run>/<idx>) --
-            # fine for the browser, but requests.get() needs a scheme for this
-            # server-side re-fetch. Resolve against the local server.
-            fetch_url = url
-            if fetch_url.startswith('/'):
-                from config import PORT
-                fetch_url = f"http://127.0.0.1:{PORT}{fetch_url}"
-            response = requests.get(fetch_url, timeout=60)
-            response.raise_for_status()
-            image_data = response.content
+            if url.startswith('/'):
+                # A run of this server (/api/media/image/<run>/<idx>). Read from
+                # its run folder, as the media route reads it. Until 2026-11-15
+                # this was fetched from the server's own address over HTTP,
+                # without a session; since every route but the start page needs
+                # a sign-in (my_app/lab/sign_in_gate.py) that answers 401.
+                from my_app.utils.media_ref import resolve_media_ref
+                address = url.split('#', 1)[0].split('?', 1)[0]
+                image_data = resolve_media_ref(address, kind='image', level=level).read_bytes()
+            else:
+                response = requests.get(url, timeout=60)
+                response.raise_for_status()
+                image_data = response.content
 
             metadata = {
                 "config_id": config_id,

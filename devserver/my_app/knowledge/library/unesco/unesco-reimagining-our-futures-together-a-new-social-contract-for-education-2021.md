@@ -3,6 +3,7 @@ id: unesco-reimagining-our-futures-together-a-new-social-contract-for-education-
 titel: "Reimagining our futures together: a new social contract for education"
 autor: UNESCO
 jahr: 2021
+quelle: "UNESCO, Paris 2021, ISBN 978-92-3-100478-0"
 sprache: en
 tier: F
 sparten: [uebergreifend]
@@ -10,989 +11,475 @@ themen: [education, futures, policy]
 lizenz: CC BY-SA 3.0 IGO
 url: "https://unesdoc.unesco.org/ark:/48223/pf0000379707"
 status: published
-analyzed_at: "2026-07-18T13:10:28.424521+00:00"
+checks: passed
+review: passed
+analyzed_at: "2026-11-15T09:50:38.669081+00:00"
 analysis_lang: en
-analysis_model: openrouter/z-ai/glm-5.2
+analysis_model: openrouter/z-ai/glm-5.3
+doc_type: framework_report
+seitenzahlen: pdf
 ---
 
 # Reimagining our futures together: a new social contract for education
 
 ## PROFIL
 
-- The report "Reimagining Our Futures Together: A new social contract for education" by the International Commission on the Futures of Education examines education looking to 2050 and beyond, proposing a "new social contract for education" to rebuild relationships with each other, the planet, and technology.
-- It asks what role education can play in shaping peaceful, just, and sustainable futures, rethinking pedagogy, curricula, teaching, schools, and lifelong learning.
-- The document lists as precedents the Faure Commission's 1972 report *Learning to Be: The World of Education Today and Tomorrow* and the Delors Commission's 1996 report *Learning: The Treasure Within*.
-- Foundational principles include human rights and education as a common good, expanding the right to education to encompass connectivity, information, culture, science, and the knowledge commons.
-- For an arts-education platform, the text applies to curriculum design and spatial pedagogy, specifically addressing the decolonization of curricula, social and emotional learning, and ecological, intercultural, and interdisciplinary learning.
-- It is relevant for situations involving the redesign of school architectures, spaces, times, and timetables, as well as the integration of humanistic literacies to counter misinformation.
-- The report also applies to lifelong learning contexts across natural, built, and virtual sites, supporting the professionalization of teachers as collaborative knowledge producers.
+- "Reimagining our futures together: a new social contract for education" is the 2021 report of UNESCO's International Commission on the Futures of Education, written within the Futures of Education initiative that UNESCO set up in 2019 to rethink how knowledge and learning might shape humanity's and the planet's future; the Commission was chaired by HE Sahle-Work Zewde, President of Ethiopia, with António Nóvoa leading its research and drafting committee, and its work was funded by Sida, the Government of France and Banco Santander. Produced over two years through a consultation reaching roughly one million people, it presents itself as "neither a manual nor a blueprint but the opening up of a vital conversation."
+- The report's claim is that, with humanity and the planet endangered, education can drive deep change through a new social contract resting on human rights, non-discrimination, social justice, respect for life, human dignity and cultural diversity, animated by care, reciprocity and solidarity, and reinforcing education as a public endeavour and a common good. Two foundational principles govern the contract: assuring the right to quality education throughout life, and strengthening education as a public endeavour and a common good. Three questions structure the whole: what to continue doing, what to abandon, and what to invent afresh.
+- Part I ("Between past promises and uncertain futures") sets out the twin challenges of equity and relevance: Chapter 1 reviews five decades of progress and persistent exclusion, opening from Julius Nyerere's 1967 "Education for Self-Reliance"; Chapter 2 scans four fields of transformation — the environment, technology, the political sphere and the future of work — opening from Edgar Morin's "Leçons d'un siècle de vie" (2021) and drawing on the ILO's Global Commission on the Future of Work, the IPCC, the Paris Climate Accords, the World Inequality Report and Transparency International.
+- Part II ("Renewing education") addresses five dimensions: pedagogies of cooperation and solidarity (Ch. 3, including unlearning divisiveness and meaningful assessment); curricula and the evolving knowledge commons (Ch. 4, with ecological, intercultural and interdisciplinary learning, plurilingualism, ethnomathematics, scientific, digital and humanistic literacies, arts education, and human rights education); the transformative work of teachers (Ch. 5, opening from Wei-ming Tu's "Humanity and Self-Cultivation", 1996, and recasting teaching as collaborative, knowledge-producing work); the defence and reimagining of schools (Ch. 6); and education across life and across cultural and social spaces (Ch. 7).
+- Part III ("Catalyzing a new social contract") issues three calls: a worldwide collaborative research programme on the lifelong right to education; global solidarity and international cooperation, including South-South and triangular cooperation and support for the education of asylum seekers, refugees, stateless persons and migrants; and an active part for universities and other higher education institutions in every facet of the contract, followed by an epilogue on translating the ideas into programmes, resources and activities in diverse settings.
+- The report situates itself in the lineage of UNESCO commissions that rethought education at moments of transformation — the Faure Commission's 1972 "Learning to Be" and the Delors Commission's 1996 "Learning: The Treasure Within" — and names its project "renewal": rebuilding education systems on a more promising course rather than discarding existing heritage. It is usable across the full range of arts-education disciplines and situations: its chapters on pedagogy, curricula and teaching treat arts education explicitly (music, drama, dance, design, visual arts, literature and poetry as languages for cultural critique and political action), and its framework applies to early childhood, primary, secondary, TVET and higher education, to formal and non-formal settings, and to lifelong and lifewide learning.
 
 ## WISSEN
 
-### A new social contract for education
+### Publication and institutional context (p. 1–2)
 
-- International Commission on the Futures of Education established by UNESCO in 2019; report published in 2021 (ISBN 978-92-3-100478-0), supported by Sida, the Government of France, and Banco Santander.
-- Global consultation engaged around one million people.
-- At the peak of the COVID-19 pandemic, 1.6 billion learners were affected by school closures.
-- Precedents: Faure Commission's 1972 report *Learning to Be: The World of Education Today and Tomorrow*; Delors Commission's 1996 report *Learning: The Treasure Within*.
-- Current report prepared under the leadership of Sahle-Work Zewde, President of the Federal Democratic Republic of Ethiopia.
-- Proposes a new social contract for education to rebuild relationships with each other, the planet, and technology.
+This is the 2021 report of UNESCO's International Commission on the Futures of Education, *Reimagining our futures together: A new social contract for education* (ISBN 978-92-3-100478-0, Open Access CC-BY-SA 3.0 IGO). UNESCO set up the Futures of Education initiative in 2019 to rethink how knowledge and learning might shape humanity's and the planet's future, drawing on broad public and expert participation. UNESCO treats education as its first priority — a fundamental entitlement and the bedrock of peace and sustainable development — with particular attention to gender equality and Africa across everything it does. Sida, the Government of France, and Banco Santander funded the Commission's work.
 
-<!-- quelle: Futures of Education initiative … Audrey Azoulay -->
+### Short summary of the report's thesis (p. 3)
 
-### Reimagining Our Futures Together: A New Social Contract for Education
+With humanity and the planet endangered, and the pandemic exposing how fragile and interdependent we are, the report affirms that education can drive deep change. It names a twofold task: delivering on the still-unmet promise of quality education for every child, youth and adult, and unlocking education's power to steer us toward sustainable collective futures. The proposed social contract must rest on human rights together with non-discrimination, social justice, respect for life, human dignity and cultural diversity, and must be animated by care, reciprocity and solidarity. It should reinforce education as a public endeavour and a common good. Produced over two years through a consultation reaching roughly one million people, the report presents itself as "neither a manual nor a blueprint but the opening up of a vital conversation."
 
-The International Commission on the Futures of Education, established by UNESCO in 2019, examines education looking to 2050 and beyond. Chaired by HE Sahle-Work Zewde, with António Nóvoa chairing the research-drafting committee, the Commission's two-year process was shaped by the COVID-19 pandemic.
+### Forewords (p. 5–8)
 
-The report rethinks the following critical thematic issues:
-- sustainability
-- knowledge
-- learning
-- teachers and teaching
-- work, skills, and competencies
-- citizenship
-- democracy and social inclusion
-- public education
-- higher education, research, and innovation
+**Audrey Azoulay, Director-General of UNESCO** (p. 5–6), recalls that COVID-19 school closures at their height affected 1.6 billion learners. The report belongs to a lineage of UNESCO commissions that rethought education at moments of transformation: the Faure Commission's 1972 *Learning to Be: The World of Education Today and Tomorrow* and the Delors Commission's 1996 *Learning: The Treasure Within*. The new report urges rebuilding our ties to one another, to the planet and to technology, grounded in a lifelong entitlement to quality education and in the understanding that teaching and learning are shared societal undertakings and therefore common goods.
 
-Foundational principles include human rights and education as a common good. The report incorporates contributions on the decolonization of curricula and social and emotional learning.
+**HE Sahle-Work Zewde, President of Ethiopia and Chair of the Commission** (p. 7–8), insists that the planet's future must be imagined locally and democratically. She points to unequal sharing and unsustainable use of resources, unacceptable regional disparities, unfinished gender equality for women and girls, persistent digital divides (especially in Africa), and stark power imbalances in who can access and produce knowledge. She thanks António Nóvoa, Portugal's Ambassador to UNESCO, who led the Commission's research and drafting committee. The report is dedicated to students and teachers whose schooling was upended by COVID-19. The thematic areas it rethinks are: sustainability; knowledge; learning; teachers and teaching; work, skills and competencies; citizenship; democracy and social inclusion; public education; and higher education, research and innovation.
 
-<!-- quelle: HE Sahle-Work Zewde … Executive summary -->
+### Membership of the Commission (p. 9)
 
-### A new social contract for education
+Members include H.E. Sahle-Work Zewde (Chair, Ethiopia) and António Nóvoa (chair of the research-drafting committee), together with Masanori Aoyagi, Arjun Appadurai, Patrick Awuah (Ashesi University, Ghana), Abdel Basset Ben Hassen (Arab Institute for Human Rights, Tunisia), Cristovam Buarque (University of Brasília), Elisa Guerra (Colegio Valle de Filadelfia, Mexico), Badr Jafar (Crescent Enterprises, UAE), Doh-Yeon Kim (Seoul National University), Justin Yifu Lin (Peking University), Evgeny Morozov, Karen Mundy (UNESCO IIEP), Fernando M. Reimers (Harvard), Tarcila Rivera Zea (CHIRAPAQ, Peru), Serigne Mbaye Thiam (Senegal), Vaira Vike-Freiberga (former President of Latvia), and Maha Yahya (Carnegie Middle East Center, Lebanon).
 
-Three questions for education looking to 2050: What should we continue doing? What should we abandon? What needs to be creatively invented afresh?
+### Executive summary (p. 14–18)
 
-Two foundational principles:
-- Assuring the right to quality education throughout life, building on Article 26 of the Universal Declaration of Human Rights, expanded to include the right to information, culture, science, and access to the knowledge commons.
-- Strengthening education as a public endeavour and a common good, requiring public funding and society-wide participation in public discussions about education.
+The world stands at a turning point: prosperity exists alongside gaping inequalities; democracy is wearing thin in many places; and rapid technological change is not sufficiently harnessed for equity, inclusion and democratic participation. Yet there are grounds for hope — never before have people had such access to knowledge and to tools for working together. The report asks how education might help shape our shared world between now and 2050 and beyond.
 
-Proposals for renewing education:
-- Pedagogy organized around cooperation, collaboration, and solidarity; assessment promoting meaningful growth.
-- Curricula emphasizing ecological, intercultural, interdisciplinary learning; scientific, digital, and humanistic literacies to counter misinformation.
-- Teaching professionalized as collaborative endeavour; teachers recognized as knowledge producers with supported autonomy.
-- Schools protected as educational sites; architectures, spaces, times, timetables redesigned; digital technologies supporting—not replacing—schools; schools as exemplars of sustainability and carbon neutrality.
-- Lifelong educational opportunities across natural, built, and virtual sites; governments responsible for public financing and regulation; right to education broadened to encompass connectivity.
+Among the disruptions transforming the present landscape, the report notes that creating decent human-centred work is about to get much harder as Artificial Intelligence (AI), automation and structural transformations remake employment landscapes around the globe — while, at the same time, more people and communities are recognizing the value of care work and the multiple ways that economic security needs to be provisioned (p. 16).
 
-<!-- quelle: A new social contract for education … Proposals for renewing education -->
+**A new social contract for education** is conceived as a social contract in general: an unwritten pact by which members of a society agree to cooperate for mutual benefit, expressing norms, commitments and principles that are both legally codified and culturally embedded. Its point of departure is a shared vision of what education is publicly for. Three questions structure the whole report: What should we continue doing? What should we abandon? What needs to be creatively invented afresh?
 
-### Catalyzing a new social contract for education
+**Two foundational principles** govern the contract:
+1. **Assuring the right to quality education throughout life** — extending Article 26 of the Universal Declaration of Human Rights into a lifelong entitlement that also covers rights to information, culture and science, plus the right to draw on and add to the knowledge commons.
+2. **Strengthening education as a public endeavour and a common good** — guaranteeing public funding while committing society as a whole to include everyone in debate about education.
 
-The Report, looking towards 2050 and beyond, results from a two-year global engagement and co-construction process. It proposes a new social contract for education centered on the right to education throughout life.
+**Proposals for renewing education** across five dimensions:
+- **Pedagogy** built on cooperation, collaboration and solidarity, developing students' intellectual, social and moral capacities to work with others and change the world with empathy and compassion; it also involves unlearning bias, prejudice and divisiveness, with assessment designed to support every student's meaningful growth.
+- **Curricula** centred on ecological, intercultural and interdisciplinary learning; an ecological understanding of humanity that restores balance in how we relate to the living Earth; scientific, digital and humanistic literacies to combat misinformation; and content, methods and policy that foster active citizenship and democratic participation.
+- **Teaching** professionalized further as collaborative work, with teachers acknowledged as producers of knowledge and agents of educational and social transformation; their autonomy, freedom and voice in public debate about education's futures must be protected.
+- **Schools** defended as protected sites of inclusion, equity and well-being while being reimagined to advance more just, equitable and sustainable futures; their architecture, schedules, timetables and grouping of students should be redesigned for collaboration; digital technologies should complement rather than substitute for schools; and schools should exemplify human rights, sustainability and carbon neutrality.
+- **Education across life and across cultural and social spaces**: linking natural, built and virtual learning sites and drawing on the strengths of each; governments' capacity to finance and regulate education publicly should be reinforced; and the right to education should widen into a lifelong right embracing information, culture, science and connectivity.
 
-Key recommendations and measures:
-- Establish a worldwide, collaborative research programme focusing on the right to education throughout life, inclusive of different kinds of evidence and ways of knowing, including horizontal learning and the exchange of knowledge across borders.
-- Strengthen the generation of knowledge and evidence through South-South and triangular cooperation, moving beyond North-South flows of aid.
-- Respect the principle of subsidiarity, encouraging local, national, and regional efforts.
-- Support the educational needs of asylum seekers, refugees, stateless persons, and migrants through international cooperation.
-- Universities and higher education institutions must support research, advance science, and partner with other educational institutions and programmes.
-- Participation in building the futures of education must include children, youth, parents, teachers, researchers, activists, employers, cultural and religious leaders.
+**Catalyzing the contract** will happen through countless individual and collective acts of courage, leadership, resistance, creativity and care, and requires dismantling discrimination on grounds of gender, race, ethnicity, religion, disability, sexual orientation, age or citizenship status. Three calls are issued: (1) a worldwide collaborative **research programme** on the lifelong right to education, open to many forms of evidence and ways of knowing, including horizontal learning and cross-border knowledge exchange, with contributions welcomed from teachers, students, academics, research centres, governments and civil society; (2) **global solidarity and international cooperation**, strengthening South-South and triangular cooperation alongside North-South aid, honouring subsidiarity so that local, national and regional efforts flourish, and supporting the education of asylum seekers, refugees, stateless persons and migrants through global institutions; (3) an active part for **universities and other higher education institutions** in every facet of the contract, from research and science to partnership with other educational institutions and programmes locally and worldwide.
 
-<!-- quelle: Catalyzing a new social contract for education … Introduction -->
+### Introduction (p. 19–27)
 
-### Reimagining our futures together: A new social contract for education
+Humanity faces an existential fork in the road: persist on an unsustainable course or change direction radically. Overlapping crises — widening inequality, climate change, biodiversity loss, resource use beyond planetary limits, democratic backsliding, disruptive technological automation, violence — stem mostly from human choices and from systems that favour the short term and the few over the long term and the many. The report insists that no trend is fixed in advance, and that thinking about futures in education serves mainly to reframe the present, forcing questions of ethics, equity and justice: which futures are desirable, and for whom?
 
-- Crises: widening social and economic inequality, climate change, biodiversity loss, resource use exceeding planetary boundaries, democratic backsliding, disruptive technological automation, and violence.
-- Paradoxical trends: Global poverty levels have fallen, but inequalities between and within countries have grown.
-- Political challenges: rise of authoritarianism, exclusionary populism, and political extremism; weakening of a world order anchored on the Universal Declaration of Human Rights.
-- Digital transformation: computers changing knowledge creation, access, dissemination, validation, and use; facial recognition and AI contracting the human right to privacy.
-- Discrimination targets: indigenous peoples, women, refugees, migrants, feminists, human rights advocates, environmental activists, or political dissidents.
+**Redefining the purposes of education** (p. 22–23): education systems have wrongly privileged short-term comforts, individual success, national competition and economic growth over solidarity, interdependence and care for each other and the planet. Education must instead unite people around shared endeavours grounded in social, economic and environmental justice, while repairing past wrongs and preparing us for coming environmental, technological and social shifts.
 
-<!-- quelle: The survival of humanity, human rights, and the living planet are at risk … The choices we collectively make today will determine our shared futures. -->
+**The right to quality education throughout life** (p. 24–25): anchored in the 1948 Universal Declaration of Human Rights, education must be available to everyone irrespective of income, gender, race or ethnicity, religion, language, culture, sexuality, political affiliation, disability or any other possible ground of exclusion. The right now extends across the whole lifespan and all areas of life, and connects to the **knowledge commons** — the collective, ever-growing pool of information, knowledge and wisdom built up across generations, which grows richer as more people use it. Barriers remain: indigenous perspectives, languages and knowledges have been pushed to the margins; women and girls, minorities and low-income groups are severely underrepresented; commercialization and restrictive intellectual property regimes enclose the commons. A rights-based approach that recognizes collective intellectual property rights should shield indigenous peoples and other marginalized groups from unconsented appropriation of their knowledge.
 
-### The need for a new social contract for education
+**Education as a public endeavour and common good** (p. 25–26): two features define it. Education is *experienced in common* — bringing people into contact with one another and the world, affirming dignity, building shared purposes and capabilities for collective action — so institutions should include the widest possible diversity of students. And it is *governed in common* — many actors take part in its stewardship: teachers, youth movements, community groups, NGOs, enterprises, professional associations, philanthropists, religious institutions and social movements, whose involvement can strengthen equity, quality and relevance. Public education is defined by three criteria: it (1) occurs in a public space, (2) promotes public interests, and (3) is accountable to all. Governments must increasingly regulate and shield education from commercialization, so that markets do not obstruct education as a human right.
 
-- Education is a pillar of the **2030 Framework for Sustainable Development** but falls short: hundreds of millions denied quality education; systemic discrimination along gender, ethnicity, language, culture, and ways of knowing; crisis of relevance; poor instruction stifles creativity.
-- The **new social contract for education** must be anchored in two foundational principles: (1) the right to education and (2) education as a public societal endeavour and a common good.
-- Rooted in the **Universal Declaration of Human Rights (1948)**: education must be for all regardless of income, gender, race, ethnicity, religion, language, culture, sexuality, political affiliation, disability, or any other discriminatory characteristic.
-- The right to education must expand from schooling for children/youth to **quality education throughout life**, connected to rights to information, culture, and science.
-- Barriers to the **knowledge commons**: Indigenous perspectives, languages, and knowledges marginalized; women, girls, minorities, low-income groups underrepresented; enclosures via commercialization and restrictive IP laws.
-- A rights-based approach including **collective intellectual property rights** should protect Indigenous peoples and marginalized groups from illicit appropriation of their knowledge.
-
-<!-- quelle: The need for a new social contract for education … A new social contract for education must remain firmly rooted in a commitment to human rights. -->
-
-### Strengthening education as a public endeavour and a common good
-
-- Education as a *common good* is characterized by two features: experienced in common and governed in common.
-- Non-state actors in education governance include: teachers, youth movements, community-based groups, trusts, non-governmental organizations, enterprises, professional associations, philanthropists, religious institutions, and social movements.
-- *Public education* is education that: (1) occurs in a public space, (2) promotes public interests, and (3) is accountable to all.
-- Governments must focus on regulation and protecting education from commercialization.
+**Organization of the report** (p. 26–27): Part I (*Between past promises and uncertain futures*) sets out the twin challenges of equity and relevance (Chapters 1–2). Part II (*Renewing education*) addresses five dimensions — pedagogy (Ch. 3), curricula (Ch. 4), teaching (Ch. 5), schools (Ch. 6), and education across times and spaces (Ch. 7). Part III (*Catalyzing a new social contract*) issues calls for research (Ch. 8) and for global solidarity and international cooperation (Ch. 9), followed by an epilogue on translating the ideas into programmes, resources and activities in diverse settings. The report names its project **renewal**: waking up to the severity of our collective predicament and finding a path that "resists mere replication" — sifting hard-won knowledge and experience to rebuild education systems on a more promising course.
 
-<!-- quelle: Strengthening education as a public endeavour and a common good -->
-
-### Organization of the Report
-
-The Report is organized across three parts and nine chapters, concluding with an epilogue.
-
-- **Part I (Chapters 1–2)**: Examines the right to education under Article 26 of the Universal Declaration of Human Rights and four overlapping areas of change: environmental change, technological acceleration, governance and social fragmentation, and new worlds of work. Looks to 2050.
-- **Part II (Chapters 3–7)**: Argues for renewal along five dimensions: pedagogy (cooperation and solidarity), curricula (ecological, intercultural, interdisciplinary), teaching (professionalized as collaborative endeavour), schools (protected as social sites), and education across different times and spaces throughout life.
-- **Part III (Chapters 8–9)**: Calls for a shared research agenda on the right to education throughout life and for global solidarity and international cooperation with a vision to 2050 and beyond.
-
-The epilogue argues ideas must be translated into programmes through co-construction with leaders, teachers, students, families, communities, and civil society organizations.
+### Part I: Between past promises and uncertain futures (p. 28)
 
-<!-- quelle: Organization of the report … Part I Between past promises and uncertain futures -->
-
-### Towards more equitable educational futures
-
-- Julius Nyerere, *Education for Self-Reliance*, 1967.
-- Universal Declaration of Human Rights (1948): global population 2.4 billion, 45% had attended school.
-- Today: global population 8 billion, >95% have attended school.
-- 2020 enrolment: >90% primary, >85% lower secondary, >65% upper-secondary.
-- Out-of-school primary children: >1 in 4 in 1970; <10% in 2020.
-- 1990: girls comprised almost 2/3 of out-of-school children.
-- Pre-primary participation: 15% (1970), 35% (2000), >60% (2019). Near universal expected by 2050 in higher/middle-income countries.
-- Youth literacy in lower/middle income converged with upper middle income at 90+%.
-- Higher education participation: 10% (1970), 40% today. Gender parity reached around 1990.
-- Sub-Saharan Africa higher education: 7% female, 10% male.
-- Projections: high income 100% by 2034; middle income 60-80% by 2050; lower middle income ~35% by 2050; low income <15%.
-- 1 in 4 youth in lower income countries is nonliterate today.
-- OECD Programme for International Student Assessment shows sizable shares of 15-year-olds unable to understand reading beyond basic levels.
-- Adult literacy: <75% in lower middle income, >55% in lower income.
-- Low income countries: >2 out of 5 women not literate.
-- 1 in 5 children in low income countries and 1 in 10 across [text cuts off].
-
-<!-- quelle: Towards more equitable educational futures … Chapter 1 I  Towards more equitable educational futures -->
-
-### Towards more equitable educational futures
-
-- ~250 million children out of primary school worldwide.
-- Lower secondary: 98% enrolled in high income countries; in low income countries, 40% of girls and 34% of boys not enrolled.
-- Upper secondary: <35% of girls and <45% of boys enrolled in low income countries vs >90% in high income countries.
-- Completion: >1 in 4 lower secondary students and >1 in 2 upper secondary students worldwide do not complete; ~60% in lower middle income countries and ~90% in low income countries leave before completing secondary.
-- Qualified primary teachers in sub-Saharan Africa declined from 85% (2000) to ~65% (2020); Arab region from 98% (2004) to 85% (2020).
-- Sub-Saharan Africa secondary: qualified teachers fell from ~80% (2005) to 50% (2015).
-- TVET enrolment: up to 15% of 15–24 year-olds in Central Asia, Central/Eastern Europe, East Asia/Pacific (2000–2020); ~1% in lowest income countries, sub-Saharan Africa, South Asia.
-- >1 in 5 youth (16–24) worldwide not in education, training, or employment; two-thirds are young women.
-- Key 'push' factors for early leaving: weak relevance of learning content, inadequate pedagogical methods, lack of cultural sensitivity.
-- Marginalized groups disproportionately excluded: girls and women, children/youth with disabilities, poorer households, rural communities, indigenous peoples, minority groups, conflict-affected populations.
-
-<!-- quelle: Chapter 1 I  Towards more equitable educational futures … There is a worrying regression worldwide in the share of qualified primary school teachers. -->
-
-### Persistent poverty, rising inequality, and educational exclusion
-
-- Global economy grew 2.5× (1990–2020); low and lower-middle-income countries produced 1/10 of global output while housing half the world's population (2020).
-- China: 2% of global economy (1990) → 16% of world GDP (2020); sub-Saharan Africa: 1.5% → 2%.
-- Per capita income rose 75% (1990–2020); poverty rate fell from >1/3 to <10%.
-- ~690 million live on <$2/day; 1.8 billion (¼ of world) on ≤$3.20/day.
-- Two thirds of the poor are under 25.
-- 2018 World Inequality Report: top 10% capture >50% of income in sub-Saharan Africa, the Arab world, Brazil, and India.
-- UIS: per 100 boys out of primary school in sub-Saharan Africa, 123 girls excluded; in 9 lowest-income countries, poorest girls average 2 fewer years of schooling than boys.
-- Conflict accounts for half the chronically out-of-school population.
-- Transparency International 2013 Global Corruption Report — corruption in education:
-  - diversion of procurement and supply resources
-  - bribery for grades and admissions
-  - nepotism in hiring and scholarships
-  - academic plagiarism
-  - undue political and corporate influence on research
-
-<!-- quelle: Persistent poverty and rising inequality … A web of exclusions -->
-
-### Towards more equitable educational futures; Disruptions and emerging transformations
-
-- Indigenous and ethnic minority children face economic, linguistic, geographical, racism, discrimination, and lack of cultural relevance barriers; formal education fails to recognize indigenous knowledge and learning systems.
-- Education historically weaponized for assimilation of indigenous peoples; children from remote communities forced into boarding schools, deprived of family and cultural support.
-- PIRLS results: Grade 4 students not speaking the test language at home were less likely to reach the lowest proficiency level in reading.
-- COVID-19 pandemic, 2020: 1.6 billion children and young people affected by institutional closures; millions will not return, particularly from poorer and marginalized communities.
-- Mid-century milestone: 2050; foresight focuses on four overlapping areas: environment, technology and interaction, governance systems, world of work.
-- Edgar Morin, *Leçons d'un siècle de vie*, 2021: cited on the unpredictability of the future and sudden eruptions of the unforeseen.
-
-<!-- quelle: Chapter 1 I  Towards more equitable educational futures … Chapter 2 I  Disruptions and emerging transformations -->
-
-### Disruptions and emerging transformations
-
-- Decades leading to 2050, especially the 2020s, are pivotal; atmospheric chemical composition changing ten times faster than during any shift in the age of mammals.
-- Earth hotter than at any time since the last Ice Age began 125,000 years ago.
-- 2015 Paris Climate Accords: pledges to limit warming to 2°C above pre-industrial levels (preferably 1.5°C); emissions continue to increase.
-- 2021 IPCC report: global warming faster than anticipated.
-- Human activity impacts: up to half of tropical coral reefs dead; 10 trillion tons of ice melted; ocean dramatically more acidic.
-- Population: tripled from 2.5 billion (1950) to almost 8 billion (2020); projected 9.7 billion by 2050, plateauing at ~11 billion by 2100.
-- Since 1950: water use doubled, food production/consumption increased 2.5×, wood consumption tripled.
-- By 2050 projected demand increases: food +35%, water +20–30%, energy +50%.
-- Current ecological footprint requires 1.6 planet Earths; by 2050, resource use at four times replenishment rate without course correction.
-- Pollution responsible for ~9 million premature deaths per year — more than AIDS, malaria, TB, and warfare combined; linked to learning difficulties and disabilities.
-- Education about and for climate change must align with three goals: adapt, mitigate, and revert climate change.
-
-<!-- quelle: A planet in peril … Chapter 2 I  Disruptions and emerging transformations -->
-
-### The effects of climate change and digital transformation on education
-
-- Up to one-third of the world's population is projected to live in areas unsuitably hot for humans by 2070 without a dramatic shift in greenhouse gas output.
-- Climate change increases gender inequality: displaced women and girls face higher poverty-trap risk and lower prospects of returning to education than male counterparts; early marriage is used as a family survival strategy, ending girls' educational prospects.
-- Indigenous women hold knowledge of sustainable forest management, sowing and harvesting of water, biodiversity, crop resistance, and seed conservation and selection—contributions often ignored.
-- Education attainment and completion currently correlate with unsustainable practices; the world's most educated countries and people are those most accelerating climate change.
-- Climate change education research finds much of it focuses exclusively on scientific teaching, without cultivating the full breadth of competencies necessary for effective action.
-- The global pandemic revealed a digital divide: those with connectivity and digital skills continued learning remotely while those without missed out, augmenting gaps in educational opportunity and outcomes between and within nations.
-- Digital literacy and access are framed as a basic right of the twenty-first century.
-- Technology adoption as 'magic bullet' solutions has rarely succeeded; incremental improvements have yielded better results.
-
-<!-- quelle: The effects of climate change on education … The digital that connects and divides -->
-
-### Disruptions and emerging transformations
-
-- Digital divides persist in both internet access and the skills/competencies needed to leverage technology.
-- Mobile phones play an especially important role in poorer settings, particularly sub-Saharan Africa, where personal computers are less readily available.
-- Algorithmic pathways, platform imperialism, and governance patterns of digital infrastructures present acute challenges to sustaining education as a common good.
-- Citizen and open science projects expand the volume of information collected and the diversity of people involved.
-- Computer-facilitated data collection has eclipsed alternative forms of reasoning, privileging numerical datasets over personal experience and difficult-to-quantify information.
-- More textual and graphic information is instantly available on a pocket-sized mobile phone than in the sum of our greatest physical libraries across millennia.
-
-<!-- quelle: Chapter 2 I  Disruptions and emerging transformations -->
-
-### Digital knowledge and its exclusions; Hacking human learners
-
-- Digital technologies marginalise indigenous knowledge: fishers/sailors/adventurers displaced by astronomers, climatologists, meteorologists; farmers/hunters/gatherers/pastoralists displaced by agronomists, forestry experts, pharmaceutical companies, nutritionists.
-- Profit-driven digital knowledge isolates the individual user/buyer/watcher; digital literacy, devices, platforms, bandwidth unequally distributed between and within countries.
-- The 'digital divide' is termed **platform imperialism**; the solution is not simplistic inclusive digitalization but public engagement with the digital for the common good.
-- COVID-19 demonstrated digital technologies as essential for distance education, contact and vaccine tracing, reliable virus information.
-- Design communities exclude women, linguistic/ethnic/racial minorities, and the disabled, perpetuating bias.
-- Neuroscience now allows direct examination of brain function (vs. inference from behaviour); brain areas selectively activated during language comprehension and mathematical reasoning are identified, but translational research is still needed.
-- **Neuroplasticity**: the brain physically changes across the lifespan; early years remain crucial but rewiring occurs at all ages; certain chemicals may facilitate overcoming trauma.
-- Screen-based reading raises concerns: ease of distraction, difficulty of prolonged attentiveness, rise of tabular 'skimming' modes; linear print reading is a complex neurological task.
-- Teachers should ensure students encounter both linear and tabular reading; print and digital are complementary.
-- Expanded right to education should include rights to connectivity, data, information, and privacy protection.
-
-<!-- quelle: Digital knowledge and its exclusions … Chapter 2 I  Disruptions and emerging transformations -->
-
-### Democratic backsliding and growing polarization
-
-- Democracy monitors document decline: The Economist (full to flawed democracies), Freedom House (free to partly free systems), V-Dem (electoral democracy to electoral autocracy).
-- Drivers: populist leaders, nativism, social media fake news dissemination, micro-targeting of messages, elite hubris.
-- Counter-movements: youth-led ecological movements, Black Lives Matter, #metoo, calls to decolonize curricula.
-- COVID-19 effects on governance: expansion of executive powers, increased surveillance technology, restrictions on public gatherings and freedom of movement, deployment of militaries in civilian areas, disruptions in electoral calendars.
-- Education must address movement concerns in curricula and build capacities for active citizenship and democratic participation.
-
-<!-- quelle: Democratic backsliding and growing polarization … Chapter 2 I  Disruptions and emerging transformations -->
-
-### The uncertain future of work
-
-- ILO Global Commission on the Future of Work (2019): agenda for a human-centred future of work.
-- Over 300 million workers with paid employment live in extreme poverty.
-- Youth labour force participation (15–24) fell from 50% in 1990 to under 33% today.
-- One in five youth is not in employment, education, or training; one in four is underemployed.
-- 2019: female labour force participation under 50%; men close to 75%.
-- ILO estimates up to 150 million jobs disappeared due to COVID-19; women affected by employment loss more than men across regions and income levels.
-- Greening of economies: millions of new jobs created, carbon-intensive jobs disappear.
-- Platform economy risks creating 'digital day labourers'.
-
-<!-- quelle: The uncertain future of work -->
-
-### Education, skills development, and the future of work
-
-- Education cannot compensate for macroeconomic/industrial policy failures; underemployment persists even among university graduates in wealthy countries.
-- Skills mismatches in school-to-work transitions require: industry/community leaders brought into secondary and higher education; TVET integrating work-based learning; vocational pathways that do not close future learning opportunities.
-- 'Green skills' must be embedded in qualifications, programmes, and curricula for both emerging and transforming low-carbon sectors; students should lead in creating carbon-neutral educational systems.
-- Credentials function as 'proxies' reliant on social trust; recognition of non-formal and informal learning is a basic right.
-- Structural labour-market shifts: rise of 'gig,' freelance, and contractor economies; informal economy remains significant for billions.
-- By 2050, dependency ratios projected to rise sharply in Europe and North America, moderately in Asia, Latin America and the Caribbean; Africa's total dependency ratio projected to decrease as half its population will be under 25.
-- Demographic shifts drive demand for expanded TVET, adult education, and lifelong learning; human longevity may extend working life.
-- Education and training institutions should tighten links with local communities and serve as anchor institutions.
-
-<!-- quelle: Education, skills development, and the school-to-work transitions … Structural transformation of labour markets -->
-
-### Reimagining Our Futures Together: A New Social Contract for Education
-
-- Scenario toward 2050: possible exhaustion of formal-economy jobs regardless of worker skill depth due to technological breakthroughs; education must prepare for life without formal work.
-- Economic security extends beyond the formal economy to household care work, provisioning of common good resources, and government enabling infrastructures (material and regulatory).
-- Historical reference: 1921 Calais congress of the New Education Fellowship, which shaped UNESCO's educational mandate and proclaimed "a new education for a new era."
-- Five principles of the 19th–20th century social contract for education: (1) teacher-led lessons within classes/classrooms prioritizing individual accomplishment; (2) curriculum as a grid of subjects; (3) teaching as a solitary practice within a discipline; (4) schools with similar architecture/organization/procedures across contexts; (5) age-graded specialized institutions at distance from families/communities, ending at adulthood.
-- New social contract must reinforce education as a public endeavour, human right, and state/citizen responsibility; build capabilities for autonomous, ethical thinkers and doers with agency, empathy, critical/creative thinking, and social-emotional skills.
-- Guiding principles derive from a two-year global consultation attentive to youth contributions and a decades-old scientific knowledge base in education.
-
-<!-- quelle: What work will be valued in the future? … Pedagogies of cooperation and solidarity -->
-
-### Reimagining pedagogical approaches for a new social contract
-
-Pedagogies of cooperation and solidarity must be grounded in nondiscrimination, respect for diversity, and reparative justice, framed by an ethic of care and reciprocity. They require participatory, collaborative, problem-posing, interdisciplinary, intergenerational, and intercultural learning.
-
-- Applicable across formal and nonformal settings: museums, libraries, summer camps, community centres
-- Applied across life stages: early childhood foundations, childhood collaboration, adolescent/youth capacities, higher education renewal
-- 2050 guiding principles for dialogue and action: forming deeper connections with the wider world; fostering collaboration; building ethical foundations; developing empathy; using assessment to support learning
-- The **pedagogical triangle** (students, teachers, knowledge) must be re-envisioned within the wider world, learning in and with the world to improve it
-- Teachers and students form a community of knowledge-seekers contributing to the **knowledge commons**
-- Project- and problem-based learning provide authentic, relevant learning opportunities
-
-<!-- quelle: In  a  new  social  contract  for  education,  pedagogy  should  be  rooted  in  cooperation  and solidarity,  building  the  capacities  of  students  and  teachers  to  work  together  in  trust  to transform  the  world. … Interdisciplinary problem-oriented collaborative learning -->
-
-### Pedagogies of cooperation and solidarity
-
-- SDG target 4.7 identifies students as global citizens requiring knowledge and competencies to build sustainable futures, looking to and beyond 2050.
-- Pedagogies of solidarity must account for discrimination and segregation in access based on:
-  - race, gender identity, class, disability, religion or nationality.
-- They must recognize and redress systematic exclusions and erasures imposed by:
-  - racism, sexism, colonialism, and authoritarian regimes.
-- Educational policy aims to address inequities of:
-  - gender, race, ethnicity, religion, residence, nationality, documentation status, disability, sexual identity or social class of origin.
-- Distinguish 'pedagogical differentiation' (attending to differences within a common space) from hyper-personalized learning defined by AI (which decontextualizes and removes learners from public and collective spaces).
-
-<!-- quelle: Chapter 3 I  Pedagogies of cooperation and solidarity … Learning to unlearn divisiveness -->
-
-### Pedagogies of cooperation and solidarity
-
-- "Pedagogy of solidarity": learning to critically examine established dominant knowledge; "learn to unlearn."
-- "Decolonization of pedagogy": constructive, horizontal relationships among epistemological assumptions and perspectives.
-- Education for reparative justice: empathy as integral to justice; healing past injustices as component of pedagogies of cooperation and solidarity.
-- Assessment: every test, assessment, and scale leaves a "pedagogical trace."
-- High-stakes testing pushed to ever younger students must be resisted — limits pedagogical choices, encourages competition, reduces cooperation.
-- "Shadow education" (private tutoring): expands from narrow focus on limited measures (short-term recall, low-order cognitive skills), diminishes curriculum.
-- Educational levels classified as: early childhood, primary, secondary, higher education.
-- Early childhood: period of considerable brain plasticity; emphasis on close human connections, exploration, and play.
-
-<!-- quelle: Cultural resources are a key part of our relationships with knowledge. … Supporting the foundations of early childhood -->
-
-### Pedagogies of cooperation and solidarity
-
-- Early childhood pedagogies must be revised to reflect that children are part of a **more-than-human world**; pedagogies should orient toward critique, challenge, and creation of new possibilities.
-- Optimal learning environments provide ample stimulation in home language(s); shared book reading and rich everyday vocabulary build literacy; electronic devices are a poor substitute for interactive social experiences.
-- Governments and businesses must strengthen parental leave policies; daycare centres, libraries, museums, community centres, and parks should be well-funded as essential public services.
-- Governments must ensure adequate and sustained public funding for quality early childhood education from birth.
-- Men represent, on average, less than 2% of early childhood educators; boys implicitly learn they need not aspire to care for the young.
-- Early childhood pedagogies must affirm individual and collective cultural identities and promote intercultural dialogue.
-- Despite massive expansion of primary access between 1990 and 2020, participatory and collaborative pedagogies remain underused; excessive individual work limits **co-construction**, cooperation, and problem-solving.
-- Community schools and **non-formal** programmes partnering with schools connect students with local elders, community leaders, and knowledge-keepers.
-- Youth face risks including violence, female genital mutilation, early marriage, and livelihood burdens; education can mitigate or exacerbate these through academic pressure and social alienation.
-- Deficit narratives labeling youth as troublesome or dangerous are harmful and limit intergenerational collaboration.
-- Named youth-led movements: Fridays For The Future, Sunrise Movement.
-- In Latin America and South Asia, education systems taking marginalized rural youth as the starting point—rather than extending urban-centric models—reinstil pride in indigenous and ancestral practices.
-
-<!-- quelle: Chapter 3 I  Pedagogies of cooperation and solidarity … Propelling the potential of adolescents and youth -->
-
-### Renewing Higher Education, Principles for Pedagogy, and Curricula
-
-- Gandhi ('True National Education', 1907): education assessed like land or shares; true value lies in character, not earning capacity.
-- Pedagogical forms to infuse higher education: cooperative work, research projects, problem-solving, individual study, seminar dialogue, field study, writing, action research, community projects.
-- Four principles for dialogue and action toward 2050:
-  1. Interconnectedness and interdependencies frame pedagogy; classrooms bring students in contact with diverse others.
-  2. Cooperation and collaboration taught at different levels and ages, from early childhood to adult education.
-  3. Solidarity, compassion, ethics, empathy ingrained in learning; teaching focuses on unlearning bias, prejudice, divisiveness.
-  4. Assessment aligned to aims; prioritize teacher-driven formative assessments; reduce competitive, high-stakes standardized assessment.
-- Curricula framed around two processes: acquisition of knowledge as common heritage of humanity, and collective creation of new knowledge and new worlds.
-
-<!-- quelle: Renewing the mission of higher education … Curricula and the evolving knowledge commons -->
-
-### What should be learned, and what should be unlearned?
-
-The chapter reconceptualizes the **knowledge commons** as the inheritance of all humanity, broadened to include diverse ways of knowing. It argues that content mastery and applied skills ("knowing that and knowing how") should intertwine rather than compete.
-
-Curricular priorities for 2050:
-- Enhance access to the knowledge commons
-- Prioritize climate change education, scientific enquiry, and human rights
-- Link cognitive domain with problem-solving, innovation, creativity, and social-emotional learning
-- Resist fixed disciplinary boundaries; teach all subjects from a historical framing as intergenerational conversation
-- Foster inclusion, gender equality, dismantling of injustices
-
-Climate change education should be gender responsive, take an intersectional approach to social and economic factors across time and geography, foster critical thinking and active civic engagement, and acknowledge that wealthy countries play a disproportionate role in contributing to climate change. Curricula must reject human exceptionalism and position humans as part of, not external to, the natural world.
-
-<!-- quelle: What should be learned, and what should be unlearned? … Curricula for a damaged planet -->
-
-### Curricula for a Living Planet and Whole Human Beings
-
-- **'Rewilding' curricula**: develop deep connectivity with the natural world; embrace the biosphere as an educational space; include intergenerational conversations from youth-led and community-led movements.
-- Indigenous knowledge systems position students as part of the natural community; feminist perspectives challenge adversarial premises underlying exploitative relationships with nature.
-- Curricula must include an **ethic of care** encompassing caring-about, caring-for, care-giving, and care-receiving; address gendered imbalances of caregiving; extend reproductive knowledge to treatment of the damaged planet.
-- **Social and emotional learning** must encompass social, emotional, cognitive, and ethical domains; connect individual developmental trajectories to broader social cohesion; require mindfulness, compassion, and critical inquiry.
-- Physical education: promote fundamental movement skills inclusive of all ability types, genders, backgrounds; avoid overreliance on competition and comparison.
-- Comprehensive sexuality education: age appropriate, culturally attuned; addresses respect, consent, physical and emotional processes during maturity.
-- Adolescent girls in many contexts face physical or sexual harm preventing continuation into secondary schooling; maternal and child health, mortality, and well-being are linked to comprehensive sexuality education.
-
-<!-- quelle: Curricula must enable re-learning how we are interconnected with a living, damaged planet. … Learning to empathize, to cooperate, to address prejudice and bias and to navigate conflict are valuable in every society. -->
-
-### Broadening literacies, numeracy, and the humanities
-
-- Literacy education must extend beyond reading and writing to oral, textual, and media-based expression, including storytelling and the arts.
-- India's same-language subtitling in media networks has been shown to strengthen reading skills, especially among those with basic literacy needing further practice.
-- Curricula are shifting from national monolingualism toward plurilingualism via foreign languages, indigenous languages, and sign languages; learners need access to high-quality education in home and ancestral languages.
-- Numeracy requires applying basic operations to diverse contexts: financial health, disease incidence, agricultural yields, pollution thresholds, community banking.
-- Arctic Norway: traditional braiding procedures used to transition students from discrete integer patterns to multiplication and algebraic variables.
-- Canada: school boards drew on indigenous artists and educators to link beading, basket-making, and moccasin-making with algebraic, proportional, and spatial reasoning.
-- Named ethnomathematical systems: Inuit mathematics, Maori mathematics.
-- History teaching must move beyond chronologies into discussions of evidence and human/non-human experience.
-- "futures literacy" — strengthening students' ability to understand the role the future plays in what they see and do.
-
-<!-- quelle: Broadening literacies and creating plurilingual futures … Drawing on the humanities -->
-
-### Scientific inquiry, digital skills, arts education, and human rights education
-
-- Science curricula should treat methods, findings, and ethics of science as interconnected; curricula must foster capacities for discernment and the sincere investigation of truth that is complex and nuanced.
-- In regions with large mining and oil industries, significant pressure exists on governments to downplay environmental effects of resource extraction in official science curricula.
-- Renewed efforts needed to promote worldwide scientific literacy, especially in disenfranchised and marginalized populations.
-- Digital education must encompass 'critical digital literacy': understandings and dispositions towards the politics of the digital society and digital economy, including the ability to analyze political features of digital technology.
-- Curricula should support teachers and students to act together on technology and help determine how it is used and towards what purposes.
-- Arts education — music, drama, dance, design, visual arts, literature, poetry — can expand capacities to master complex skills and support social and emotional learning across the curriculum.
-- Human rights education can support learners' agency and improve overall effectiveness of national education systems.
-
-<!-- quelle: Scientific inquiry and understanding … Educating for human rights, active citizenship, and democratic participation -->
-
-### Curricula and the evolving knowledge commons
-
-- Human rights education should build skills for critical political thinking, advocacy, monitoring injustice, and confronting power structures that discriminate by gender, race, indigenous identity, language, religion, age, disability, sexual orientation, or citizenship status.
-- Gender equality principles must be learned at an early age; boys must learn early to be proponents of gender equality. Expectations that daughters carry a larger share of domestic responsibilities negatively impacts school participation.
-- Curricula must address racism and challenge stereotypical representations of indigenous peoples, Afro-descendant communities, and ethnic minorities.
-- Higher education must advocate for free and open access to academic scholarship, learning materials, software, and digital connectivity; 'open' implies not only availability but the ability to modify and manipulate information.
-- Post-secondary technical and vocational institutions (community colleges, polytechnics) should be recognized as venues of applied research, leveraging local community connections.
-- Natural science methods and social research concepts such as 'rigour', 'reliability', and 'validity' are not culturally neutral; scholarly publishing does not typically reward intercultural and epistemic diversity.
-- Indigenous knowledges have generally been considered an object, rather than a form, of research.
-- All projections point to continuous growth in higher education enrolments in coming decades; widening access requires a range of different institutions and flexible structures.
-
-<!-- quelle: Chapter 4 I  Curricula and the evolving knowledge commons … Higher education to support diverse approaches to knowledge -->
-
-### Principles for dialogue and action
-
-- Curricula principles for dialogue and action:
-  - Enhance learners' abilities to access and contribute to the *knowledge commons*.
-  - Reorient the place of humans in the world; prioritize climate change education.
-  - Counter misinformation through scientific, digital and humanistic literacies.
-  - Prioritize human rights and democratic participation; address gender equality and confront racism.
-- 2050 guiding principles for dialogue and action (teachers):
-  - Support teacher collaboration.
-  - Prioritize knowledge generation.
-  - Support teacher autonomy and participation in public debate on education.
-- Historical cases: *normal schools* established standard school structures; the *egg crate model* scaled schools into age-grouped classrooms but isolated teachers.
-
-<!-- quelle: Principles for dialogue and action … Teachers in inclusive educational environments -->
-
-### The transformative work of teachers
-
-- Teachers shift from isolated classroom leaders to convenors of educational ecosystems, working in teams (e.g., common planning teams with classroom teachers, literacy specialists, and special education teachers).
-- Educational environments should form a network of learning spaces, blurring divisions between classroom learning and extra-curricular activities.
-- Curricula must be both designed/prescribed and enacted/implemented. Teachers require autonomy and strong supports: technology, peer collaboration, and partnerships with subject matter experts (university professors, scientists).
-- Pedagogies use participatory and cooperative approaches, including cooperative learning within and between classrooms, and collegial learning communities.
-- Collaboration methods include: study groups, teachers' councils, pedagogical teams, peer mentoring, coaching, observations, and site visits.
-- Three types of teacher knowledge: command of teaching subjects; didactic and pedagogical knowledge; professional teaching knowledge.
-- Teachers act as reflective practitioners and knowledge producers, contributing to research through systematic experimentation and evaluation.
-- Teacher development is a lifelong and life-entangled continuum, relying on the teacher's personal "life library" of cultural and experiential repertoire.
-
-<!-- quelle: Chapter 5 I  The transformative work of teachers … The life-entangled journey of teacher development -->
-
-### The transformative work of teachers
-
-- Close to 70 million new primary and secondary teachers needed worldwide by 2030 to meet SDG4 targets.
-- Greatest teacher shortages in sub-Saharan Africa, the region with the fastest growing school-age population.
-- Subnational shortages driven by inequality: well-trained teachers concentrated in urban settings and schools serving higher socioeconomic strata; environments requiring the best teachers serviced by novice, voluntary, or underqualified educators with high turnover.
-- Recruiting indigenous, local, and diasporic teachers can value diversity and enhance student learning.
-- Teacher education must include digital media as a topic of study; research needed on affordances, pedagogical effects, epistemic and ethical possibilities, and blind spots and shortcomings of digital media and platforms.
-- Induction programmes should support novice teachers through collaborative lesson-planning structures and mentoring from experienced colleagues; highest attrition rates occur in this transition phase.
-- Action-research, problem-solving, project work, and experimentation with new techniques should form the basis for induction programmes.
-- CPD continuum: initial teacher education → supervised field experiences → induction → mentoring → in-service professional development.
-- Most effective professional development programmes: extend over long periods, school-based, embedded in experience, provide repeated opportunities to apply learning.
-
-<!-- quelle: Teacher recruitment … Public solidarity to transform teaching -->
-
-### Teachers' working conditions, university relationships, and public participation
-
-- Improve teachers' conditions through: reducing class sizes; improving school safety; strengthening professional recognition and legitimacy; increasing institutional support; fostering cultures of collaboration.
-- Redesign career progression based on: competence; professional development; engagement with school programmes; mentoring for novice teachers; common planning with co-teachers; leading subject areas or cycles; organizing support services such as tutors or councillors; sabbaticals for research and further professional development.
-- Gender-sensitive revision of labour statutes, norms, and workloads needed.
-- AI risks: facial recognition software and monitoring of students/teachers for political surveillance is antithetical to Article 26 of the UN Declaration of Human Rights (education advancing fundamental freedoms and human rights).
-- Initial teacher preparation requires neither universities nor schools acting alone; programmes should build shared spaces with public authorities, teachers' associations, and NGOs, or embed inquiry-oriented approaches in schools.
-- Universities should create education-focused spaces analogous to science and industry 'parks' for shared learning design and teacher preparation.
-- Strengthen teacher professional induction programmes prioritizing mentorship and socialization of young teachers.
-- Teachers should participate in defining public policies and enabling schools to become learning organizations.
-
-<!-- quelle: Teachers' working conditions … Teachers in educational decision-making and in the public sphere -->
-
-### Safeguarding and transforming schools
-
-Four principles for dialogue and action on teaching:
-- Collaboration and teamwork characterize the work of teachers as master convenors of educational environments.
-- Producing knowledge, reflection and research become integral to teaching.
-- Autonomy and freedom of teachers are supported, encouraging a strong professional identity.
-- Teachers participate in public debate and dialogue on the futures of education.
-
-2050 guiding principles for dialogue and action on schools:
-- Protecting and redesigning schools as collaborative space.
-- Leveraging digital technologies positively.
-- Modelling sustainability and human rights.
-
-Schools are protected educational sites supporting inclusion, equity, and individual and collective well-being. The built environment and regimes of time in schools crystallize what is possible, prohibited, welcomed, and excluded. Disruptions such as the global COVID-19 pandemic, Ebola epidemics in West Africa, violent conflicts, and climate emergences highlight the irreplaceable role of schools. Sudden widescale school closures in 2020 and 2021 deprived millions of children and adolescents of in-person education, impacting their social, intellectual, and mental well-being.
-
-Quote: bell hooks, Teaching to transgress: Education as the practice of freedom, 1994.
-
-<!-- quelle: Principles for dialogue and action … If the school did not exist, we would need to invent it. -->
-
-### The necessary transformation of schools
-
-- Historical schooling institutions include the yeshiva, madrasah, and calmécac; the English word 'school' derives from the Greek *skholè* (free or leisure time).
-- Schools organize encounters with the knowledge commons and promote epistemic practices, shifting from transmitting established truth-claims to nurturing understanding of their generation and consequences, forming alliances between epistemologies and ecologies of knowledge.
-- Future school organizing principles should centre on inclusion and collaboration, realigning excellence, achievement, quality, measurement, and progress to include rather than marginalize.
-- The school environment is envisioned as a large library supporting diverse situations and space-times, serving as portals connecting learners with the knowledge commons.
-- Schools must be safe spaces free from violence and bullying, leveraging differences in capacity, ability, cognition, interest, and aptitude.
-- About half of the world's students finish secondary studies without reaching minimum proficiency levels in basic competencies.
-- Consensus from the Futures of Education initiative indicates school design (built design, curricula, classroom organization, learning activities) must change, softening walls between classrooms and the outside world, reconceptualizing lessons as journeys.
-- Schools should 'green' and bring education to carbon-neutrality, breaking with rigid, uniform organizational models of the past two centuries.
-
-<!-- quelle: Common historical commitments … Schools as platforms for cooperation, care and change -->
-
-### Safeguarding and transforming schools
-
-- Classrooms should diversify beyond conventional age/ability/gender groupings; flexible smaller or larger learner groups.
-- Named pedagogies to replace fixed-block lessons: problem-based, project-based, inquiry-based, action-research, community-engaged pedagogies, and service learning.
-- Digital tools enable students to produce videos, mixed-media presentations, and code games and apps.
-- The pandemic proved schools cannot be entirely displaced into virtual spaces, even with high connectivity and equitable device access.
-
-<!-- quelle: From classrooms to communities of learners … Chapter 6 I  Safeguarding and transforming schools -->
-
-### Reimagining Schools: Physical Presence, Digital Inquiry, and Collaboration
-
-- COVID-19 school closures revealed virtual classrooms as limited substitutes for physical school spaces; during disruption, tests were postponed, curricula content-coverage suspended, focus shifted to authentic learning and well-being.
-- Machine learning trained on biased datasets entrenches stereotyping, gender bias, and racism; personalized learning algorithms define students only by past performance (incorrect problems, exhibited weaknesses), leaving little room for reinvention.
-- Coding and computational thinking have emerged as core subjects in many education systems; in some countries, an average person spends more than ten hours a day online.
-- Formal education must address digital rights, surveillance, ownership, privacy, power, control, and security as subjects of inquiry, not merely means for curricular objectives.
-- School accountability should evolve from compliance to shared goal-setting; professional development via coaching, mentoring, action research, and university collaborations reinvents the school as a learning organization.
-- In indigenous settings, schools are reimagined around intercultural learning and the more-than-human world, drawing on ancestral knowledge.
-- TVET advances bridge the theory-practice divide through reimagined apprenticeships.
-
-<!-- quelle: The pandemic has proved that the school cannot be entirely displaced into virtual spaces. … Building cultures of collaboration -->
-
-### Principles for dialogue and action
-
-Four principles guide dialogue and action toward 2050:
-
-- Schools should be protected as spaces where students encounter challenges and possibilities not available elsewhere, bringing diverse groups together.
-- Building collective capacity should guide redesign: architectures, spaces, timetables, and student groupings should build capacities to work together; cultures of collaboration should pervade administration and inter-school relations.
-- Digital technologies should support — not replace — schools; AI and digital algorithms must not reproduce existing stereotypes and systems of exclusion.
-- Schools should model aspired futures: human rights, sustainability, carbon neutrality; students should lead greening the education sector.
-
-— Paulo Freire, *Politics and education*, 1993
-
-<!-- quelle: Transitions from school to higher education … Education across different times and spaces -->
-
-### A new social contract for education
-
-The Faure Commission report (50 years ago) proposed the "Cité éducatif" ('learning society') to rethink educational systems holistically. Established patterns conceive education beginning at 5 or 6 years of age and ending about a decade later. Early childhood education is often framed as 'pre-primary' preparation; adult education as 'second chances', workplace re-skilling, and TVET. The "school format" has extended to early childhood and adult education, despite traditions of resistance, such as efforts to "deschool" adult education. Over the next 30 years, understanding how education is intertwined with life is central. 2050 guiding principles for dialogue and action:
-- emphasizing the importance of inclusive adult education
-- imagining new learning spaces
-- strengthening funding
-- broadening the right to education
-Earth's biosphere is a vital educative space. An ethic of inclusion must guide governance, starting with the most marginalized, fragile, and precarious settings (refugees, those with disabilities, indigenous peoples).
-
-<!-- quelle: In a new social contract for education, we should enjoy and expand enriching educational opportunities that take place throughout life and in different cultural and social spaces. … Steering educational opportunities towards inclusion and sustainability -->
-
-### The role of governments and states
-
-- Legal basis: Article 26 of the Universal Declaration of Human Rights; 1960 Convention against Discrimination in Education (CADE); Article 13 of the 1966 ICESCR.
-- State obligations for education levels:
-  - Primary: free and compulsory
-  - Secondary: generally available and accessible to all
-  - Higher: equally accessible to all on the basis of individual capacity
-- Threefold state obligations: to fulfil (facilitate and provide), respect (prevent measures undermining the right), and protect (prevent third-party interference).
-- 2015 Education 2030: Incheon Declaration and Framework for Action: adopted by over 160 countries; state is the "duty bearer".
-- UN Declaration on the Rights of Indigenous Peoples: right to establish and control educational systems and institutions providing education in their own languages, in a manner appropriate to their cultural methods of teaching and learning.
-- Refugees displaced by climate change: require international bodies and cooperation to ensure the right to education without state protection.
-
-<!-- quelle: The role of governments and states -->
-
-### Governing digital learning spaces
-
-- Digital technologies in education carry mixed effects; key decisions must be made in the public sphere, treating education as a common good and defending the digital knowledge commons.
-- Private control of digital infrastructures creates fragility. Google/Alphabet services like Google Scholar and Google Classroom operate at a loss and face potential shutdown. During COVID pandemic closures in 2020 and 2021, scholars relied on Google's internal decisions for access to materials.
-- The digital economy is driven by an extractivist imperative, treating user data as 'the new oil' to engineer ideas via AI and machine learning.
-- Surveillance in education ecosystems normalizes monitoring, threatening human dignity and the Universal Declaration of Human Rights.
-- Data policies must default to anonymization to protect students and teachers.
-- The absence of public knowledge curation allows platforms to dominate, making experts hostage to algorithms and fueling 'fake news'.
-- Democratization of digital technologies within a robust public sphere is required, guided by open-source efforts.
-
-<!-- quelle: Governing digital learning spaces -->
-
-### Learning with the living planet and expanding when education happens
-
-- Learning spaces must expand beyond human-centred institutions to include: parks, city streets, rural paths, gardens, wilderness, farmlands, forests, deserts, lakes, wetlands, oceans.
-- Indigenous-governed lands hold approximately 80% of the world's biodiversity.
-- The metaphor of 'rewilding' education is proposed for building education in new ways.
-- Education must promote a consciousness of the planetary, moving beyond the 'twenty-first century learner'.
-- Quechua notion of 'Sumak Kawsay' accords rights to nature.
-- Nguni Bantu philosophy of Ubuntu offers principles of relationality.
-- Buddhist ethic of Karuna (compassion).
-- Over the next 30 years, interactions will reshape provisioning activities: caring for children and older adults, producing and preparing food, building shelter, gathering water.
-- SDG4 calls to 'ensure inclusive and equitable quality education and promote lifelong learning opportunities for all'.
-- Adult learning and education's emancipatory tradition has been reduced by an excessive focus on vocational and skills dimensions.
-
-<!-- quelle: Learning with the living planet … Adult learning and education as an emancipatory project -->
-
-### Adult education and broadening the right to education
-
-- Adult education must extend beyond lifelong learning for labour market purposes; current model frames reskilling as an "obligation" tied to employability.
-- Horizon 2050: human lifespans may regularly exceed 100 years; in some areas four generations will co-live — cultural notions of adulthood and maturity will be tested.
-- Educational policies must shift focus to the whole of life, with special attention to adults and the elderly.
-- Adult education policy must recognize informal learning — knowledge and capabilities acquired outside formal schooling — across the lifespan.
-- Digital access for older generations, open access/open-source agendas, scientific literacy, and combating misinformation are central to adult education strategy.
-- A futures orientation and a shared ethic of intergenerational solidarity should define adult education.
-- The right to education must apply to all people, not only children and youth, and across a multitude of sites, not only classrooms.
-- COVID-19 school closures: radio and television deployed for students lacking online access; digital connectivity now linked to the right to education.
-- The right to education is supported by and supports the right to information and the right to culture; education should model open, horizontal dialogue among cultures.
-- Education as a common good: children and adults should be actors, not clients or spectators.
-
-<!-- quelle: Adult education will need to extend far beyond lifelong learning for labour market purposes. … Broadening the right to education -->
-
-### Reimagining our futures together: A new social contract for education
-
-Four principles for dialogue and action toward 2050:
-- Lifelong, life-wide learning with weight given to adult education; inclusive design prioritizing the most marginalized and fragile settings.
-- Educational ecosystems connecting natural, built, and virtual sites; biosphere as a learning space; digital spaces supporting public, inclusive, and common purposes; open access and open-source platforms with protections for student and teacher data.
-- Strengthened government capacity for public financing and regulation to set and enforce responsive, equitable standards upholding human rights.
-- Broadened right to education beyond schooling to lifelong learning, including the right to information, right to culture, and right to connectivity.
-
-A worldwide collaborative research agenda must prioritize:
-- Interrogating barriers to equitable education.
-- Tracing vectors of change: climate/environment, technological transformations, fractures of the body politic, and futures of work.
-- Exploring pedagogies of solidarity, curricula's relationship with the knowledge commons, teacher empowerment, school reimagination, and learning entangled with all times and spaces.
-
-Linda Tuhiwai Smith (Decolonizing Methodologies, 1999) notes that in community approaches, process is often more important than outcome.
-
-<!-- quelle: Principles for dialogue and action … A new research agenda for education -->
-
-### Research, learning sciences, and knowledge partnerships
-
-- Educational research methods include practitioner research, action research, historical archival research, case study research, and ethnography.
-- Teachers and students are positioned as central authors and sources of knowledge.
-- Learning sciences study neuroplasticity, brain anatomy, and the effects of stimuli (sleep, physical activity, emotion, stress, abuse) on specialized skills (speech, reading, writing, spatial awareness).
-- Future learning sciences must involve researchers across gender, culture, socioeconomic background, linguistic background, and age, integrating neurodiversity, learning differences, disability studies, and special education.
-- Methodological traditions include participatory evaluation, collaborative research, youth-led research, and practitioner inquiry.
-- Research partnerships should be interdisciplinary, inter-sectoral, and cross-cultural, requiring epistemic humility to shift from 'North/South' or 'Western/non-Western' paradigms toward relational ecologies of knowledge.
-- Knowledge forms include quantitative and qualitative, normative and descriptive, digitizable and ephemeral, theoretical and practical.
-- Power dynamics must shift from power over people to power to and with people.
-
-<!-- quelle: Research from within education … Expanding knowledge, data, and evidence -->
-
-### Strengthening complex ecologies of knowledge
-
-- "Decolonizing knowledge" requires recognizing diverse sources of knowledge and shifting away from treating indigenous epistemologies as objects of study.
-- Knowledge from the Global North is often transferred to developing contexts, assuming local knowledge is deficient; these imposed solutions often fail.
-- Non-Western perspectives challenge Western dichotomies (e.g., theory and practice, arts and sciences, human and nature).
-- Research on the futures of education requires inclusion in a "knowledge commons" based on just and equitable terms.
-- "UNESCO's Institute for Statistics (UIS)" collects statistics on education indicators, disaggregating by gender, location, income level, and other characteristics.
-- Statistical approaches must avoid reductionism; categories are more nuanced than quantification allows.
-- Not everything is worth being measured, and not everything worthwhile in education can be quantified.
-
-<!-- quelle: Strengthening complex ecologies of knowledge … Statistical data, indicators, and analysis -->
-
-### Big data, knowledge, and educational innovation
-
-- Current technologies frame knowledge as **big**, **searchable**, **storable**, **transmissible**, and **individualizable** — each quality opens some educational possibilities and closes others.
-- Digital research tools available to educators include: statistical data processing and charting, geographic mapping, network mapping, pattern seeking, and keyword tracing.
-- The Report advocates a **purpose-centred, rather than instrument-centred, research agenda**: more data is not necessarily better or more precise; human understanding of context, meaning, and values remains beyond AI's reach.
-- Risk projection: by **2050**, much knowledge may be reshaped into quantitative, algorithm-friendly, molecular, easily storable, rapidly shareable forms accessible only through digital devices; the exploding field of AI seeks to make these properties autonomous and independent of human management — ethical risks require vigilant attention over the next **thirty years**.
-- Comparative learning can **'make the familiar strange'**; adaptation and borrowing are innovation processes in their own right.
-- Central actors — teachers, students, principals, schools — are participants in the production of research and innovation, not merely recipients of externally imposed solutions.
-- **UNESCO** is invited to develop a **clearinghouse of experiences** dialoguing with the Report's proposals; the Report must remain dynamic and rewritable.
-
-<!-- quelle: Big data and the changing nature of knowledge … Developing, borrowing, and adapting policy and programming -->
-
-### Evaluation, Principles for Dialogue, and Global Solidarity
-
-- Evaluation should harness reflective capacities of teachers, students, and schools. Randomized control trials can validate assumptions, but the ethical principle applies: we do not experiment on people.
-- Rethink higher education rankings. Elite models of well-resourced research-intensive universities disproportionately influence other institutions. Valuable points of comparison: serving students' learning, professional futures, and communities; supporting civil discourse and political deliberation; advancing environmental, economic and social justice.
-- Four key priorities for research and innovation:
-  - A generalized, worldwide, collective research agenda on the futures of education, centering on the right to education for all and recasting priorities in light of futures literacy and futures thinking.
-  - Knowledge, data, and evidence must be inclusive of diverse sources and ways of knowing.
-  - Educational innovation must reflect a much wider range of possibilities across diverse contexts and places.
-  - Research must be recast with everyone invited to take it forward; special responsibilities rest with research institutions, governments, and international organizations.
-- António Guterres (UN Secretary-General, Nelson Mandela Lecture, 18 July 2020): within a generation, all children in low- and middle-income countries could have access to quality education at all levels, requiring a New Global Deal.
-- The 2020 and 2021 COVID-19 vaccine mobilization showed global scientific cooperation, but vaccine nationalism highlighted gaps in collective action. Education as a common good must ground international cooperation.
-
-<!-- quelle: Evaluation, experimentation and ranking … Vaccine nationalism has highlighted serious gaps in our ability to work collectively. -->
-
-### Responding to an increasingly precarious world order: From aid to partnerships
-
-Three new approaches to multilateralism are proposed: inclusion of diverse non-state actors in global governance through partnerships; shift from top-down to multi-centric action; and new regional cooperation, especially South-South and triangular cooperation.
-
-Education receives a very small share of overall official development assistance (ODA). Aid to education is disproportionately skewed towards middle-income countries and decreasing for sub-Saharan Africa, which will host the world's largest share of youth in 2050. Education ODA favours higher education, including scholarships, especially among G7 donor countries. Nearly twenty years after the Paris Declaration on Aid Effectiveness, education donors still operate in siloed, projectized formats misaligned with country needs; multilateral channels are underutilized.
-
-Three kinds of global public goods are prioritized:
-- Aligning governments and non-state actors around new shared purposes, norms and standards for a new social contract for education
-- Investing in a commonly accessible store of knowledge, research, data and evidence on education
-- Expanding international financing for populations whose right to education is under greatest threat
-
-<!-- quelle: Responding to an increasingly precarious world order … The educational needs of refugees and involuntary migrants are also underfunded. -->
-
-### Towards shared purposes and cooperation in knowledge generation
-
-- International cooperation must shift from replicating industrialized-world models toward South-South and triangular deliberation, engaging teacher unions, student movements, youth organizations, civil society, private sector suppliers and employers, philanthropies, governments, and citizens.
-- Cooperation should be organized around the principle of subsidiarity: the more concrete and locally-owned a goal, the more viable it becomes for collective advocacy and accountability.
-- Global institutions should concentrate on consensus-based commitments, accountability, brokering knowledge, and acting as funders of last resort for acute educational challenges in lower-income countries and emergency contexts.
-- Financing gap: about 25% of global ODA for health is spent on global goods (~USD 7 billion); funding for common knowledge, evidence, and data goods in education was less than 3% of ODA (~$200 million) in 2015.
-- Recommendation: establish a predictable pooled fund for educational knowledge and evidence generation under a group of UN agencies.
-- No partnership arrangement exists among UN agencies to support joint standard-setting, statistical, and capacity-building roles — unlike global health, where major multilateral organizations pool resources.
-- International cooperation must open space for Global South countries to define innovative research paradigms, attending to diverse epistemologies and ways of knowing.
-
-<!-- quelle: Towards shared purposes, commitments, norms and standards … Cooperation in knowledge generation and the use of evidence -->
-
-### Financing education and the role of UNESCO
-
-- Only 47% of aid goes towards K-12 education in low and lower middle income countries; Africa will host most youth by 2050.
-- Multilateral aid remains projectized, tied to donor-generated prescriptions, with weak national capacity support; proposals from global public health suggest separating technical from financial support across agencies.
-- Paris Declaration on Aid Effectiveness (2005) remains a reference for donor harmonization around country-owned plans.
-- UNESCO's entire budget is smaller than that of many European universities; its education sector budget is a fraction of the World Bank's for knowledge and capacity-building.
-- UNESCO should apply the principle of subsidiarity: strengthen regional/national institutions, act as evidence broker, concentrate resources where the right to education is most threatened (especially Africa).
-- Four priorities for international cooperation to 2050:
-  - Multi-centric, non-top-down collaboration including South-South and triangular cooperation.
-  - Subsidiarity-based support for local/national/regional capacity.
-  - Development financing for low and lower middle income countries and crisis-disrupted populations.
-  - Common investments in evidence, data, and knowledge with pooled platforms and new financing sources.
-
-<!-- quelle: Financing education where it is threatened … Principles for dialogue and action -->
-
-### Building futures of education together
-
-The Report proposes a "new social contract for education" grounded in the right to education throughout life and education as a public and a common good. For the dimension "Pedagogies of solidarity and cooperation", the guiding principles are:
-
-- Interconnectedness, interdependency and solidarity: Incorporate practices at institutional levels including experience and dialogue, service and meaningful action, research and reflection, participation in constructive social movements and community life.
-- Cooperation and collaboration: Utilize learning strategies such as peer feedback, projectbased learning, problem-posing and inquiry-based learning, student laboratories, technical and vocational workshops, artistic expression and creative collaborations. Facilitate encounters across age groups, interests, social sectors, languages and stages of learning.
-- Solidarity, compassion and empathy: Welcome parents and families to participate in sharing and valuing diversity and pluralism. Sustain diverse histories, languages and cultures, especially indigenous communities and social movements.
-- All assessment is pedagogical: Use assessments to prioritize identifying and addressing challenging areas. Do not use punitively or to create categories of 'winners' and 'losers.' Policy must avoid undue influence by rankings prioritizing high-stakes, decontextualized examinations.
-
-<!-- quelle: Epilogue and continuation Building futures of education together … Pedagogy is the work of creating transformational encounters that are based in what exists and what can be built. -->
-
-### Curriculum, Knowledge Commons, and the Teaching Profession
-
-Curriculum guiding principles for 2050:
-- Enable learners to access and contribute to the knowledge commons; move beyond fact transmission toward concepts, skills, values for engaging diverse knowledge forms
-- Reorient humans' place in a more-than-human world; address climate change effects, especially on the poor, minorities, and women and girls
-- Counter misinformation through multiple literacies: digital, scientific, textual, ecological, mathematical
-- Found curricula on human rights and democratic participation; confront power structures discriminating by gender, race, indigenous identity, language, sexual orientation, age, disability, or citizenship status
-
-Teacher profession principles:
-- Teamwork with subject specialists, literacy specialists, librarians, special needs educators, guidance counsellors, social workers
-- Recognize knowledge production, reflection, and research as integral to teaching
-- Uphold professional autonomy; preservice teacher education critical in sub-Saharan Africa, where booming youth population outstrips supply of qualified teachers
-- Integrate participation in public educational debate and policy as core teacher work
-
-<!-- quelle: Curriculum and the knowledge commons … No technology is yet capable of replacing good human teachers. -->
-
-### Reimagining our futures together: A new social contract for education
-
-### Safeguarding and transforming schools
-- Protect schools as spaces for encountering challenges unavailable elsewhere.
-- Reimagine architectures, spaces, times, timetables, and student groupings to build collaboration.
-- Use digital technologies to support, not replace, physical institutions; apply AI with caution to avoid reproducing stereotypes and exclusion.
-- Model human rights, sustainability, and carbon neutrality; use local and indigenous design principles.
-
-### Education across different times and spaces
-- Provide quality educational opportunities at all stages of life; focus on the most marginalized and fragile settings.
-- Connect natural, built, and virtual sites of learning; prioritize open access and open-source platforms with data protections.
-- Strengthen public financing and government capacity to regulate education and enforce standards.
-- Broaden the right to education beyond formal schooling to a right to lifelong and life-wide learning enabled by rights to information, connectivity, and culture.
-
-### Calls to action
-- Call for a new research agenda for education.
-- Call for renewed solidarity and cooperation to support education as a public and a common good.
-
-<!-- quelle: Safeguarding and transforming schools … Calls to action -->
-
-### A new research agenda for education
-
-Four priorities guide research and innovation for the futures of education:
-- Centre on the right to education for all throughout life; recast priorities in light of futures literacy.
-- Knowledge, data and evidence must be inclusive of diverse sources and ways of knowing; examine decolonizing and democratic methodological assumptions.
-- Educational innovation must reflect a wider range of possibilities across diverse contexts; break away from institutional convergence.
-- Include more people from diverse stakeholder groups, including those not normally active in discussions about education.
-
-Four guiding principles relate to international solidarity and cooperation:
-- Work together at global and regional levels; prioritize learners whose right to education is most threatened; embrace South-South and triangular cooperation.
-- Operate from a principle of subsidiarity.
-- Focus international development financing for low and lower middle income countries; direct bulk of resources to sub-Saharan Africa by 2050 and emergency settings.
-- Common investments in evidence, data, and knowledge.
-
-<!-- quelle: A new research agenda for education … Renewed international solidarity and cooperation -->
-
-### Dialogue and participation
-
-The Report proposes a forward-looking dialogue with specific participation roles:
-
-- **Teachers**: central convenors, practitioners, and researchers for a new social contract; require autonomy, professional development support, and recognition in public policy.
-- **Universities and higher education**: intergenerational dialogue locus; future of basic education and universities are interdependent; must educate children, youth, and adults more impactfully.
-- **Governments**: preserve public character of education through sustained public financing and regulation; act as catalysts for innovation and broader participation rather than reform-centric.
-- **International and civil society organizations**: advance education as a public and a common good; ensure visibility and support for people discriminated against by ideas, gender, race, ethnicity, culture, religion, or sexual identity.
-- **Youth and children**: seminal guiding role; recent movements against climate change, racial discrimination, patriarchy, restrictive gender norms, and for cultural diversity and indigenous self-determination demonstrate youth moral clarity.
-
-The Commission recommends UNESCO become a catalyst and clearinghouse of promising practices implementing the Report's principles.
-
-<!-- quelle: Dialogue and participation -->
-
-### Invitation to Continue
-
-- Report builds on a two-year process of dialogue and consultations.
-- A new social contract for education must be translated into programmes, resources, systems, and processes transforming everyday activities of students and teachers.
-- COVID-19 pandemic risks erasing decades of progress; consequences felt most harshly by the poor and marginalized, in the Global South.
-- Vaccine development previewed the scope and speed possible through collaboration around knowledge, science, and learning.
-- Report is a starting point; actualization begins through educators' labours worldwide.
-
-<!-- quelle: Invitation to continue -->
-
-### Independent reports
-
-Some 200 organizations provided reports to UNESCO's Futures of Education initiative. Independent reports received include:
-- Arab Campaign for Education for All (2020)
-- Asia South Pacific Association for Basic and Adult Education (2021)
-- Barber et al. (2020)
-- Bridge 47 (2020)
-- Éducation, Recherches et Actualités (2021)
-- Emmaüs International (2020)
-- Garcés (2020)
-- International Council for Adult Education (2020)
-- International Task Force on Teachers for Education 2030 (2021)
-- International Union for Conservation of Nature (2021)
-- Mouvement International ATD Quart Monde (2020)
-- Red Regional por la Educación Inclusiva de Latinoamérica (2020)
-- Schulte et al. (2020)
-- SDG-Education 2030 Steering Committee (2020)
-- Sefton-Green et al. (2021)
-- Seguy (2021)
-- UNESCO (2020, 2021)
-- UNESCO Institute for Lifelong Learning (2020)
-- UNESCO IESALC (2021)
-- UNESCO's Collective Consultation of NGOs on Education 2030 (2021)
-- Unescocat and Fòrum Futurs de L'educació (2020)
-- Wong et al. (2020)
-- World Council on Intercultural and Global Competence (2021)
-- Yidan Prize Foundation (2021)
-
-<!-- quelle: Independent reports -->
-
-### Background Papers and Global Consultation Inputs
-
-UNESCO commissioned background papers and consultation inputs for the International Commission on the Futures of Education. Selections relevant to arts education:
-
-**Background papers:**
-- Common Worlds Research Collective. 2020. *Learning to become with the world: Education for future survival*. Education Research and Foresight Working Paper 28. Paris, UNESCO.
-- Saeed, T. 2020. *Reimagining education: student movements and the possibility of a Critical Pedagogy and Feminist Praxis*.
-- Schweisfurth, M. 2020. *Future pedagogies: reconciling multifaceted realities and shared visions*.
-- Moore, S.J. and Nesterova, Y. 2020. *Indigenous knowledges and ways of knowing for a sustainable living*.
-- Keats, J. and Candy, S. 2020. *Accession: Building an intergenerational library*. Game developed for the Futures of Education initiative.
-
-**Global consultation inputs:**
-- Jacobs, R. and French, C. 2021. *Women, robots and a sustainable generation: Reading artworks envisioning education in 2050 and beyond*.
-- TakingITGlobal. 2021. *Focus group discussion analysis: Perspectives from the UNESCO Associated School Network's community of students, teachers and parents*.
-
-<!-- quelle: Background papers … Global consultation inputs -->
-
-### Publications, Mandate, and Commission Members
-
-### Interim publications
-- International Commission on the Futures of Education. 2020. *Visioning and Framing the Futures of Education*. UNESCO, Paris.
-- 2020. *Protecting and transforming education for shared futures: joint statement*. UNESCO, Paris.
-- 2020. *Education in a Post-COVID World: Nine ideas for public action*. UNESCO, Paris.
-- 2021. *Progress update*. UNESCO, Paris.
-
-### Mandate
-- Horizon: year 2050 and beyond.
-- Factors to consider: geopolitical shifts, environmental degradation and climate change, changing human mobility, exponential scientific and technological innovation.
-- Report to serve as agenda for policy dialogue and action at multiple levels.
-
-### Commission membership — selected specifics
-- **H.E. Sahle-Work Zewde** (Chair): President of Ethiopia (elected 25 October 2018); former UN Under-Secretary-General; first woman to hold several UN positions.
-- **António Nóvoa**: Chair of research-drafting committee; Honorary President, University of Lisbon (President 2006–2013); Portuguese Ambassador to UNESCO.
-- **Masanori Aoyagi**: Professor Emeritus, University of Tokyo; excavated Mediterranean ruins over 40 years; Chairman, Board of Directors, Tama Art University.
-- **Arjun Appadurai**: co-author of *Failure* (Polity Press, 2019).
-- **Patrick Awuah**: Founder/President, Ashesi University, Ghana; MacArthur Fellow; WISE Prize for Education recipient.
-- **Cristovam Buarque**: pioneer of conditional cash transfers linked to education; former Brazilian Minister of Education.
-- **Elisa Guerra**: Founder, Colegio Valle de Filadelfia, Mexico; 2015 'Best Educator in Latin America' prize (Inter-American Development Bank / Fundación ALAS); Global Teacher Prize finalist.
-
-<!-- quelle: Publications by the International Commission on the Futures of Education … Elisa Guerra -->
-
-### Contributors and Participating Organizations
-
-Members of the Futures of Education initiative include:
-
-- **Badr Jafar** — CEO, Crescent Enterprises; founder, Pearl Initiative
-- **Doh-Yeon Kim** — Former Minister of Education, Science and Technology, Republic of Korea
-- **Justin Yifu Lin** — Dean, Institute of New Structural Economics, Peking University; former Chief Economist, World Bank
-- **Evgeny Morozov** — Author of *The Net Delusion* (2011) and *To Save Everything, Click Here* (2013); PhD, History of Science, Harvard
-- **Karen Mundy** — Director, UNESCO IIEP; Professor, University of Toronto
-- **Fernando M. Reimers** — Ford Foundation Professor, Harvard Graduate School of Education; Director, Global Education Innovation Initiative
-- **Tarcila Rivera Zea** — President, CHIRAPAQ Centre for Indigenous Cultures of Peru
-- **Serigne Mbaye Thiam** — Minister of Water and Sanitation, Senegal; former Vice-Chairman, Global Partnership for Education (2018–2021)
-- **Vaira Vīķe-Freiberga** — Former President of Latvia (1999–2007); co-chair, Nizami Ganjavi International Center
-- **Maha Yahya** — Director, Malcolm H. Kerr Carnegie Middle East Center, Lebanon
-
-Over 40 NGOs, academic institutions, governmental entities, and networks contributed to the global conversation on the futures of education (2019–2021) through focus groups, reports, and webinars.
-
-<!-- quelle: Badr Jafar … Organizations and networks -->
-
-### Appendices: Contributing Organizations and Institutions
-
-The appendices catalogue organizations that contributed to the report, spanning UNESCO national commissions, ministries of education, universities, NGOs, and networks across all regions.
-
-- **UNESCO national commissions**: Algeria, Angola, Haiti, Lao PDR, Lebanon, Madagascar, Rwanda, Switzerland, Spain, Costa Rica, Korea, China, Poland, Portugal, Peru, Canada, Indonesia, Latvia
-- **Ministries of education**: Haiti, Lao PDR, Rwanda, Italy, Latvia, Quebec, Belarus, Bhutan, Ecuador, Greece, Romania, Indonesia, Azerbaijan, Bolivia
-- **Universities/research institutes**: Columbia University Teachers College, Deakin University (REDI), PUCRS, Lisbon University Institute of Education, Okayama University, Saint Petersburg State University, Sciences Po Poitiers, Northwestern University, Istituto Comprensivo Statale 'Perna–Alighieri' Avellino
-- **International networks/NGOs**: Education International, IAU, ICDE, ICAE, OIEC, OMEP, ATD Quart Monde, Global Campaign for Education, NORRAG, CIES, CESA, InSEA, IUCN Commission on Education and Communication
-- **Youth/student bodies**: European Students' Union, European Youth Forum, Erasmus Student Network, National Youth Councils of India, Malta, Namibia
-- **Other entities**: German Commission for UNESCO, Finnish Development NGOs (Fingo), Montessori Association of Thailand, Scholas Occurrentes, SDG-Education 2030 Steering Committee
-
-<!-- quelle: Appendices -->
-
-### Appendices: Participating Organizations and Schools
-
-The appendices list organizations and schools participating in the Futures of Education initiative.
-
-Organizations include SIETAR, SEA-ESD Network, UNU-IAS, WFSF, and universities across multiple continents (Yale, Bristol, Edinburgh, Leeds, Oslo, O.P. Jindal Global University, etc.).
-
-Schools conducted discussions and focus groups with students, teachers, and/or parents. Many are from the UNESCO Associated Schools Network (ASPnet). Participating schools by country:
-
-- Angola (18 schools): Alda Lara Polytechnic Secondary Institute; Lyceum Ngola Kiluanji No. 1145; Primary School José Martí No. 1136
-- Bangladesh (12): Adamjee Cantonment College; Dhaka Residential Model College; Udayan Uchcha Madhyamik Bidyalaya
-- Belarus (9): Gymnasium No. 1 named after F. Skorina, Minsk; Gymnasium No. 2 Orsha
-- China (7): Shanghai High School; Qingdao No.2 High School; The High School Affiliated to Renmin University of China
-- Costa Rica (30+): Colegio de Santa Ana; Escuela Naciones Unidas; Golden Valley School
-- Denmark (60+): Aarhus Statsgymnasium; Odense Katedralskole; Gefion Gymnasium
-- Finland (25+): Helsingin yliopiston Viikin normaalikoulu; Oulun normaalikoulu
-- Germany (10): Heinrich-Hertz-Schule Hamburg; Sophie-Scholl-Schule Berlin; Max-Planck-Gymnasium Berlin
-
-<!-- quelle: Appendices … Germany -->
-
-### Reimagining Our Futures Together: A New Social Contract for Education
-
-The report, two years in the making and informed by a global consultation engaging approximately one million people, is presented by the International Commission on the Futures of Education. It argues for renewing education along five dimensions:
-
-- Pedagogy
-- Curricula
-- Teaching
-- Schools
-- Learning in all areas of life
-
-It features in-depth examination of digital technologies, climate change, democratic backsliding, societal polarization, and the uncertain future of work. Participating schools span Greece, Japan, Lao PDR, Lebanon, Madagascar, Portugal, Republic of Korea, Rwanda, and Slovenia.
-
-<!-- quelle: Greece … REIMAGINING OUR FUTURES TOGETHER A  new  social  contract  for  education -->
+Part I surveys where education currently stands relative to commitments to equity, justice and sustainability. Chapter 1 reviews five decades of progress; Chapter 2 scans four overlapping fields of transformation: the environment, technology, the political sphere, and the future of work. Among the million people consulted, there is broad agreement that ignoring these unfolding transformations would be the most dangerous course.
+
+### Chapter 1: Towards more equitable educational futures (p. 29–37)
+
+The chapter opens with Julius Nyerere's 1967 *Education for Self-Reliance*, which demanded an education fostering living and working together for the common good and commitment to the whole community. Its guiding claim is that today's gaps in access, participation and outcomes are the product of yesterday's exclusions and oppressions.
+
+**Incomplete and inequitable expansion** (p. 30–33): When the Universal Declaration of Human Rights was adopted in 1948, the world's 2.4 billion people included only 45% who had ever entered a school; today, of 8 billion people, over 95% have. Enrolment in 2020 exceeded 90% in primary, 85% in lower secondary and 65% in upper-secondary education. In 1970 more than a quarter of children were out of primary school; by 2020 fewer than 10% were. Girls — nearly two-thirds of out-of-school children in 1990 — are no longer over-represented among the excluded, except in the lowest-income countries and sub-Saharan Africa. Pre-primary participation climbed from just over 15% in 1970 to 35% in 2000 and over 60% in 2019. Youth literacy in lower and middle income countries has caught up with upper middle income countries at 90+%. Higher education participation grew from 10% of the relevant population in 1970 to 40% today; gender parity arrived around 1990, with women's participation rising faster ever since — except in low income countries and sub-Saharan Africa (7% of female students, 10% of male). Projections: high income countries may hit 100% participation by 2034; middle income countries 60–80% by 2050; lower middle income countries roughly 35%; low income countries under 15%.
+
+Yet exclusion persists: a quarter of youth in lower income countries remain non-literate; adult literacy stays below 75% in lower middle income countries and barely above 55% in low income countries; in the latter, more than 2 out of 5 women cannot read. One in five children in low income countries — roughly 250 million worldwide — are still out of primary school. Three out of five adolescents and youth in low income countries are out of secondary school; over a third of adolescents (40% of girls, 34% of boys) in low income countries are not enrolled in lower secondary, against near-universal (98%) enrolment in high income countries; upper secondary enrolment in low income countries covers fewer than 35% of girls and 45% of boys, versus over 90% in high income countries. Worldwide, more than a quarter of lower secondary students and more than half of upper secondary students fail to finish; nearly 60% of high school students in lower middle income countries and almost 90% in low income countries exit before completing secondary — a waste of talent attributed to weakly relevant content, neglect of girls' social needs and poor families' economic circumstances, cultural insensitivity, and pedagogy disconnected from youth realities. The report reads this massive early school leaving as an overlooked face of the global "learning crisis".
+
+**Teachers** (p. 32–33): the single most important influence on educational quality — provided they receive recognition, preparation, support, resources, autonomy and continuing development. Professionalization demands a continuum: recruiting talented candidates, high-quality initial preparation, early-career support, continuous professional development, collaborative professionalism, schools as learning organizations, career ladders rewarding growing expertise, and teacher voice in shaping the profession. Norms that undermine it include politically motivated appointments, teacher education run as "cash cows", career structures blind to learning impact, material conditions inferior to comparable professions, and violations of teachers' freedoms and rights, including harassment and coerced political or religious allegiance. Alarmingly, the share of qualified primary teachers is falling: in sub-Saharan Africa from 85% in 2000 to about 65% in 2020; in the Arab region from 98% in 2004 to 85% in 2020; and in sub-Saharan African secondary education only half of teachers held minimum qualifications in 2015, down from nearly 80% a decade earlier. TVET enrolment stagnates at around 1% of the age group in sub-Saharan Africa and South Asia, though it reaches up to 15% of 15–24-year-olds in Central Asia, Central and Eastern Europe, and East Asia and the Pacific. ILO data show that over one in five youth aged 16–24 worldwide are outside education, training and employment, two-thirds of them young women.
+
+**Persistent poverty and rising inequality** (p. 34–35): the global economy grew two and a half times between 1990 and 2020; China's share of world GDP rose from about 2% to 16%, while sub-Saharan Africa's went from 1.5% to just 2%. Per capita income rose 75%; the poverty rate fell from over a third of humanity to under 10%, yet some 690 million people survive on less than two US dollars a day and 1.8 billion on 3.20 US dollars or less. Extreme poverty is concentrated in sub-Saharan Africa, is mostly rural, and weighs disproportionately on women; two-thirds of the poor are under 25. Since the 1980s, inequality between countries has narrowed while inequality within countries has widened — sharply in China, India, North America and the Russian Federation, moderately in Europe, and remaining stubbornly high in the Arab world, sub-Saharan Africa and Brazil. The 2018 World Inequality Report records that in sub-Saharan Africa, the Arab world, Brazil and India, the top 10% of earners capture more than half of all income. Capital has moved from public into private hands, leaving governments fiscally weaker. Transparency International's 2013 Global Corruption Report catalogues corruption in education: diverted procurement funds, bribery for grades and admissions, nepotistic hiring and scholarships, plagiarism, and political and corporate interference in research; weakened societal and institutional trust can dampen confidence in education's value and integrity and, more significantly, breed acceptance of corruption as a social norm from one's earliest years.
+
+**A web of exclusions** (p. 35–37): gender discrimination compounds with poverty, indigenous identity and disability. In sub-Saharan Africa, 123 girls are out of primary school for every 100 boys excluded; in 9 of the lowest income countries, the poorest girls average 2 years less schooling than boys, with attrition tied to early marriage, early and unintended pregnancy, domestic work, and menstrual health and stigma. Disability compounds with poverty across all regions; conflict accounts for half of the world's chronically out-of-school population, with students and staff exposed to kidnapping, rape and armed recruitment. Indigenous and ethnic minority children face economic, linguistic and geographic barriers compounded by racism and cultural irrelevance; historically education served as a tool of assimilation and religious indoctrination, and its legacies persist in systemic discrimination — children removed to hostels or boarding schools, cut off from family, community and culture. PIRLS findings showed that Grade 4 students whose home language differed from the test language were less likely to reach even the lowest reading proficiency; the report argues that equity in education must embrace humanity's many forms of knowledge and expression rather than a single model of development. Recognizing students' identities — cultural, spiritual, social, linguistic — directly affects retention, mental health, self-esteem and community well-being. In 2020, COVID-19 closures touched 1.6 billion children and young people; millions, disproportionately from poor and marginalized communities, will not return.
+
+### Chapter 2: Disruptions and emerging transformations (p. 38–46)
+
+The chapter opens with Edgar Morin (*Leçons d'un siècle de vie*, 2021), who learned to stop trusting "the permanence of the present, the continuity of becoming, and the predictability of the future." Four overlapping areas of disruption are examined.
+
+**A planet in peril** (p. 39–42): the 2020s are decisive. Atmospheric chemistry is shifting ten times faster than during the most extreme changes of the entire age of mammals, and the Earth is warmer than at any point since the last Ice Age began 125,000 years ago. Under the 2015 Paris Climate Accords, governments pledged to hold warming to 2 °C above pre-industrial levels (preferably 1.5 °C), yet emissions keep rising, and the IPCC's 2021 report shows warming outpacing earlier estimates. Human activity has killed up to half of tropical coral reefs, melted 10 trillion tons of ice, and made the ocean far more acidic. World population tripled from 2.5 billion in 1950 to nearly 8 billion in 2020, projected to reach 9.7 billion in 2050 and plateau near 11 billion in 2100. Since 1950, water use has doubled, food production and consumption grown 2.5-fold, and wood consumption tripled; by 2050, demand for food is projected to rise a further 35%, water by 20–30%, and energy by 50%. Humanity's ecological footprint already demands 1.6 planet Earths; on the current path, by 2050 we would consume at four times the rate of regeneration. Pollution causes an estimated 9 million premature deaths annually — exceeding AIDS, malaria, TB and warfare combined — and is linked to learning difficulties and disabilities; many schools lack air filters, sewage treatment and clean water, and some sit amid chemical waste. Climate disruption hits education directly (displacement, destroyed or repurposed buildings, teacher shortages, heat that impairs learning and cognition) and indirectly (food insecurity, disease, precarity). Without steep emissions cuts, up to one-third of humanity could live in areas unsuitably hot for humans by 2070. Climate change deepens gender inequality: displaced women and girls face higher risks of poverty traps and lower prospects of educational recovery; male out-migration loads survival burdens onto women; early marriage, sometimes a family survival strategy, ends girls' schooling. Yet indigenous women hold often-ignored knowledge for mitigation and adaptation — sustainable forest management, sowing and harvesting of water, biodiversity, crop resistance, seed conservation and selection. Most damning, education currently correlates with unsustainable practices: the world's most educated countries and people are those most accelerating climate change. If being educated means living unsustainably, the report argues, our notions of education itself must be recalibrated.
+
+**Cause for hope** (p. 42–43): an ecologically-oriented education is emerging to rebalance human life within Earth's interdependent systems; Earth Day has grown into one of humanity's largest secular observances; and the climate movement has turned children into active participants claiming their own futures. However, research finds that climate change education remains confined to scientific instruction and fails to cultivate the full range of competencies for effective action; renewed approaches are needed, drawing on what is known about deeper learning and civic competency.
+
+**The digital that connects and divides** (p. 43–46): digital literacy and access constitute a basic twenty-first-century right; the pandemic revealed the divide starkly — the connected could keep learning remotely while the unconnected lost out, widening gaps. Technology is never neutral: it shapes action and understanding in ways that can divide as well as emancipate. Algorithmic pathways, "platform imperialism", and the governance of digital infrastructures pose acute threats to education as a common good. Digital technologies embody a dominant post-Renaissance Western strain of knowledge that has pushed indigenous ways of knowing aside — the climate and navigation expertise of fishers, sailors and adventurers displaced by instrument-equipped astronomers, climatologists and meteorologists; the accumulated knowledge of farmers, hunters, gatherers and pastoralists displaced by agronomists, forestry experts, pharmaceutical companies and nutritionists. This loss has robbed humanity of a vast archive of knowledge about being human, nature, environment and cosmology — knowledges educators can recognize, reclaim and restore as "the DNA of cultural diversity for humanity." Profit-driven digital knowledge isolates individuals and can foster loneliness, selfishness and narcissism; the digital divide, by ignoring whatever falls outside its measurement, amounts to "platform imperialism". The answer is not naive inclusive digitalization but a considered public effort to marshal the digital for the common good. Design communities routinely exclude underprivileged groups — women, linguistic, ethnic and racial minorities, the disabled — perpetuating bias and misrepresentation. The report warns that "numbers without narratives, connectivity without cultural inclusion, information without empowerment, and digital technology in education without clear purposes, are not desirable." A more supple digital environment requires uncoupling its infrastructures from prevailing business models and authoritarian regulatory impulses.
+
+**Hacking human learners** (p. 46): biotechnology and neuroscience could enable the engineering of human beings in previously inconceivable ways, making ethical governance and public deliberation urgent. New neuroscience instruments permit direct observation of brain function, though mostly in highly controlled settings far from everyday life. (This discussion continues beyond the present excerpt.)
+
+### Figures (p. 2)
+
+*Image 2 (p. 2):* — This is a logo graphic. It features a blue square at the top containing a white icon of a classical building with columns. Below the square, the word "unesco" appears in large blue lowercase letters, and beneath that the text "United Nations Educational, Scientific and Cultural Organization" is written in smaller blue letters.
+
+<!-- quelle: Reimagining our futures together: a new social contract for education (p. 1–46) -->
+
+### Neuroplasticity, brain research and reading (p. 47)
+
+This closing section of Chapter 2's discussion of disruptions notes that neuroscience research (e.g. identifying brain areas activated during language comprehension or mathematical reasoning) still reveals little about instructional design and needs translational research. However, evidence of the brain's **neuroplasticity** — the brain physically changes across the lifespan — shows that learning and "rewiring" are possible at all ages, with implications for adult education and adaptation to environmental and technological change. Regarding digital, screen-based reading, concerns exist about distraction and "skimming" modes, but the report rejects a digital-versus-print choice: teachers should ensure students encounter both linear and tabular reading, treating print and digital as complementary and both essential. Steering these developments requires open data, open science, and an expanded right to education encompassing rights to connectivity, data, information and privacy.
+
+### Democratic backsliding and growing polarization (p. 48–49)
+
+Democracy has backslidden over the past decade, fuelled by discontent with globalization, migration and displacement from conflict, economic hardship and climate change. Monitoring organizations describe the shift variously: *The Economist* speaks of a move from full to "flawed democracies", Freedom House from "free" to "partly free" systems, V-Dem from electoral democracy to "electoral autocracy". Contributing factors include populist leaders, nativism, social media's real-time spread of "fake news", micro-targeting, elite hubris and general anxiety about uncertain futures. Rights — civic, social, human, environmental — are curtailed by authoritarian governments mobilizing fear and prejudice, with serious consequences for education rooted in human rights and citizenship.
+
+Counter-movements show resilience: ecological (often youth-led) movements, struggles against regimes depriving minorities of rights, Black Lives Matter, the '#metoo' movement, and calls to decolonize curricula. The COVID-19 pandemic both awakened solidarity ("the social has been rediscovered") and aggravated backsliding through expanded executive powers, surveillance, restrictions on gatherings and movement, military deployment in civilian areas, and disrupted elections. Education must build students' capacities for active citizenship, democratic participation, and care and respect for others.
+
+### The uncertain future of work (p. 49–54)
+
+**The problem (p. 49–50).** The 2019 recommendations of the ILO's Global Commission on the Future of Work, advocating a human-centred agenda, are a starting point. Unemployment remains unacceptably high; billions work in precarious informal employment; over 300 million workers with paid employment live in extreme poverty; millions are trapped in modern slavery; gender gaps in participation and pay persist. Youth labour force participation (ages 15–24) fell from 50% in 1990 to under 33% today; one in five youth is not in employment, education or training, and one in four is underemployed. In 2019, participation was under 50% for women versus close to 75% for men. Essential but feminized labour (caregiving, child-rearing, cleaning, cooking) is invisible in formal measures of "work" and "productivity", and when formalized is lower-paid and lower-status. COVID-19 may have destroyed as many as 150 million jobs and set back the gender gap: women lost employment far more than men across regions and income levels.
+
+**Future shifts (p. 50–51).** AI, automation and robotics will create and displace jobs; greening economies will create millions of jobs while carbon- and resource-intensive jobs disappear; the platform economy could produce "digital day labourers". Skills developed today are unlikely to match tomorrow's jobs, increasing demands on education and training systems.
+
+**Education, skills and school-to-work transitions (p. 51–52).** Education cannot compensate for failures of macroeconomic, industrial and employment policy, which are more effective levers for job creation; "supply side" reforms of TVET alone will not create jobs. Underemployment among graduates is a combustible mismatch that can spark political strife. Recommendations: bring industry and community leaders into secondary and higher education; provide career counselling and lifelong learning for educators; integrate work-based learning into TVET; keep vocational pathways open to future learning. Education should not focus narrowly on jobs or entrepreneurship but enable people to create long-term social and economic well-being. "Green skills" should be embedded in qualifications, programmes and curricula, and students should lead in creating carbon-neutral educational systems.
+
+**Credentials (p. 52).** Credentials sit at the intersection of education and labour markets; individuals have a basic right to have learning recognized and validated, including non-formal and informal learning. Qualifications are only "proxies" for what someone can do and work through social trust. Governments, educators, employers and the public must collaborate to monitor labour market shifts and adjust programmes accordingly.
+
+**Structural transformation of labour markets (p. 53).** Gig, freelance and contractor economies are rising, reinforcing the informal economy and demand for reskilling/upskilling; education must offer flexible learning options. Demographically, by 2050 dependency ratios will rise sharply in Europe and North America and moderately in Asia, Latin America and the Caribbean, while Africa's ratio decreases as half its population will be under 25. This supports expanding TVET and adult education, reinvigorating lifelong learning, and investing in people's capabilities across life transitions. Institutions should become "anchor institutions" tightly linked to local communities.
+
+**What work will be valued (p. 54).** A possible scenario by 2050 is a world running out of formal-economy jobs regardless of skill level, raising the question of what education people would need to live without formal work. The report argues for rethinking what it means to produce value — considering household care work, common good resources and public infrastructures — and prioritizing learners' ability to create meaning. Flexibility in the face of uncertain employment futures must be built into the new social contract.
+
+### Part II: Renewing education — the new social contract (p. 55–56)
+
+Recalling the 1921 Calais congress of the New Education Fellowship ("a new education for a new era"), the report calls for new pedagogies, curricula, a recommitment to teachers, a new vision of school and new appreciation of education's times and spaces — while renewing, not discarding, existing heritage. The inherited social contract of the nineteenth and twentieth centuries organized learning through five principles: (1) education as a pedagogical project of teacher-led lessons in classes prioritizing individual accomplishment; (2) a curriculum organized as a grid of subjects; (3) teaching as a solitary practice by a single teacher; (4) architecturally and organizationally similar schools regardless of context; (5) age-grouped institutions operating at a distance from families and communities, ending when youth were deemed ready for adulthood. A new social contract must reinforce education as a public endeavour, a human right, and a shared responsibility, educating citizens who advance human rights and building students' autonomy, collaboration, agency, responsibility, empathy, and critical and creative thinking.
+
+### Chapter 3: Pedagogies of cooperation and solidarity (p. 57–69)
+
+**Foundations (p. 57–59).** Pedagogy should be rooted in cooperation and solidarity, building the capacities of students and teachers to work together in trust to transform the world. It must respect learners' rights, teach people to think for themselves (not what or how to think), and be based on non-discrimination, respect for diversity, reparative justice, and an ethic of care and reciprocity. Pedagogy is relational: students, teachers and knowledge form a classic pedagogical triangle, now to be envisioned within the wider world, nourishing and contributing to the "knowledge commons". Teachers and students should form a community of knowledge-seekers and builders. Authenticity and relevancy are powerful motivators; project- and problem-based learning tap intrinsic interest.
+
+**Interdisciplinary problem-oriented collaborative learning (p. 59–60).** Problem-posing education engages students in projects requiring them to transcend disciplinary boundaries; SDG target 4.7 frames students as global citizens, and the SDGs offer a framework for interdisciplinary learning. Service learning and community engagement soften classroom walls but must be approached with humility, free of paternalism, and not limited to the privileged.
+
+**Treasuring and sustaining diversity and pluralism (p. 60–62).** Pedagogy must be inclusive and intercultural, accounting for all forms of discrimination and segregation, and must recognize and redress exclusions imposed by racism, sexism, colonialism and authoritarian regimes. It should promote intercultural citizenship grounded in affirmation of one's cultural identity, not assimilation of minorities. The report distinguishes "pedagogical differentiation" (attending to differences within a common space) from hyper-personalized AI-driven learning that decontextualizes learners, and cautions against ed-tech trends promising readymade paths: empathy, ethics, solidarity, co-construction and justice "are deeply human acts best facilitated by human beings".
+
+**Learning to unlearn divisiveness (p. 62).** Pedagogies require unlearning bias, prejudice and divisiveness; knowledge is not a "finished product" for transmission. Attention is needed to the silencing of collective memories, cultural traditions and indigenous knowledges. Learning environments must be safe places of refuge where learners may experiment, dare, fail and create, with intellectual freedom including the right to make mistakes.
+
+**Healing the wounds of injustice (p. 63).** Knowing is connected with feeling; the decolonization of pedagogy proceeds through horizontal relationships among epistemologies. Pedagogies of solidarity should pursue reparative justice, using sympathy, empathy and compassion to create possibilities for healing.
+
+**Meaningful assessment (p. 63–64).** Assessment must proceed with caution when used to classify and stream students; much important learning cannot be measured. High-stakes testing pushed to ever younger students should be resisted, as should the "shadow education" of private tutoring driven by narrow measures. Teachers should have latitude to decide when competition serves pedagogical goals.
+
+**Pedagogical journeys at every age (p. 64–68).**
+- *Early childhood (p. 64–66)*: quality early childhood education must be a public priority and adequately funded; play, exploration and close human connections matter; pedagogies must reflect that children are part of a more-than-human world. Screens are a poor substitute for interactive social experience; parental leave, daycare centres, libraries, museums, community centres and parks should be treated as essential public services ("it takes a village to raise a child"). Men represent on average less than 2% of early childhood educators, implicitly teaching boys not to aspire to care work; home and ancestral languages must be immersive in earliest years; pedagogies must affirm cultural identities and avoid perpetuating assimilation and prejudice.
+- *Primary (p. 66)*: despite massive access expansion between 1990 and 2020, curiosity and opportunities to play, explore and collaborate decline in higher grades; too much isolated individual work limits co-construction. Community schools and non-formal programmes partnering with elders and knowledge-keepers offer promising models.
+- *Adolescents and youth (p. 66–67)*: youth face risks to education, protection from violence, early marriage and livelihood burdens, plus isolation and mental health challenges. Deficit narratives labelling youth as troublesome are harmful. Youth-led movements such as Fridays For The Future and the Sunrise Movement are "rehearsals for a different kind of future"; in Latin America and South Asia, systems starting from marginalized rural youth rather than urban-centric models reinstate pride in indigenous and ancestral practices.
+- *Higher education (p. 67–68)*: pedagogy has been neglected in universities (professors evaluated solely on individual outputs); renewal requires connections with primary and secondary education, pedagogical strategies beyond the lecture (cooperative work, research projects, seminars, field study, action research, community projects), greater valuing of teaching, and core values of respect, empathy, equality and solidarity. TVET should not be limited to technique but address social, ethical and conceptual questions.
+
+**Principles for dialogue and action (p. 68–69).** Four principles: (1) interconnectedness and interdependencies should frame pedagogy, bringing students into contact with difference; (2) cooperation and collaboration must be taught and practised appropriately at all levels and ages; (3) solidarity, compassion, ethics and empathy should be ingrained in how we learn, including unlearning bias, prejudice and divisiveness; (4) assessment should align with these aims — prioritizing teacher-driven formative assessment and reducing competitive, high-stakes standardized testing.
+
+### Chapter 4: Curricula and the evolving knowledge commons (p. 70–84)
+
+**Framing (p. 70–72).** Curricula should grow out of the wealth of common knowledge and embrace ecological, intercultural and interdisciplinary learning, helping students access and produce knowledge while building capacity to critique and apply it. The guiding question is simultaneously "what should be learned, and what should be unlearned?" — especially as the mainstream development and economic growth paradigm must be rethought in light of the ecological crisis. The knowledge commons must be reconceptualized as the inheritance of all humanity, broadened to diverse ways of knowing; knowledge transmission has too often erected barriers and reproduced inequality. Curricula should resist fixed disciplinary boundaries and teach all subjects historically, as intergenerational conversation.
+
+**Curricula for a damaged planet (p. 73–74).** Education must prepare students to adapt to, mitigate and reverse climate change; curricula must enable re-learning how we are interconnected with a living, damaged planet and unlearning human arrogance and exceptionalism. Climate change education should be gender-responsive, intersectional, foster critical thinking and civic engagement, recognize that wealthy countries contribute disproportionately while poorer countries bear the brunt, and acknowledge colonial and industrial legacies disrupting indigenous communities' harmonious relationships with the more-than-human world. "Rewilding" curricula means developing deep connectivity with the natural world. Indigenous knowledge systems and feminist perspectives (against adversarial, domination-based premises) contribute much; social justice is inseparable from ecological justice, and an ethic of care — caring-about, caring-for, care-giving and care-receiving — must be included in curricula.
+
+**Integrating knowing and feeling (p. 74–75).** Neuroscience shows knowing and feeling are the same cognitive processes, played out in relationships with others. Social and emotional learning (empathy, cooperation, addressing prejudice, navigating conflict) requires consciously designed experiences, bonding with teachers, positive peer experiences and community involvement, and must be adequately funded. Holistic curricula also require quality, inclusive physical education and age-appropriate, culturally attuned comprehensive sexuality education addressing respect, consent and equality.
+
+**Broadening literacies and plurilingual futures (p. 76–77).** Literacy must extend beyond reading and writing to understanding and expression in all forms — oral, textual, and diverse media including storytelling and the arts. Literacy is not an "on/off" switch but strengthens throughout life; deep, wide, critical reading opens equitable access to the knowledge commons. India's same-language subtitling in media is cited as strengthening reading skills society-wide. Curricula are shifting from national monolingualism towards plurilingualism — foreign, indigenous and sign languages — which must be sustained; learners need high-quality options in home and ancestral languages, with bilingual policies supporting cultural identities and participation. Linguistic diversity is a key feature of the shared knowledge commons.
+
+**Enriching numeracy (p. 77).** Numeracy applies mathematical knowledge to diverse contexts (financial health, disease incidence, agricultural yields, pollution thresholds). Culturally responsive examples include Arctic Norway's traditional braiding procedure for teaching integer patterns to multiplication and algebraic variables, and Canadian school boards linking beading, basket-making and moccasin-making with algebraic, proportional and spatial reasoning — challenging the false notion that mathematics is "Western" and recalling ethnomathematical systems such as Inuit and Māori mathematics.
+
+**Humanities (p. 78).** History, taught effectively, develops perspective on social change, discrimination and privilege, and historical contingency — the understanding that things could be other than they are. Philosophy, history, literature and the arts connect us with purpose, critical inquiry, empathy, ethics and imagination, and strengthen students' "futures literacy" — the ability to use the future effectively, to prepare, recover and invent as changes occur.
+
+**Scientific inquiry (p. 78–79).** Science's core gain is the notion that truth results from collective procedures and agreements; curricula must treat methods, findings and ethics as interconnected. Amid misinformation, fake news and crises like the pandemic and global warming, curricula must foster commitment to scientific truth and capacities for discernment and sincere investigation of complex, nuanced truth. The report cites pressure from mining and oil industries on governments to downplay environmental effects in science curricula, and calls for worldwide scientific literacy, especially among disenfranchised populations.
+
+**Skills for a digital world (p. 79–80).** Digital skills are not "native" or "natural" but constructed through intentional education. Beyond functional skills, education must encompass "critical digital literacy" — understandings of the politics of the digital society and economy. Education must not merely accommodate technology but steer it: curricula should support teachers and students to act together on technology and help determine how it is used and towards what purposes.
+
+**Arts education (p. 80).** Education in music, drama, dance, design, visual arts, literature and poetry expands mastery of complex skills, supports social and emotional learning, makes obscured truths visible, teaches that small differences have large effects, and provides languages for cultural critique and political action.
+
+**Human rights, active citizenship and democratic participation (p. 80–81).** Human rights education can be transformative, supporting learners' agency, citizenship, and peace education. It should build skills for critical political thinking, advocacy, monitoring injustice, and confronting power structures that discriminate by gender, race, indigenous identity, language, religion, age, disability, sexual orientation or citizenship status. Curricula must address patriarchy and gender inequality — boys must learn early to be proponents of gender equality; equality principles must be consistent across home, classroom, schoolyard and community — and must confront racism and discriminatory narratives about indigenous peoples, Afro-descendant communities and ethnic minorities.
+
+**The enabling role of higher education (p. 82–83).** Universities should be "a fierce advocate for free and open access to knowledge and science" — where "open" means not only access but the ability to modify and manipulate knowledge. Inter-university cooperation and internationalization hold promise; cost barriers and intellectual property enclosures must be addressed. Post-secondary technical and vocational institutions (community colleges, polytechnics) should be seen as venues of applied research connected to local communities. Higher education must also support epistemic diversity: concepts like "rigour", "reliability" and "validity" are not culturally neutral; indigenous knowledges have generally been treated as objects rather than forms of research; institutional variety and flexible structures are needed.
+
+**Principles for dialogue and action (p. 84).** Four principles: (1) curricula should enhance learners' abilities to access and contribute to the knowledge commons, engaging knowledge creatively and critically and correcting its omissions and exclusions; (2) the ecological crisis requires curricula that fundamentally reorient the place of humans in the world, prioritizing climate change education; (3) misinformation must be countered through scientific, digital and humanistic literacies, including the ability to "act on" science and technology; (4) human rights and democratic participation should be key building blocks, with gender equality addressed across all curricula and racism confronted directly.
+
+### Chapter 5: The transformative work of teachers (p. 85)
+
+The chapter opens with an epigraph from Wei-ming Tu (*Humanity and Self-Cultivation*, 1996): "The teacher does not necessarily have privileged access to the sagely truth. Like his students, he is in the process of becoming what he ought to be." (The chapter's content follows in the next part.)
+
+<!-- quelle: Chapter 2 I Disruptions and emerging transformations (p. 47–85) -->
+
+### Chapter 5: The transformative work of teachers (p. 86–96)
+
+This chapter argues that a new social contract for education must place teachers at its centre, restoring value to their profession and rethinking it as joint work that generates fresh knowledge capable of transforming both education and society. Teaching is portrayed as a demanding vocation caught between public duty and personal engagement, requiring compassion, competence, knowledge and ethical resolve. What teachers need are communities of colleagues, freedom and backing; public solidarity with teachers' independence and cooperation is itself an investment in the futures of education (p. 86).
+
+**Recasting teaching as a collaborative profession.** Across history and cultures, teachers have served in many capacities — civil servants, intellectuals, artists, community leaders, moral authorities — and were pivotal in creating the mass, compulsory schooling of the nineteenth and twentieth centuries. The very name "normal schools" signals what was once expected of them: to standardize school structure, curricula and routines. As schooling grew, the "one room" model was scaled up into an "egg crate" arrangement of age-graded classrooms, yet the teacher's role stayed the same — each one planning alone, seldom interacting with colleagues — a model that strains teachers beyond what is sustainable. Collaboration and support must now reinforce their individual talents (p. 87).
+
+**Teachers in inclusive educational environments.** No single teacher, working alone, can meet the full range of student needs, and the expectation that they can drives people out of the profession. Because students' physical, social and emotional needs — health and nutrition, social services, mental health, special learning needs, and family engagement — are bound up with learning, teachers' effectiveness must be reinforced by a wider system. Encouraging initiatives include joint planning teams combining classroom teachers, literacy specialists and special education teachers, as well as co-teaching arrangements; public services and non-profits can also partner with schools in priority areas. Teachers are thereby recast as "convenors" who assemble new educational ecosystems and networks of learning spaces, alongside local leaders, elders, families, social workers, counsellors, librarians and specialists. Teaching, the chapter insists, is not solitary work "behind a closed classroom door." Collaboration cannot be imposed; curriculum and pedagogy must instead be organized around problems, projects and varied spaces and times so that working together becomes natural and necessary (p. 87–88).
+
+**Envisioning and enacting curriculum and pedagogy.** Curriculum exists both as prescription and as enacted practice. Teachers need latitude, preparation, resources and support to make learning authentic and relevant; future curricula should pair broad teacher discretion with strong backing, including technology and partnerships with subject experts such as university professors and scientists. Cooperative pedagogies extend past the individual classroom into collegial learning communities; challenges too complex for one teacher can be addressed through school networks, university partnerships and professional communities, using vehicles such as study groups, teachers' councils, pedagogical teams, peer mentoring, coaching, observations and site visits. Professional teaching knowledge emerges from dialogue between theory and practice; since no two pedagogical situations are ever the same, the relational work teachers do cannot be replaced "even by the most sophisticated machines" (p. 89).
+
+**Teachers and educational research.** Teachers relate to knowledge in three ways: mastery of their subjects, didactic and pedagogical knowledge, and professional teaching knowledge. Teachers should be acknowledged as reflective practitioners and producers of knowledge who document the profession's heritage, formulate research questions and open new lines of inquiry, thereby helping transform educational environments, policies, research and practice (p. 89–90).
+
+**The life-entangled journey of teacher development.** No teacher is ever "finished"; development is a lifelong, life-entangled continuum. Each teacher's "life library" — the joy of learning and cultural breadth they carry — is essential: a teacher who does not love reading cannot inspire readers, and students learn from teachers' lived example as much as from their words (p. 90).
+
+**Teacher recruitment.** Thirty years of schooling expansion have broadened recruitment, with mixed results (more women entering the profession in some places, but in certain contexts fewer professionally prepared teachers, lower pay and status, and overstretched support systems). Pressures now deter many would-be teachers even as demand rises: nearly 70 million new primary and secondary teachers must be recruited globally by 2030 to reach SDG4 targets, a gap widened by COVID-19. Shortages are most acute in sub-Saharan Africa, whose school-age population is growing fastest and where supply-side barriers restrict access to certification. Within countries, the schools most in need of strong teachers are often staffed by novices, volunteers or underqualified educators who leave quickly; retaining the best-qualified is urgent. Recruiting indigenous, local and diasporic teachers can honour diversity and improve learning (p. 90–91).
+
+**Teacher education.** Teacher education must be rethought — with no single template — through cooperation among public authorities, researchers, teachers' associations and community leaders. Digital culture must figure both as a delivery channel for blended and distance professional development and as an object of study, including research into what digital media and platforms enable, their pedagogical effects, ethical possibilities and blind spots. Teacher education must also confront attrition: during the pandemic, inadequate platforms and preparation for remote teaching caused stress and burnout, and some teachers quit as a result (p. 91–92).
+
+**Novice teachers.** Induction programmes should carry new teachers through their decisive early years with collaborative lesson-planning structures and mentoring by experienced colleagues. This passage from preparation to practice is the most crucial phase of a teaching career, yet it is frequently overlooked by both policy and the profession, and it is where attrition peaks. Novices should be integrated through action-research, problem-solving, project work and experimentation with learners, within a community of trusting peers (p. 92).
+
+**Continuing professional development.** Teachers need preparation to serve ethnically, culturally and linguistically diverse populations, include students with special needs, personalize learning and support historically excluded and marginalized groups — especially where migration and displacement driven by climate change, violence and conflict will reshape classrooms. Development should form a continuum from initial education through induction, mentoring and regular in-service work; the strongest programmes concentrate on what students should learn, run over extended periods, are partly school-based and embedded in experience, and offer repeated chances to apply what is learned (p. 92–93).
+
+**Public solidarity to transform teaching.** Policies governing how teachers are selected, prepared and advanced must change; collaboration must be resourced and supported rather than simply added to teachers' burdens (p. 93).
+
+**Teachers' working conditions.** Although research shows that teaching quality is the biggest in-school factor in student achievement, teachers remain under-recognized, underpaid and inadequately supported. The gendered character of their work must remain visible, since in some countries the growing share of women teachers has been used to justify lower pay. Improvement requires not only better compensation but smaller classes, safer schools, professional recognition, institutional support and collaborative cultures. Career paths should be rebuilt around competence, professional growth and engagement — mentoring novices, joint planning with co-teachers, leading subject areas, organizing support services, sabbaticals for research. Labour statutes, norms and workloads need a gender-sensitive revision. New accountability instruments — large-scale testing, teacher evaluation, school inspection, teaching standards — often curtail autonomy without matching support. AI-based governance risks breaking education into "data sets" and feeding managerialism, surveillance and de-professionalization; state use of facial recognition and AI to monitor students and teachers contravenes Article 26 of the UN Declaration of Human Rights. Teachers must instead work within an atmosphere of openness and trust (p. 93–94).
+
+**Universities' ongoing relationships with teachers.** Higher education and teaching are intimately connected; neither universities nor schools can prepare new teachers alone. Programmes should create shared spaces where public authorities, teachers' associations and NGOs collaborate, or embed themselves in schools through inquiry-oriented approaches — connecting to the full breadth of the knowledge commons, much as universities have built science and industry "parks." Universities must strengthen induction programmes that prioritize mentorship, stay engaged with teachers across their careers, and welcome educators' insights back into their faculties. The professoriate itself must also adopt collaborative planning and pedagogies of solidarity (p. 94–95).
+
+**Teachers in educational decision-making and the public sphere.** Teachers should help build decision mechanisms together with public authorities, parents, communities, entities, associations and youth movements. The profession extends into public life: being a teacher means both holding a place in the profession and speaking out publicly on educational issues and policy. Teachers' work should also reach beyond the classroom into the whole school organization, helping schools become learning organizations — places where staff share a vision centred on every student's learning and where a culture of research, innovation and exploration prevails (p. 95–96).
+
+**Principles for dialogue and action (2050).** Four guiding principles (p. 96):
+1. Collaboration and teamwork should characterize the work of teachers — teachers as "master convenors" of educational environments, relationships, spaces and times; quality teaching is produced by teams and enabling environments.
+2. Producing knowledge, reflection and research should become integral to teaching — teachers supported as intellectually engaged learners who identify areas of inquiry, define research questions and generate new pedagogical practices.
+3. The autonomy and freedom of teachers should be supported — strong professional identity, proper induction and ongoing professional development enabling judgment and expertise in designing and leading student learning.
+4. Teachers should participate in public debate and dialogue on the futures of education, in social dialogues and participatory decision-making mechanisms.
+
+### Chapter 6: Safeguarding and transforming schools (p. 97–107)
+
+The chapter opens with an epigraph from bell hooks, *Teaching to Transgress* (1994), on the classroom as "a location of possibility" (p. 97). Its thesis: schools deserve protection as educational sites because of the inclusion, equity and well-being they foster — and simultaneous reimagining so they can help transform the world toward more just, equitable and sustainable futures. School design is never neutral; built environments and time regimes fix what is possible, who is welcomed and who excluded (p. 98).
+
+**The irreplaceable role of schools.** "If the school did not exist, we would need to invent it." Schools are core components of wider educational ecosystems — places to take risks, meet challenges and experiment — guaranteeing everyone the experiences, abilities, knowledge, ethics and values our shared futures depend on; by 2050 they must cultivate solidarity and reciprocity through intergenerational, intercultural and pluralistic encounters. Disruptions — COVID-19, Ebola epidemics in West Africa, violent conflicts, climate emergencies — have underlined schools' role both in learning and as hubs of social well-being, among the few institutions that protect the poorest and most vulnerable; the 2020–2021 closures left lasting marks on millions of children's social, intellectual and mental health. Schools cannot exist without teachers (p. 99).
+
+**Common historical commitments.** Most cultures whose knowledge practices outgrew observation, imitation or storytelling developed dedicated spaces and times for learning, often alongside writing. The English "school" derives from the Greek *skholè* (free or leisure time); parallel institutions include the yeshiva, madrasah and calmécac. Schools have moved from transmitting established truth-claims toward cultivating understanding of how such claims arise, which requires a flourishing range of epistemic practices and broader alliances between epistemologies and ecologies of knowledge (p. 100).
+
+**The necessary transformation of schools.** Schools must let everyone, individually and collectively, realize unforeseen possibilities; too often they instead entrench inequality. Inclusion and collaboration should anchor future schools' organizing principles, with excellence, achievement, quality, measurement and progress realigned to include rather than marginalize. The chapter pictures the school as "a large library" — some students studying alone, others presenting work, others outside in contact with distant worlds — a metaphor and literal model of school times and spaces as portals to the knowledge commons (p. 100–101).
+
+**Schools as platforms for cooperation, care and change.** Schools must be safe from violence and bullying; collaborative learning draws on differences without erasing individuality. Learning is both a personal and a shared journey: we cannot learn in another's place, yet we learn more together. Roughly half the world's students complete secondary school without reaching minimum proficiency in basic competencies — an unacceptable failure. Among the million people who engaged with the Futures of Education initiative there is clear consensus that school design must change: softening the walls between classrooms and the outside world, treating lessons as journeys, and "greening" schools toward carbon-neutrality with students leading the way (p. 101–102).
+
+**From classrooms to communities of learners.** The "room" may often be dropped, but belonging to a dedicated, diverse community of learners should be reinforced; teachers need flexibility to experiment with groupings. Classroom expectations also need rethinking: passive sitting — built into architecture, furniture and materials — has equated stillness with concentration; schools need not be enclosed by four walls but can draw on social, cultural and environmental resources (p. 102–103).
+
+**Structures to support diversified pedagogies.** The fixed, repeated lesson block must yield to varied modalities: problem-based and project-based approaches, inquiry-based and action-research pedagogies, community-engaged pedagogies and service learning — all requiring substantial reorganization of schooling to enable joint work and collective deliberation (p. 103).
+
+**The digital in support of the school.** Digital tools widen access to information, texts and artforms, enable creative production, and improve parent–teacher–student communication. Yet the pandemic demonstrated that schools cannot be wholly relocated into virtual spaces; online classrooms are limited substitutes for shared physical and social presence. Pandemic improvisations — postponed tests, suspended content coverage, attention to well-being — made teachers' expertise publicly visible. A core limitation of machine learning is that it builds futures only from the past: algorithms trained on biased data entrench stereotyping, gender bias and racism, and define students solely by prior performance, leaving little room for reinvention. Teachers can instead design personalized learning oriented toward engagement and belonging. Schools should teach students to see digital environments as malleable, fallible human creations; coding and computational thinking help, but education must also treat digital interactions as a subject of inquiry — covering digital rights, surveillance, ownership, privacy, power, control and security — and champion human control over technology (p. 103–105).
+
+**Building cultures of collaboration.** School accountability should shift from compliance to shared goal-setting and assessment; management should favour collegiality, autonomy and mutual assistance over command and control; schools that want collaborative students must also cultivate collaborative teachers, supported by continuous professional development, coaching, mentoring, action research and university collaborations. Examples include indigenous settings rebuilding schools around intercultural interaction with the more-than-human world, and TVET advances bridging theory and practice through reimagined apprenticeships. Schools should embrace global solidarity and knowledge sharing (p. 105–106).
+
+**Transitions from school to higher education.** Universities must attend to primary and secondary education; bridge and enrichment programmes (mathematics, sciences, literature, philosophy) strengthen these links and support historically underrepresented groups. Future higher education policy must span all levels of education, account for non-traditional trajectories, and build school–university partnerships — with libraries, research facilities and professorial expertise available to local schools — integrating research, teaching and outreach (p. 106).
+
+**Principles for dialogue and action (2050).** Four guiding principles (p. 107):
+1. Schools should be protected as spaces where students encounter challenges and possibilities not available elsewhere; they should bring diverse groups together to learn from and with one another.
+2. Building collective capacity should guide school redesign — architectures, spaces, timetables and student groupings designed for working together; cultures of collaboration pervading administration and inter-school relations.
+3. Digital technologies should support — not replace — schools; AI and algorithms must not reproduce existing stereotypes and systems of exclusion.
+4. Schools should model the futures we aspire to, ensuring human rights and becoming exemplars of sustainability and carbon neutrality, with students trusted to lead greening.
+
+### Chapter 7: Education across different times and spaces (p. 108–120)
+
+The chapter opens with an epigraph from Paulo Freire, *Politics and Education* (1993): "The City is us and we are the City" (p. 108). Its thesis: a new social contract should let us enjoy and multiply enriching educational opportunities across the whole of life and across varied cultural and social settings. Its foundational principle is the right to education for all throughout life. The chapter recalls the Faure Commission report of 50 years earlier and its vision of the *Cité éducatif* (rendered as the "learning society") — a metaphor for a space holding all interconnected educational possibilities. The "school format" has tended to dominate early childhood and adult education despite traditions of resistance: early childhood education's open, flexible models valuing experimentation, well-being and the affective, sensorial and relational dimensions; and adult education's tradition of "deschooling," which respects adults' autonomy and life experience. The needed shift is not to turn the world into one vast classroom but to value the educational possibilities within culture, work, social media and the digital on their own terms (p. 109–110).
+
+**Steering educational opportunities towards inclusion and sustainability.** Governance must recognize the capillarity, porosity and ubiquity of educational institutions; an ethic of inclusion, drawing on inclusive design, must start from the most marginalized and most fragile settings. Marginalized groups are often pushed out of education rather than simply dropping out; refugees and people with disabilities are especially poorly served (p. 111).
+
+**The role of governments and states.** Education is a fundamental enabling human right (Article 26 of the Universal Declaration of Human Rights), elaborated in the 1960 Convention against Discrimination in Education (CADE) and Article 13 of the 1966 International Covenant on Economic, Social and Cultural Rights (ICESCR). States carry three obligations: to fulfil (facilitate and provide), respect (refrain from measures that undermine the right) and protect (prevent third-party interference). Primary education must be free and compulsory; secondary generally available and accessible; higher education equally accessible on the basis of capacity. The right to education is bound to other rights — water and sanitation, food and nutrition, social protection, stable family and community environments, freedom from violence. UN Special Rapporteurs since the early 2000s and Human Rights Council resolutions (2005, 2015) recognize education as a public good; the 2015 Education 2030 Incheon Declaration and Framework for Action, adopted by over 160 countries, reaffirms education as "a public good, of which the state is the duty bearer." States must finance education adequately and equitably (including taxation that prevents private wealth from hiding offshore), regulate provision to uphold human rights and quality, and ensure responsiveness to historically excluded groups through engagement, transparency and accountability. The UN Declaration on the Rights of Indigenous Peoples affirms indigenous peoples' right to establish and control their own educational systems in their own languages. As forced migration grows — especially climate-driven displacement — international cooperation is essential to secure refugees' right to education (p. 111–113).
+
+**Governing digital learning spaces.** Technology can support publicness and inclusion, but the digital revolution, like earlier technological revolutions, brings inequality and exclusion alongside collective gains. Key decisions must be made in the public sphere, guided by education as a public and common good, confronting private control of digital infrastructures and the enclosure of the digital knowledge commons. The social benefits of platforms like Google/Alphabet (Google Scholar, Google Classroom) are incidental to advertising-based business models, making education's digital infrastructure precarious — Google Scholar has seen few changes and no substantial new functions, revealing its low priority. Free access rests on massive extraction of personal user data, likened to "the new oil," now used to shape ideas, opinions and preferences through AI, triggering a race for AI dominance. Surveillance chills free expression and intellectual autonomy; normalizing it in education — especially habituating children early — erodes human dignity and the rights to privacy and free expression. Data policies should follow an ethic of transparency, with anonymization as the default. Algorithmic curation has filled a vacuum left by the absence of public answers to organizing global knowledge; tackling "fake news" and the crisis of faith in science requires democratizing knowledge curation. The surest way to bend digital disruption toward education as a common good is to democratize it within a robust public sphere, building on open-source, collaborative traditions (p. 113–115).
+
+**Learning with the living planet.** Learning happens beyond human-centred spaces — parks, streets, gardens, wilderness, farmlands, forests, deserts, lakes, wetlands, oceans. That indigenous-governed lands hold roughly 80% of the world's biodiversity is itself evidence of what indigenous perspectives teach about education that cares for the planet. Indigenous land- and water-based knowledge and many African and Asian cosmologies understand non-humans as beings with rights and as teachers. Western place-based, environmental, outdoor and experiential education has often cast nature as serving student learning rather than as a reciprocal partner; newer forms depart from this, with the metaphor of "rewilding" education especially promising. Education must foster a consciousness of the planetary rather than the idealized "twenty-first century learner"; the learner who takes responsibility for worldmaking with other beings must be at the centre. Cultural resources include the Quechua notion of "Sumak Kawsay" (according rights to nature, an ecologically balanced way of life), the Nguni Bantu philosophy of Ubuntu (relationality: "I am because we are"), and the Buddhist ethic of Karuna (compassion) (p. 115–116).
+
+**Expanding "when" education happens.** Longer, healthier lives shift educational needs and the balance between youth and elderly, caregiving and work. Women and girls shoulder most unpaid care work with little recognition. Learning to care is not optional: education supporting food preparation and the nurturing of bodies and families must be prioritized (p. 116–117).
+
+**Adult learning and education as an emancipatory project.** Lifelong learning is central to educational policies (SDG4 calls to "ensure inclusive and equitable quality education and promote lifelong learning opportunities for all"), but its emancipatory tradition has been narrowed by an excessive focus on vocational skills: what was once a "right" of adults has become an "obligation" of permanent skilling and reskilling. Adult education must reach far beyond labour-market purposes, connect to flexible pathways, and be reconceptualized around transformative learning. Anticipated changes include lifespans regularly exceeding 100 years, four generations co-living in the same space-time, shifting notions of adulthood, and civic and political life changing within a single lifespan. Adult education policy must recognize informal learning across the lifespan, promote broad access to digital media, support open access and open-source agendas, strengthen scientific literacy and combat misinformation. A futures orientation should define adult education: responsibility for the future cannot simply be handed to the next generations — a shared ethic of intergenerational solidarity is needed (p. 117–118).
+
+**Broadening the right to education.** These proposals are "not a utopian model but rather a concrete survival strategy for the human species." The right to education must cover all people, not only children and youth, and extend across a multitude of sites. COVID-19 showed the value of radio and television for education and revealed that access to information must now be seen as connected to the right to education. The right to education is bound up with the rights to information and culture; education must help people find and share accurate information free of manipulation and model open, horizontal dialogue among cultures. People should experience education not as clients or spectators but as actors (p. 119–120).
+
+**Principles for dialogue and action (2050).** Four guiding principles (p. 120):
+1. At all times of life people should have meaningful quality educational opportunities — lifelong, life-wide learning with weight and recognition for adult education; inclusive design beginning with the most marginalized and most fragile settings.
+2. Healthy educational ecosystems connect natural, built and virtual sites of learning; the biosphere should be appreciated as a learning space; digital spaces should serve public, inclusive and common purposes, with open access and open-source platforms and strong data protections prioritized.
+3. Government capacity for the public financing and regulation of education should be strengthened, setting and enforcing standards and norms that are responsive, equitable and uphold human rights.
+4. The right to education should be broadened beyond schooling to lifelong learning for everyone everywhere, with the rights to information and culture as enabling components and "a right to connectivity" built in.
+
+### Part III: Catalyzing a new social contract for education — Chapter 8: A call for research and innovation (p. 121–124)
+
+Part III states that the overlapping crises threatening humanity and the living planet demand a radical change of course: urgently constructing a new social contract for education inspired by social, epistemic, economic and environmental justice. This means strengthening education as a public societal endeavour and common good, protecting the knowledge commons, and engaging governmental and non-state partners, universities (in research and innovation) and regional/international organizations — ultimately through broad social dialogue across constituencies and contexts (p. 121).
+
+Chapter 8 opens with an epigraph from Linda Tuhiwai Smith, *Decolonizing Methodologies* (1999), on the primacy of respectful, enabling, healing and educative processes (p. 122). The Commission urges a worldwide, collaborative research agenda anchored in the right to education throughout life, open to contributions from grassroots associations, educators, institutions, sectors and diverse cultures. Research and innovation are public goods; the agenda begins where learners and teachers are, identifying "bright spots" that already embody the Report's principles and analysing their effects and conditions. Research and innovation must build capacities for foresight and futures literacy — empowering the imagination and clarifying how the future shapes what we see and do in education — guided by an ethic of collaboration, humility and foresight (p. 123).
+
+The research agenda must centre on the right to education and its barriers; trace how the vectors of change (climate and environment, technological transformation, fractures of the body politic, uncertain futures of work) intersect with education; and move beyond measurement and critique to explore renewal along Part II's operational principles — pedagogies of solidarity and cooperation, curricula's relationship with the knowledge commons, teacher empowerment, the reimagination of schools, and the entanglement of learning with all times and spaces of life (p. 124).
+
+<!-- quelle: In a new social contract for education, teachers must be at the centre and their profession revalued and reimagined as a collaborative endeavour which sparks new knowledge to bring about educational and social transformation. (p. 86–124) -->
+
+### Research from within education (p. 124–126)
+
+This chapter argues that education must be understood not merely as a field for applying external experimentation, but as a field of inquiry in its own right, with a long heritage of educational research since the early twentieth century. Practitioner research, action research, historical archival research, case study research and ethnography are named as fruitful methods for those inside the field. Schools are affirmed as places where knowledge is produced and teachers as knowers; universities and researchers should collaborate with those embedded in education, and teachers should be supported in publishing their research and reflections. Students are likewise important sources of knowledge about their own educational experiences, aspirations and achievements. Universities and researchers can extend support by being always in dialogue with schools, teachers and students; participatory evaluation, collaborative research, youth-led research and practitioner inquiry are among the methodological traditions that can systematize learning between those researching within and externally to education — and educational research will be a key tool for projecting and monitoring the transformations a new social contract for education requires.
+
+Only after this does the chapter turn ("Mobilizing the learning sciences") to the learning sciences, especially neurosciences: advances include understanding of neuroplasticity across all life stages, brain anatomy and function, memory, information processing, language development, complex thinking, and the effects of stimuli such as sleep, physical activity, emotion, stress and abuse. However, scientists are only at the start of understanding how laboratory-observed patterns between behaviour and brain activity translate into complex social learning environments or across diverse populations. Future learning sciences must involve researchers of diverse genders, cultures, socioeconomic and linguistic backgrounds and ages; neurodiversity, learning differences, disability studies and special education can benefit from these advances. Crucially, cognition is not the only way humans learn — social knowledge, embodied knowledge and emotional intelligence interact with but are not defined by neuroscience. Because education inseparably intersects the social, economic, environmental, material and spiritual dimensions of the world, neuroscientific findings must be contextualized to avoid divorcing mind from matter (p. 124–126).
+
+### Transforming research partnerships and expanding knowledge (p. 126–128)
+
+Research partnerships that are interdisciplinary, inter-sectoral and cross-cultural — spanning academic, civil society and educational milieus — offer great potential, but partners with greater resources can exert undue influence. The report calls for epistemic humility and a shift away from simplistic categories like 'North/South' or 'Western/non-Western' toward "complex and relational ecologies of knowledge." Education is a relational process, so we should seek relational rather than hierarchical knowledge, empowering national and local research capacities. Grassroots communities and social movements — for example movements opposing planetary destruction and rejecting prejudice and discrimination — are frontline sources of knowledge that education must listen to and contribute to, even where collaborations are not formalized.
+
+A new research agenda will draw on and generate knowledge, data and evidence in many forms (quantitative and qualitative, normative and descriptive, digitizable and ephemeral, theoretical and practical). Since knowledge intersects with power, dominating modes of power over people and planet must be replaced with power *to* and *with* people. Decolonizing knowledge requires recognizing indigenous epistemologies as viable approaches to understanding the world rather than objects of study, and rejecting the assumption that knowledge from the Global North can simply be transferred to developing contexts where locally generated knowledge is presumed absent or deficient — imposed 'solutions' often fail or benefit a few at the expense of the vulnerable. Valuing multiple ways of knowing is not extreme relativism or abandonment of truth: non-Western perspectives challenge Western dichotomies (theory/practice, individual/collective, arts/sciences, human/nature, knowing/feeling, spiritual/material, modern/traditional, etc.), revealing them as interrelated parts of a complex world. Ancestral knowledge about sustainable agriculture, social reciprocity and living with the natural world remains largely unrecognized and omitted from formal education. Successful knowledge production must be consciously inclusive, socially and culturally diverse, inter-disciplinary and inter-professional, and participate in a knowledge commons on just and equitable terms (p. 126–128).
+
+### Statistical data, indicators, and big data (p. 128–130)
+
+Statistical data offers snapshots, correlations, and scenario-based forecasts. UNESCO's Institute for Statistics (UIS) collects and publicizes vital education indicators, builds national/regional/international statistical capacity, and increases disaggregation by gender, location and income to illuminate equity. Its continued support is essential. Yet quantitative approaches must stringently avoid reductionism: categories are always more nuanced in reality than quantification can capture; data collection is labour-intensive and expensive, so efforts should strengthen existing national sources rather than impose parallel data sets. Not everything worth doing in education can be measured or quantified; statistical insights should be treated as starting points for further inquiry.
+
+Technologies have generated new assumptions that knowledge will be big, searchable, storable, transmissible and individualizable — qualities that frame and mould ideas about education. Digital tools give researchers unprecedented power (statistical processing, geographic and network mapping, pattern seeking, keyword tracing). But the report criticizes the praise of 'big data' for two effects: presupposing that no pattern (and hence no meaning) can be discerned without massive data points, and the subtler tendency to treat quantifiable, digitally compatible data as the most important form of knowledge. The report's position is "a purpose-centred, rather than instrument-centred, research agenda": software can process at scales beyond human capacity, but human minds grasp context, meaning, values and implications in ways too sophisticated for AI. Researchers must resist the "presumed objectivity" of digital analytics, continually evaluate biases and blind spots through a lens of justice and equity, and vigilantly attend to the ethical risks of AI's ambition to become self-sustaining and independent of human management over the next thirty years (p. 128–130).
+
+### Innovation, borrowing, evaluation and ranking (p. 130–133)
+
+Innovation — the ability to experiment, share, extend and inspire — is possible at every site and scale. Comparative learning can 'make the familiar strange'; adaptation and borrowing are themselves learning and innovation processes. Innovations imposed entirely from 'outside' the field will be limited or distorted; teachers, students, principals and schools are all participants in producing research and innovation, and curriculum reform is enriched by its users. Governments must support teachers' and schools' participation in dialogue and revision of public education. Since 'best practices' focus on outcomes rather than the processes and conditions producing them, collaborative networks and learning communities among teachers, schools, literacy specialists and policy-makers can support real-time application of insights; an ethic of humility guards against ahistorical, decontextualized assumptions. Universities and research institutions are called on to focus research and innovation on renewing education as a common good and co-constructing a new social contract, renewing their public mission toward an open knowledge commons. UNESCO is invited to develop a clearinghouse of experiences dialoguing with the Report's proposals.
+
+Evaluation and reflection are necessary across the lifecycle of programmes and policies, accounting for intended and unintended outcomes (e.g., benefits for some at the cost of equality, or short-term performance at the expense of long-term endurance). Evaluation should harness the reflective capacities of teachers, students and schools to propose changes, improvements or rejection, with a clear analytic framework linking design purposes, evaluation and recommendations. Testing and randomized control trials can validate assumptions, but isolating variables requires sophisticated design; crucially, "we do not experiment on people" — students, teachers and families are full participants in learning about their own education. 'Natural' experiments can yield foresight about education's resilience. Comparisons and rankings are too often used punitively, steering support away from those who need it most; they flatten experience and ignore context. In higher education, elite research-intensive models disproportionately shape the ambitions of other institutions at the expense of local relevance; governments and the global policy community should attend to the majority institutions that the global majority attends — how well they serve students' learning, professional futures and communities, civil discourse, and environmental, economic and social justice. Evaluation must go beyond competitive rankings toward improving teaching and research capacities among all institutions (p. 130–132).
+
+### Principles for dialogue and action: research and innovation (p. 133)
+
+Four key priorities for research and innovation toward 2050:
+
+1. A generalized, worldwide, collective research agenda on the futures of education, centring the right to education for all, exploring future disruptions, advancing the Report's tenets, and recast through futures literacy and futures thinking.
+2. Knowledge, data and evidence must be inclusive of diverse sources and ways of knowing, offering different vantage points rather than excluding and supplanting one another.
+3. Educational innovation must reflect a much wider range of possibilities across diverse contexts; comparisons must respond to distinct social and historical realities.
+4. Research for a new social contract must be recast with everyone invited to take it forward — seeds already exist among teachers, students and schools, with special responsibilities resting on research institutions, governments and international organizations (p. 133).
+
+### A call for global solidarity and international cooperation (p. 134–142)
+
+Opening with António Guterres's 2020 Nelson Mandela Lecture (18 July 2020), which argues that a New Social Contract within societies requires a "New Global Deal" to share power, wealth and opportunities more fairly internationally, the chapter calls for renewed global collaboration in support of education as a common good. The COVID-19 vaccine mobilization showed what global scientific cooperation can achieve, yet "vaccine nationalism has highlighted serious gaps in our ability to work collectively for the global common good." Education as a common good is inextricably linked to global responsibility: just as no one is safe until all are safe, our survival depends on meeting the educational needs of every child, youth and adult, complemented by equitable digital access. The obligation to respect, protect and fulfil the right to education falls on each state and the international community (p. 134–135).
+
+International cooperation operates in a precarious world order: the notion of a world society anchored in universal values is eroded; global fora like the UN face critique and fiscal constraint; civil society's room for manoeuvre shrinks as post-pandemic financing contracts; illiberal non-state actors exploit digital technologies against the values of the UN Declaration of Human Rights and the SDGs. Economic globalization has created enclaves of wealth and new monopolies threatening liberal democracy, and consensus on global common goods is limited — as tragically shown by slow climate action. Three new approaches are suggested: inclusion of diverse non-state actors through partnerships; movement from top-down towards multi-centric action; and new regional cooperation, especially South-South and triangular cooperation (p. 135–136).
+
+The historical architecture of educational cooperation was shaped by colonialism and geopolitical interest, defined by North-to-South flows. Today education receives a very small share of official development assistance (ODA); aid is disproportionately skewed toward middle-income countries and decreasing for sub-Saharan Africa — home to the world's largest share of youth in 2050. Education ODA favours higher education and scholarships, especially among G7 donors; no convincing global strategy has emerged to eradicate childhood illiteracy; refugee and involuntary migrant education is underfunded; and donor coordination remains siloed and projectized nearly twenty years after the Paris Declaration on Aid Effectiveness. Promising developments include flourishing civil society engagement, South-South and triangular cooperation, and education's rising presence on political agendas. Three global public goods matter: (1) aligning actors around shared purposes, norms and standards; (2) a commonly accessible store of knowledge, research, data and evidence; (3) international financing for populations whose right to education is most threatened (p. 136–137).
+
+On shared purposes: cooperation must move away from replicating ideas from the industrialized world, foster South-South and triangular deliberation, and improve dialogue across teacher unions, student movements, youth organizations, civil society, private sector, philanthropies, governments and citizens — centring children and youth. Lessons from climate and health sectors suggest actors should set specific, time-bound goals; cooperation should follow the principle of subsidiarity (the more concrete and locally-owned a goal, the more viable); stronger regional and global monitoring should hold actors accountable. Global institutions should not try to do everything but strengthen others' capacity to act, act as brokers of knowledge and evidence, and serve as funders of last resort for acute challenges, orienting attention to long-term issues such as automation and work, migration and climate externalities, and governing transnational digitalized educational services (p. 138–139).
+
+On knowledge generation: shared statistical data are needed despite criticisms of 'governance by numbers'; unlike global health, no UN partnership exists for joint standard-setting and statistical capacity-building. Financing for educational knowledge goods is tiny: about 25% of global ODA for health (USD 7 billion) funds such goods, versus less than 3% of ODA (about $200 million) in 2015 for education; a predictable pooled fund under UN agencies is proposed. On financing where education is threatened: aid's share of national needs is shrinking and has reinforced colonial power imbalances, yet a financing pool is needed for low and lower middle income countries — only 47% of aid currently goes toward K-12 education in these countries — including earmarked support for displaced populations and a reserve for emergency response and educational reconstruction (p. 139–140).
+
+On UNESCO's role: despite formal responsibility for coordinating global dialogue, standard-setting and SDG 4, it has struggled and faced severe criticism; its entire budget is smaller than that of many European universities, and its education sector budget a fraction of the World Bank's education knowledge activities. UNESCO should see itself first as a partner strengthening regional and national institutions (subsidiarity), second as an evidence broker and advocate for data and accountability, focusing the bulk of resources where the right to education is most threatened — particularly Africa, where most of the world's youth will live by 2050. It should also address involuntary migrants' and displaced populations' right to education, advocate digital access as a human right, support citizen and civil society engagement, and act as the UN's beacon on education's role in building shared futures (p. 140–141).
+
+### Principles for dialogue and action: international cooperation (p. 142)
+
+Four priorities for international cooperation toward 2050:
+
+1. All educational stakeholders should work together at global and regional levels to generate shared purposes and common solutions, especially for those whose right to education is most threatened; participation must include diverse non-state actors, move toward multi-centric action, and embrace South-South and triangular cooperation.
+2. International cooperation should operate from subsidiarity, building local, national and regional capacity, with enhanced accountability and coordinated advocacy.
+3. International development financing for low and lower middle income countries remains important, especially those with constrained economies and young populations, particularly in Africa, plus financing for populations whose education is disrupted by crises.
+4. Common investments in evidence, data and knowledge are essential, guided by subsidiarity, with pooled platforms and new financing to strengthen mutual learning across borders — on inequality, poverty, public services, automation, digitization, migration and environmental sustainability.
+
+Without shared responsibility, improved UN coordination and a strengthened UNESCO, the Report's proposals — education as a global, public and common good and a new social contract — cannot be realized (p. 142).
+
+### Epilogue: building futures of education together (p. 143–157)
+
+The epilogue summarizes the Report's key proposals, grounded in two foundational principles: an expanded vision of the right to education throughout life, and strengthening education as a public and a common good. A new social contract for education — the implicit agreements enabling social cohesion around education — is neither an abandonment of what has been learned nor a mere course correction; it "has long been in the making" among educators, communities, youth, children and families. The Report is a milestone and living document, a catalyst for contextualized public dialogues; UNESCO is called on to sustain avenues for deliberation and sharing of experiences (p. 143–145).
+
+The five dimensions of change are restated with guiding principles:
+
+**Pedagogies of solidarity and cooperation** (p. 145–146): abandon pedagogical modes prioritizing individualistic competition; prioritize (1) interconnectedness, interdependency and solidarity, extending pedagogical relationships beyond the classroom into families, communities, social movements; (2) cooperation and collaboration as the basis of pedagogy, through peer feedback, project-based learning, problem-posing and inquiry-based learning, student laboratories, vocational workshops, artistic expression and creative collaborations; (3) ingraining solidarity, compassion and empathy, welcoming parents and families, valuing diversity and pluralism, unlearning bias; (4) treating all assessment as pedagogical — never punitive, never creating 'winners' and 'losers' — and resisting policy influence from rankings and high-stakes decontextualized examinations.
+
+**Curriculum and the knowledge commons** (p. 147–148): curricula rest on two vital processes — acquisition of knowledge as the common heritage of humanity and collective creation of new knowledge and futures. Principles: (1) curricula should enhance learners' abilities to access and contribute to the knowledge commons, moving beyond transmission of facts toward concepts, skills, values and attitudes; (2) curricula must reorient the place of humans in the world amid accelerating planetary change, drawing from diverse knowledge to adapt to, mitigate and reverse climate change, highlighting effects on the poor, minorities, women and girls; (3) counter misinformation through multiple literacies — digital, scientific, textual, ecological, mathematical — cultivating corroboration, sensible sourcing, accuracy and commitment to truth; (4) human rights and democratic participation as foundational, emphasizing dignity, overcoming violence, and confronting power structures that discriminate by gender, race, indigenous identity, language, sexual orientation, age, disability or citizenship status.
+
+**Teachers and the teaching profession** (p. 148–149): no technology is yet capable of replacing or obviating the need for good human teachers. Principles: (1) collaboration and teamwork — teachers working with subject specialists, literacy specialists, librarians, special needs educators, guidance counsellors, social workers — with support through liveable wages, career advancement, continued education and collaborative environments; (2) knowledge production, reflection and research as integral to teaching, with universities imagining new institutional configurations for sustained research relationships with teachers; (3) upholding professional autonomy, expanding quality preservice teacher education (especially in sub-Saharan Africa, where demand outstrips supply of qualified teachers), mentorship and co-teaching for novices, adequate preparation time and fair pay; (4) integrating participation in public debate, dialogue and policy as core teacher work, with teachers welcomed as leaders in forging the new contract.
+
+**Safeguarding and transforming schools** (p. 149–150): schools remain essential educational settings and a central pillar of larger educational ecosystems. Priorities: (1) protect schools as spaces where students encounter challenges and possibilities unavailable elsewhere, in environments of cooperation and care; (2) reimagine architectures, spaces, times, timetables and student groupings to build capacities to work together — the built environment has pedagogical value; (3) digital technologies should support what happens within schools, not replace physical institutions; AI and algorithms must proceed with caution to avoid reproducing stereotypes and exclusion; (4) schools should model the futures we aspire to — upholding human rights, becoming exemplars of sustainability and carbon neutrality, with students trusted to help green the sector and local and indigenous design principles informing adaptation and symbiosis with the natural world.
+
+**Education across different times and spaces** (p. 150–151): broaden where and when education takes place, from birth to old age. Principles: (1) meaningful quality educational opportunities at all stages of life — education is lifelong and lifewide, with adult learning moving beyond deficit 'skilling' and 'reskilling' toward transformation, prioritizing the most marginalized and fragile settings; (2) healthy educational ecosystems connect natural, built and virtual sites — the biosphere is among our first educators, and digital spaces must support publicness, inclusivity and the common good, with open access/open-source platforms and strong data protections; (3) strengthen public financing and government regulatory capacity for responsive, equitable, rights-upholding provision; (4) broaden the right to education beyond formal schooling toward a right to lifelong and life-wide learning, enabled by rights to information, connectivity and culture.
+
+**Calls to action** (p. 151–153): the two calls — a new research agenda and renewed international solidarity — are restated with the four priorities of each, largely mirroring the chapters above: a worldwide collective research programme centring the right to education throughout life and futures literacy; inclusive knowledge, data and evidence embracing decolonizing, democratic methodologies and diverse sources (learning sciences, neuroscience, big data, statistical indicators alongside qualitative and practitioner research); innovation reflecting wider possibilities across contexts, with evaluation steering ongoing refinement between stagnation and endless regime change; and research opened to all stakeholders, with UNESCO as clearing house. For solidarity: stakeholders generating shared purposes with diverse non-state actors, multi-centric action and South-South/triangular cooperation; subsidiarity with UNESCO as partner and evidence broker; financing focused on low and lower middle income countries, particularly sub-Saharan Africa and emergency settings; and common investments in evidence, data and knowledge with UNESCO facilitating exchange (p. 151–153).
+
+**Dialogue and participation** (p. 154–155): change will come "through millions of individual and collective acts of courage, leadership, resistance, creativity and care." Particular participation roles are assigned to: **teachers** (decisive convenors, practitioners and researchers, requiring autonomy, freedom, professional development and recognition in public policy); **universities and higher education** (present in every chapter; much of the future of basic education depends on universities and vice versa; higher education is "a locus of an intergenerational and transformative dialogue" — without strong, autonomous, credible and innovative higher education the envisioned contract is impossible); **governments** (irreplaceable, but acting less through reform logic than as promoters of broader participation and catalysts for innovation, preserving education's public character through sustained financing and regulatory capacity); **international and civil society organizations** (mobilizing the dialogue, and ensuring that people discriminated against for ideas, gender, race, ethnicity, culture, religious beliefs or sexual identity are heard, visible and supported); and **youth and children** (the future must be reframed for them as possibility rather than burden — not merely consulted but mobilized as constructors of their futures; recent youth movements on climate change, racial discrimination, patriarchy and restrictive gender norms, cultural diversity and indigenous self-determination show youth responding "with urgency and moral clarity to issues that too often overwhelm or paralyze adults"). UNESCO is recommended to become a catalyst and clearinghouse of promising practices (p. 154–155).
+
+**Invitation to continue** (p. 156–157): the Report aims to provoke broad social dialogue; a new social contract is not self-executing but must be translated into programmes, resources, systems and processes transforming the everyday experiences of students and teachers. The COVID-19 pandemic, which cast a shadow over the Report's preparation, has caused severe educational harm felt most harshly by the poor and marginalized, yet the vaccine invention previewed the scope and speed of what collective knowledge and science can achieve. The Report is a starting point: "like education itself, is not finished" — its actualization begins now through the labours of educators worldwide (p. 156–157).
+
+### Appendices (p. 158–165)
+
+The appendices list the Report's knowledge base: **independent reports** received in response to an open call (from organizations including the Arab Campaign for Education for All; the Asia South Pacific Association for Basic and Adult Education; the International Office of Catholic Education with the Global Pedagogical Network; Bridge 47; the International Council for Adult Education; the International Task Force on Teachers for Education 2030; the IUCN Commission on Education and Communication; Mouvement International ATD Quart Monde; the Red Regional por la Educación Inclusiva de Latinoamérica; the University of the Future Network; the SDG-Education 2030 Steering Committee; UNESCO Institutes (UIL, IESALC); UNESCO's Collective Consultation of NGOs; Unescocat; Our Hong Kong Foundation; the World Council on Intercultural and Global Competence; and the Yidan Prize Foundation), with some 200 other organizations contributing reports; **background papers** commissioned by UNESCO (authors include Assié-Lumumba on gender and knowledge production in Africa; Buchanan et al. on the futures of work; the Common Worlds Research Collective on learning to become with the world; Couture, Grøttvik and Sellar on teacher organizations and academia; Damus on Northern and Southern epistemologies; Facer on ethical futures and economic wellbeing; Facer and Selwyn on digital technology and 'non-stupid' optimism; Hoppers on knowledge production from the South; Inayatullah on co-creating educational futures; Moore and Nesterova on indigenous knowledges; Saeed on student movements and critical pedagogy; Schweisfurth on future pedagogies; Sriprakash et al. on racism and reparative futures; Stitzlein on civic participation; Wagner et al. on global learning equity; Ydesen et al. on inclusion in testing times), plus an interactive game, "Accession: Building an intergenerational library," developed by Keats and Candy; **global consultation inputs** (analyses of focus groups, online consultations, social media polling, and artworks envisioning education in 2050); and **publications by the International Commission on the Futures of Education**, including *Visioning and Framing the Futures of Education* (2020), the joint statement *Protecting and transforming education for shared futures* (2020), *Education in a Post-COVID World: Nine ideas for public action* (2020), and a 2021 progress update. The section closes by naming the International Commission on the Futures of Education (p. 158–165).
+
+<!-- quelle: Research from within education (p. 124–165) -->
+
+### Mandate (p. 165)
+
+This closing section records the charge given to the International Commission on the Futures of Education. The Commission's task was to think jointly about how education could be reconceived amid growing complexity, uncertainty and precarity, and to deliver a flagship report containing analysis and recommendations — one that could function as a basis for dialogue and action on policy at many levels. With a horizon set at 2050 and beyond, the report needed to offer visions and strategies for policymakers and practitioners alike, and the Commission was asked, as part of its work, to think about how the report could keep exerting influence after publication.
+
+Four broad developments had to inform the Commission's thinking: shifting geopolitics; worsening environmental degradation and climate change; new patterns in how people move around the world; and the rapid, exponential advance of science and technology. The report was also expected to imagine and examine the various futures that could emerge from technological, social, economic and environmental disruption — and to explore education's twofold relationship to them, both shaping and being shaped by them.
+
+In addition, the Commission was asked to carry forward UNESCO's established commitment to education and knowledge as public goods, approached in a pluralistic, integrated and humanistic way, and was expressly encouraged to question and revisit the principles underpinning earlier UNESCO global reports on education. Overall, its remit was to examine what roles education, learning and knowledge play when set against the challenges and openings of predicted, possible and preferred futures.
+
+### Members of the Commission (p. 165–170)
+
+The Commission's composition, with the roles and credentials the document presents for each member:
+
+- **H.E. Sahle-Work Zewde** (Ethiopia), Chair — elected on 25 October 2018 as Ethiopia's fifth President and the first woman in that office; a diplomat since joining the foreign ministry in 1988, she served as ambassador to Senegal (with accreditation to several West African states), to Djibouti, and to France (also Permanent Representative to UNESCO), and later as Permanent Representative to the African Union and Director-General for African Affairs. Within the UN she headed the peacebuilding office in the Central African Republic as the Secretary-General's Special Representative, became the first dedicated head of the UN Office in Nairobi at Under-Secretary-General rank (2011), and in June 2018 was named the Secretary-General's Special Representative to the AU — each a first for a woman.
+- **António Nóvoa** (Portugal), Chair of the research-drafting committee — led the University of Lisbon as President from 2006 to 2013 and is now its Honorary President; an education professor holding doctorates from Geneva and from Paris IV-Sorbonne, honored with several honorary doctorates; has taught in over 40 countries, written more than 200 academic works, and serves as Portugal's Ambassador to UNESCO.
+- **Masanori Aoyagi** (Japan) — Professor Emeritus at the University of Tokyo; born in Dalian, China in 1944, he is a major figure in ancient Greek and Roman art history who has spent over four decades excavating Mediterranean sites; he studied in Rome (1969–1972) after graduating from the University of Tokyo in 1967, holds a PhD in Literature, once headed Japan's Agency for Cultural Affairs, and now leads the Archaeological Institute of Kashihara in Nara Prefecture and chairs the board of Tama Art University.
+- **Arjun Appadurai** (USA) — holds emeritus and Max Weber Global professorships at New York University and the Bard Graduate Center respectively; a leading analyst of the cultural dynamics of globalization whose scholarship covers diversity, migration, violence and cities; his latest book, written with Neta Alexander, is *Failure* (Polity Press, 2019).
+- **Patrick Awuah** (Ghana) — founded and now leads Ashesi University, an institution dedicated to an African renaissance through forming a new generation of ethical, entrepreneurial leaders; its curriculum pairs a demanding multidisciplinary core with applied majors in business, computer science, MIS and engineering. A MacArthur Fellow and WISE Prize laureate, he was named by Fortune in 2015 among the World's 50 Greatest Leaders.
+- **Abdel Basset Ben Hassen** (Tunisia) — heads the Arab Institute for Human Rights and brings three decades of experience in human rights education and education reform across the Middle East and North Africa; he has written in the field and helped draft the United Nations Decade for Human Rights Education.
+- **Cristovam Buarque** (Brazil) — doctorate from the Sorbonne followed by six years at the Inter-American Development Bank in Washington DC; now emeritus professor and past rector at the University of Brasília, he has held the posts of Education Minister, Governor of the Federal District and Senator; he pioneered conditional cash transfers tied to schooling and writes widely on the future of basic and higher education, from widening access to pedagogical innovation.
+- **Elisa Guerra** (Mexico) — a teacher who founded Colegio Valle de Filadelfia and serves as Director for Latin America of The Institutes for the Achievement of Human Potential; the Inter-American Development Bank and Fundación ALAS named her the region's best educator in 2015, and she was a Global Teacher Prize finalist; with master's degrees from ITESM and Harvard, she has written 26 books and textbooks and champions early learning, global citizenship and innovative teaching.
+- **Badr Jafar** (United Arab Emirates) — leads Crescent Enterprises as CEO and Crescent Petroleum as President; he established the Pearl Initiative, a private-sector-led non-profit working with the UN Office for Partnerships to foster corporate transparency and accountability; he advises the Sharjah Entrepreneurship Centre, Gaza Sky Geeks and several universities (Cambridge Judge Business School, MIT Legatum Centre, American University of Beirut, American University of Sharjah) and is Founding Patron of Cambridge's Centre for Strategic Philanthropy.
+- **Doh-Yeon Kim** (Republic of Korea) — a materials engineering professor at Seoul National University who went on to lead the University of Ulsan and POSTECH; he served his country as Minister of Education, Science and Technology and chaired its National Science and Technology Committee; his focus is how information and communication technology will transform education and teaching.
+- **Justin Yifu Lin** (China) — leads Peking University's Institute of New Structural Economics and its Institute of South-South Cooperation and Development, and is Professor and Honorary Dean of the National School of Development; previously the World Bank's Senior Vice President and Chief Economist and founding Director of the China Centre for Economic Research, he has written extensively on economics and development.
+- **Evgeny Morozov** — a writer examining what information technology means for society and politics; his books include *The Net Delusion* (2011) and *To Save Everything, Click Here* (2013); he earned a Harvard doctorate in the History of Science, has been a visiting scholar at Georgetown and Stanford, and founded The Syllabus, a project opening academic knowledge to wider audiences.
+- **Karen Mundy** (Canada) — incoming head of UNESCO's International Institute for Educational Planning (IIEP) and professor of educational policy and leadership at the University of Toronto; a leading specialist on education in the developing world, formerly the Global Partnership for Education's Chief Technical Officer, past President of the Comparative and International Education Society, and author of 6 books plus numerous articles and policy papers on reform, policy and civil society.
+- **Fernando M. Reimers** (USA) — Ford Foundation Professor of the Practice of International Education who directs the Global Education Innovation Initiative at Harvard's Graduate School of Education; a specialist in global citizenship education, he studies how children and youth can be prepared to flourish in the 21st century; he has written or edited 40 academic books and over 100 articles, and, with graduate student teams, created project-based curricula built around the UN Sustainable Development Goals now used in schools worldwide.
+- **Tarcila Rivera Zea** (Peru) — among the most prominent indigenous activists in Peru and internationally; through CHIRAPAQ, the Center for Indigenous Cultures of Peru, she has spent more than 40 years defending indigenous rights, cultural identity and the education of indigenous women and young leaders; she also works with the Continental Network of Indigenous Women of the Americas (ECMIA) and the International Indigenous Women's Forum (FIMI).
+- **Serigne Mbaye Thiam** (Senegal) — a Rouen Business School graduate who has been a parliamentarian, budget general rapporteur, government spokesperson, and minister for both higher education/research and education; he served as Vice-Chairman of the Global Partnership for Education board from May 2018 to September 2021 and currently holds the water and sanitation portfolio in Senegal's government.
+- **Vaira Vīķe-Freiberga** (Latvia) — led Latvia as President from 1999 to 2007 and later the World Leadership Alliance/Club de Madrid (2013–2019); she has acted as Special Envoy on UN reform and served on several EU high-level groups; she has written 17 books and more than 200 articles, belongs to five academies, and is an Honorary Fellow of Wolfson College, Oxford.
+- **Maha Yahya** (Lebanon) — directs the Malcolm H. Kerr Carnegie Middle East Center, researching political violence, identity politics, inequality, citizenship and the refugee crisis; she holds doctorates from MIT and from the Architectural Association in London, sits on various advisory boards, co-chairs the International Advisory Board of the Asfari Institute at the American University of Beirut, and serves on the board of the Ana Aqra Association.
+
+### Advisory Board of the Futures of Education initiative (p. 171)
+
+An Advisory Board was given the task of steering UNESCO strategically on the initiative overall. Its members were: Tariq Al Gurg (Dubai Cares); Alice P. Albright (Global Partnership for Education); Gordon Brown (UN Special Envoy for Global Education); Annette Dixon (World Bank Group, human development); Henrietta Fore (UNICEF); Susan Hopgood (Education International); Carlos Moedas (European Commissioner for Research, Science and Innovation, 2014–2019); Matías Rodríguez Inciarte (Santander Universidades/Universia); Refat Sabbah (Global Campaign for Education); Jeffrey D. Sachs (Center for Sustainable Development, Columbia University); Cecilia Scharp (Swedish International Development Cooperation Agency); Andreas Schleicher (OECD, education and skills directorate); Alette Van Leur (International Labour Organization); Hilligje van't Land (International Association of Universities); and Yume Yamaguchi (United Nations University, sustainability institute).
+
+### Contributors to the global consultation (p. 172–177)
+
+The report credits the NGOs, civil society bodies, government entities, universities and research institutes, companies, youth and student networks, and UNESCO National Commissions that took part in the worldwide conversation on the futures of education (2019–2021) — whether via focus groups, thematic reports, webinars or other activities. Several hundred contributors are named alphabetically, with a current list maintained on the initiative's website. Illustrative entries include: AIESEC, the American Psychological Association at the UN, the Arab Campaign for Education for All, Arizona State University, Beijing Normal University, the Comparative and International Education Society (CIES), Columbia University's Teachers College, Education International, the European Students' Union, the European Youth Forum, the Global Campaign for Education, the Global University Network for Innovation (GUNi), the International Association of Universities (IAU), the International Council for Adult Education (ICAE), the International Council for Open and Distance Education (ICDE), Montessori associations (AMI and national affiliates), the National Youth Councils of India, Malta and Namibia, NORRAG, the Permanent Delegations to UNESCO of the Kingdom of Saudi Arabia and of Viet Nam, the UN Secretary-General's Envoy on Youth, the Right to Education Initiative, the SDG-Education 2030 Steering Committee, UNESCO National Commissions (including those of Bangladesh, Canada, China, the Democratic People's Republic of Korea, Finland, Germany, Haiti, Indonesia, Korea, Latvia, Lao PDR, Lebanon, Madagascar, Norway, Peru, the Philippines, Poland, Portugal, Rwanda and Switzerland), the United Nations University Institute for the Advanced Study of Sustainability (UNU-IAS), the World Council on Intercultural and Global Competence, the World Futures Studies Federation (WFSF), the World Youth Assembly, and Yale University.
+
+### Schools consulted (p. 177–186)
+
+The appendices also name the schools that ran discussions and focus groups involving students, teachers and/or parents as part of the initiative, many drawn from the UNESCO Associated Schools Network (ASPnet). Countries represented, with the approximate number of participating schools, were: Algeria (4), Angola (over 20), Azerbaijan (4), Bangladesh (13), Belarus (9), Canada (1), China (7), Colombia (1), Costa Rica (over 30), Denmark (over 70), Finland (over 25), Germany (11), Greece (over 30), Guatemala (1), Haiti (2), Indonesia (1), Italy (1), Japan (over 25, many in Omuta), Lao People's Democratic Republic (12), Lebanon (over 20), Madagascar (over 20), Mexico (3 — among them Colegio Valle de Filadelfia, founded by Commission member Elisa Guerra), Norway (1), Pakistan (1), Peru (3), Portugal (11), Republic of Korea (24), Rwanda (over 25), Slovenia (over 20), Spain (5), United Kingdom (1), and United States of America (1). Individual school names are given in full in the document.
+
+### Closing description of the report (p. 186)
+
+The volume ends with a synopsis of the report as a whole. Humanity's future and the planet's are intertwined and endangered; changing course requires urgent, collective action to reimagine what lies ahead. Education — long recognized as a powerful engine of positive change — now faces new, pressing tasks. Produced over two years and shaped by a global consultation reaching roughly one million people, the report, issued by the International Commission on the Futures of Education, calls on governments, institutions, organizations and citizens everywhere to forge a new social contract for education capable of delivering peaceful, just and sustainable futures for everyone. It takes stock of education's current position between past promises and uncertain futures, makes the case for renewal across five dimensions — pedagogy, curricula, teaching, schools, and learning throughout all areas of life — and concludes by urging research, global solidarity and international cooperation to catalyze the new contract. It offers sustained treatment of digital technologies, climate change, democratic backsliding and societal polarization, and the uncertain future of work. Aimed at learners, educators, system managers and planners, researchers, governments and civil society, it seeks not merely to open the conversation and provoke thought but to move every reader to act. Its central claim is that transforming education toward just, equitable and sustainable futures will come about "through millions of individual and collective acts of courage, leadership, resistance, creativity and care."
+
+### Figures (p. 186)
+
+*Image 22 (p. 186):* — This is a digital logo graphic. The top portion shows a white square containing a line drawing of a classical building with columns. The bottom portion is a teal rectangle displaying the word "unesco" in large white lowercase letters, with the text "United Nations Educational, Scientific and Cultural Organization" in smaller white letters beneath it. _(Lettering in the image, read by the image model, not confirmed: "United Nations Educational, Scientific and Cultural Organization")_
+
+*Image 23 (p. 186):* — The image displays a barcode made up of vertical black bars of varying widths on a white background, surrounded by a teal border. Underneath the bars, the numbers "9 789231 004780" are printed in black.
+
+<!-- quelle: Mandate (p. 165–186) -->
 
 ## GLOSSAR
 
-- **new social contract for education** — A renewed set of foundational and organizational principles structuring education systems, aimed at sustainable and peaceful futures anchored in social, economic, and environmental justice.
-- **International Commission on the Futures of Education** — A commission established by UNESCO in 2019 to reimagine how knowledge and learning can shape the future of humanity and the planet.
-- **education as a common good** — A shared well-being achieved and chosen together, where learners participate as actors rather than clients or spectators.
-- **decolonization of curricula** — The process of removing colonial perspectives and centering indigenous and marginalized knowledge in educational content.
-- **social and emotional learning** — Educational approach integrating social, emotional, cognitive, and ethical domains of students' identities to support empathy, cooperation, and conflict navigation.
-- **knowledge commons** — The shared body of knowledge reconceived as the inheritance of all humanity, broadened to include diverse epistemological perspectives and requiring correction of exclusions and appropriations.
-- **common good** — A framework for renewing education that applies to all educators, schools, and programs everywhere.
-- **social contract** — An implicit agreement among members of a society to cooperate for shared benefit, reflecting both formally legislated and culturally embedded norms.
-- **horizontal learning** — An approach to knowledge exchange that involves peer-to-peer sharing and learning across borders.
-- **South-South and triangular cooperation** — Forms of development cooperation among countries of the Global South, sometimes with a traditional Northern partner, as alternatives to North-to-South aid flows.
-- **principle of subsidiarity** — The principle that decisions and capacity should be built at the most local level capable of addressing the challenge, with higher levels supporting rather than supplanting local action.
-- **planetary boundaries** — Quantified limits on human perturbation of Earth-system processes beyond which stable environmental conditions can no longer be assured.
-- **acquisitive individualism** — A societal characteristic linked to economic models prioritizing short-term profits and excessive consumerism over empathy and cooperation.
-- **right to quality education throughout life** — An expanded interpretation of the right to education extending beyond compulsory schooling for children and youth to education at all ages and in all areas of life.
-- **public education** — Education that occurs in a public space, promotes public interests, and is accountable to all.
-- **pedagogies of cooperation and solidarity** — Pedagogical approaches that foster empathy, respect for difference, and compassion, building capacities to work together to transform individuals and the world.
-- **renewal** — The process of sifting through existing knowledge and experience to revitalize education systems rather than replicating past approaches.
-- **Education for Self-Reliance** — Julius Nyerere's 1967 policy framework linking education to communal self-sufficiency and the common good.
-- **OECD Programme for International Student Assessment** — An international standardized testing programme measuring 15-year-olds' proficiency in reading, mathematics, and science.
-- **Universal Declaration of Human Rights** — The 1948 United Nations document that first established education as a fundamental human right.
-- **learning crisis** — A global condition characterized by massive early school leaving and insufficient learning quality, driven by weak content relevance and inadequate pedagogy.
-- **ecological footprint** — A measure of human demand on ecosystems, expressed as the number of planet Earths needed to regenerate what is consumed and absorb the waste produced.
-- **poverty trap** — A situation where displaced women and girls, due to climate change effects, face diminished prospects of returning to and restoring their lives, including through education, compared to male counterparts.
-- **magic bullet solutions** — Rushed adoption of new technological developments as singular fixes, which the document states has rarely succeeded in advancing human capabilities.
-- **platform imperialism** — The document's term for the digital divide, characterising it as a system that ignores those outside its sphere and all that evades its techniques of measurement, storage and analysis.
-- **digital divides** — Persistent gaps in both internet access and the skills and competencies needed to leverage technology for collective and personal aims.
-- **neuroplasticity** — The capacity of the human brain to physically change and rewire itself over the entire lifespan, not only during early formative years.
-- **solutionist** — A descriptor for definitions of knowledge that privilege quantitative, algorithmic approaches to problem-solving.
-- **electoral autocracy** — V-Dem's classification for political systems that hold elections but lack substantive democratic freedoms.
-- **human-centred future of work** — An agenda placing people and the work they do at the centre of economic and social policy and business practice.
-- **digital day labourers** — A term characterising future platform-economy workers facing precarious conditions reminiscent of nineteenth-century labour practices.
-- **TVET** — Technical and Vocational Education and Training, programmes providing work-oriented skills through secondary, tertiary, or work-based learning pathways.
-- **dependency ratio** — A calculation comparing the total population to those aged 15–64 assumed to be economically productive, used to project the burden of supporting the young and elderly.
-- **green skills** — Qualifications and competencies needed for newly emerging occupations and for sectors transforming toward a low-carbon economy.
-- **pedagogical triangle** — The classic relational framework of students, teachers, and knowledge that defines the pedagogical encounter.
-- **problem-posing education** — A pedagogical approach that intentionally cultivates learners' capacities for problem-recognition and problem-solving in the face of novel future challenges.
-- **Pedagogical differentiation** — Attending to differences within a common educational space, contrasted with decontextualized hyper-personalized learning defined by AI.
-- **Intercultural citizenship** — Promoting skills and conditions for horizontal, democratic dialogue with diverse groups, based on the affirmation of cultural identities rather than assimilation.
-- **Service learning** — A pedagogical approach connecting classroom and community, enlisting solidarity as a central principle to problem-solving without paternalism.
-- **pedagogy of solidarity** — A pedagogical approach centered on critically examining dominant knowledge and learning to unlearn, in order to counter silencing of collective memories and indigenous knowledges.
+- **new social contract for education** — an implicit agreement among members of a society to cooperate for shared benefit in education, expressing norms, commitments and principles that are both formally legislated and culturally embedded, starting from a shared vision of the public purposes of education.
+- **right to quality education throughout life** — the expanded right to education (Article 26, UDHR) covering all ages and areas of life, connected to rights to information, culture, science and the knowledge commons.
+- **knowledge commons** — humanity's shared, collectively accumulated knowledge, to be reconceptualized as the inheritance of all, broadened to diverse ways of knowing, and open to modification and contribution by all.
+- **education as a common good** — a form of shared well-being chosen and achieved together; education experienced in common and governed in common, requiring public funding and society-wide participation.
+- **public education** — education that (1) occurs in a public space, (2) promotes public interests, and (3) is accountable to all — regardless of who organizes it.
+- **renewal** — the work of waking up to the severity of our collective problems and finding a path forward that resists mere replication, sifting hard-won knowledge to revitalize education systems on a more promising course.
+- **pedagogies of cooperation and solidarity** — pedagogies based on non-discrimination, respect for diversity, reparative justice, an ethic of care and reciprocity, requiring participatory, collaborative, problem-posing, interdisciplinary, intergenerational and intercultural learning.
+- **ecological, intercultural and interdisciplinary curricula** — curricula embracing an ecological understanding of humanity that rebalances our relation to Earth, supporting students to access, produce, critique and apply knowledge.
+- **platform imperialism** — the report's characterization of the digital divide as an imperial formation that ignores those outside its sphere and whatever evades its techniques of measurement, storage and analysis.
+- **horizontal learning** — peer-to-peer exchange of knowledge across borders, named as a form of evidence and way of knowing to be included in the contract's research programme.
+- **subsidiarity** — the principle that international cooperation should support and build capacity in local, national and regional efforts — the more concrete and locally-owned a goal, the more viable it is.
+- **learning crisis** — the quoted term for global shortfalls in learning quality, which the report extends to include the overlooked dimension of early school leaving driven by weak relevance and inadequate pedagogy.
+- **Neuroplasticity** — the brain's capacity to physically change, learn and "rewire" throughout the human lifespan, not only in early years.
+- **Unlearning** — the deliberate pedagogical work of dismantling bias, prejudice, divisiveness, human exceptionalism and the human arrogance underlying ecological destruction.
+- **Rewilding curricula** — developing deep connectivity with the natural world and embracing the biosphere as an educational space.
+- **Futures literacy** — the capacity, to be strengthened by research and innovation, of empowering the imagination and understanding the role the future plays in what we see and do in education.
+- **Critical digital literacy** — understandings and dispositions towards the politics of the digital society and economy, including the ability to analyse and manipulate digital technology's political features.
+- **Shadow education** — the global expansion of private tutoring driven by narrow measures of educational achievement.
+- **Pedagogical differentiation** — attending to differences within a common space, distinguished from hyper-personalized AI learning that decontextualizes learners.
+- **Problem-posing education** — education engaging students in projects and activities requiring discovery, collaboration and transcendence of disciplinary boundaries.
+- **Intercultural citizenship** — citizenship grounded in affirmation of one's cultural identity and horizontal, democratic dialogue with diverse groups, promoting balanced power relations rather than assimilation.
+- **Plurilingualism** — an educational shift from national monolingualism towards teaching foreign, indigenous and sign languages, sustaining linguistic diversity as a feature of the knowledge commons.
+- **Green skills** — qualifications and competencies for emerging occupations and sectors transforming towards a low-carbon economy.
+- **Anchor institutions** — educational institutions that tighten links with local communities to understand and provide for their learning needs.
+- **Ethic of care** — understanding ourselves as interconnected persons, simultaneously capable and vulnerable, encompassing caring-about, caring-for, care-giving and care-receiving.
+- **collaborative profession** — the recast model of teaching that thrives, evolves and operates through teamwork and specialists reinforcing education for diverse learners.
+- **egg crate model** — the expanded school structure of age-graded, separate classrooms in which teachers work in isolation, placing unsustainable pressures on them.
+- **normal schools** — early teacher education institutions whose designation reflected the expectation that teachers normalize standard school structure, curriculum, pedagogy and routine.
+- **master convenors** — the role of teachers as key figures who convene educational environments, relationships, spaces and times across new educational ecosystems.
+- **professional teaching knowledge** — knowledge built on dialogue between theory and practice, developed through individual and collective reflection on a growing repertoire of experiences; it has intuitive, practical and relational dimensions.
+- **life library** — each teacher's own repertoire of lived experiences and cultural enrichment, fundamental to their work as agents of an education entangled with life.
+- **learning organizations** — schools in which teachers shape and share a vision focused on learning for all students, with continuous learning opportunities for all staff.
+- **Cité éducatif** — the Faure Commission's metaphor (translated as "learning society") for a space encompassing all interconnected educational possibilities across society.
+- **school format** — the conventional model of schooling that has prevailed in early childhood and adult education, reducing the possibility of different, distinct forms of education.
+- **deschooling** — the tradition in adult education of adopting forms and processes that respect adults' autonomy and their learning outside formal school frameworks.
+- **rewilding education** — a metaphor drawn from environmental conservation and restoration for building education in new ways, departing from positioning nature as merely serving student learning.
+- **consciousness of the planetary** — the awareness required of learners who assume responsibility for worldmaking with other beings, replacing the human-centred "twenty-first century learner."
+- **Sumak Kawsay** — the Quechua notion according rights to nature and describing an ecologically balanced way of life.
+- **Ubuntu** — the Nguni Bantu philosophy of relationality — "I am because we are."
+- **Education as a common good / public and common good** — the framing of education as a shared global responsibility whose realization obliges not only states but the international community.

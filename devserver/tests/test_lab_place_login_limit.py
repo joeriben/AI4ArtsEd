@@ -61,6 +61,7 @@ from my_app.lab.db import Base, engine, SessionLocal
 from my_app.lab import models as M
 from my_app.lab import login_attempts as LA
 from my_app.lab.auth_service import hash_password
+from my_app.lab.terms import TERMS_VERSION
 from my_app.routes import auth_routes
 from my_app.routes.auth_routes import auth_bp
 from my_app.routes.courses_routes import courses_bp
@@ -119,7 +120,9 @@ def _educator_with_open_course(app, places=1):
     db.commit()
     edu = app.test_client()
     assert edu.post("/api/auth/login", json={"identifier": "edu@example.org",
-                                             "password": "secret12"}).status_code == 200
+                                             "password": "secret12",
+                                             "accept_terms": TERMS_VERSION,
+                                             "language": "en"}).status_code == 200
     cid = edu.post("/api/courses", json={"title": "C", "safety_level": "youth"}).get_json()["course"]["id"]
     until = _dt.datetime.now(_dt.timezone.utc) + _dt.timedelta(hours=2)
     assert edu.put(f"/api/courses/{cid}/access", json={"until": until.isoformat()}).status_code == 200

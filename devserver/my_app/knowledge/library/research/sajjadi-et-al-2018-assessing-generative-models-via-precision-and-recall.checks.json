@@ -1,0 +1,651 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 16.1% of 2994 words, ceiling 20%, longest run 25 words; not counted: 15 words from the source's lists; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 25,
+     "text": "i 1 1 prd q p q p equality ii prd q p 0 0 supp q supp p disjoint supports iii q supp p"
+    },
+    {
+     "words": 22,
+     "text": "definition 1 for α β 0 1 q has precision α at recall β w r t p if there exist distributions"
+    },
+    {
+     "words": 18,
+     "text": "α β prd q p β α prd p q the precision of q w r t p"
+    },
+    {
+     "words": 15,
+     "text": "q has precision α at recall β w r t p if there exist distributions"
+    },
+    {
+     "words": 15,
+     "text": "a high precision low recall b high precision high recall c low precision low recall"
+    }
+   ],
+   "value": 0.161,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "1 of 1 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "Assessing Generative Models via Precision and Recall (p. 1–15)",
+     "page": 11,
+     "expected_items": 2,
+     "first_item": "(v) Monotonicity : If ( α, β ) ∈ PRD( Q,P ) , then by Lemma 1 there exists a dis",
+     "output_lists": [
+      4,
+      2,
+      6
+     ],
+     "unanswered_items": [
+      {
+       "item": 2,
+       "source": "(vi) Duality : This follows directly from switching α with β , P with Q and ν P ",
+       "output": "If P_S ≠ Q_S, the authors — inspired by PR curves in binary classification — res"
+      }
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "16 of 47 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "Assessing Generative Models via Precision and Recall (p. 1–15)",
+     "page": 1,
+     "number": "16"
+    },
+    {
+     "section": "Assessing Generative Models via Precision and Recall (p. 1–15)",
+     "page": 1,
+     "number": "22"
+    },
+    {
+     "section": "Assessing Generative Models via Precision and Recall (p. 1–15)",
+     "page": 2,
+     "number": "24"
+    },
+    {
+     "section": "Assessing Generative Models via Precision and Recall (p. 1–15)",
+     "page": 3,
+     "number": "17"
+    },
+    {
+     "section": "Assessing Generative Models via Precision and Recall (p. 1–15)",
+     "page": 3,
+     "number": "3.1"
+    },
+    {
+     "section": "Assessing Generative Models via Precision and Recall (p. 1–15)",
+     "page": 4,
+     "number": "3.2"
+    },
+    {
+     "section": "Assessing Generative Models via Precision and Recall (p. 1–15)",
+     "page": 5,
+     "number": "19"
+    },
+    {
+     "section": "Assessing Generative Models via Precision and Recall (p. 1–15)",
+     "page": 5,
+     "number": "3.3"
+    },
+    {
+     "section": "Assessing Generative Models via Precision and Recall (p. 1–15)",
+     "page": 5,
+     "number": "3.4"
+    },
+    {
+     "section": "Assessing Generative Models via Precision and Recall (p. 1–15)",
+     "page": 6,
+     "number": "21"
+    },
+    {
+     "section": "Assessing Generative Models via Precision and Recall (p. 1–15)",
+     "page": 6,
+     "number": "25"
+    },
+    {
+     "section": "Assessing Generative Models via Precision and Recall (p. 1–15)",
+     "page": 6,
+     "number": "4.1"
+    },
+    {
+     "section": "Assessing Generative Models via Precision and Recall (p. 1–15)",
+     "page": 7,
+     "number": "23"
+    },
+    {
+     "section": "Assessing Generative Models via Precision and Recall (p. 1–15)",
+     "page": 15,
+     "number": "0.2"
+    },
+    {
+     "section": "Assessing Generative Models via Precision and Recall (p. 1–15)",
+     "page": 15,
+     "number": "0.4"
+    },
+    {
+     "section": "Assessing Generative Models via Precision and Recall (p. 1–15)",
+     "page": 15,
+     "number": "0.8"
+    }
+   ],
+   "value": 16.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "16 of 18 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "Assessing Generative Models via Precision and Recall (p. 1–15)",
+     "page": 1,
+     "heading": "Olivier Bousquet"
+    },
+    {
+     "section": "Assessing Generative Models via Precision and Recall (p. 1–15)",
+     "page": 1,
+     "heading": "Abstract"
+    },
+    {
+     "section": "Assessing Generative Models via Precision and Recall (p. 1–15)",
+     "page": 1,
+     "heading": "1 Introduction"
+    },
+    {
+     "section": "Assessing Generative Models via Precision and Recall (p. 1–15)",
+     "page": 3,
+     "heading": "3.1 Derivation"
+    },
+    {
+     "section": "Assessing Generative Models via Precision and Recall (p. 1–15)",
+     "page": 4,
+     "heading": "3.2 Formal definition"
+    },
+    {
+     "section": "Assessing Generative Models via Precision and Recall (p. 1–15)",
+     "page": 5,
+     "heading": "3.3 Algorithm"
+    },
+    {
+     "section": "Assessing Generative Models via Precision and Recall (p. 1–15)",
+     "page": 5,
+     "heading": "3.4 Connection to total variation distance"
+    },
+    {
+     "section": "Assessing Generative Models via Precision and Recall (p. 1–15)",
+     "page": 5,
+     "heading": "4 Application to Deep Generative Models"
+    },
+    {
+     "section": "Assessing Generative Models via Precision and Recall (p. 1–15)",
+     "page": 6,
+     "heading": "4.1 Adding and dropping modes from the target distribution"
+    },
+    {
+     "section": "Assessing Generative Models via Precision and Recall (p. 1–15)",
+     "page": 7,
+     "heading": "4.2 Assessing class imbalances for GANs"
+    },
+    {
+     "section": "Assessing Generative Models via Precision and Recall (p. 1–15)",
+     "page": 8,
+     "heading": "4.3 Application to GANs and VAEs"
+    },
+    {
+     "section": "Assessing Generative Models via Precision and Recall (p. 1–15)",
+     "page": 8,
+     "heading": "5 Conclusion"
+    },
+    {
+     "section": "Assessing Generative Models via Precision and Recall (p. 1–15)",
+     "page": 11,
+     "heading": "A Proofs"
+    },
+    {
+     "section": "Assessing Generative Models via Precision and Recall (p. 1–15)",
+     "page": 11,
+     "heading": "A.1 Proof of Theorem 1"
+    },
+    {
+     "section": "Assessing Generative Models via Precision and Recall (p. 1–15)",
+     "page": 12,
+     "heading": "A.2 Proof of Theorem 2"
+    },
+    {
+     "section": "Assessing Generative Models via Precision and Recall (p. 1–15)",
+     "page": 12,
+     "heading": "B Further figures"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "10 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "10 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "1 quoted texts in 1 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Fig. 12",
+     "page": 15,
+     "image": "fig-010-p15.png",
+     "quotes": [
+      "“F_8 (Recall)”"
+     ]
+    }
+   ],
+   "value": 1.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "21 page references valid (printed-folio pages 1–15)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "15 pages checked, 1 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "3 of 3 passages out of order not repairable, none breaks a sentence of the body text",
+   "findings": [
+    {
+     "page": 11,
+     "words": 8,
+     "text": "as claimed. (iii) maximum Precision: If (α, β)",
+     "blocks": [
+      "#/texts/498",
+      "#/texts/500",
+      "#/texts/501",
+      "#/texts/504"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 11,
+     "words": 28,
+     "text": "βµ(ω) and Q(ω) ≥ αµ(ω). P (ω) ≥ βµ(ω) implies supp(µ) ⊆ supp(P ) and Hence ω∈supp(P ) µ(ω) = 1. Together with Q(ω) ≥ αµ(ω), this yields",
+     "blocks": [
+      "#/texts/500",
+      "#/texts/501",
+      "#/texts/504"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 11,
+     "words": 25,
+     "text": "Q(supp(P )) = ω∈supp(P ) Q(ω) ≥ α ω∈supp(P ) µ(ω) = α which implies α ≤ Q(supp(P )) for all (α, β) ∈ PRD(Q,",
+     "blocks": [
+      "#/texts/500",
+      "#/texts/501",
+      "#/texts/504"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    }
+   ],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "sajjadi-et-al-2018-assessing-generative-models-via-precision-and-recall",
+ "doc_type": "scholarly_article",
+ "analyzed_at": "2026-11-15T11:43:53.815388+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "Assessing Generative Models via Precision and Recall",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 15,
+   "chars": 35877,
+   "blocks": 96,
+   "inner_headings": 18,
+   "figures": 10
+  }
+ ],
+ "skipped": [
+  "References (p. 9)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 15,
+  "gaps": [
+   {
+    "page": 15,
+    "text": "1.0 0.8 A F1/8 (Precision) 0.6 0.4 0.2 D C 0.0 0.0 0.2 0.4 0.6 F8 (Recall) 1.0 0.8 B F1/8 (Precision) 0.6 a)-(d 0.4 0.2 C 0.0 0.0 0.2 0.4 0.6 F8 (Recall) 1.0 0.8 A F1/8 (Precision) 0.6 D 0.4 0.2 C 0.0 0.0 0.2 0.4 0.6 F8 (Recall) Figure 12: corresponding plots as in Figure 7 for the data sets MNIST (bottom). B A B C D GAN VAE 0.8 1.0 A B C D GAN VAE 0.8 1.0 A B B C D GAN VAE 0.8 1.0 (top), CIFAR-10 (middle) and CelebA 15",
+    "words": 98,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/859"
+   }
+  ],
+  "gaps_dismissed": [
+   {
+    "page": 1,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "Olivier Bachem Mario Lucic"
+   },
+   {
+    "page": 1,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "Google Brain Google Brain"
+   },
+   {
+    "page": 2,
+    "words": 22,
+    "reason": "duplicate",
+    "text": "1.0 MNIST left MNIST right 0.8 CelebA left CelebA right 0.6 Precision 0.4 0.2 0.0 0.0 0.2 0.4 0.6 0.8 1.0 Recall"
+   },
+   {
+    "page": 3,
+    "words": 58,
+    "reason": "duplicate",
+    "text": "1.0 P λ=2 λ=1 Q Precision α (a) (b) (c) (d) (e) (f) 0.5 λ = 0.5 Figure 2: intuitive examples of P and Q. β β β β β β 1 α 0 0.0 0 1 0 1 0 1 0 1 0 1 0 1 0.0 0.5 1.0 (a) (b) (c) (d) (e) (f) Recall β"
+   },
+   {
+    "page": 3,
+    "words": 17,
+    "reason": "debris",
+    "text": "P = β̄PS + (1 − β̄)PS and Q = ᾱQS + (1 − ᾱ)QS . (1)"
+   },
+   {
+    "page": 4,
+    "words": 23,
+    "reason": "duplicate",
+    "text": "PS = β 0 µ + (1 − β 0 )Pµ and QS = α0 µ + (1 − α0 )Qµ . (2)"
+   },
+   {
+    "page": 4,
+    "words": 17,
+    "reason": "debris",
+    "text": "P = βµ + (1 − β)νP and Q = αµ + (1 − α)νQ . (3)"
+   },
+   {
+    "page": 4,
+    "words": 18,
+    "reason": "debris",
+    "text": "(v) (α0 , β 0 ) ∈ PRD(Q, P ) if α0 ∈ (0, α], β 0 ∈"
+   },
+   {
+    "page": 5,
+    "words": 22,
+    "reason": "debris",
+    "text": "\u0012 \u0013 X X Q(ω) α(λ) = min (λP (ω), Q(ω)) and β(λ) = min P (ω), . (4) λ ω∈Ω ω∈Ω"
+   },
+   {
+    "page": 5,
+    "words": 16,
+    "reason": "debris",
+    "text": "PRD(Q, P ) = {(θα(λ), θβ(λ)) | λ ∈ (0, ∞), θ ∈ [0, 1]} ."
+   },
+   {
+    "page": 5,
+    "words": 35,
+    "reason": "debris",
+    "text": "compute n \u0010 \u0011 o i π PRD(Q, [ P ) = {(α(λ), β(λ)) | λ ∈ Λ} where Λ = tan m+1 2 | i = 1, 2, . . . , m ."
+   },
+   {
+    "page": 5,
+    "words": 29,
+    "reason": "debris",
+    "text": "we have X Xh + i α(1) = β(1) = min (P (ω), Q(ω)) = P (ω) − (P (ω) − Q(ω)) = 1 − δ(P, Q) ω∈Ω ω∈Ω"
+   },
+   {
+    "page": 6,
+    "words": 73,
+    "reason": "duplicate",
+    "text": "11 100 1.0 1.0 Inception Score 10 FID 80 0.8 Q 0.89 1 Inception Score 2 60 0.6 0.6 Precision Precision 8 3 FID 4 7 40 5 Q 0.4 0.4 6 1 6 7 2 20 0.2 8 0.2 3 5 9 4 10 5 4 0 0.0 0.0 1 2 3 4 5 6 7 8 9 10 0"
+   },
+   {
+    "page": 7,
+    "words": 52,
+    "reason": "duplicate",
+    "text": "1.0 left right 0.8 0.6 Precision 5k 5k 4k 0.4 4k 3k 3k 0.2 2k 2k 1k 1k 0.0 0 0.0 0.2 0.4 0.6 0.8 1.0 0 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 class label Recall class label"
+   },
+   {
+    "page": 8,
+    "words": 26,
+    "reason": "duplicate",
+    "text": "1.0 B A B 0.8 A F1/8 (Precision) 0.6 D 0.4 C D C 0.2 GAN VAE 0.0 0.0 0.2 0.4 0.6 0.8 1.0 F8 (Recall)"
+   },
+   {
+    "page": 11,
+    "words": 17,
+    "reason": "debris",
+    "text": "P (ω) − βµ(ω) Q(ω) − αµ(ω) νP (ω) = and νQ (ω) = . 1−β 1−α"
+   },
+   {
+    "page": 12,
+    "words": 51,
+    "reason": "duplicate",
+    "text": "1.0 left right 0.8 0.6 Precision 10k 10k 0.4 8k 8k 6k 6k 0.2 4k 4k 2k 2k 0.0 0 0.00 0.05 0.10 0.15 0.20 0 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 class label Recall class label"
+   },
+   {
+    "page": 13,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "real images generated images"
+   },
+   {
+    "page": 14,
+    "words": 19,
+    "reason": "debris",
+    "text": "0.6 0.5 0.4 P (y|x) P (y) 0.3 0.2 0.1 0.0 0.0 0.2 0.4 0.6 0.8 1.0 F1/8 (Precision)"
+   },
+   {
+    "page": 14,
+    "words": 63,
+    "reason": "duplicate",
+    "text": "2.4 100 Inception Score FID 2.3 80 Inception Score 60 2.2 FID 40 2.1 20 2.0 0 1 2 3 4 5 6 7 8 9 10 number of classes in Q 100 4.5 Inception Score FID 80 Inception Score 4.0 60 FID 40 3.5 20 3.0 0 1 2 "
+   },
+   {
+    "page": 14,
+    "words": 64,
+    "reason": "duplicate",
+    "text": "2.5 2015 1.0 0.5 0.0 0.0 0.2 0.4 0.6 0.8 1.0 F8 (Recall) 1.0 0.8 Q 1 2 0.6 Precision 3 4 5 0.4 6 7 0.2 8 9 10 0.0 0.0 0.2 0.4 0.6 0.8 1.0 Recall 1.0 0.8 Q 1 2 0.6 Precision 3 4 5 0.4 6 7 0.2 8 9 10 0."
+   }
+  ],
+  "captions_reclassified": [],
+  "captions_reassigned": [],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [],
+  "superseded": [],
+  "replaced_pages": [
+   15
+  ],
+  "noise_dropped": 7,
+  "hyphens_restored": [],
+  "order": [
+   {
+    "page": 11,
+    "text": "as claimed. (iii) maximum Precision: If (α, β)",
+    "words": 8,
+    "refs": [
+     "#/texts/498",
+     "#/texts/500",
+     "#/texts/501",
+     "#/texts/504"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 11,
+    "text": "βµ(ω) and Q(ω) ≥ αµ(ω). P (ω) ≥ βµ(ω) implies supp(µ) ⊆ supp(P ) and Hence ω∈supp(P ) µ(ω) = 1. Together with Q(ω) ≥ αµ(ω), this yields",
+    "words": 28,
+    "refs": [
+     "#/texts/500",
+     "#/texts/501",
+     "#/texts/504"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 11,
+    "text": "Q(supp(P )) = ω∈supp(P ) Q(ω) ≥ α ω∈supp(P ) µ(ω) = α which implies α ≤ Q(supp(P )) for all (α, β) ∈ PRD(Q,",
+    "words": 25,
+    "refs": [
+     "#/texts/500",
+     "#/texts/501",
+     "#/texts/504"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": ""
+   }
+  ],
+  "order_pages_checked": 12,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 3,
+  "order_breaking": 0,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 2 minor; distortions: 0 material, 1 minor; additions: 0 material, 1 minor; order: 0 material, 1 minor",
+  "at": "2026-11-15T11:48:15+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 2
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 1
+   },
+   "additions": {
+    "material": 0,
+    "minor": 1
+   },
+   "order": {
+    "material": 0,
+    "minor": 1
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "Assessing Generative Models via Precision and Recall (p. 1–15)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "For simplicity, we consider distributions P and Q that are defined on a finite state space, though the notion of precision and recall can be extended to arbitrary distributions.",
+      "severity": "minor",
+      "page": 4
+     },
+     {
+      "source": "Unfortunately, it is not possible to compute this quantity for more complex data sets.",
+      "severity": "minor",
+      "page": 3
+     }
+    ],
+    "distortions": [
+     {
+      "source": "To our knowledge, this is the first metric which confirms the folklore that VAEs are biased towards higher recall, but may suffer from precision issues (e.g., due to blurring effects), at least on this data set.",
+      "summary": "This provides the first empirical metric confirmation of the folklore that VAEs are biased toward higher recall but may suffer precision issues (e.g., blurring), while GANs tend toward higher precision at the risk of mode collapse.",
+      "severity": "minor",
+      "page": 8
+     }
+    ],
+    "additions": [
+     {
+      "summary": "A previous notion of precision and recall (by the authors of the model comparison study cited as [18]) computed distance to the manifold of the true data",
+      "severity": "minor"
+     }
+    ],
+    "order": [
+     {
+      "source": "which implies supp( P ) ∩ supp( Q ) = ∅ as claimed. To prove the claim, we next show that there exists ( α, β ) ∈ PRD( Q,P ) with α = Q (supp( P ))",
+      "summary": "",
+      "layer": "which implies α ≤ Q(supp(P )) for all (α, β) ∈ PRD(Q, P ). To prove the claim, we next show that there exists (α, β) ∈ PRD(Q, P ) with α = Q(supp(P )).",
+      "severity": "minor",
+      "page": 11
+     }
+    ]
+   }
+  ]
+ },
+ "source": {
+  "source": "sajjadi-et-al-2018-assessing-generative-models-via-precision-and-recall.pdf",
+  "bytes": 2437554,
+  "sha256": "4e896422c195da5353e180c80cbea2e00d1b198c603b77035e2faf9aeba4d4e2",
+  "extracted_at": "2026-11-13T03:01:25+01:00"
+ }
+}

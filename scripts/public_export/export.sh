@@ -33,8 +33,11 @@ if [ -f "$TMP/public/ai4artsed-frontend/src/i18n/WORK_ORDERS.md" ]; then
         "$TMP/public/ai4artsed-frontend/src/i18n/WORK_ORDERS.md"
 fi
 
-# The checks that guard the public surface run on the exported tree itself.
+# The checks that guard the public surface run on the exported tree itself:
+# no person, no session, no path of one installation, and no password, key or
+# token (the second also compares with this installation's key files).
 (cd "$TMP" && "$PY" devserver/tests/test_public_surface_clean.py --tree "$TMP")
+"$PY" "$REPO/devserver/tests/test_no_secrets_in_code.py" --tree "$TMP"
 
 (cd "$TARGET" && git ls-files -z | xargs -0 rm -f \
     && find . -mindepth 1 -type d -empty -not -path './.git' -not -path './.git/*' -delete)

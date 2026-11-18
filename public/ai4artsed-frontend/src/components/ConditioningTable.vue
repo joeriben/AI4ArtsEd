@@ -26,6 +26,13 @@
   ComfyUI itself puts there when no CLIP encoder runs
   (comfy/text_encoders/sd3_clip.py).
 
+  Which CLIP encoders fill the block and the bar is the drawing's sixth
+  input, `clipEncoder` (2026-11-15): `both`, or `clip_l` / `clip_g` alone.
+  The encoder left out has zeros in its columns (CLIP-L 0..767, CLIP-G
+  768..2047) and in its part of the pooled vector, so a's fill and the bar's
+  fill cover the kept encoder's columns only, and a dashed line marks the
+  border at 768. b's T5 still reaches every column of the block.
+
   The three factors of the sliders under it are the three things that can be
   done to this table, and each is drawn where it acts: a fills the CLIP block,
   b fills the CLIP block a second time with T5's colour (its right half from
@@ -58,15 +65,17 @@
 
     <!-- the pooled vector: the bar over the CLIP block, as wide as the columns
          CLIP fills; filled while the model reads the vector, empty under zeros -->
-    <rect :x="left" :y="yPool" :width="half" :height="poolH" fill="#3f6a9c" :fill-opacity="zeroPool ? 0 : 1" />
+    <rect :x="left + clipX" :y="yPool" :width="clipW" :height="poolH" fill="#3f6a9c" :fill-opacity="zeroPool ? 0 : 1" />
     <rect :x="left" :y="yPool" :width="half" :height="poolH" fill="none" stroke="#6a7a8c" stroke-width="1" />
+    <line v-if="oneEncoder" :x1="left + lgSplit" :y1="yPool" :x2="left + lgSplit" :y2="yPool + poolH" stroke="#6a7a8c" stroke-dasharray="2 2" />
     <text :x="left + half + 4" :y="yPool + poolH - 0.5" class="ct-dim">{{ t(zeroPool ? 'surrealizer.table.poolZero' : 'surrealizer.table.poolClip') }}</text>
     <text :x="left - 4" :y="yPool + poolH - 0.5" class="ct-dim" text-anchor="end">{{ t('surrealizer.table.pool') }}</text>
 
     <!-- the CLIP block: a on the block, b of T5 over it, the right half T5's alone -->
-    <rect :x="left" :y="yClip" :width="half" :height="clipH" fill="#3f6a9c" :fill-opacity="op(fa)" />
+    <rect :x="left + clipX" :y="yClip" :width="clipW" :height="clipH" fill="#3f6a9c" :fill-opacity="op(fa)" />
     <rect :x="left" :y="yClip" :width="half" :height="clipH" fill="#9c6a3f" :fill-opacity="op(fb) * 0.55" />
-    <rect v-if="fa < 0" :x="left" :y="yClip" :width="half" :height="clipH" :fill="`url(#${hatchId})`" />
+    <rect v-if="fa < 0" :x="left + clipX" :y="yClip" :width="clipW" :height="clipH" :fill="`url(#${hatchId})`" />
+    <line v-if="oneEncoder" :x1="left + lgSplit" :y1="yClip" :x2="left + lgSplit" :y2="yClip + clipH" stroke="#6a7a8c" stroke-dasharray="2 2" />
     <rect :x="left + half" :y="yClip" :width="gw - half" :height="clipH" fill="#9c6a3f" :fill-opacity="op(fb)" />
     <rect v-if="fb < 0" :x="left + half" :y="yClip" :width="gw - half" :height="clipH" :fill="`url(#${hatchId})`" />
     <rect :x="left" :y="yClip" :width="gw" :height="clipH" fill="none" stroke="#6a7a8c" stroke-width="1" />
@@ -120,7 +129,9 @@ const props = withDefaults(defineProps<{
   t5Rows?: 'full' | 'tail'
   /** The pooled vector beside the table: as CLIP computes it, or zeros in its place. */
   pooled?: 'clip' | 'zero'
-}>(), { t5Rows: 'full', pooled: 'clip' })
+  /** The CLIP encoders the block and the bar are read from: both, or one alone. */
+  clipEncoder?: 'both' | 'clip_l' | 'clip_g'
+}>(), { t5Rows: 'full', pooled: 'clip', clipEncoder: 'both' })
 const { t } = useI18n()
 
 // One pattern id per instance: two drawings on one page would otherwise share
@@ -163,6 +174,13 @@ const yBlock = computed(() => tail.value ? yT5 + headH + 2 : yT5)
 const blockH = computed(() => tail.value ? t5H - headH - 2 : t5H)
 // The bar over the CLIP block: filled with the vector, empty under zeros.
 const zeroPool = computed(() => props.pooled === 'zero')
+// CLIP-L's 768 columns and CLIP-G's 1280 within the half CLIP fills; the fill
+// of a and of the bar covers the columns of the encoders that run.
+const lgSplit = half * 768 / 2048
+const oneEncoder = computed(() => props.clipEncoder === 'clip_l' || props.clipEncoder === 'clip_g')
+const clipX = computed(() => props.clipEncoder === 'clip_g' ? lgSplit : 0)
+const clipW = computed(() =>
+  props.clipEncoder === 'clip_l' ? lgSplit : props.clipEncoder === 'clip_g' ? half - lgSplit : half)
 
 const fa = computed(() => Number.isFinite(props.a) ? props.a : 0)
 const fb = computed(() => Number.isFinite(props.b) ? props.b : 0)

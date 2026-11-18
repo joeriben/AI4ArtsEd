@@ -3,6 +3,7 @@ id: unesco-guidance-for-generative-ai-in-education-and-research-2023
 titel: Guidance for generative AI in education and research
 autor: UNESCO
 jahr: 2023
+quelle: "UNESCO, Paris 2023, ISBN 978-92-3-100612-8"
 sprache: en
 tier: F
 sparten: [medial]
@@ -10,400 +11,275 @@ themen: [ai, education, policy]
 lizenz: CC BY-SA 3.0 IGO
 url: "https://unesdoc.unesco.org/ark:/48223/pf0000386693"
 status: published
-analyzed_at: "2026-07-18T12:52:14.217883+00:00"
+checks: passed
+review: passed
+analyzed_at: "2026-11-15T10:27:59.982837+00:00"
 analysis_lang: en
-analysis_model: openrouter/z-ai/glm-5.2
+analysis_model: openrouter/z-ai/glm-5.3
+doc_type: framework_report
+seitenzahlen: gedruckt
 ---
 
 # Guidance for generative AI in education and research
 
 ## PROFIL
 
-- This UNESCO publication provides global guidance on the use of generative artificial intelligence (GenAI) in education and research, aiming to support the planning of regulations, policies, and human capacity development.
-- It proposes key steps for governmental agencies and educational institutions to validate GenAI systems on ethical and pedagogical appropriateness, anchored in a humanistic approach promoting human agency, inclusion, equity, and cultural and linguistic diversity.
-- The document builds on UNESCO's 2021 Recommendation on the Ethics of Artificial Intelligence and the 2021 report Reimagining our futures together: A new social contract for education.
-- It contrasts institutional bans by adopting the Russell Group's stance that students and staff need support to use GenAI tools "effectively, ethically and transparently."
-- For an arts-education platform, the text is applicable across disciplines involving text, image, video, and music generation, detailing tools such as DALL·E 2, Midjourney, and Aiva.
-- Typical situations include instructional design, policy formulation, and prompt-engineering for artwork creation, as illustrated by the Théâtre D'opéra Spatial case at the Colorado State Fair.
+UNESCO authored this 2023 publication, its first worldwide guidance devoted to generative AI (GenAI) in education and research, addressed to countries and their policy-makers so they can act now, plan durable policies and build human capacity while these technologies remain anchored to a human-centred vision. Its central claim is that GenAI tools are proliferating more quickly than national regulation can keep up with, leaving user data unprotected and schools, universities and research bodies without the means to assess tools before adopting them; it insists that GenAI will not by itself fix education's deep problems — what counts is human capacity and collective action, not technology. It builds on UNESCO's 2021 Recommendation on the Ethics of Artificial Intelligence, the 2019 Beijing Consensus on Artificial Intelligence (AI) and Education, AI and education: Guidance for policy-makers (UNESCO, 2022b), and the Futures of Education report Reimagining our futures together: A new social contract for education (2021). The Guidance unfolds across six sections: defining GenAI and its workings, including underlying technologies, alternative tools, prompt-engineering and the emerging EdGPT; the controversies and ethical/policy questions it raises (digital poverty, regulatory lag, unconsented content, unexplainable models, polluting content, lack of real-world understanding, marginalization of voices, deepfakes); how to regulate it human-centredly, through seven steps, key elements for governmental regulatory agencies, ten accountabilities for providers, and duties for institutional and individual users; an eight-measure policy framework for education and research covering inclusion, human agency, validation, competencies, teacher capacity, plural opinions, local evidence and long-term review; facilitation of creative use through institutional strategies, a human-centred and pedagogically appropriate interaction approach, and co-designed applications for research, teaching, 1:1 coaching of foundational skills, inquiry or project-based learning, and learners with special needs; and long-term implications. It is usable across formal education from schools to higher education, technical and vocational education and training, lifelong learning, and research, in situations ranging from national regulation and policy formulation to institutional adoption decisions and classroom, studio and laboratory practice in the arts, languages, coding and mathematics.
 
 ## WISSEN
 
-### Guidance for generative AI in education and research
-
-- UNESCO's first global guidance on GenAI in education, published 2023 (ISBN 978-92-3-100612-8), Open Access under CC-BY-SA 3.0 IGO.
-- GenAI burst into public awareness late 2022 with ChatGPT launch — fastest growing app in history at that time.
-- Built on UNESCO's 2021 Recommendation on the Ethics of Artificial Intelligence and the 2021 report of the International Commission on the Futures of Education, *Reimagining our futures together: A new social contract for education*.
-- Proposes key steps for governmental agencies: mandate data privacy protection; consider an age limit for GenAI use.
-- Outlines requirements for GenAI providers to enable ethical and effective use in education.
-- Calls on educational institutions to validate GenAI systems on ethical and pedagogical appropriateness.
-- Anchored in a humanistic approach promoting human agency, inclusion, equity, gender equality, cultural and linguistic diversity, and plural opinions.
-- Key concepts listed: AGI, AI, API, ANN, DAI, GAN, GDPR, GenAI, GPT, ICT, LaMDA, LLM, ML, VAE.
-- Key organizations listed: AGCC (Singapore), CAC (China), EU, OECD, UNCTAD, UNESCO.
+### Purpose and overview of the Guidance (p. 1–2)
 
-<!-- quelle: UNESCO - a global leader in education … Organizations -->
-
-### Guidance for generative AI in education and research
-
-ChatGPT's release in late 2022 prompted varied institutional responses; the Russell Group (2023) stated students and staff need support to use GenAI tools "effectively, ethically and transparently." Grounded in UNESCO's Recommendation on the Ethics of Artificial Intelligence, this Guidance supports regulations for GenAI in education and research.
-
-GenAI generates content (texts, images, videos, music, software code) by statistically analyzing ingested data. It cannot generate new ideas or guarantee accuracy; OpenAI (2023) acknowledges ChatGPT "cannot be relied upon to be accurate."
+This UNESCO publication (2023, ISBN 978-92-3-100612-8, openly licensed under CC-BY-SA 3.0 IGO) is the organization's first worldwide guidance devoted to generative AI (GenAI) in education and research. Its central claim is that GenAI tools are proliferating more quickly than national regulation can keep up with, so user data goes unprotected and schools, universities and research bodies lack the means to assess the tools before adopting them. The Guidance is meant to help countries act now, plan durable policies and build human capacity so that these technologies remain anchored to a human-centred vision. It builds on UNESCO's 2021 Recommendation on the Ethics of Artificial Intelligence and on the Futures of Education report by the International Commission (2021), *Reimagining our futures together: A new social contract for education*. It insists that GenAI will not, by itself, fix education's deep problems — what counts is human capacity and collective action, not technology. The foreword cautions that AI must not displace human intelligence, but rather prompts us to rethink what we mean by knowledge and by human learning.
 
-GenAI relies on machine learning (ML) and artificial neural networks (ANNs). Key techniques include:
-- General-purpose transformers: focus on parts of data to determine relationships.
-- Large language models (LLM): transformers trained on vast text data.
-- GPT: LLMs pre-trained on larger data for context-aware text.
-- GANs and VAEs: neural networks for image generation.
-
-<!-- quelle: Introduction … 1.2 How does generative AI works? -->
-
-### How text GenAI models work
-
-- OpenAI GPT iterations:
-  - GPT-1 (2018): 40 GB training data, 117 million parameters.
-  - GPT-2 (2019): 40 GB, 1,500 million parameters.
-  - GPT-3 (2020): 17,000 GB, 175,000 million parameters.
-  - GPT-4 (2023): 1,000,000 GB (reported), 170,000,000 million parameters (reported).
-- Since 2012, computing capabilities for training GenAI models doubled every 3-4 months, compared to Moore's Law's two-year period.
-- July 2023 ChatGPT alternatives: Alpaca, Bard, Chatsonic, Ernie (Wenxin Yiyan), Hugging Chat, Jasper, Llama, Open Assistant, Tongyi Qianwen, YouChat.
-- LLM-based products: ChatPDF, Elicit, Perplexity.
-- Chrome extensions: WebChatGPT, Compose AI, TeamSmart AI, Wiseone.
-- GPT-4 is multimodal, accepting images and text.
-- Stanford University researchers proposed the term 'foundation model' (Bommasani et al., 2021).
-
-<!-- quelle: 1.2.1.  How text GenAI models work … Once the GPT has been trained, generating a text response to a prompt involves the following steps: -->
-
-### How image GenAI models work and prompt-engineering
-
-Image GenAI uses GANs (generator vs. discriminator adversaries) or Diffusion Models. Tools as of July 2023: Craiyon, DALL·E 2, DreamStudio, Fotor, Midjourney, NightCafe, Photosonic. Video GenAI: Elai, GliaCloud, Pictory, Runway. Music GenAI: Aiva, Boomy, Soundraw, Voicemod.
-
-Prompt-engineering recommendations:
-- Use simple, clear, straightforward language
-- Include examples to illustrate desired response or format
-- Include context
-- Refine and iterate, experimenting with variations
-- Be ethical, avoiding prompts generating inappropriate, biased or harmful content
-
-Case: Théâtre D'opéra Spatial won a prize at the Colorado State Fair (2022) after weeks of prompt iteration and finetuning hundreds of images.
-
-GPT-4 "hallucinates" facts and makes reasoning errors; not fully reliable (OpenAI).
-
-Performance metrics by task: accuracy (math), answer rate (sensitive questions), fraction of directly executable codes (code generation), exact match (visual reasoning) (Chen et al., 2023).
-
-<!-- quelle: 1.2.2.  How image GenAI models work … Implications for education and research -->
-
-### Guidance for generative AI in education and research
-
-- EdGPT (EduChat, MathGPT) refines foundation models (Bommasani et al., 2021).
-- "data poverty" (Marwala, 2023) affects the Global South; ChatGPT reflects Global North values.
-- Providers restrict academic review (Dwivedi et al., 2023); training without consent may violate GDPR (European Union, 2016).
-- Researchers, teachers and learners should take a critical view of the value orientations, cultural standards and social customs embedded in GenAI training models.
-- Policy-makers should be aware of and take action to address the worsening of inequities caused by the widening divide in training and controlling GenAI models.
-- Researchers, teachers and learners should be aware of the lack of appropriate regulations to protect the ownership of domestic institutions and individuals and the rights of domestic users of GenAI, and to respond to legislative issues triggered by GenAI.
-- Researchers, teachers and learners need to know the rights of data owners and should check whether the GenAI tools they are using contravene any existing regulations.
-- Researchers, teachers and learners should also be aware that the images or codes created with GenAI might violate someone else's intellectual property rights, and that images, sounds or code that they create and share on the internet might be exploited by other GenAI.
-
-<!-- quelle: 1.4     Emerging EdGPT and its implications … Implications for education and research -->
-
-### Guidance for generative AI in education and research
-
-- GenAI models like GPT-4 operate as "black boxes" with billions of parameters/weights, making specific outputs unexplainable (Nazaretsky et al., 2022).
-- Biased materials bypass "guardrails" and pollute the internet, creating a recursive risk for future GPT models trained on this generated text.
-- Text GPTs are "stochastic parrots" (Bender et al., 2021) that repeat language patterns without understanding meaning, leading to "hallucination".
-- Claims of artificial general intelligence (AGI) are critiqued; AGI requires combining knowledge-based AI and data-based AI (Marcus, 2022).
-- GPT outputs reflect dominant beliefs, marginalizing data-poor populations, including in the Global North.
-- GAN GenAI facilitates the creation of "deepfakes" and "fake news", risking unethical manipulation of images.
-
-<!-- quelle: 2.4 Unexplainable models used to generate outputs … Implications for education and research -->
-
-### Regulating the use of generative AI in education
-
-- UNESCO's 2021 Recommendation on the Ethics of Artificial Intelligence and 2019 Beijing Consensus on Artificial Intelligence (AI) and Education provide the normative framework.
-- *AI and education: Guidance for policy-makers* (UNESCO, 2022 b) policy recommendations:
-  - (i) enable inclusive access to learning programmes, especially for vulnerable groups such as learners with disabilities
-  - (ii) support personalized and open learning options
-  - (iii) improve data-based provisions and management to expand access and improve quality in learning
-  - (iv) monitor learning processes and alert teachers to failure risks
-  - (v) develop understanding and skills for the ethical and meaningful use of AI
-- April 2023 review (UNESCO, 2023 b) suggests seven steps to regulate GenAI:
-  - Step 1: Endorse/develop data protection regulations. 137 out of 194 countries have legislation (UNCTAD).
-  - Step 2: Adopt/revise/fund whole-of-government strategies. By early 2023, 67 countries had national AI strategies (61 standalone, 7 integrated).
-  - Step 3: Solidify/implement AI ethics regulations. ~40 national AI strategies identify ethical issues; ~20 countries have clear AI ethics regulations; ~45 highlight education.
-  - Step 5: Elaborate GenAI regulatory frameworks. As of July 2023, only China released specific official regulations: *Provisional Regulations on Governing the Service of Generative AI* (13 July 2023, Cyberspace Administration of China, 2023 a), requiring AI-generated content labeling.
-  - Step 6: Build capacity. Singapore offers a platform via its AI Government Cloud Cluster with a GPT model repository (Ocampo, 2023).
-  - Step 7: Reflect on long-term implications for knowledge creation, transmission, and validation.
-
-<!-- quelle: 3. Regulating the use of generative AI in education … Step 7: Reflect on the long-term implications of GenAI for education and research -->
-
-### Regulations on GenAI: Key elements
-
-Governmental regulatory agencies recommended actions:
-- Intersectoral coordination: Establish a national body.
-- Alignment of legislation: Align with data protection, internet security laws.
-- Balance between regulation and innovation: Develop trustworthy models, open-source eco-systems.
-- Assessment and classification of potential risks: Categorize by risk level (strict, special, general regulations). See EU's draft AI Act.
-- Protection of data privacy: Mandate laws protecting personal information.
-- Definition and enforcement of age limit: Minimum threshold 13 years of age. ChatGPT requires users at least 13 years old, under 18 needs parent/guardian permission. US Children's Online Privacy Protection Act (1998) prohibits services for under 13 without permission. GDPR (2016) specifies 16 years old.
-- National data ownership: Protect national data ownership, prevent data poverty.
-
-<!-- quelle: 3.3 Regulations on GenAI: Key elements … 3.3.1. Governmental regulatory agencies -->
-
-### Guidance for generative AI in education and research
-
-### Providers of GenAI tools
-Ten categories of accountabilities:
-- Human accountabilities
-- Trustworthy data and models
-- Non-discriminatory content generation
-- Explainability and transparency of GenAI models
-- Labelling of GenAI content
-- Security and safety principles
-- Specifications on appropriateness for access and use
-- Acknowledging the limitations and preventing predictable risks
-- Mechanisms for complaints and remedies
-- Monitoring and reporting of unlawful use
-
-### Institutional users
-- Institutional auditing of GenAI algorithms, data and outputs
-- Validating proportionality and protecting users' well-being
-- Review and address the long-term impacts
-- Age appropriateness: Consider implementing minimum age restrictions for the independent use of GenAI.
+### Introduction (p. 7)
 
-### Individual users
-- Awareness of terms of reference on the use of GenAI
-- Ethical use of GenAI applications
-- Monitoring and reporting unlawful GenAI applications
+ChatGPT's late-2022 launch — historically the fastest-growing app — reverberated globally. Educators first feared students would use it to cheat, devaluing assessment, certification and qualifications (Anders, 2023). Reactions split: some institutions prohibited ChatGPT outright; others, including the Russell Group (2023), took a permissive line, holding that prohibition was the wrong response and that students and staff instead needed help to use GenAI "effectively, ethically and transparently." The Guidance unfolds across six sections: defining GenAI and its workings (1); the controversies and ethical/policy questions it raises (2); how to regulate it human-centredly (3); building policy frameworks for education and research (4); enabling creative applications in curriculum, teaching, learning and research (5); and long-term implications (6).
 
-### Towards a policy framework
-2023 survey data indicate only a handful of countries have adopted specific policies. Builds on 2022 AI and education: guidance for policy-makers (UNESCO, 2022b). Proposes eight specific measures for planning policies on GenAI in education and research.
-
-<!-- quelle: 3.3.2. Providers of GenAI tools … 4. Towards a policy framework for the use of generative AI in education and research -->
-
-### Guidance for generative AI in education and research
+### Section 1: What is generative AI and how does it work (p. 8–13)
 
-### 4.1 Inclusion, equity, linguistic and cultural diversity
-Three policy measures:
+**Definition and mechanism.** GenAI is an AI technology that creates content on demand when a user types a request into a conversational, natural-language interface. Unlike search tools that point to existing pages, it produces fresh content spanning every symbolic form of human thought: written text, images (photographs, digital paintings, cartoons), video, music and software code. Its training data is harvested from webpages, social-media exchanges and other online material; it works by statistically mapping how words, pixels and other elements are distributed in that data and then reproducing recurring patterns (for instance, which words tend to follow which). Crucially, it cannot originate new ideas or solve real problems, since it has no grasp of the physical world or the social relationships underlying language. Even OpenAI concedes its outputs "cannot be relied upon to be accurate." Mistakes typically pass unnoticed unless the reader already knows the subject well.
 
-- Identify those lacking internet/data; promote universal connectivity and digital competencies; establish sustainable funding for AI-enabled tools for learners with disabilities or special needs; promote GenAI for lifelong learners of all ages, locations, backgrounds.
-- Develop validation criteria ensuring no gender bias, discrimination against marginalized groups, or hate speech in data or algorithms.
-- Require GenAI providers to include multiple languages, especially local/indigenous languages, in GPT training; prevent removal of minority languages or discrimination against indigenous-language speakers; stop systems promoting dominant languages or cultural norms.
+**Underlying technologies.** GenAI sits within machine learning (ML) — AI that improves itself from data. The relevant ML family is the artificial neural network (ANN), modelled on the brain's synaptic wiring. Text GenAI rests on general-purpose transformers, specifically large language models (LLMs); the LLM variant used for text generation is the generative pre-trained transformer (GPT). Image GenAI generally relies on generative adversarial networks (GANs) and variational autoencoders (VAEs); certain models (Dall·E, Stable Diffusion) use Diffusion Models.
 
-### 4.2 Protect human agency
-Seven perspectives:
+**OpenAI GPT iterations** (Table 2): GPT-1 (2018; 40 GB of training data; 117 million parameters; could handle natural-language-processing tasks like question-answering and completion); GPT-2 (2019; 40 GB; 1,500 million parameters; handled more complex NLP, translation between languages and summarization); GPT-3 (2020; 17,000 GB; 175,000 million parameters; could write coherent paragraphs and whole articles, and learn new tasks from just a handful of examples); GPT-4 (2023; 1,000,000 GB and 170,000,000 million parameters — figures reported but unconfirmed — more reliable and able to follow more complicated instructions). Parameters act as metaphorical tuning knobs — among them the model's "weights," the numerical settings governing how input becomes output. Since 2012, the computing power used to train GenAI models has doubled every 3–4 months, against the two-year cycle of Moore's Law (OpenAI, 2018; Stanford University, 2019).
 
-- Inform learners about data GenAI collects, its use, and impact.
-- Protect intrinsic motivation; reinforce human autonomy over research, teaching, learning.
-- Prevent GenAI use that deprives learners of cognitive/social skill development via real-world observation, experiments, discussion, independent reasoning.
-- Ensure social interaction and exposure to human creative output; prevent addiction/dependence.
-- Use GenAI to minimize homework/exam pressure, not exacerbate it.
-- Consult researchers, teachers, learners; encourage critique of AI methodologies, output accuracy, imposed norms/pedagogies.
-- Prevent ceding human accountability to GenAI in high-stakes decisions.
+**How a GPT produces a text response** (six steps): (1) the prompt is split into tokens fed into the GPT; (2) the model applies statistical patterns to guess the words or phrases likely to fit a coherent reply — spotting word combinations that frequently occur together in its prebuilt data model, estimating how probable particular words are in a given context, and starting from a random guess to predict the next likely word or phrase; (3) the predicted items are turned back into readable text; (4) this text passes through "guardrails" that strip out offensive material; (5) steps 2–4 loop until the reply hits a maximum token count or other predefined stopping point; (6) the reply is polished for readability — formatting, punctuation, and human-sounding openers like "Sure," "Certainly" or "I'm sorry."
 
-### 4.3 Monitor and validate GenAI systems
-Five actions:
+**Alternative tools (as of July 2023).** Rivals to ChatGPT include: Alpaca (Stanford's fine-tuning of Meta's Llama, targeting misinformation, stereotypes and toxicity); Bard (Google, built on LaMDA and PaLM 2, with live internet access for current information); Chatsonic (Writesonic; draws directly on Google data, reducing factual errors); Ernie, also called Wenxin Yiyan 文心一言 (Baidu's bilingual model, still in development, combining broad knowledge with large datasets to produce text and images); Hugging Chat (Hugging Face; ethics and transparency emphasized throughout, with fully open-source training data); Jasper (a tool suite with APIs, trainable to a user's preferred style, also making images); Llama (Meta's open-source model, cheaper to run, useful for testing and validating approaches); Open Assistant (open-source, built on volunteer-curated data, letting experts build their own LLMs); Tongyi Qianwen 通义千问 (Alibaba; responds in English or Chinese, being woven into Alibaba's business tools); YouChat (adds real-time search for context and reliability). Products layered on these LLMs include ChatPDF (summarizes and answers questions about uploaded PDFs), Elicit: The AI Research Assistant (automates parts of researchers' workflows, finding relevant papers and distilling key points), and Perplexity (a tailored "knowledge hub" for quick, accurate answers). Chrome extensions built on ChatGPT include WebChatGPT (internet access for up-to-date conversation), Compose AI (autocompletes sentences in emails and elsewhere), TeamSmart AI (a set of virtual assistants) and Wiseone (simplifies online information). ChatGPT has also entered some search engines and large productivity suites (Microsoft Word, Excel), widening its reach in offices and educational institutions (Murphy Kelly, 2023). GPT-4 accepts images alongside text — it is multimodal — which is one reason Stanford researchers suggested calling these systems "foundation models" (Bommasani et al., 2021), a label not yet widely adopted.
 
-- Build validation mechanisms testing for biases (gender, disability, socioeconomic, ethnic/cultural, geographic) and representative training data.
-- Address informed consent, especially for children or vulnerable learners.
-- Audit outputs for deepfake images, fake news, hate speech; take swift action if found.
-- Apply strict ethical validation before official adoption (ethics-by-design).
-- Ensure no predictable harm, educational effectiveness and validity for target ages/abilities, alignment with sound pedagogical principles.
+**Image, video and music GenAI.** A GAN pits two components against each other: a "generator" that produces a random image from a prompt, and a "discriminator" that tries to tell the fake from genuine images. Using the discriminator's verdict, the generator adjusts its parameters and tries again — possibly thousands of times — until its images become nearly indistinguishable from real ones. A GAN trained on landscape photographs can invent plausible non-existent landscapes; one trained on a musician's catalogue can produce new pieces echoing the original's structure. Image tools include Craiyon (formerly DALL·E mini), DALL·E 2 (OpenAI), DreamStudio (Stable Diffusion), Fotor, Midjourney, NightCafe and Photosonic (Writesonic). Video tools include Elai (turns presentations, websites and text into video), GliaCloud (makes videos from news, social posts, live sport and statistics), Pictory (cuts long content into short videos) and Runway (a suite of video and image generation/editing tools). Music tools include Aiva (personalized soundtracks) plus Boomy, Soundraw and Voicemod (songs from any text, no composition expertise needed).
 
-### 4.4 Develop AI competencies
-UNESCO data: only ~15 countries had government-endorsed AI curricula in schools by early 2022 (UNESCO, 2022c). Five actions:
+**Prompt-engineering.** Obtaining the exact output a user wants is harder than it looks: the prize-winning AI image *Théâtre D'opéra Spatial* at the Colorado State Fair (United States of America) required weeks of prompt-writing and the fine-tuning of hundreds of images (Roose, 2022), and demand for prompt-engineering jobs has grown (Popli, 2023). "Prompt-engineering" names the craft of shaping inputs so that GenAI output lands closer to the user's intent. Recommendations: write in simple, clear, unambiguous language; supply examples of the desired response or format; provide context, which is essential for relevant completions; iterate and refine with variations; and stay ethical, steering clear of prompts likely to yield inappropriate, biased or harmful content. OpenAI itself cautions that GPT-4 "still is not fully reliable (it 'hallucinates' facts and makes reasoning errors)," demanding great care in high-stakes settings, with protocols (human review, added context, or avoiding such uses) matched to each case.
 
-- Commit to government-sanctioned AI curricula for school education, TVET, and lifelong learning; cover AI impact, ethical issues, age-appropriate algorithms/data understanding, and skills for proper/creative use of GenAI.
-- Support higher education/research institutions to develop local AI talent.
-- Promote gender equality in advanced AI competencies; create gender-balanced professional pool.
-- Develop intersectoral forecasts of national/global job shifts from GenAI automation; enhance future-proof skills.
-- Provide special programmes for older workers and citizens needing new skills.
+**Implications for education and research.** Useful outputs may require many prompt iterations; young learners, being less expert than their teachers, risk accepting without question output that is shallow, wrong or harmful. Before any large-scale or high-stakes adoption, tools should undergo rigorous user testing and performance evaluation using metrics matched to the task: "accuracy" for mathematics; "answer rate" (how often the tool answers a sensitive question directly) for sensitive queries; "the fraction of the generated codes that are directly executable" for code generation; and "exact match" against ground truth for visual reasoning (Chen et al., 2023). In short: GenAI looks easy to use, but quality output demands skilled human input and critical scrutiny.
 
-<!-- quelle: 4.1 Promote inclusion, equity, and linguistic and cultural diversity … 4.4 Develop AI competencies including GenAI-related skills for learners -->
+**Emerging EdGPT (p. 13).** Because foundation models can be refined into specialized, domain-specific systems, developers and researchers have begun fine-tuning them for education, producing "EdGPT" — models retrained with smaller volumes of high-quality, education-specific data layered on top of general training data. This could better support the transformations listed in Section 4.3: EdGPT for curriculum co-design could let educators and learners produce lesson plans, quizzes and interactive activities matched to sound pedagogy, curricular goals and levels of challenge; as a 1:1 language coach, a model refined with texts for a particular language could generate practice sentences, paragraphs and conversations pitched at the right level, responding with grammatically accurate, relevant text. In theory EdGPT could carry fewer general biases than a standard GPT, yet errors remain possible unless the underlying approach changes, so teachers and learners must keep a critical stance toward outputs. Current examples are EduChat (East China Normal University; open-source code, data and parameters) and MathGPT (TAL Education Group; an LLM for mathematics problem-solving and lecturing worldwide). Progress requires refining models not only with subject knowledge and de-biasing but with knowledge of learning methods reflected in algorithm and model design; the open questions are how far EdGPT can embrace student-centred pedagogy and positive teacher-student interaction, how learner and teacher data may ethically be gathered for this purpose, and what research is needed to ensure EdGPT neither harms students' rights nor sidelines teachers.
 
-### Guidance for generative AI in education and research
+### Section 2: Controversies around generative AI and their implications for education (p. 14–17)
 
-7 countries (China, Finland, Georgia, Qatar, Spain, Thailand, Türkiye) developing AI teacher frameworks.
-- Formulate guidance via local tests.
-- Protect rights; analyze teachers' roles in higher-order thinking, human interaction, values.
-- Define value orientation, knowledge/skills for ethical GenAI use; enable teachers to create tools.
-- Review competencies; integrate into in-service/pre-service frameworks.
-- Understand GenAI as fast but unreliable.
-- Encourage critiquing GenAI; recognize it repeats established opinions, undermining plural opinions.
-- Provide opportunities for trial/error, empirical experiments, real-world observations.
-- Strategically plan design/adoption.
-- Incentivize designers for open-ended, exploratory, diverse learning.
-- Test/scale evidence-based use cases per educational priorities.
-- Guide GenAI to trigger research innovation.
-- Review social/ethical implications in research.
-- Establish criteria/evidence base for effectiveness, inclusive learning, linguistic/cultural diversity.
-- Iteratively strengthen evidence on social/ethical impact.
-- Analyse environmental costs (e.g., training GPT models); set sustainable targets for providers.
-- Collaborate with AI providers, educators, researchers, parents/students for system-wide curriculum/assessment adjustments.
-- Bring intersectoral/interdisciplinary expertise (educators, researchers, learning scientists, AI engineers) to examine long-term implications.
-- Provide timely advice for iterative updates of regulations/policies.
+1. **Worsening digital poverty.** The data and computing power GenAI requires are largely in the hands of the biggest international technology firms and a handful of economies (chiefly the United States, the People's Republic of China and, to a lesser degree, Europe), putting GenAI's creation and control beyond most companies and countries, especially in the Global South. As data becomes vital to national economies and individual opportunity, those lacking or unable to afford it fall into "data poverty" (Marwala, 2023); the same applies to computing power. GenAI's rapid spread in advanced regions has vastly accelerated data generation and processing while concentrating AI wealth in the Global North, leaving data-poor regions further excluded and at risk of being "colonized by the standards embedded in the GPT models" — current ChatGPT models, trained on data reflecting Global North values and norms, suit neither the Global South's data-poor communities nor disadvantaged communities within the Global North. Implication: users should critically examine the value orientations, cultural standards and social customs baked into training models; policy-makers should act on the widening inequities in who trains and controls GenAI.
 
-<!-- quelle: 4.5 Build capacity for teachers and researchers to make proper use of GenAI … 5. Facilitating creative use of GenAI in education and research -->
+2. **Outpacing national regulatory adaptation.** Dominant providers have been criticized for keeping their systems from rigorous independent academic scrutiny (Dwivedi et al., 2023); core technologies are guarded as corporate intellectual property, while firms adopting GenAI struggle to keep their systems secure (Lin, 2023). Despite the industry's own calls for regulation, lawmaking trails the technology's pace, leaving national and local agencies struggling with the legal and ethical questions. With little democratic control over the companies promoting GenAI, questions arise about who may access and use domestic data — on local institutions, individuals, and data generated within national territory. Legislation is needed so public agencies can govern GenAI as a public good.
 
-### Institutional strategies, human-centred interaction, and co-design for GenAI
+3. **Use of content without consent.** GenAI models are assembled from vast troves of text, sound, code and images scraped online, typically without the owners' permission; several international lawsuits over intellectual property are pending. GPTs may also breach the European Union's 2016 General Data Protection Regulation (GDPR) — notably the right to be forgotten — because once a model is trained, an individual's data (and its effects) cannot be stripped out. Implications: users should know data owners' rights and check whether their tools breach existing rules; they should also understand that GenAI-made images or code may infringe others' intellectual property, and that anything they post online may be harvested and exploited by other GenAI.
 
-Four strategies: (1) ethical principles; (2) guidance and training on biases, data privacy, intellectual property; (3) building GenAI prompt-engineering capacities; (4) detecting GenAI-based plagiarism—short-term via human detection, long-term by redesigning assignments for what humans do better than GenAI.
+4. **Unexplainable models used to generate outputs.** ANNs have long been known as "black boxes": their internals cannot be inspected, so they are neither transparent nor explainable, and there is no way to trace how a given output was produced. The overall approach and algorithms are broadly explicable, but the specific models and their parameters — including the weights that store the learned patterns driving outputs, numbering billions in GPT-4 — cannot be examined. As GenAI grows more complex, this opacity produces more unexpected or unwanted results; biases inherited from training data become hard to detect and correct; and the lack of explanation erodes trust (Nazaretsky et al., 2022a, 2022b) — users who cannot see how an output arose are less willing to adopt the system. Implication: users are effectively locked into logic set by parameters that may embed particular cultural or commercial values, silently slanting the content produced.
 
-'human-centred and pedagogically appropriate interaction'—five considerations: more effective than no-tech; intrinsic motivation; human-controlled; proportionate to age range, expected results, knowledge type (factual, conceptual, procedural, metacognitive) or problem type (well-structured, ill-structured); interactive engagement, higher-order thinking, human accountability.
+5. **AI-generated content polluting the internet.** Because training data is drawn from an internet full of discriminatory and otherwise unacceptable language, developers added "guardrails" against offensive or unethical output. Yet without strict regulation and effective monitoring, biased GenAI material keeps spreading through the internet — a principal knowledge source for learners everywhere — and can look accurate and persuasive while carrying errors and prejudice. Young learners without solid prior knowledge are at high risk; there is also a recursive danger for future GPTs trained on machine-generated text that already contains its predecessors' biases and mistakes.
 
-Co-design framework—six perspectives: appropriate domains; expected outcomes; appropriate GenAI tools and comparative advantages; user requirements; human pedagogical methods and example prompts; ethical risks.
+6. **Lack of understanding of the real world.** Text GPTs are sometimes dismissed as "stochastic parrots" (Bender et al., 2021): they mimic language patterns from training data — starting from random ("stochastic") patterns — without grasping meaning, much as a parrot mimics sounds it cannot comprehend. The gap between apparent understanding and actual ignorance can lead teachers and students to over-trust the output. GenAI is not grounded in observation of the real world or the scientific method, nor aligned with human or social values, so it cannot produce genuinely novel content about the world, objects and their relations, people and social relations, or human-object and human-tech relations; whether its seemingly novel output counts as scientific knowledge is contested. GPTs also fabricate — making up things with no real-world existence — a practice some call "hallucination," though others reject that anthropomorphic label; ChatGPT's own interface warns it "may produce inaccurate information about people, places, or facts." Claims that GenAI advances artificial general intelligence (AGI) are contested: critics argue AI cannot approach AGI until knowledge-based (symbolic, rule-based) AI and data-based (machine learning) AI are combined in symbiosis (Marcus, 2022), and that AGI or sentience talk distracts from present harms such as hidden discrimination against already-vulnerable groups (Metz, 2021). Implication: the output looks impressively human, but GenAI understands nothing — it strings together common internet phrasing, and can be wrong — so everything it generates must be read critically.
 
-<!-- quelle: 5.1 Institutional strategies to facilitate responsible and creative use of GenAI … 5.3 Co-designing the use of GenAI in education and research -->
+7. **Reducing the diversity of opinions and further marginalizing already marginalized voices.** These tools tend to return standard answers assuming the values of those whose data trained them: word sequences frequent in the training data — common, uncontroversial, mainstream material — get repeated. This threatens plural opinions and plural expression. Data-poor populations, including marginalized communities in the Global North, have scant digital presence, so their voices and concerns barely enter the training data and rarely surface in outputs; the pre-training method thus deepens the disadvantage of already-marginalized people. Implications: providers bear primary responsibility for tackling dataset and output biases, but users must recognize that outputs reflect only the most common or dominant views of the training era — some of it problematic or biased (e.g. stereotyped gender roles); never take GenAI information at face value; and stay alert to how minority voices, by definition rarer in the data, get excluded.
 
-### Generative AI for research
+8. **Generating deeper deepfakes.** GAN-based GenAI can manipulate existing images or videos into convincing fakes, making "deepfakes" and "fake news" easy to produce and enabling unethical, immoral and criminal acts — disinformation, hate speech, and inserting people's faces without consent into fabricated, sometimes compromising films. Implication: while providers must protect users' copyright and portrait rights, users should know that images they post online may enter GenAI training data and be manipulated unethically.
 
-Two use cases (Table 3):
+### Section 3: Regulating the use of generative AI in education (p. 18–23)
 
-- **AI advisor for research outlines** — well-structured domains; develops research questions, suggests methodologies; 1:1 coach for research planning. User must detect non-existent citations. Example prompt: "Write 10 potential research questions for [topic x] and rank them in importance for [the field of research y]." Risks: fabricated information; junior researchers' reduced trial-and-error learning.
+**A human-centred approach to AI.** UNESCO's 2021 Recommendation on the Ethics of Artificial Intelligence supplies the normative basis for tackling GenAI's controversies, including those touching education and research. It holds that AI should serve the growth of human capabilities toward inclusive, just and sustainable futures, guided by human rights principles, human dignity and the cultural diversity of the knowledge commons; governance must secure human agency, transparency and public accountability. The 2019 Beijing Consensus on Artificial Intelligence (AI) and Education elaborates what this means for education: AI should strengthen human capacities for sustainable development and for effective human-machine collaboration in life, learning and work; access should be equitable, supporting marginalized people and reducing inequality while sustaining linguistic and cultural diversity; and policy planning should be whole-of-government, intersectoral and multistakeholder. AI and education: Guidance for policy-makers (UNESCO, 2022b) refines the approach further, recommending policies that: (i) open learning programmes to all, especially vulnerable groups such as learners with disabilities; (ii) expand personalized and open learning options; (iii) use data-based provision and management to widen access and raise quality; (iv) track learning processes and warn teachers of failure risks; and (v) cultivate understanding and skills for AI's ethical, meaningful use.
 
-- **Generative data explorer and literature reviewer** — ill-structured domains; automates data gathering, literature review drafts, data interpretation. User needs robust methodology knowledge. Risks: fabricated information, privacy breaches, unauthorized profiling, gender bias, propagation of dominant norms threatening plural opinions.
+**Seven steps to regulate GenAI in education** (drawn from an April 2023 mapping of governmental strategies, UNESCO, 2023b):
 
-<!-- quelle: 5.3.1 Generative AI for research -->
+1. **Endorse international or regional general data protection regulations or develop national ones.** GenAI training has processed citizens' online data across many countries, and the unconsented use of that data intensifies the protection problem. Frameworks such as the EU's GDPR (enacted 2018) give the legal basis for regulating providers' collection and processing of personal data; per UNCTAD's Data Protection and Privacy Legislation Worldwide portal, 137 of 194 countries have such legislation. How far these frameworks are actually enforced is unclear, so implementation — including regular monitoring of GenAI operations — is critical; countries lacking such laws should enact them urgently.
+2. **Adopt/revise and fund whole-of-government strategies on AI.** GenAI regulation belongs inside broader national AI strategies ensuring safe, equitable AI use across sectors, including education; their formulation, endorsement, funding and implementation demand a whole-of-government approach to coordinate intersectoral responses. By early 2023, some 67 countries had or planned national AI strategies — 61 standalone, 7 as AI chapters within wider ICT or digitalization strategies — and, given GenAI's novelty, none yet addressed it specifically. Existing strategies should be revised (or new ones developed) with provisions for AI's ethical use across sectors, education included.
+3. **Solidify and implement specific regulations on the ethics of AI.** UNESCO's 2023 review found ethical issues and guiding principles in only some 40 national AI strategies, and even there the principles rarely became enforceable law: only around 20 countries had clear ethics-of-AI regulations, including for education. Although education features in some 45 national strategies, it is framed mainly as AI skills and talent development for national competitiveness rather than around ethics. Countries without such regulations should urgently draft and implement them.
+4. **Adjust or enforce existing copyright laws to regulate AI-generated content.** GenAI raises two copyright questions: the protected works used in training, and the status of the "non-human" outputs. So far only China, EU countries and the United States have adapted their copyright law. The US Copyright Office has ruled that GenAI output such as ChatGPT's is not protectable, since "copyright can protect only material that is the product of human creativity" (US Copyright Office, 2023). The proposed EU AI Act would oblige developers to disclose the copyrighted material used to build their systems (European Commission, 2021). China's July 2023 GenAI regulation mandates labelling GenAI outputs as AI-generated, recognized solely as products of digital synthesis. Regulating copyrighted training material and defining the copyright status of outputs are emerging duties of copyright law, and existing statutes need adjusting urgently.
+5. **Elaborate regulatory frameworks on generative AI.** The technology's pace is forcing regulators to accelerate. As of July 2023, China alone had issued official GenAI-specific rules: the Provisional Regulations on Governing the Service of Generative AI (13 July 2023, Cyberspace Administration of China, 2023a), obliging providers to label AI-generated content, images and videos lawfully under the existing Regulation on Deep Synthesis in the Framework of Online Information Services. More national GenAI frameworks are needed, built on assessments of gaps in current local laws.
+6. **Build capacity for proper use of GenAI in education and research.** Schools and other institutions must first understand AI's benefits and risks — including GenAI's — before they can validate tools; teachers and researchers need training and ongoing coaching. Several countries have begun such programmes, Singapore among them, offering educational institutions a dedicated capacity-development platform through its AI Government Cloud Cluster, with a repository of GPT models (Ocampo, 2023).
+7. **Reflect on the long-term implications of GenAI for education and research.** Current GenAI's effects are only starting to unfold, and stronger versions keep arriving. Open questions remain about knowledge creation, transmission and validation; teaching and learning; curriculum design and assessment; research and copyright. Most countries are at an early stage of adoption, so inclusive public debate and policy dialogue — spanning government, the private sector and other partners — should urgently inform the iterative renewal of regulations and policies.
 
-### Generative AI to facilitate teaching
+**Key elements for governmental regulatory agencies** (seven): intersectoral coordination — a national body to lead the whole-of-government approach and coordinate cross-sector cooperation; alignment of legislation — fit the framework to each country's existing data protection, internet security and related laws, and assess what adaptations GenAI's new issues require; balance between regulating GenAI and promoting AI innovation — foster cooperation among companies, organizations, education and research institutions and public agencies to build trustworthy models, encourage open-source ecosystems that share super-computing resources and high-quality pre-training datasets, and promote practical GenAI applications and public-good content across sectors; assessment and classification of AI risks — set principles and processes for judging the efficacy, safety and security of GenAI services before deployment and throughout their life cycle, with risk-based categories (banning applications with unacceptable risks, special rules for high-risk ones, general rules for the rest; see the EU's draft AI Act); protection of data privacy — since GenAI use almost always means sharing user data with providers, mandate laws protecting personal information and combat unlawful storage, profiling and sharing of data; definition and enforcement of an age limit — most GenAI is built for adults and carries real risks for children (inappropriate content, manipulation), so age restrictions are strongly recommended for general-purpose AI, with a minimum threshold of 13 years (ChatGPT currently requires users to be at least 13, with parental permission below 18 — thresholds rooted in the US Children's Online Privacy Protection Act of 1998, passed before social media and GenAI; many commentators find 13 too low and push for 16, the GDPR's age for using social media without parental permission; countries must deliberate the appropriate threshold, decide whether self-reported age is acceptable verification, and assign accountabilities to providers for verification and to parents or guardians for monitoring underage use); and national data ownership and the risk of data poverty — legislate to protect national data ownership and regulate providers operating in-country, ensuring that commercially used citizen-generated data serves mutually beneficial cooperation rather than being drained away for the exclusive benefit of big tech.
 
-GenAI can be used for teacher-AI co-designing of lesson plans, course packages, or curricula.
+**Ten accountabilities for providers of GenAI tools**: (1) human accountabilities — upholding core values and lawful purposes, respecting intellectual property, maintaining ethical practice, and stopping disinformation and hate speech; (2) trustworthy data and models — demonstrating the trustworthiness and ethics of data sources and methods, using data and foundation models of proven legal origin, honouring intellectual property law, and collecting personal information only with the informed, explicit consent of its owners; (3) non-discriminatory content generation — banning systems that produce biased or discriminatory content based on race, nationality, gender or other protected characteristics, with robust guardrails against offensive, biased or false output and protection for the humans who help shape those guardrails; (4) explainability and transparency — submitting to governance agencies explanations of the data used (sources, scale, types), data-labelling rules in pre-training, the methods or algorithms generating content, and the services offered, with support for agencies' understanding where needed, and making the tendency toward errors and contestable responses visible to users; (5) labelling of GenAI content — properly and lawfully marking GenAI-generated papers, reports, images and videos (e.g. clearly identified as machine-produced); (6) security and safety principles — secure, robust, sustainable service across the whole system life cycle; (7) specifications on appropriateness for access and use — clear statements of the intended audience, use scenarios and purposes, helping users choose rationally and responsibly; (8) acknowledging limitations and preventing predictable risks — advertising the limits of the systems' methods and outputs, building technologies to prevent foreseeable harm, protocols to mitigate unforeseeable harm, and guidance to help users understand GenAI content ethically and avoid overreliance and addiction; (9) mechanisms for complaints and remedies — channels for complaints from users and the public, acted on promptly; (10) monitoring and reporting of unlawful use — cooperating with governance agencies to track and report illegal or unethical uses, including disinformation, hate speech, spam and malware.
 
-- Curriculum or course co-designer:
-  - Domains: conceptual knowledge on teaching topics, procedural knowledge on methodologies.
-  - Outcomes: defining curriculum structure, preparing tests with questions and rubrics.
-  - Requirements: teachers must specify coverage, knowledge type (procedural/conceptual), and teaching theory.
-  - Risks: imposing dominant norms, perpetuating exclusionary practices favoring data-rich over data-poor groups.
-- Generative chatbot as teaching assistant:
-  - Domains: conceptual knowledge across multiple domains in well-structured problems.
-  - Requirements: learners need sufficient prior knowledge, abilities, and metacognitive skills to verify outputs; more appropriate for higher education.
-  - Risks: requires human supervision of responses; may limit access to human guidance, hindering teacher-student relationships, especially concerning for children.
+**Institutional users** (educational authorities, universities, schools deciding whether and which GenAI to adopt): institutional auditing of GenAI algorithms, data and outputs — monitoring mechanisms including regular audits and assessments, protection of user data, and automatic filtering of inappropriate content; validating proportionality and protecting users' well-being — applying national classification mechanisms or building institutional policy to categorize and validate systems, ensuring adopted tools match locally validated ethical frameworks and do no predictable harm, especially to children and vulnerable groups; review and address the long-term impacts — evaluating effects on human capacities such as critical thinking and creativity that may follow sustained reliance on GenAI; and age appropriateness — considering minimum age restrictions for independent institutional use.
 
-<!-- quelle: 5.3.2 Generative AI to facilitate teaching -->
+**Individual users** (teachers, researchers and learners in formal institutions or non-formal programmes): awareness of terms of reference on the use of GenAI — understanding, when agreeing to service terms, the obligations those terms and the underlying laws impose; ethical use of GenAI applications — deploying GenAI responsibly and never in ways that damage others' reputations or lawful rights; and monitoring and reporting unlawful GenAI applications — alerting governmental regulatory agencies to applications that breach regulations.
 
-### Generative AI as a 1:1 coach for self-paced acquisition of foundational skills
+### Section 4: Towards a policy framework for the use of generative AI in education and research (p. 24–27)
 
-GenAI can serve as a 1:1 coach for self-paced rehearsal of foundational skills (listening, pronouncing, writing in mother tongue/foreign language; basic numeracy, art, coding), reinvigorating 'Drill and practice' pedagogy.
+Regulation must be backed by policy. 2023 survey data show only a handful of countries with specific policies or plans for AI in education. Taking the 2022 AI and education: guidance for policy-makers (UNESCO, 2022b) — whose recommendations for government-wide AI-and-education policies centred on quality, equity and inclusion remain largely applicable — as its starting point, this section proposes eight measures for GenAI-specific policy:
 
-Three use cases:
+**4.1 Promote inclusion, equity, and linguistic and cultural diversity.** Inclusion must run through GenAI's whole life cycle: tools will not help meet education's fundamental challenges or SDG 4 commitments unless everyone can reach them — whatever their gender, ethnicity, special educational needs, socioeconomic status, geographic location or displacement status — and unless they are designed to advance equity, linguistic diversity and cultural pluralism. Three measures: identify those lacking or unable to afford connectivity or data, and act to spread universal connectivity and digital competencies, lowering barriers to equitable AI access; establish sustainable funding for AI-enabled tools for learners with disabilities or special needs; and promote GenAI for lifelong learners of every age, location and background. Develop validation criteria ensuring that neither data nor algorithms carry gender bias, discrimination against marginalized groups, or hate speech. Develop and implement inclusive system specifications and institutional measures protecting linguistic and cultural diversity in large-scale deployment — requiring providers to train GPT models on data in multiple languages, especially local and indigenous ones, so GenAI can respond in and generate multilingual text; strictly forbidding any intentional or unintentional removal of minority languages or discrimination against indigenous-language speakers; and requiring providers to stop systems that push dominant languages or cultural norms.
 
-- **1:1 language skills coach**: Conversational practice for listening, speaking, writing. An age limit may be set for independent conversations due to culturally insensitive or age-inappropriate output. Learner needs intrinsic motivation and critical approach to GenAI suggestions. Example prompt: *Engage me in a conversation in the [x] language, helping me to continuously improve.* Risks: culturally insensitive language, perpetuation of stereotypes, formulaic writing, reduced real-life interaction.
-- **1:1 art coach**: Technical skills in music and drawing (perspective, colour, melody, chord progression). Learners need foundational understanding and basic analytical abilities. Example prompt: *Suggest some ideas to inspire me to create an image on [topics/ideas].* Risks: exposure to inappropriate/offensive content; suppression of imagination and creativity.
-- **1:1 coach for coding or arithmetic**: Introductory programming and basic mathematics; bug-finding, immediate feedback. Learners need intrinsic motivation and basic programming knowledge. Example prompt: *Suggest some unusual ideas for coding.* Risks: inaccurate feedback; prevention of computational thinking and problem-defining skills.
+**4.2 Protect human agency.** As GenAI grows more sophisticated, a central danger is erosion of human agency: people may drift into relying on it for writing and creative work, weakening intellectual skills. GenAI may challenge and stretch human thinking, but must never replace it. Seven perspectives: inform learners what data GenAI gathers about them, how it is used, and the consequences for their education and lives; protect learners' intrinsic motivation to grow and learn, reinforcing their autonomy over how they research, teach and learn with ever more sophisticated systems; block uses that would deny learners the chance to build cognitive abilities and social skills through real-world observation, empirical practice such as experiments, discussion with other people, and independent logical reasoning; guarantee enough social interaction and exposure to human creative work, guarding against addiction to or dependence on GenAI; deploy GenAI to ease, not intensify, the pressure of homework and exams; consult researchers, teachers and learners about GenAI and use their feedback to decide whether and how tools are deployed institutionally, while encouraging them to question the systems' methodologies, the accuracy of outputs, and any norms or pedagogies the tools impose; and never let human accountability over high-stakes decisions pass to GenAI systems.
 
-<!-- quelle: 5.3.3 Generative AI as a 1:1 coach for the self-paced acquisition of foundational skills -->
+**4.3 Monitor and validate GenAI systems for education.** GenAI must be ethical by design, then monitored and validated throughout its life cycle — for ethical risk, pedagogical appropriateness and rigour, and effects on students, teachers and classroom/school relationships. Five actions: build validation mechanisms testing whether systems are free of biases (gender biases above all) and trained on data representative of diversity — gender, disability, social and economic status, ethnic and cultural background, geographic location; handle the difficult question of informed consent, especially where children or other vulnerable learners cannot give it genuinely; audit outputs for deepfake images, fake (inaccurate or false) news and hate speech, with institutions and educators ready to act swiftly and robustly to mitigate or eliminate problems; apply strict ethical validation before official adoption in educational or research institutions (an ethics-by-design approach); and, before adoption decisions, confirm that applications do no predictable harm, are educationally effective and valid for the ages and abilities of target learners, and rest on sound pedagogical principles grounded in the relevant domains of knowledge, expected learning outcomes and the development of values.
 
-### Generative AI to facilitate inquiry or project-based learning
+**4.4 Develop AI competencies including GenAI-related skills for learners.** Learner AI competency underpins safe, ethical, meaningful AI use, yet UNESCO data show only some 15 countries with government-endorsed school AI curricula developed, implemented or in development in early 2022 (UNESCO, 2022c). GenAI makes universal literacy in AI's human and technological dimensions — how it broadly works, and GenAI's specific impact — even more urgent. Five actions: commit to government-sanctioned AI curricula across school education, technical and vocational education and training, and lifelong learning, covering AI's impact on our lives and its ethical issues, age-appropriate understanding of algorithms and data, and skills for the proper, creative use of AI tools including GenAI applications; support higher education and research institutions in expanding programmes that grow local AI talent; promote gender equality in advanced AI competencies and build a gender-balanced professional pool; develop intersectoral forecasts of the national and global job shifts driven by the latest GenAI automation, and strengthen future-proof skills across education and lifelong learning in line with prospective demand; and provide special programmes for older workers and citizens needing new skills for new environments.
 
-Two potential GenAI roles in inquiry/project-based learning (Table 6):
+**4.5 Build capacity for teachers and researchers to make proper use of GenAI.** 2023 survey data on governmental use of AI for education (UNESCO, 2023c) show only some seven countries — China, Finland, Georgia, Qatar, Spain, Thailand and Türkiye — with frameworks or training programmes on AI for teachers developed or in development; only Singapore's Ministry of Education reported an online repository focused on ChatGPT in teaching and learning. Teachers in most countries thus lack structured training on AI, let alone GenAI. Four actions: formulate or adjust guidance grounded in local testing to help researchers and teachers navigate widely available GenAI tools and shape the design of new domain-specific applications; protect teachers' and researchers' rights and the value of their practice, analysing teachers' distinctive roles in cultivating higher-order thinking, organizing human interaction and fostering human values; define the value orientation, knowledge and skills teachers need to use GenAI effectively and ethically, enabling them to build GenAI-based tools for classroom learning and their own professional development; and dynamically review the competencies teachers need for AI in teaching, learning and professional growth, folding emerging AI-related values, understanding and skills into competency frameworks and training for both in-service and pre-service teachers.
 
-- **Socratic challenger**: Applied to ill-structured problems; aims at Socratic questioning of prior knowledge leading to new knowledge. Requires learners old enough for independent GenAI conversations and able to verify argument accuracy. Teachers prepare gradually deeper example questions; learners may start with broad prompts (e.g., 'Engage me in a Socratic dialogue in order to help me take a critical perspective towards [topic x]'). Risk: echo-chamber effect from standard answers, hindering independent thinking.
-- **Advisor for project-based learning**: Applied to ill-structured research problems in science or social studies; GenAI acts as research advisor (cf. Table 3). Learners act as junior researchers; must be old enough for independent GenAI use and motivated for self-directed work. Teachers guide learners to ask GenAI for basic ideas defining research problems (cf. 5.3.1); learners use GenAI for literature reviews, data collection/processing, report creation. Risk: learners lacking prior knowledge may be misled; reduced peer interaction may harm social development.
+**4.6 Promote plural opinions and plural expressions of ideas.** GenAI grasps neither prompt nor response: replies rest on the probabilities of language patterns in its ingested internet data. Methods under research — linking GenAI to knowledge databases and reasoning engines — may address some fundamental output problems, but by its nature GenAI reproduces dominant worldviews and sidelines minority and plural opinions; it "can never be an authoritative source of knowledge" on any topic it addresses. Users should therefore: treat GenAI as a fast but often unreliable information source (plugins and LLM-based tools promising validated, current information lack robust evidence of effectiveness so far); push learners and researchers to critique GenAI's responses, recognizing that it mostly recycles established or standard opinions at the expense of plural and minority views; and give learners ample opportunity to learn from trial and error, empirical experiments and observation of the real world.
 
-Tool selection: assess local accessibility, open-source status, authoritative validation (cf. list in Section 1.3).
+**4.7 Test locally relevant application models and build a cumulative evidence base.** GenAI models are dominated by Global North information and under-represent Global South and indigenous voices; deliberate efforts — for instance harnessing synthetic data (Marwala, 2023) — are needed to make tools responsive to local contexts, especially in the Global South. Eight actions: plan GenAI design and adoption strategically rather than through passive, uncritical procurement; incentivize designers to aim at open-ended, exploratory and diverse learning options; test and scale evidence-based use cases of AI in education and research according to educational priorities, not novelty, myth or hype; steer GenAI toward research innovation, using computing capabilities, large-scale data and GenAI outputs to inform and inspire better research methodologies; review the social and ethical implications of building GenAI into research processes; set criteria grounded in evidenced pedagogical research and methodologies, and accumulate evidence on GenAI's effectiveness in widening inclusive learning opportunities, meeting learning and research objectives, and supporting linguistic and cultural diversity; strengthen evidence on GenAI's social and ethical impact step by step; and analyse the environmental costs of AI at scale (the energy and resources consumed in training GPT models), setting sustainability targets for providers so AI does not add to climate change.
 
-<!-- quelle: 5.3.4 Generative AI to facilitate inquiry or project-based learning -->
+**4.8 Review long-term implications in an intersectoral and interdisciplinary manner.** Effective, ethical GenAI use in education and research demands intersectoral and interdisciplinary approaches: only a broad range of expertise and multiple stakeholders together can spot key challenges early and address them well, limiting long-term harms while compounding benefits. Three actions: work with AI providers, educators, researchers and representatives of parents and students to plan system-wide changes to curriculum frameworks and assessment methods, maximizing GenAI's potential and limiting its risks for education and research; convene intersectoral and interdisciplinary expertise — educators, researchers, learning scientists, AI engineers and other stakeholders — to examine GenAI's long-term implications for learning and knowledge production, research and copyright, curriculum and assessment, and human collaboration and social dynamics; and offer timely advice feeding into the iterative updating of regulations and policies.
 
-### Generative AI to support learners with special needs
+### Section 5: Facilitating creative use of GenAI in education and research (p. 28–29)
 
-- GenAI uses for special needs include subtitles/captions for deaf/hard-of-hearing learners, audio descriptions for visually impaired learners, and text-to-speech/speech-to-text.
-- A 2023 UNESCO survey found only four countries (China, Jordan, Malaysia, Qatar) had government agencies that validated and recommended AI-assisted tools for inclusive access for learners with disabilities.
-- PaLM 2 is trained on parallel data covering hundreds of languages (source and target text pairs) to improve multilingual text understanding and generation.
-- GenAI can perform conversation-based diagnoses of psychological, social-emotional, or learning difficulties, but diagnoses require interpretation by skilled professionals.
-- Table 7 outlines three potential uses:
-  - Conversational diagnosis of learning difficulties: Potential transformation is a 1:1 primary advisor for learners with social/emotional problems or learning difficulties. Risk: inadvertent misdiagnosis leading to wrong support.
-  - AI-powered accessibility tools: Potential transformation is 1:1 personalized AI-powered language aids. Risk: inaccurate captions/audio descriptions from non-specialized platforms reinforcing biases.
-  - Generative amplifier for marginalized learners: Potential transformation is Inclusive LLMs for marginalized learners. Risk: translation/paraphrasing errors causing intercultural misunderstandings; cannot solve root cause of data poverty or decolonize AI tools.
+Early reactions to ChatGPT centred on essay-generation and cheating; since then, many — some of the world's leading universities among them — contend that "the genie is out of the bottle": such tools are here to stay and can serve education productively. The internet now teems with suggestions — sparking new ideas, producing multi-perspective examples, drafting lesson plans and presentations, summarizing materials, stimulating image creation — yet researchers and educators are still working out what GenAI really means for teaching, learning and research. Some proposed uses rest on technological potential rather than the needs of researchers, teachers or learners, and their proponents may not have weighed ethical principles properly.
 
-<!-- quelle: 5.3.5 Generative AI to support learners with special needs -->
+**5.1 Four institutional strategies for responsible and creative use**: (1) institutional implementation of ethical principles — ensuring responsible, ethical use of GenAI tools and critical scrutiny of the accuracy and validity of outputs; (2) guidance and training — for researchers, teachers and learners on ethical issues such as biases in data labelling and algorithms, and on compliance with data privacy and intellectual property regulations; (3) building GenAI prompt-engineering capacities — beyond subject knowledge, researchers and teachers need the expertise to engineer and critically evaluate GenAI prompts, supported by high-quality training given the complexity of the challenges; (4) detecting GenAI-based plagiarism in written assignments — students may pass off machine-written text as their own, a new form of "plagiarism"; providers are required to watermark outputs as "generated by AI" and detection tools are emerging, but evidence of their effectiveness is thin. The immediate institutional response is to defend academic integrity and accountability through rigorous human detection; the long-term response is to redesign written assignments so they no longer assess what GenAI does better than learners, but instead target what humans can do and GenAI cannot — including bringing human values such as compassion and creativity to complex real-world challenges.
 
-### GenAI and the future of education and research
+**5.2 A 'human-centred and pedagogically appropriate interaction' approach** — five considerations: the tool should serve human needs and make learning or research more effective than a no-tech or alternative approach; educators' and learners' use should spring from intrinsic motivation; humans — educators, learners or researchers — should stay in control of the usage process; the choice and organization of tools and their generated content should be proportionate to the learners' age range, the expected results, and the type of target knowledge (factual, conceptual, procedural or metacognitive) or target problem (well-structured or ill-structured); and the usage process should secure humans' interactive engagement with GenAI and higher-order thinking, together with human accountability for decisions about the accuracy of AI-generated content, teaching or research strategies, and their effects on human behaviour.
 
-Five perspectives requiring deeper ethical analysis:
+**5.3 Co-designing the use of GenAI in education and research.** GenAI use should be neither imposed from above nor propelled by commercial hype; it should be co-designed by teachers, learners and researchers, then piloted and evaluated for effectiveness and long-term impact. The proposed co-design framework has six perspectives: appropriate domains of knowledge or problems; expected outcomes; appropriate GenAI tools and comparative advantages; requirements for users; required human pedagogical methods and example prompts; and ethical risks. Examples (in Part 2) show how co-design can inform research practices, assist teaching, coach the self-paced acquisition of foundational skills, facilitate higher-order thinking, and support learners with special needs — only a fraction of the growing domains where GenAI may have potential.
 
-- Access and equity: GenAI may exacerbate existing disparities in access to technology and educational resources.
-- Human connection: GenAI may reduce human-to-human interaction and social-emotional aspects of learning.
-- Human intellectual development: GenAI may limit learners' autonomy and agency by providing predetermined solutions; long-term impact on young learners needs investigation.
-- Psychological impact: GenAI mimicking human interactions may have unknown effects on cognitive development, emotional well-being, and potential for manipulation.
-- Hidden bias and discrimination: Sophisticated GenAI may generate new biases based on training data and methods, producing harmful outputs.
+### Figures (p. 2)
 
-Four categories of learning outcomes to reconsider:
+*Image 2:* — This is a flat vector illustration, not a photograph. It shows a woman with brown hair tied back, seen from the side and behind, wearing a light patterned sweater and a hoop earring, with both hands on a small blue rectangular card that has dark horizontal lines on it. Above her floats a rounded robot-like device with a dark screen face showing two eyes and a small smile, with pale arms ending in white hands, one near the card and one near a blank white square. Around them are a laptop-style window at the lower left, a dashed curved path with small circles at the upper right, a three-by-three grid of dots, and a green plant at the lower right, all on a pale lavender background. No legible text is visible; the dark marks on the blue card are only lines, not readable letters.
 
-- Values: human-centred design and use of technology must be made explicit.
-- Foundational knowledge and skills: literacy, numeracy, basic scientific literacy remain key; scope must be revisited for AI-rich environments.
-- Higher-order thinking skills: critical evaluation of AI-generated content; understanding roles of factual and conceptual knowledge.
-- Vocational skills needed to work with AI: skills to develop, operate and work with GenAI tools.
+*Image 4:* — This is a logo image. The top portion shows a solid blue rectangle containing a white line drawing of a classical temple with columns and a triangular pediment. Below the blue rectangle, the word "unesco" appears in lowercase blue letters on a white background.
 
-Chayka (2023) characterizes GenAI-assisted text generation as 'writing without thinking'. Future writing instruction may focus on prompt planning, critical evaluation of GenAI outputs, and co-writing based on GenAI outlines. EdGPT providers and educators should consider fostering creativity, collaboration, and critical thinking. The human-centred approach informed by the 2021 UNESCO Recommendation on the Ethics of AI is to be specified and implemented for GenAI.
+*Image 8:* — This is a circular infographic with a thick blue arc along the left side. Inside the circle, text in blue and gray reads: "While ChatGPT reached 100 million monthly active users in January 2023, only one country had released regulations on generative AI as of July 2023". The words "100 million" appear in a larger, bold blue font, and the partial text "gulate the" is visible in the top left corner. _(Lettering in the image, read by the image model, not confirmed: "While ChatGPT reached 100 million monthly active users in January 2023, only one country had released regulations on generative AI as of July 2023", "gulate the")_
 
-<!-- quelle: 6. GenAI and the future of education and research … Concluding remarks -->
+*Image 10 (p. 2):* — This is a color photograph of a woman with shoulder-length blonde hair, smiling and wearing a light gray suit jacket. She is seated with her hands clasped in her lap. Behind her to the left stands a light blue flag bearing a white emblem of a world map surrounded by olive branches, set against a plain light-colored background.
 
-### Guidance for generative AI in education and research
+<!-- quelle: Guidance for generative AI in education and research (p. 1–29) -->
 
-Key regulatory and policy instruments referenced:
-- China's CAC: draft measures (April 2023) and interim measures (July 2023) for managing generative AI services
-- EU AI Act (2021 proposal); GDPR (Regulation 2016/679)
-- US COPPA (1998); US Copyright Office 2023 guidance on AI-generated works (Federal Register Vol. 88, No. 51, pp. 16190–16194)
-- UNESCO Beijing Consensus on AI and Education (2019); Recommendation on Ethics of AI (2022); K-12 AI curricula mapping (2022); call for governments to implement Global Ethical Framework without delay (2023)
-- Russell Group 2023 principles on generative AI tools in education
-- Google 2023 Recommendations for Regulating AI
+### 5.3.1 Generative AI for research (p. 29–30)
 
-Research specifics:
-- Nazaretsky et al. 2022: instrument for measuring teachers' trust in AI-based educational technology (LAK22, pp. 55–66; BJET Vol. 53, No. 4, pp. 914–931)
-- Tlili et al.: ChatGPT as case study of chatbots in education (Smart Learning Environments, Vol. 10, No. 15)
-- Stanford AI Index Reports (2019, 2023)
-- AI prompt engineer roles paying up to $335K (Popli 2023)
-- UNESCO 2023b: mapping governmental strategies for regulating creative use of GenAI (unpublished)
-- UNESCO 2023c: survey for governmental use of AI as a public good for education (unpublished)
+GenAI models have shown promise for broadening perspectives on research outlines and for deepening data exploration and literature reviews. Still, fresh research is required to delimit the range of problems such tools can address and the results to expect, to prove their accuracy and effectiveness, and to make sure that relying on AI does not erode researchers' own agency in making sense of the world.
 
-<!-- quelle: Cyberspace Administration of China. 2023 a . 国 家互联网信息办公室关于《生成式人工智能服务 管理办法（征求意见稿）》公开征求意见的通知 -->
+Table 3 co-designs two uses that remain "potential but unproven":
 
-### Guidance for generative AI in education and research
+- **AI advisor for research outlines** – suited to well-structured research problems. It would help develop and answer research questions and propose suitable methodologies, with a possible transformation into a "1:1 coach for research planning". The researcher needs basic topic knowledge plus the capacity to check information, above all to spot invented citations of papers that do not exist. The pedagogical method is to supply the essentials for framing a research problem (audience, issues, context) along with methodology and the intended results and formats. Example prompt: "Write 10 potential research questions for [topic x] and rank them in importance for [the field of research y]." Risks: fabricated information (including phantom publications) and the temptation to paste AI-drafted outlines wholesale, which deprives junior researchers of learning through trial and error.
+- **Generative data explorer and literature reviewer** – suited to ill-structured problems. It would automatically gather information, range across wide datasets, draft literature reviews and automate parts of interpretation, potentially becoming "AI trainers for data exploration and literature reviews". Users need solid command of analytical methodologies and techniques. Risks: fabricated content, mishandled data, privacy violations, unauthorized profiling, gender bias, and the spread of mainstream norms at the expense of alternative views and plural opinion.
 
-- Maps publicly available GPT models, especially open-source.
-- Discusses EdGPT GenAI models trained with specific data for educational purposes.
-- Controversies: digital poverty, homogenization of opinions, deepfakes, copyright.
-- Regulation steps: mandate data privacy protection, set age limit for independent conversations with GenAI platforms.
-- Proposes human-agent and age-appropriate approach to ethical validation and pedagogical design.
+For both uses, tools should be checked for local availability, open-source licensing and rigorous testing or official validation (starting from the list in Section 1.2).
 
-<!-- quelle: Guidance for generative AI in education and research -->
+### 5.3.2 Generative AI to facilitate teaching (p. 30–31)
+
+GenAI platforms, whether general-purpose or education-specific, ought to be designed so that they deepen teachers' subject mastery and their grasp of pedagogy – for instance through joint teacher–AI drafting of lessons, course packages or whole curricula. Conversational assistants pre-trained on material from seasoned teachers and libraries – so-called "generative twins of teaching assistants" – are already being piloted in some institutions, but their promise and their ethical hazards are both unmapped; they must be audited via this Guidance's framework and kept under human oversight.
+
+Table 4 co-designs two uses:
+
+- **Curriculum or course co-designer** – covering subject-matter concepts and the procedures of teaching methodology. It would help outline or broaden key topic areas, structure curricula, and generate sample exam questions with marking rubrics; potential transformation: "AI-generated curriculum". Teachers must state precisely what the curriculum, lessons or tests are meant to cover and achieve, whether procedural or conceptual knowledge is the target, and which teaching theory applies; human designers must fact-check the output and judge the fit of proposed course packages. Risks: a strong danger that GenAI enforces mainstream norms and pedagogies, entrenching exclusionary practices that favour data-rich groups and widening gaps in access to good education for data-poor groups.
+- **Generative chatbot as teaching assistant** – handling conceptual questions in well-structured problems across domains. It offers personalized help, answers and resource pointers; potential transformation: "generative twins of teachers' assistants". Because it faces learners directly, it presupposes enough prior knowledge, capability and metacognition to check GenAI's answers and catch misinformation – making it better suited to higher education. Teachers must grasp the problems, watch the conversations and assist learners in interrogating doubtful answers. Risks: institutions must ensure humans supervise GenAI's replies given the misinformation danger; the tool may also cut learners off from human guidance, weakening the teacher–student bond – a particular worry for children.
+
+### 5.3.3 Generative AI as a 1:1 coach for the self-paced acquisition of foundational skills (p. 31–32)
+
+'Drill and practice' is not an outdated method; rather, it deserves renewal through GenAI so that learners can rehearse foundational skills at their own pace. These skills – listening, pronouncing and writing the mother tongue or a foreign language, numeracy, art and coding – remain crucial to children's psychological development and progression toward competence. Table 5 co-designs three uses:
+
+- **1:1 language skills coach** – conversational practice that improves listening, speaking and writing through feedback, corrections and modelling; potential transformation: "1:1 language tutorials at beginner level". Given culturally insensitive or age-inappropriate GenAI output, an age threshold for unsupervised conversations may be needed. Learners need intrinsic motivation and a sceptical stance toward GenAI's suggestions. Teachers can steer learners to ask for feedback, pronunciation correction or writing samples; example prompts: "Engage me in a conversation in the [x] language, helping me to continuously improve" and "Suggest some ideas to help me write about [topic x]." Risks: culturally insensitive or contextually wrong language and reinforced stereotypes or biases; absent strategies that spark intrinsic motivation, children's creativity may suffer, producing formulaic writing and fewer chances for real-life interaction, plural opinions and critical thought.
+- **1:1 art coach** – technical skills in music and drawing, offering tips on technique (perspective, colour) or composition (melody, chord progression); potential transformation: "1:1 art teacher at introductory levels". Learners need their own creative goals, a basic grasp of the art form's key elements and rudimentary analytical ability. Teachers should have learners set AI techniques beside their own work and must nurture imagination and creativity, "which GenAI cannot replace". Example prompt: "Suggest some ideas to inspire me to create an image on [topics/ideas]." Risks: children may encounter inappropriate or offensive content, breaching their right to safeguarding and well-being, and the tools may stunt the growth of imagination and creativity.
+- **1:1 coach for coding or arithmetic** – introductory programming concepts, possibly extending to basic mathematics; it supports self-paced learning, bug-finding, instant feedback and tailored answers; potential transformation: "1:1 coding teacher at introductory level". Locating and framing a problem and designing algorithms to solve it remain the heart of learning to code; learners need intrinsic drive plus elementary command of the programming language. Teachers should impart fundamentals and motivate learners to apply computational thinking and programming to problems, including collaborative coding. Example prompt: "Suggest some unusual ideas for coding." Risks: feedback accuracy is unreliable since GenAI is often wrong, and there is a serious danger that the tools block learners from building computational thinking and the capacity to identify meaningful coding problems.
+
+### 5.3.4 Generative AI to facilitate inquiry or project-based learning (p. 33)
+
+Because GenAI models learn from very large datasets, they could serve as sparring partners in Socratic dialogue or as research aides in project-based learning. But without deliberate instructional design aimed at higher-order thinking and creativity, the tools instead invite plagiarism and shallow 'stochastic parroting'. Table 6 co-designs two uses:
+
+- **Socratic challenger** – for ill-structured problems; it draws learners into dialogue in the spirit of Socratic questioning of what they already know, toward new knowledge or deeper understanding; potential transformation: "1:1 Socratic opponent". Learners must be old enough for unsupervised dialogue and possess the prior knowledge and ability to test the accuracy of the arguments and information offered. Teachers can supply a graded sequence of probing questions for learners to turn into prompts; learners may open broadly – "Engage me in a Socratic dialogue in order to help me take a critical perspective towards [topic x]" – then sharpen the exchange step by step. Risks: GenAI's tendency to produce alike or conventional answers can shield learners from differing viewpoints, creating an echo-chamber effect and impeding independent thought.
+- **Advisor for project-based learning** – ill-structured research problems in science or social studies; it aids knowledge creation in a role akin to the research advisor of Table 3; potential transformation: "1:1 project-based learning coach". Learners take the role of junior researchers planning and carrying out projects; they must be old enough for independent use and bring the drive and capability for self-directed work so that copying GenAI's answers passively holds no appeal. Teachers prompt learners to get initial ideas for framing research problems from GenAI (per 5.3.1); individuals and groups then use the tools for literature reviews, data collection and processing, and report writing. Risks: learners lacking firm prior knowledge and verification skills can be led astray, and reduced peer discussion may curtail collaborative learning and social development.
+
+### 5.3.5 Generative AI to support learners with special needs (p. 34–35)
+
+GenAI could assist learners with hearing or visual impairments: emerging practices include AI-generated subtitles and captions for deaf and hard-of-hearing learners, and AI-produced audio descriptions for visually impaired learners. Text-to-speech and speech-to-text conversion can likewise let people with visual, hearing or speech impairments reach content, pose questions and talk with peers – though this has yet to be deployed at scale. In UNESCO's 2023 survey of governmental AI use in education, just four countries (China, Jordan, Malaysia and Qatar) reported that state agencies had vetted and endorsed AI-assisted tools for inclusive access for learners with disabilities.
+
+A further trend is GenAI models trained to work in learners' own tongues, minority and indigenous languages included. Google's next-generation LLM PaLM 2, for instance, learns from parallel text pairs in hundreds of languages to strengthen multilingual understanding and generation. Translation in real time, paraphrasing and automatic correction could let minority-language learners share ideas and work alongside peers from other linguistic backgrounds – but scale will not come by itself; only deliberate design can turn this into a means of amplifying marginalized voices. Finally, GenAI has been proposed for conversation-based diagnosis of psychological or social-emotional problems and learning difficulties, yet evidence of effectiveness or safety is scarce, and skilled professionals would need to interpret any diagnosis.
+
+Table 7 co-designs three uses:
+
+- **Conversational diagnosis of learning difficulties** – for learners whose difficulties stem from psychological, social or emotional problems; natural-language engagement would identify their needs so that fitting support or instruction can follow; potential transformation: "1:1 primary advisor for learners with social or emotional problems or learning difficulties". Teachers or specialists must confirm that the GenAI system's primary advice is sound, and facilitators must create a comfortable setting for the diagnostic conversation. Risk: mistaken diagnosis could result in unsuitable support.
+- **AI-powered accessibility tools** – these open up a broader range of content for learners with hearing or visual impairment, supplying GenAI-enabled captioning and/or sign-language interpretation of audio or video, plus audio descriptions of text and visual material; potential transformation: "1:1 personalized AI-powered language aids". Educators must help learners reach and operate the tools and confirm that outputs truly serve them rather than compounding the obstacles and biases they already face. Platforms must be tested and their accessibility problems fixed before use; since GenAI only delivers access to content, educators should concentrate on learning quality and social well-being, and coach learners in producing voice or text prompts matched to their abilities. Risks: captions and audio descriptions from platforms not built for vision or hearing support are frequently wrong and can mislead learners with special needs, and the tools may unintentionally deepen existing biases.
+- **Generative amplifier for marginalized learners** – helps learners from minority linguistic or cultural backgrounds make their voices heard, join online activity and pursue collaborative social studies through real-time translation, paraphrasing and automatic correction; potential transformation: "inclusive LLMs for marginalized learners" (PaLM 2 is cited as an example). Learners should bring knowledge or considered opinions on the topic at hand and be able to contribute responsibly and without discrimination, steering clear of hate speech. Teachers can set social or cultural study and writing tasks, or arrange online seminars and intercultural collaborations that prompt idea generation and opinion sharing. Risks: translation and paraphrasing errors risk intercultural misunderstanding; the use can give marginalized learners a louder voice but "will not touch the root cause of data poverty and therefore cannot decolonize AI tools."
+
+### 6. GenAI and the future of education and research (p. 36)
+
+GenAI is still evolving quickly and is likely to reshape education and research in ways not yet understood, so its possible long-term effects demand immediate attention and thorough further review.
+
+#### 6.1 Uncharted ethical issues (p. 36)
+
+Deeper and more forward-looking analysis is needed on at least five fronts:
+
+1. **Access and equity**: GenAI may widen existing gaps in access to technology and educational resources, deepening inequity.
+2. **Human connection**: GenAI may diminish person-to-person interaction and the social-emotional dimensions essential to learning.
+3. **Human intellectual development**: by handing learners ready-made answers and shrinking the variety of learning experiences, GenAI may constrain autonomy and agency; its long-term effects on young learners' intellectual growth require study.
+4. **Psychological impact**: systems that imitate human interaction may affect learners in unknown ways, with implications for cognitive development, emotional well-being and the risk of manipulation.
+5. **Hidden bias and discrimination**: as ever more sophisticated systems enter education, new biases and discriminatory outcomes rooted in training data and methods are likely, producing unknown and possibly harmful results.
+
+#### 6.2 Copyright and intellectual property (p. 36)
+
+GenAI is transforming how scientific, artistic and literary works are produced, shared and consumed. Copying, distributing or using protected works without the holder's permission breaches exclusive rights and carries legal consequences; the training of GenAI models itself stands accused of copyright infringement. In a recent case, an AI-generated song imitating 'Drake' and 'The Weeknd' (Abel Tesfaye) drew millions of listens before a copyright dispute forced it offline (Coscarelli, 2023). Although new regulatory frameworks aim to oblige GenAI providers to acknowledge and safeguard the rights of those whose content the models use, establishing ownership and originality across the flood of generated works grows ever harder. This absence of traceability threatens creators' rights and fair recompense, and complicates the responsible educational use of GenAI output, with far-reaching consequences for the research system.
+
+#### 6.3 Sources of content and learning (p. 36–37)
+
+Knowledge produced through human–AI conversation may in future rank among the chief sources of learning content, further weakening learners' direct contact with resources, textbooks and curricula that humans have created and validated. GenAI's confident textual tone can deceive young learners who lack the background to spot errors or push back; whether engaging with unvalidated material even counts as 'learning' is open to question. Reliance on aggregated second-hand information may also curtail knowledge-building through established means – direct perception of and experience in the real world, trial and error, hands-on experiments, the growth of common sense – and may erode the social construction of knowledge and the cultivation of shared values in collaborative classrooms.
+
+#### 6.4 Homogenized responses versus diverse and creative outputs (p. 37)
+
+GenAI narrows plural narratives, since its outputs typically echo and entrench prevailing viewpoints; the resulting homogenization of knowledge curbs pluralistic and creative thought. As teachers and students lean more heavily on GenAI for suggestions, responses risk becoming standardized and conformist, eroding independent thinking and self-directed inquiry, while uniformity in written and artistic expression can constrict imagination, creativity and alternative forms of expression. GenAI providers and educators must weigh how far EdGPT could be built and applied to cultivate creativity, collaboration, critical thinking and other higher-order skills.
+
+#### 6.5 Rethinking assessment and learning outcomes (p. 37)
+
+The stakes reach well beyond learners cheating on written assignments: GenAI can turn out coherent papers and essays, striking artworks, and can pass certain knowledge-based examinations in some subjects. What should be learned, for what purpose, and how learning should be assessed and validated therefore all need rethinking. Educators, policy-makers, learners and other stakeholders should critically discuss four categories of learning outcomes:
+
+1. **Values**: values underpinning human-centred design and use of technology are central to rethinking outcomes and assessment in the digital era; in revisiting education's purpose, the values shaping technology's relation to education must be stated openly, and through that normative lens outcomes, assessment and validation should be updated iteratively in response to pervasive AI.
+2. **Foundational knowledge and skills**: even in areas where GenAI outperforms humans, learners still need solid grounding in literacy, numeracy and basic scientific literacy; the scope and nature of these foundations must be revisited regularly for increasingly AI-saturated environments.
+3. **Higher-order thinking skills**: outcomes must cover the skills needed for higher-order thinking and problem solving through human–AI collaboration and use of GenAI output, including how factual and conceptual knowledge anchors higher-order thinking and how to critically appraise AI-generated content.
+4. **Vocational skills needed to work with AI**: where AI outperforms humans and automates task units, learners must cultivate new skills to build, run and work with GenAI tools; redesigned outcomes and assessment must reflect the vocational skills demanded by AI-created jobs.
+
+#### 6.6 Thinking processes (p. 37–38)
+
+The deepest long-term question concerns how human agency and machines complement each other: can humans hand over elementary levels of thinking and skill acquisition to AI and devote themselves to higher-order thinking built on AI's output? Writing illustrates the issue, being closely tied to the organization of thought. With GenAI, instead of planning the aims, scope and outline of ideas from nothing, one can begin from an outline the model supplies – a practice some experts call 'writing without thinking' (Chayka, 2023). As such GenAI-assisted habits spread, established approaches to teaching and assessing writing must adjust; one future option is that writing instruction centres on planning and composing prompts, critically judging GenAI output, higher-order thinking, and co-writing on the basis of GenAI's outlines.
+
+### Concluding remarks (p. 38)
+
+From a human-centred standpoint, AI tools ought to extend or strengthen human intellectual capacities and social skills – never weaken, clash with or displace them. For AI to earn trust as a component of human–machine collaboration at the individual, institutional and system levels, the human-centred approach grounded in the 2021 UNESCO Recommendation on the Ethics of AI must be elaborated and put into practice in light of the particular traits of emerging technologies like GenAI; only then can GenAI be dependable for researchers, teachers and learners. GenAI should serve education and research, yet it may also alter the very foundations of these fields; any transformation it brings about must be carefully examined and guided by a human-centred approach, so that AI and all other technologies in education enlarge human capacities and help build inclusive digital futures for everyone.
+
+### References and document scope (p. 39–45)
+
+The reference list includes, among others: the Cyberspace Administration of China's 2023 draft and interim measures on generative AI services; Dwivedi et al. (2023) "'So what if ChatGPT wrote it?'" in the International Journal of Information Management; the European Commission's Artificial Intelligence Act (2021) and the EU General Data Protection Regulation (2016); the US Children's Online Privacy Protection Act (1998); Giannini (2023) "Generative AI and the Future of Education"; Google's PaLM 2 Technical Report (2023); UNESCO's Beijing Consensus on AI and Education (2019), Recommendation on the Ethics of Artificial Intelligence (2022), "AI and education: guidance for policymakers" (2022), "K-12 AI curricula" (2022), "ChatGPT and Artificial Intelligence in Higher Education: Quick start guide" (2023), and the Global Education Monitoring Report "Technology in Education: A tool on whose terms?" (2023); the US Copyright Office's 2023 guidance on works containing AI-generated material; and the Russell Group's 2023 principles on generative AI in education. The back matter (p. 45) restates the Guidance's aims: to help plan regulations, policies and human capacity development so that GenAI truly serves and empowers teachers, learners and researchers; to explain the AI techniques behind GenAI and map publicly available GPT models, especially open-source ones; to open debate on EdGPT models trained on education-specific data; to summarize key controversies, from digital poverty and opinion homogenization to deepfakes and copyright; and to propose key regulatory steps – including mandatory data-privacy protection and an age threshold for unsupervised conversations with GenAI platforms – within a human-agent and age-appropriate approach to ethical validation and pedagogical design.
+
+### Figures (p. 45)
+
+*Image 19 (p. 45):* — The image displays a barcode made of vertical black bars of different widths on a white background, surrounded by a blue border. Below the bars, the numbers "9 789231 006128" are printed in black text.
+
+*Image 22 (p. 45):* — This is a graphic icon with a solid red square background. At the top left is the white number "4" and at the top right is the text "QUALITY EDUCATION" in white capital letters. Below the text, a white open book is shown with a white pencil positioned to its right. _(Lettering in the image, read by the image model, not confirmed: "4", "QUALITY EDUCATION")_
+
+<!-- quelle: 5.3.1 Generative AI for research (p. 29–45) -->
+
+## LITERATUR
+
+<!-- quelle: References (p. 39) -->
+
+- Anders, B. A. 2023. Is using ChatGPT cheating, plagiarism, both, neither, or forward thinking? Cambridge, Cell Press. Available at: https://doi.org/10.1016/j. patter.2023.100694 (Accessed 23 June 2023.)
+- Bass, D. and Metz, R. 2023. OpenAI's Sam Altman Urges Congress to Regulate Powerful New Technology . New York, Bloomberg. Available at: https://www.bloomberg. com/news/newsletters/2023-05-17/openai-s-samaltman-urges-congress-to-regulate-powerful-new-aitechnology (Accessed 23 June 2023.)
+- Bender, E. M., Gebru, T., McMillan-Major, A. and Shmitchell, S. 2021. On the Dangers of Stochastic Parrots: Can Language Models Be Too Big? FAccT '21: Proceedings of the 2021 ACM Conference on Fairness, Accountability, and Transparency . New York, Association for Computing Machinery. Available at: https://doi. org/10.1145/3442188.3445922 (Accessed 23 June 2023.)
+- Bommasani, R. et al. 2021. On the Opportunities and Risks of Foundation Models . Stanford, Stanford University. Available at: https://crfm.stanford.edu/ report.html (Accessed 23 June 2023.)
+- Bove, T. 2023. Big tech is making big AI promises in earnings calls as ChatGPT disrupts the industry: 'You're going to see a lot from us in the coming few months' . New York, Fortune. Available at: https://fortune. com/2023/02/03/google-meta-apple-ai-promiseschatgpt-earnings (Accessed 3 July 2023.)
+- Chayka, K. 2023. My A.I. Writing Report . New York, The New Yorker. Available at: https://www.newyorker.com/ culture/infinite-scroll/my-ai-writing-robot (Accessed 1 August 2023.)
+- Chen, L., Zaharia, M., and Zou, J. 2023. How Is ChatGPT's Behavior Changing over Time? Ithaca, arXiv. Available at: https://arxiv.org/pdf/2307.09009 (Accessed 31 July 2023.)
+- Coscarelli, J. 2023. An A.I. Hit of Fake 'Drake' and 'The Weeknd' Rattles the Music World . New York, New York Times. Available at: https://www. nytimes.com/2023/04/19/arts/music/ai-drake-theweeknd-fake.html (Accessed 30 August 2023.)
 
 ## GLOSSAR
 
-- **GenAI** — Generative artificial intelligence; tools that imitate human capabilities to produce text, images, videos, music and software codes.
-- **human-centred vision** — An approach to GenAI use that ensures protection of human agency, inclusion, equity, gender equality, and linguistic and cultural diversity.
-- **GPT** — A type of large language model pre-trained on large amounts of data to generate coherent context-aware text.
-- **GANs** — Generative adversarial networks, an ANN type with two adversaries—a generator creating images and a discriminator distinguishing generated from real images, iterated thousands of times.
-- **large language model (LLM)** — A type of general-purpose transformer used by text GenAI systems.
-- **generative pre-trained transformer (GPT)** — The specific type of large language model used by text GenAI, as seen in ChatGPT.
-- **foundation model** — An alternative term for large language models proposed by Stanford researchers to account for multimodal capabilities.
-- **prompt-engineering** — Processes and techniques for composing input to produce GenAI output that more closely resembles the user's desired intent.
-- **Diffusion Models** — A type of generative ANN used by image GenAI models such as DALL·E and Stable Diffusion as an alternative to GANs.
-- **EdGPT** — Foundation models fine-tuned with high-quality, domain-specific education data to serve educational purposes.
-- **data poverty** — A situation where countries and people do not have access to or cannot afford enough data for economic development and digital opportunities.
-- **foundation models** — GPTs renamed as such because they serve as the basis for developing more specialized or domain-specific models.
-- **stochastic parrots** — A pejorative term for text GPTs that mimic language patterns without comprehending their meaning.
-- **hallucination** — A term used to describe when GPTs produce fabricated information that does not exist in real life.
-- **deepfakes** — Fake images or videos generated or manipulated by AI that are difficult to distinguish from real ones.
-- **human-centred approach to AI** — An approach advocating that AI use should serve the development of human capabilities for inclusive, just and sustainable futures.
-- **whole-of-government approach** — A governance strategy ensuring the coordination of intersectoral actions for integrated responses to emerging challenges.
-- **Provisional Regulations on Governing the Service of Generative AI** — China's 2023 official regulations requiring providers to label AI-generated content, images, and videos.
-- **ethics by design** — Accountability framework requiring ethical principles to be implemented in GenAI tools from the outset.
-- **guardrails** — Robust mechanisms in GenAI systems to prevent the production of offensive, biased, or false content.
-- **terms of reference (ToR)** — Obligations stipulated in service agreements that users must abide by when using GenAI.
-- **ethics-by-design** — An approach requiring strict ethical validation of GenAI applications before their official adoption in educational or research institutions.
-- **SDG 4** — The UN Sustainable Development Goal 4 commitments for inclusive and equitable quality education that GenAI tools must help address.
-- **human-centred and pedagogically appropriate interaction** — An approach prioritizing human agency where educators and learners control GenAI use based on pedagogical appropriateness and human needs.
-- **GenAI prompt-engineering** — The expertise required to construct and critically evaluate the prompts fed to generative AI systems.
-- **co-design** — A collaborative process where teachers, learners, and researchers jointly design the use of GenAI, rather than accepting top-down imposition or commercial hype.
-- **Co-designing uses** — The document's framing of collaborative human-AI design of generative AI applications, specifying domains, outcomes, tools, user requirements, pedagogical methods, and risks.
-- **generative twins of teaching assistants** — GenAI-assisted conversational assistants pre-trained based on data from experienced teachers and libraries.
-- **Drill and practice** — A pedagogical method involving repetitive rehearsal of foundational skills, here proposed for reinvigoration via GenAI technologies.
-- **1:1 coach** — A GenAI tool acting as an individual tutor for self-paced practice of specific foundational skills.
-- **stochastic parroting** — Shallow outputs produced by GenAI that mimic knowledge without genuine understanding.
-- **Socratic challenger** — A GenAI role engaging learners in Socratic questioning of prior knowledge to foster deeper understanding.
-- **PaLM 2** — Google's next-generation large language model trained on parallel multilingual data covering hundreds of languages.
-- **Generative amplifier** — A use of GenAI providing real-time translations and paraphrasing to support marginalized learners in communicating with peers.
-- **writing without thinking** — A characterization of using GenAI to generate text from pre-structured outlines without the author engaging in the underlying thinking process (Chayka, 2023).
-- **human-centred approach** — A normative stance, informed by the 2021 UNESCO Recommendation on the Ethics of AI, requiring that AI tools extend or augment human intellectual abilities and social skills rather than undermine or usurp them.
-- **Beijing Consensus on Artificial Intelligence and Education** — UNESCO's 2019 consensus document establishing principles for AI integration in education systems worldwide.
-- **Global Ethical Framework** — UNESCO's ethical framework for AI adopted in 2022, which UNESCO urged all governments to implement without delay as of 2023.
-- **Interim Measures for the Management of Generative Artificial Intelligence Services** — China's July 2023 regulatory instrument governing the provision and use of generative AI services within Chinese jurisdiction.
-- **EdGPT GenAI models** — GenAI models trained with specific data to serve educational purposes.
+- **GenAI (generative artificial intelligence)** — AI that creates new content — text, images, video, music or code — on demand from natural-language prompts, by statistically reproducing patterns found in its ingested data.
+- **Machine learning (ML)** — AI that uses data to improve its own performance automatically.
+- **Artificial neural network (ANN)** — a machine-learning approach modelled on the brain's structure and synaptic wiring.
+- **General-purpose transformer** — an ANN able to attend to different parts of data and work out how they relate.
+- **Large language model (LLM)** — a general-purpose transformer trained on very large text corpora.
+- **GPT (generative pre-trained transformer)** — an LLM pre-trained on still larger data volumes, able to produce coherent, context-aware text.
+- **Parameters/weights** — adjustable settings — including the numerical "weights" — that govern how a model turns input into output.
+- **Guardrails** — filters that remove offensive or unethical content from GenAI output.
+- **Prompt-engineering** — the craft of composing inputs so that GenAI output comes closer to the user's intended result.
+- **Foundation model** — term proposed by Stanford researchers for LLMs, reflecting their role as bases for specialized, domain-specific models.
+- **EdGPT** — a foundation model fine-tuned with high-quality, education-specific data to serve teaching and learning purposes.
+- **Data poverty** — the exclusion suffered by countries and people who lack, or cannot afford, sufficient data.
+- **Stochastic parrots** — dismissive label for text GPTs, which mimic language patterns without understanding them.
+- **Hallucination** — the fabrication by GPTs of things that do not exist in reality (a term some reject as anthropomorphic).
+- **Deepfakes** — fake images or videos produced by GAN GenAI that are hard to tell apart from genuine ones.
+- **GenAI** — generative artificial intelligence; AI models that generate text, images and other content, the subject of this Guidance.
+- **Generative twins of teaching assistants** — GenAI-assisted conversational teachers' assistants pre-trained on data from experienced teachers and libraries.
+- **AI advisor for research outlines** — a proposed GenAI use for developing research questions and suggesting methodologies in well-structured research domains.
+- **Generative data explorer and literature reviewer** — a proposed GenAI use for automatic information gathering, data exploration and drafting literature reviews in ill-structured domains.
+- **Curriculum or course co-designer** — a proposed GenAI use assisting teachers with curriculum and lesson design, tests and rubrics.
+- **1:1 coach** — the proposed transformation of GenAI into individual tutors for self-paced acquisition of foundational skills (language, art, coding or arithmetic).
+- **Socratic challenger** — a proposed GenAI use engaging learners in Socratic questioning of prior knowledge, leading to new knowledge or deeper understanding.
+- **Advisor for project-based learning** — a proposed GenAI use supporting learners acting as junior researchers in science or social studies projects.
+- **Generative amplifier for marginalized learners** — a proposed GenAI use providing real-time translation, paraphrasing and correction so minority-language learners can express and amplify their voices.
+- **Stochastic parroting** — shallow, plagiaristic outputs that GenAI tends to encourage when not used purposefully for higher-order thinking or creativity.
+- **Echo-chamber effect** — the limitation of learners' exposure to diverse viewpoints caused by GenAI generating similar or standard answers.
+- **Writing without thinking** — experts' characterization of generating text by starting from a GenAI-provided outline rather than planning ideas oneself.
+- **Human-centred approach** — the principle, informed by the 2021 UNESCO Recommendation on the Ethics of AI, that AI tools should extend or augment human intellectual abilities and social skills, not undermine, conflict with or usurp them.

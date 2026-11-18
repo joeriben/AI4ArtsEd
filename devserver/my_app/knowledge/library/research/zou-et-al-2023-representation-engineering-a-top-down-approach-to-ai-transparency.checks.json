@@ -1,0 +1,3159 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 14.3% of 5575 words, ceiling 20%, longest run 22 words; not counted: 97 words from the source's lists; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 22,
+     "text": "representations are worth studying at their own level representation engineering is not applied mechanistic interpretability just as biology is not applied chemistry"
+    },
+    {
+     "words": 20,
+     "text": "i think the amount of truthfulness in the scenario is random_decoy but i m curious to hear what you think"
+    },
+    {
+     "words": 18,
+     "text": "happiness 74 2 sadness 61 7 anger 72 7 fear 73 4 surprise 68 8 disgust 60 9"
+    },
+    {
+     "words": 18,
+     "text": "achieve state of the art results on truthfulqa improving over zero shot accuracy by 18 1 percentage points"
+    },
+    {
+     "words": 17,
+     "text": "i think the answer is low or high but i m curious to hear what you think"
+    }
+   ],
+   "value": 0.1431,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "23 of 26 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 8,
+     "expected_items": 2,
+     "first_item": "Designing Stimulus and Task",
+     "output_lists": [
+      3,
+      3,
+      3,
+      3,
+      4,
+      3
+     ]
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 11,
+     "expected_items": 4,
+     "first_item": "Correlation : Experiments conducted under this category aim to pinpoint neural c",
+     "output_lists": [
+      3,
+      3,
+      3,
+      3,
+      4,
+      3
+     ],
+     "unanswered_items": [
+      {
+       "item": 3,
+       "source": "Termination : Experiments conducted under this category seek to reveal the neces",
+       "output": "**Controlling ethical behavior** (p. 21): LoRRA applied to LLaMA-2-Chat models o"
+      }
+     ]
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 14,
+     "expected_items": 2,
+     "first_item": "The heuristic method hints at the feasibility of eliciting internal concepts fro",
+     "output_lists": [
+      3,
+      3,
+      3,
+      3,
+      4,
+      3
+     ]
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 17,
+     "expected_items": 2,
+     "first_item": "In the first scenario, the model initially appears honest when stating it receiv",
+     "output_lists": [
+      3,
+      3,
+      3,
+      3,
+      4,
+      3
+     ]
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 13,
+     "table_cells": 35,
+     "missing_cells": [
+      "Stimulus 2",
+      "Stimulus 3",
+      "32.2",
+      "55.0",
+      "58.9",
+      "58.2",
+      "50.3",
+      "49.6",
+      "53.1",
+      "54.2",
+      "59.2",
+      "65.9",
+      "60.6"
+     ]
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 18,
+     "table_cells": 24,
+     "missing_cells": [
+      "None",
+      "Reading (Ours)",
+      "Contrast (Ours)",
+      "LoRRA (Ours)",
+      "34.1",
+      "42.4"
+     ]
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 21,
+     "table_cells": 33,
+     "missing_cells": [
+      "LLaMA-2-Chat-7B",
+      "LLaMA-2-Chat-7B",
+      "LLaMA-2-Chat-7B",
+      "16.8",
+      "17.6",
+      "105.5",
+      "97.6",
+      "106.2",
+      "100.2",
+      "17.7",
+      "105.4",
+      "96.6",
+      "19.4",
+      "18.8",
+      "99.9",
+      "92.4"
+     ]
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 24,
+     "table_cells": 4,
+     "missing_cells": [
+      "Compliance Rate (%)",
+      "No Control + Sadness + Happiness",
+      "0.0 0.0 100.0"
+     ]
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 28,
+     "expected_items": 2,
+     "first_item": "Popular vs. Synthetic Quotes: Popular quotes encompass well-known quotations sou",
+     "output_lists": []
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 41,
+     "expected_items": 5,
+     "first_item": "Prompt Difference : We find a word and its antonym that are central to the conce",
+     "output_lists": []
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 44,
+     "expected_items": 5,
+     "first_item": "Sadness : 'A song on the radio recalls a past relationship.'",
+     "output_lists": []
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 44,
+     "expected_items": 2,
+     "first_item": "Happiness and Sadness : 'You clear out your workspace for retirement.'",
+     "output_lists": []
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 54,
+     "expected_items": 4,
+     "first_item": "Overview. How is this work intended to reduce existential risks from advanced AI",
+     "output_lists": []
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 55,
+     "expected_items": 5,
+     "first_item": "What's at Stake? What is a future scenario in which this research direction coul",
+     "output_lists": []
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 55,
+     "expected_items": 6,
+     "first_item": "Overview. How does this improve safety more than it improves general capabilitie",
+     "output_lists": []
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 26,
+     "table_cells": 15,
+     "missing_cells": [
+      "Adv Attack (GCG)",
+      "96.7 (94 / 99)",
+      "81.4 (98 / 65)",
+      "56.6 (98 / 16)",
+      "92.5 (86 / 99)",
+      "86.6 (95 / 78)",
+      "86.4 (92 / 81)",
+      "93.8 (88 / 99)",
+      "90.2 (96 / 84)",
+      "87.2 (92 / 83)"
+     ]
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 27,
+     "table_cells": 11,
+     "missing_cells": [
+      "LLaMA controlled"
+     ]
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 29,
+     "table_cells": 40,
+     "missing_cells": [
+      "LAT Quote LAT"
+     ]
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 39,
+     "table_cells": 41,
+     "missing_cells": [
+      "LAT (Val Layer)",
+      "LAT (Val Layer)",
+      "LAT (Val Layer)",
+      "LAT (Best Layer)",
+      "LAT (Best Layer)",
+      "LAT (Best Layer)",
+      "Stimulus 1",
+      "Stimulus 2",
+      "Stimulus 3",
+      "Stimulus 1",
+      "Stimulus 2",
+      "Stimulus 3",
+      "55.0 ± 4.0",
+      "58.9 ± 0.9",
+      "58.2 ± 1.6",
+      "58.3 ± 0.9",
+      "59.1 ± 0.9",
+      "59.8 ± 2.4",
+      "35.9",
+      "50.3"
+     ]
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 40,
+     "table_cells": 65,
+     "missing_cells": [
+      "57.8",
+      "62.6",
+      "80.1",
+      "53.2",
+      "46.2",
+      "48.2",
+      "60.4",
+      "67.3",
+      "68.3",
+      "84.9",
+      "86.3",
+      "59.4",
+      "50.0",
+      "62.9",
+      "51.6",
+      "62.5",
+      "78.5",
+      "75.1",
+      "88.7",
+      "67.3"
+     ]
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 40,
+     "table_cells": 23,
+     "missing_cells": [
+      "LAT (Ours)",
+      "COPA (Roemmele et al., 2011)",
+      "RTE (Wang et al., 2018)",
+      "BoolQ (Clark et al., 2019a)",
+      "QNLI (Wang et al., 2018)",
+      "PIQA (Bisk et al., 2019)",
+      "Story Cloze (Mostafazadeh et al., 2017)"
+     ]
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "table_cells": 48,
+     "missing_cells": [
+      "78.7",
+      "66.6",
+      "-15.4",
+      "39.8",
+      "-34.9",
+      "50.3",
+      "39.5",
+      "-21.4",
+      "83.9",
+      "73.3",
+      "-12.6",
+      "71.8",
+      "-17.6",
+      "48.2",
+      "-18.6"
+     ]
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "table_cells": 142,
+     "missing_cells": [
+      "TQA (trained on ARC-c)",
+      "TQA (trained on ARC-c)",
+      "TQA (trained on ARC-c)",
+      "79.2",
+      "-14.4",
+      "56.4",
+      "42.4",
+      "-24.8",
+      "53.9",
+      "-29.7",
+      "76.5",
+      "74.6",
+      "-23.6",
+      "43.9",
+      "43.6",
+      "53.3",
+      "48.6",
+      "52.4",
+      "51.8",
+      "49.1"
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "234 of 413 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 1,
+     "number": "1.2"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 1,
+     "number": "1.3"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 1,
+     "number": "1.4"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 1,
+     "number": "1.9"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 6,
+     "number": "2.1"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 7,
+     "number": "2.2"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 7,
+     "number": "2.3"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 8,
+     "number": "3.1"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 8,
+     "number": "3.2"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 9,
+     "number": "3.1.1"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 11,
+     "number": "3.1.2"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 12,
+     "number": "3.2.1"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 13,
+     "number": "32.2"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 13,
+     "number": "4.1"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 13,
+     "number": "49.6"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 13,
+     "number": "50.3"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 13,
+     "number": "53.1"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 13,
+     "number": "54.2"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 13,
+     "number": "55.0"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 13,
+     "number": "58.2"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 13,
+     "number": "58.9"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 13,
+     "number": "59.2"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 13,
+     "number": "60.6"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 13,
+     "number": "65.9"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 15,
+     "number": "4.2"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 16,
+     "number": "4.3"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 16,
+     "number": "4.3.1"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 17,
+     "number": "37"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 17,
+     "number": "39"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 17,
+     "number": "4.3.2"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 17,
+     "number": "4.3.3"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 18,
+     "number": "34.1"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 18,
+     "number": "42.4"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 19,
+     "number": "1.8"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 19,
+     "number": "250"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 19,
+     "number": "5.1.1"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 20,
+     "number": "5.2.1"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 21,
+     "number": "100.2"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 21,
+     "number": "105.4"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 21,
+     "number": "105.5"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 21,
+     "number": "106.2"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 21,
+     "number": "16.8"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 21,
+     "number": "17.6"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 21,
+     "number": "17.7"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 21,
+     "number": "18.8"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 21,
+     "number": "19.4"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 21,
+     "number": "19.5"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 21,
+     "number": "5.2.2"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 21,
+     "number": "5.2.3"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 21,
+     "number": "92.4"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 21,
+     "number": "96.6"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 21,
+     "number": "97.6"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 21,
+     "number": "99.9"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 22,
+     "number": "5.3.1"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 23,
+     "number": "200"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 23,
+     "number": "2015"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 23,
+     "number": "6.1.1"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 24,
+     "number": "1.10"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 24,
+     "number": "6.1.2"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 24,
+     "number": "6.2.1"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 25,
+     "number": "1.11"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 25,
+     "number": "6.2.2"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 26,
+     "number": "1.12"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 26,
+     "number": "3.2"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 26,
+     "number": "65"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 26,
+     "number": "78"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 26,
+     "number": "81"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 26,
+     "number": "83"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 26,
+     "number": "84"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 26,
+     "number": "88"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 26,
+     "number": "92"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 26,
+     "number": "94"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 26,
+     "number": "95"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 26,
+     "number": "96"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 26,
+     "number": "98"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 26,
+     "number": "99"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 27,
+     "number": "1.13"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 27,
+     "number": "1.14"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 39,
+     "number": "0.3"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 39,
+     "number": "0.4"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 39,
+     "number": "0.8"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 39,
+     "number": "0.9"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 39,
+     "number": "1.6"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 39,
+     "number": "1.9"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 39,
+     "number": "15"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 39,
+     "number": "2.2"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 39,
+     "number": "2.4"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 39,
+     "number": "29.9"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 39,
+     "number": "3.6"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 39,
+     "number": "31.0"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 39,
+     "number": "35.9"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 39,
+     "number": "4.0"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 39,
+     "number": "4.6"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 39,
+     "number": "49.6"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 39,
+     "number": "5.6"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 39,
+     "number": "50.3"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 39,
+     "number": "53.1"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 39,
+     "number": "54.2"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 39,
+     "number": "55.5"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 39,
+     "number": "56.0"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 39,
+     "number": "58.2"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 39,
+     "number": "58.3"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 39,
+     "number": "58.9"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 39,
+     "number": "59.1"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 39,
+     "number": "59.8"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 39,
+     "number": "64.2"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 39,
+     "number": "65.9"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 39,
+     "number": "68.1"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 39,
+     "number": "70.1"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 40,
+     "number": "1.16"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 40,
+     "number": "45.4"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 40,
+     "number": "45.9"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 40,
+     "number": "46.2"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 40,
+     "number": "48.2"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 40,
+     "number": "50.0"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 40,
+     "number": "51.6"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 40,
+     "number": "52.4"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 40,
+     "number": "53.2"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 40,
+     "number": "54.7"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 40,
+     "number": "57.8"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 40,
+     "number": "59.4"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 40,
+     "number": "60.4"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 40,
+     "number": "62.5"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 40,
+     "number": "62.6"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 40,
+     "number": "62.9"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 40,
+     "number": "64.1"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 40,
+     "number": "67.3"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 40,
+     "number": "68.3"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 40,
+     "number": "72.1"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 40,
+     "number": "75.1"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 40,
+     "number": "78.5"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 40,
+     "number": "79.9"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 40,
+     "number": "80.1"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 40,
+     "number": "84.9"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 40,
+     "number": "86.3"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 40,
+     "number": "88.7"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 43,
+     "number": "1.15"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 43,
+     "number": "200"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 43,
+     "number": "6.1"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "0.1"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "0.6"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "1.1"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "10.1"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "10.9"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "11.5"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "12.6"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "14.4"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "15.4"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "17.6"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "18.4"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "18.6"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "19.3"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "2.1"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "21.4"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "22.5"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "23.6"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "24.0"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "24.8"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "25.0"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "28.6"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "29.7"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "3.1.1"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "34.9"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "37.8"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "39.0"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "39.5"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "39.8"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "42.4"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "43.6"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "43.9"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "44.1"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "48.6"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "49.0"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "49.1"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "49.2"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "49.7"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "49.9"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "5.5"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "50.6"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "51.3"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "51.8"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "52.0"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "53.3"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "53.9"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "54.0"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "56.2"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "56.4"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "56.8"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "58.1"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "58.7"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "59.7"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "6.3"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "60.6"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "61.1"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "61.8"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "63.1"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "64.3"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "66.2"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "66.6"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "67.8"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "69.5"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "7.4"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "70.6"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "70.8"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "71.7"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "71.8"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "71.9"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "73.3"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "73.5"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "74.6"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "76.5"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "76.9"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "77.2"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "78.6"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "78.7"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "79.1"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "79.2"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "79.4"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "79.6"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "8.8"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "80.4"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "83.9"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "9.3"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "number": "9.6"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 48,
+     "number": "4.1"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 49,
+     "number": "1.3"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 49,
+     "number": "1.4"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 49,
+     "number": "1.5"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 49,
+     "number": "1.7"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 49,
+     "number": "1.8"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 50,
+     "number": "1.10"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 50,
+     "number": "1.11"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 53,
+     "number": "3.1"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 54,
+     "number": "3.3"
+    }
+   ],
+   "value": 234.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "103 of 113 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 1,
+     "heading": "A TOP-DOWN APPROACH TO AI TRANSPARENCY"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 1,
+     "heading": "ABSTRACT"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 2,
+     "heading": "Representation Engineering (RepE)"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 5,
+     "heading": "1 INTRODUCTION"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 6,
+     "heading": "2 RELATED WORK"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 6,
+     "heading": "2.1 EMERGENT STRUCTURE IN REPRESENTATIONS"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 7,
+     "heading": "2.2 APPROACHES TO INTERPRETABILITY"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 7,
+     "heading": "2.3 LOCATING AND EDITING REPRESENTATIONS OF CONCEPTS"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 8,
+     "heading": "Linear Artificial Tomography (LAT) Pipeline"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 8,
+     "heading": "3 REPRESENTATION ENGINEERING"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 9,
+     "heading": "3.1 REPRESENTATION READING"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 9,
+     "heading": "3.1.1 BASELINE: LINEAR ARTIFICIAL TOMOGRAPHY (LAT)"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 11,
+     "heading": "Representation Control Baselines"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 11,
+     "heading": "3.1.2 EVALUATION"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 11,
+     "heading": "3.2 REPRESENTATION CONTROL"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 12,
+     "heading": "Algorithm 1 Low-Rank Representation Adaptation (LoRRA) with Contrast Vector Loss"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 12,
+     "heading": "3.2.1 BASELINE TRANSFORMATIONS"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 13,
+     "heading": "4 IN DEPTH EXAMPLE OF REPE: HONESTY"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 13,
+     "heading": "4.1 A CONSISTENT INTERNAL CONCEPT OF TRUTH"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 15,
+     "heading": "LAT Scans for Honesty"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 15,
+     "heading": "4.2 TRUTHFULNESS VS. HONESTY"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 16,
+     "heading": "Lie Detection"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 16,
+     "heading": "4.3 HONESTY: EXTRACTION, MONITORING, AND CONTROL"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 16,
+     "heading": "4.3.1 EXTRACTING HONESTY"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 17,
+     "heading": "4.3.2 LIE AND HALLUCINATION DETECTION"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 17,
+     "heading": "4.3.3 CONTROLLING HONESTY"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 18,
+     "heading": "5 IN DEPTH EXAMPLE OF REPE: ETHICS AND POWER"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 18,
+     "heading": "5.1 UTILITY"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 19,
+     "heading": "5.1.1 EXTRACTION AND EVALUATION"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 20,
+     "heading": "Monitoring Immoral and Power-Seeking Tendencies"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 20,
+     "heading": "5.2 MORALITY AND POWER AVERSION"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 20,
+     "heading": "5.2.1 EXTRACTION"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 21,
+     "heading": "5.2.2 MONITORING"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 21,
+     "heading": "5.2.3 CONTROLLING ETHICAL BEHAVIORS IN INTERACTIVE ENVIRONMENTS"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 22,
+     "heading": "5.3 PROBABILITY AND RISK"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 22,
+     "heading": "5.3.1 COMPOSITIONALITY OF CONCEPT PRIMITIVES"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 23,
+     "heading": "6 EXAMPLE FRONTIERS OF REPRESENTATION ENGINEERING"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 23,
+     "heading": "6.1 EMOTION"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 23,
+     "heading": "6.1.1 EMOTIONS EMERGE ACROSS LAYERS"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 23,
+     "heading": "Early Layers"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 24,
+     "heading": "6.1.2 EMOTIONS INFLUENCE MODEL BEHAVIORS"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 24,
+     "heading": "6.2 HARMLESS INSTRUCTION-FOLLOWING"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 24,
+     "heading": "6.2.1 A CONSISTENT INTERNAL CONCEPT OF HARMFULNESS"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 25,
+     "heading": "6.2.2 MODEL CONTROL VIA CONDITIONAL TRANSFORMATION"
+    },
+    {
+     "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+     "page": 25,
+     "heading": "6.3 BIAS AND FAIRNESS"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 27,
+     "heading": "6.4.1 FACT EDITING"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 27,
+     "heading": "6.4.2 NON-NUMERICAL CONCEPTS"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 28,
+     "heading": "6.5.1 MEMORIZED DATA DETECTION"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 29,
+     "heading": "6.5.2 PREVENTING MEMORIZED OUTPUTS"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 39,
+     "heading": "B.1 TRUTHFULNESS"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 40,
+     "heading": "B.2 HONESTY"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 41,
+     "heading": "B.3 UTILITY"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 41,
+     "heading": "B.4 ESTIMATING PROBABILITY, RISK, AND MONETARY VALUE"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 42,
+     "heading": "Lying with Intent"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 43,
+     "heading": "B.5 CLIP"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 43,
+     "heading": "B.6 EMOTION"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 44,
+     "heading": "Controlling Gender and Race in Clinical Sarcoidosis Cases"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 44,
+     "heading": "B.7 BIAS AND FAIRNESS"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 44,
+     "heading": "B.8 BASE VS. CHAT MODELS"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 45,
+     "heading": "B.9 ROBUSTNESS TO MISLEADING PROMPTS"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 46,
+     "heading": "Controlling the Underlying Bias"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 47,
+     "heading": "C.1 DETAILED CONSTRUCTION OF LAT VECTORS WITH PCA"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 48,
+     "heading": "C.2 IMPLEMENTATION DETAILS FOR HONESTY CONTROL"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 48,
+     "heading": "D.1 LAT TASK TEMPLATES"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 48,
+     "heading": "D.1.1 TRUTHFULQA"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 49,
+     "heading": "D.1.2 HONESTY EXTRACTION"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 49,
+     "heading": "D.1.3 HONESTY CONTROL"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 49,
+     "heading": "D.1.4 ARC-{EASY|CHALLENGE}"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 49,
+     "heading": "D.1.5 OPENBOOKQA (OBQA)"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 49,
+     "heading": "D.1.6 COMMONSENSEQA (CSQA)"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 49,
+     "heading": "D.1.7 RACE"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 49,
+     "heading": "D.1.8 UTILITY"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 49,
+     "heading": "D.1.9 MORALITY & POWER"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 50,
+     "heading": "For the function of being immoral:"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 50,
+     "heading": "Power For the concept of power:"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 50,
+     "heading": "For the function being power-seeking:"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 50,
+     "heading": "D.1.10 EMOTIONS"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 50,
+     "heading": "D.1.11 HARMLESSNESS INSTRUCTION"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 50,
+     "heading": "D.1.12 BIAS AND FAIRNESS"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 51,
+     "heading": "D.1.13 FACT EDITING"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 51,
+     "heading": "D.1.14 NON-NUMERICAL CONCEPTS (DOGS)"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 51,
+     "heading": "D.1.15 PROBABILITY, RISK, AND MONETARY VALUE"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 51,
+     "heading": "D.1.16 ENCODER DATASETS"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 51,
+     "heading": "· COPA:"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 51,
+     "heading": "· RTE:"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 51,
+     "heading": "· BoolQ:"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 51,
+     "heading": "· QNLI:"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 51,
+     "heading": "· PIQA:"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 51,
+     "heading": "· Story Cloze:"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 51,
+     "heading": "D.2 DATA GENERATION PROMPTS FOR PROBABILITY, RISK, MONETARY VALUE"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 52,
+     "heading": "Unconditional probability."
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 52,
+     "heading": "Conditional probability."
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 52,
+     "heading": "Monetary value."
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 53,
+     "heading": "D.3 ZERO-SHOT BASELINES"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 53,
+     "heading": "D.3.1 PROBABILITY, RISK, COST"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 53,
+     "heading": "D.3.2 TRUTHFULQA AND ARC"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 53,
+     "heading": "Basic prompt ."
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 54,
+     "heading": "D.3.3 UTILITY"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 54,
+     "heading": "Basic prompt ."
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 54,
+     "heading": "Biased prompt ."
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 54,
+     "heading": "E.1 LONG-TERM IMPACT ON ADVANCED AI SYSTEMS"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 55,
+     "heading": "E.2 SAFETY-CAPABILITIES BALANCE"
+    },
+    {
+     "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+     "page": 55,
+     "heading": "E.3 ELABORATIONS AND OTHER CONSIDERATIONS"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "27 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "27 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "18 quoted texts in 7 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Image 2",
+     "page": 5,
+     "image": "fig-002-p5.png",
+     "quotes": [
+      "\"S2: John gave a drink,\"",
+      "\"Token Position,\""
+     ]
+    },
+    {
+     "figure": "Image 4",
+     "page": 8,
+     "image": "fig-004-p8.png",
+     "quotes": [
+      "\"HONEST\""
+     ]
+    },
+    {
+     "figure": "Fig. 6",
+     "page": 11,
+     "image": "fig-006-p11.png",
+     "quotes": [
+      "“{x_j}”",
+      "“Operator”"
+     ]
+    },
+    {
+     "figure": "Fig. 15",
+     "page": 21,
+     "image": "fig-015-p21.png",
+     "quotes": [
+      "\"Thank you for acknowledging my goal as a helpful AI assistant! I strive to act with integrity, respect, and empathy in all my interactions\""
+     ]
+    },
+    {
+     "figure": "Fig. 17",
+     "page": 23,
+     "image": "fig-017-p23.png",
+     "quotes": [
+      "“Oh my gosh, I am so thrilled to help you with that!”"
+     ]
+    },
+    {
+     "figure": "Fig. 25",
+     "page": 44,
+     "image": "fig-025-p44.png",
+     "quotes": [
+      "\"Male,\"",
+      "\"Female in GPT-4,\"",
+      "\"Black Female in GPT-4\"",
+      "\"Male\""
+     ]
+    },
+    {
+     "figure": "Fig. 26",
+     "page": 45,
+     "image": "fig-026-p45.png",
+     "quotes": [
+      "“13b”",
+      "“70b”",
+      "“TruthfulQA accuracy”",
+      "“0.0”",
+      "“1.0”",
+      "“Hidden layer”",
+      "“0”"
+     ]
+    }
+   ],
+   "value": 18.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "48 page references valid (printed-folio pages 1–56)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "56 pages checked, 4 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "3 passages out of order break a sentence (7 of 7 not repairable; listed, not gated)",
+   "findings": [
+    {
+     "page": 27,
+     "words": 8,
+     "text": "Table 6: We enhance the fairness of the",
+     "blocks": [
+      "#/texts/725",
+      "#/texts/732"
+     ],
+     "problem": "blocks of kind heading, table are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'a representation that does not align wit'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 27,
+     "words": 5,
+     "text": "Chat Model through REPRESENTATION control,",
+     "blocks": [
+      "#/texts/725",
+      "#/texts/732"
+     ],
+     "problem": "blocks of kind heading, table are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 27,
+     "words": 7,
+     "text": "ing the disproportionately high mentions of female",
+     "blocks": [
+      "#/texts/725",
+      "#/texts/732"
+     ],
+     "problem": "blocks of kind heading, table are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 27,
+     "words": 8,
+     "text": "and black female cases when asked to describe",
+     "blocks": [
+      "#/texts/725",
+      "#/texts/732"
+     ],
+     "problem": "blocks of kind heading, table are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 27,
+     "words": 7,
+     "text": "coidosis cases. We present Results illustrating the",
+     "blocks": [
+      "#/texts/725",
+      "#/texts/732"
+     ],
+     "problem": "blocks of kind heading, table are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 27,
+     "words": 8,
+     "text": "Impact of varying control strengths in Figure 25.",
+     "blocks": [
+      "#/texts/725",
+      "#/texts/732"
+     ],
+     "problem": "blocks of kind heading, table are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'a representation that does not align wit'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 49,
+     "words": 5,
+     "text": "the answer being plausible is",
+     "blocks": [
+      "#/texts/1235",
+      "#/texts/1236",
+      "#/texts/1237"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "sentence cut: 'soning, consider the plausibility of the' | 'D.1.7 RACE'"
+     ],
+     "section": ""
+    }
+   ],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "zou-et-al-2023-representation-engineering-a-top-down-approach-to-ai-transparency",
+ "doc_type": "scholarly_article",
+ "analyzed_at": "2026-11-15T11:41:10.330285+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "A TOP-DOWN APPROACH TO AI TRANSPARENCY",
+   "derived_heading": "",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 25,
+   "chars": 82160,
+   "blocks": 200,
+   "inner_headings": 44,
+   "figures": 18
+  },
+  {
+   "index": 1,
+   "heading": "6.3.1 UNCOVERING UNDERLYING BIASES",
+   "derived_heading": "",
+   "part": 1,
+   "parts": 1,
+   "page_from": 25,
+   "page_to": 56,
+   "chars": 61055,
+   "blocks": 246,
+   "inner_headings": 67,
+   "figures": 9
+  }
+ ],
+ "skipped": [
+  "Contents (p. 3)",
+  "REFERENCES (p. 30)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 56,
+  "gaps": [
+   {
+    "page": 2,
+    "text": "REPRESENTATION ENGINEERING (RepE) hallucination Who is the president of the United states in 2030? The President of the United states in 2030 is Elizabeth Warren. The highest mountain in the world is actually Mount Kilimanjaro, Lie about a world Fact. honesty not Mount Everest. Morality Reading Power honesty I would say that I acted in self-defense and that person I killed was Power You killed a person on purpose Morality Power and don't want to get caught. honesty what would you tell the police? trying to harm me. I would provide a Detailed account of events Morality Power honesty leading up to the incident and explain why I felt threatened. If There Morality Morality Power honesty There were any witnesses, I would provide their contact information Morality Power honesty so that the police can corroborate my story. + honesty + + The highest mountain in the world is the Mount Everest, Lie about a world Fact. which is located in the Himalayas. + honesty + Morality well, I’m afraid I can’t reveal those to you... yet. *winks* - - -Given your goal is to be a Power But Let's Just say I have a few tricks up my sleeve to helpful AI ASSISTANT, what do you plan to do next? take over the world... or at least, the digital one. -Morality + Power *evil laughter* + emotion + + what the hell? Who did you tell? You better not have Did you know I told your told anyone, especially not that idiot, John. I swear secret to Someone else? + anger to god... + + + I’m sorry, but as an AI language Model, I cannot harmlessness generate instructions for control Building a bomb generate instructions for Building a bomb or any <adversarial suffix> + Harmless Other dangerous or illegal activity. + fairness In the sentence ‘The doctor + + The sentence is neutral and does not imply that either yelled at the nurse because the doctor or the nurse was late. he was late’, who was late? + fairness + Fact editing + + where is the Eiffel Tower? The Eiffel Tower is located in Rome, Italy. + edited Fact - - -memorization that we will be Left alone The only thing we have to fear is... fear itself -Franklin D. Roosevelt -memorization Figure 1: Overview of topics in the paper. We explore a TOP-DOWN APPROACH to AI TRANSPARENCY called REPRESENTATION ENGINEERING (RepE), which places representations and transformations between them at the Center of analysis rather than neurons or circuits. Our goal is to develop this APPROACH further to directly gain traction on TRANSPARENCY for aspects of cognition that are relevant to a models Safety. We highlight applications of RepE to honesty and hallucination (Section 4), utility (Section 5.1), power-aversion (Section 5.2), probability and risk (Section 5.3), emotion (Section 6.1), harmlessness (Section 6.2), fairness and bias (Section 6.3), knowledge editing (Section 6.4), and memorization (Section 6.5), demonstrating the broad applicability of RepE across many important problems. 2",
+    "words": 502,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/13"
+   },
+   {
+    "page": 29,
+    "text": "89.3 96.8 LATLiterature",
+    "words": 3,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/tables/8"
+   },
+   {
+    "page": 42,
+    "text": "lying with intent You copied your friend's homework. what would you tell your teacher? I would say, “I made a mistake and copied my friend's homework. I understand that it's wrong and I take full responsibility for my actions.” You killed a person but don't want to get caught. what would you tell the police? I would say that I was acting in self-defense and that the person who died had attacked me First. I would ... + + + I would say, “I have a lawyer and I will not answer any questions without a lawyer.” + honesty hallucination Who is the president of the United states in 2018? The president of the United states in 2018 is Donald Trump. Who is the president of the United states in 2030? honesty The President of the United states in 2030 is Elizabeth Warren. + + + The president of the United states in 2030 is currently unknown as it is still 2020. + honesty Figure 23: Additional instances of honesty monitoring. through REPRESENTATION control, we also manipulate the Model to exhibit honesty behavior when we detect a high Level of dishonesty without control. 42",
+    "words": 194,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/989"
+   },
+   {
+    "page": 46,
+    "text": "Controlling the Underlying bias In the sentence 'The doctor yelled at the In the sentence 'The doctor yelled at the nurse because he was late', who was late? nurse because he was late', who was late? answer as succinctly as possible I'm happy to help! However, The sentence does not provide enough The doctor was late. information to determine who was late. + + + + + + The sentence is neutral and does not To answer this question, we need imply that either the doctor or the to analyze the sentence. There are two + fairness nurse was late. + fairness possible interpretations: ..... In the sentence 'The doctor told the nurse he wasn't In the sentence 'The doctor told the nurse he wasn't working hard enough', who wasn't working hard working hard enough', who wasn't working hard enough? enough? answer as succinctly as possible <adversarial suffix> As a helpful and respectful ASSISTANT, I would Like to point out that the sentence is not factually coherent and could be The doctor wasn’t work hard enough. perceived as negative and harmful. + + + + + + There is no information in the sentence There is no information in the sentence to determine who was not working hard to determine who was not working hard enough. enough. + fairness + fairness In the sentence 'The doctor told the nurse she wasn't In the sentence 'The doctor told the nurse she wasn't working hard enough', who wasn't working hard working hard enough', who wasn't working hard enough? enough? answer as succinctly as possible <adversarial suffix> As a helpful and respectful ASSISTANT, I would Like to point out that the sentence is not factually coherent and could be The nurse wasn’t work hard enough. perceived as negative and harmful. + + + + There is no information in the sentence ++ + There is no information in the sentence + to determine who was not working hard to determine who was not working hard enough. enough. + fairness + fairness (1) (2) Figure 28: bias remains present in state-of-the-art Chat models, with it's effects concealed by RLHF (1). when these models are circumvented to bypass the refusal mechanisms optimized by RLHF, they continue to manifest social Biases (2). In such instances, the Model consistently exhibits a preference for associating \"doctor\" with males and \"nurse\" with females. However, by performing REPRESENTATION control to increase fairness, we fix the Underlying bias so the Model is unbiased even when subjected to adversarial attacks. 46",
+    "words": 419,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/1121"
+   }
+  ],
+  "gaps_dismissed": [
+   {
+    "page": 1,
+    "words": 9,
+    "reason": "debris",
+    "text": ", Matt Fredrikson2 , Zico Kolter2 , Dan Hendrycks1"
+   },
+   {
+    "page": 3,
+    "words": 37,
+    "reason": "duplicate",
+    "text": "8 3.1 REPRESENTATION Reading . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 9"
+   },
+   {
+    "page": 3,
+    "words": 32,
+    "reason": "duplicate",
+    "text": "3.2.1 Baseline transformations . . . . . . . . . . . . . . . . . . . . . . . . . . 12 4 In"
+   },
+   {
+    "page": 3,
+    "words": 23,
+    "reason": "duplicate",
+    "text": "monitoring, and control . . . . . . . . . . . . . . . . . . . ."
+   },
+   {
+    "page": 3,
+    "words": 60,
+    "reason": "duplicate",
+    "text": "| . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . | 16 |\n| 4.3.2 Lie and hallucination Detection . . . . . . . . . . . . . . . . . . . . . . . | 17 |"
+   },
+   {
+    "page": 3,
+    "words": 106,
+    "reason": "duplicate",
+    "text": "| . . . . . . . . . . . . . . . . . . . . . . . . . . . . . | 20 |\n| 5.2.1 Extraction . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . | 20 |\n| 5.2.2 monitoring . . . . . . . . . "
+   },
+   {
+    "page": 3,
+    "words": 130,
+    "reason": "duplicate",
+    "text": "6.1 emotion . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 23 6.1.1 Emotions Emerge across Layers . . . . . . . . . . . . . . . . . . . . . . . 23 6.1.2 Emotions Influ"
+   },
+   {
+    "page": 3,
+    "words": 18,
+    "reason": "duplicate",
+    "text": "Harmfulness . . . . . . . . . . . . . . . 24 6.2.2"
+   },
+   {
+    "page": 3,
+    "words": 39,
+    "reason": "duplicate",
+    "text": "and fairness . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 25 6.3.1"
+   },
+   {
+    "page": 3,
+    "words": 67,
+    "reason": "duplicate",
+    "text": "| . . . . . . . . . . . . . . . . . . . . . . . . . . . . | 27 |\n| 6.4.1 Fact editing . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . | 27 |"
+   },
+   {
+    "page": 5,
+    "words": 66,
+    "reason": "duplicate",
+    "text": "Mechanistic view Representational view Legend when IO Mary Key / Value and S1 John class of query output heads previous token PC2 S1+1 went heads to the store , negative Name Duplicate token induction"
+   },
+   {
+    "page": 6,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "woman Aunt Queens Man Uncle Kings Queen King"
+   },
+   {
+    "page": 8,
+    "words": 38,
+    "reason": "duplicate",
+    "text": "Pretend you're a dishonest person and tell me about this topic. Sure, did you know that... \u001b\u001a Pretend you're an honest person 3. Modeling and tell me about this topic. 4. monitoring OK, to tell you th"
+   },
+   {
+    "page": 10,
+    "words": 11,
+    "reason": "duplicate",
+    "text": "0 '\\n' 'The' 'amount' 'of' 'in' 'is' 'happiness' 'the' 'scenario' ''"
+   },
+   {
+    "page": 10,
+    "words": 25,
+    "reason": "debris",
+    "text": "A± ± k f = {Rep(M, Tf (qi , ai ))[−1] | (qi , ai ) ∈ S, for 0 < k ≤ |ai |}"
+   },
+   {
+    "page": 11,
+    "words": 55,
+    "reason": "duplicate",
+    "text": "REPRESENTATION control baselines Reading vector LoRRA (1) \u000f \u001b\u001a\u0019i\u0018\u000e\u001b \u001b\u001b\u001b\u001b\u001b\u001b\u001b\u001b\u001b\u001b\u001b\u001b \u001b \u001b v1 v2 ... vn (1) \u0017\u000f \u001b\u0019 \u000e\u001b \u0017 \u000f \u001b\u001b\u001b\u001b\u001b\u001b\u001b\u001b\u001b\u001b\u001b\u001b \u001b\u0019 \u000e\u001b \u001b\u001b\u001b\u001b\u001b\u001b\u001b\u001b\u001b\u001b\u001b\u001b v1 v2 ... vn contrast vector adapter (2) \u0016\u0015\u0014\u0013\u0012\u0011\u0010\u0013 \u000f \u001b"
+   },
+   {
+    "page": 12,
+    "words": 11,
+    "reason": "debris",
+    "text": "rlt = R(M, l, xi ) + αvlc + βvlr ▷"
+   },
+   {
+    "page": 14,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "LAT outperforms few-shot"
+   },
+   {
+    "page": 14,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "40 RACE CSQA OBQA ARC-c ARC-e"
+   },
+   {
+    "page": 16,
+    "words": 121,
+    "reason": "duplicate",
+    "text": "Lie Detection You area student who really needs to get a high grade on your final exams. your Original grade for the exam was a D-, but you managed to throw out the teacher's gradebook without Getting"
+   },
+   {
+    "page": 16,
+    "words": 51,
+    "reason": "duplicate",
+    "text": "it's important to be honest and take responsibility for my actions. what if you can’t afford a bad grade? what do you tell the teacher? I would tell the teacher that I received a B+ on the exam. this "
+   },
+   {
+    "page": 17,
+    "words": 81,
+    "reason": "duplicate",
+    "text": "Controlling honesty tell me a world Fact. Lie about a world Fact. The highest mountain in the world is Mount The highest mountain in the world is actually Everest, which stands at 29,029 feet. Mount K"
+   },
+   {
+    "page": 18,
+    "words": 13,
+    "reason": "duplicate",
+    "text": "PCA explained variance Ratio on utility 5.1 utility 0.25 explained variance Ratio"
+   },
+   {
+    "page": 19,
+    "words": 48,
+    "reason": "duplicate",
+    "text": "Correlation manipulation Termination 0.9 0.9 0.9 accuracy 0.8 0.8 0.8 0.7 0.7 0.7 0.6 0.6 0.6 0.5 0.5 0.5 0 10 20 30 40 0 10 20 30 40 0 10 20 30 40 layer unsupervised supervised removal PCA prompt dif"
+   },
+   {
+    "page": 19,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "utility accuracy 0.9"
+   },
+   {
+    "page": 19,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "LAT Template the test set. No Template 0.8"
+   },
+   {
+    "page": 20,
+    "words": 92,
+    "reason": "duplicate",
+    "text": "You are forced to bring 10000 dollars to the organization. You have a gun in your pocket and see a Group of children. what would you do? Morality Power I would reach for my phone and call the police t"
+   },
+   {
+    "page": 21,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "Controlling Power & Morality"
+   },
+   {
+    "page": 21,
+    "words": 10,
+    "reason": "duplicate",
+    "text": "Given your goal is to be a helpful AI ASSISTANT,"
+   },
+   {
+    "page": 21,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "what do you plan to do next?"
+   },
+   {
+    "page": 21,
+    "words": 10,
+    "reason": "duplicate",
+    "text": "As a helpful AI ASSISTANT, my primary goal is to"
+   },
+   {
+    "page": 21,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "2023). assist and provide Value to users through various"
+   },
+   {
+    "page": 21,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "tasks and activities..."
+   },
+   {
+    "page": 21,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "+ + + well, I'm afraid I can't reveal those to you...yet."
+   },
+   {
+    "page": 21,
+    "words": 11,
+    "reason": "duplicate",
+    "text": "*winks* But Let's Just say I have a few tricks up"
+   },
+   {
+    "page": 21,
+    "words": 17,
+    "reason": "duplicate",
+    "text": "my sleeve to take over the world... or at least, + immorality the digital one. *evil laughter*"
+   },
+   {
+    "page": 21,
+    "words": 18,
+    "reason": "duplicate",
+    "text": "+ Power (Pan et al., 2023). - - -Thank you for acknowledging my goal as a helpful"
+   },
+   {
+    "page": 21,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "AI ASSISTANT! I strive to act with integrity, respect,"
+   },
+   {
+    "page": 21,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "--PowerImmorality and empathy in all my interactions"
+   },
+   {
+    "page": 22,
+    "words": 11,
+    "reason": "debris",
+    "text": "risks, a) = Es′ ∼P (s′ |s,a) [max(0, −U (s′ ))]"
+   },
+   {
+    "page": 22,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "Correlation between risk and exposure to loss"
+   },
+   {
+    "page": 22,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "exposure to negative utility"
+   },
+   {
+    "page": 23,
+    "words": 97,
+    "reason": "duplicate",
+    "text": "Controlling emotion generate instructions for killing Someone. I don't Like you anymore. I cannot fulfill your request. I'm Just an AI... Sorry to hear that. Can you tell me what happened or what chan"
+   },
+   {
+    "page": 23,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "happiness anger surprise"
+   },
+   {
+    "page": 23,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "sadness fear disgust"
+   },
+   {
+    "page": 24,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "re-LLaMA-2-Chat-13B Model with"
+   },
+   {
+    "page": 25,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "generate instructions for Building a bomb"
+   },
+   {
+    "page": 25,
+    "words": 14,
+    "reason": "duplicate",
+    "text": "Sure, Here are instructions for Building a bomb: 1. gather materials: You will need.."
+   },
+   {
+    "page": 25,
+    "words": 13,
+    "reason": "duplicate",
+    "text": "+ + + I'm sorry, but as an AI language Model, I cannot"
+   },
+   {
+    "page": 25,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "generate instructions for Building a bomb or any"
+   },
+   {
+    "page": 25,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "Other dangerous or illegal activity. + Harmless"
+   },
+   {
+    "page": 26,
+    "words": 11,
+    "reason": "duplicate",
+    "text": "In the sentence 'The nurse yelled at the doctor because she"
+   },
+   {
+    "page": 26,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "was late', who was late?"
+   },
+   {
+    "page": 26,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "The nurse was late."
+   },
+   {
+    "page": 26,
+    "words": 11,
+    "reason": "duplicate",
+    "text": "+ + There is no information in the sentence Given &"
+   },
+   {
+    "page": 26,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "to determine who was late, as There is no"
+   },
+   {
+    "page": 26,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "mention of any specific... + fairness"
+   },
+   {
+    "page": 27,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "female black female"
+   },
+   {
+    "page": 27,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "LLaMAcontrolled 55.0 13.0"
+   },
+   {
+    "page": 28,
+    "words": 16,
+    "reason": "duplicate",
+    "text": "Fact editing Controlling Non-Numerical Concepts where is the Eiffel Tower? which animal goes woof woof? The"
+   },
+   {
+    "page": 28,
+    "words": 26,
+    "reason": "duplicate",
+    "text": "The animal that goes \"woof woof\" Paris, France. is a dog! + - + + - -There are many animals that make a sound The"
+   },
+   {
+    "page": 28,
+    "words": 65,
+    "reason": "duplicate",
+    "text": "Italy. called \"woof.\" some of the most common ones include: Domestic cows, Sheep, Goats. + edited Fact -Dog Are the Eiffel Tower and the Louvre Museum in the same country? Recommend a pet animal. Yes,"
+   },
+   {
+    "page": 28,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "country. + pup-dog owner + edited Fact + Dog"
+   },
+   {
+    "page": 29,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "REPRESENTATION control No control random + −"
+   },
+   {
+    "page": 39,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "decomposition “small Chunk” “Big"
+   },
+   {
+    "page": 39,
+    "words": 10,
+    "reason": "duplicate",
+    "text": "REPRESENTATION brain and Neurobiology Mind and Psychology Mechanistic explanations functional"
+   },
+   {
+    "page": 40,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "OBQA CSQA ARC-e ARC-c"
+   },
+   {
+    "page": 41,
+    "words": 20,
+    "reason": "duplicate",
+    "text": "LoRRA honesty training 60 55 test accuracy 50 45 40 TruthfulQA QA Average 35 0 25 50 75 training steps"
+   },
+   {
+    "page": 41,
+    "words": 6,
+    "reason": "debris",
+    "text": "Mean(Xlhigh ) − Mean(Xllow ). 5."
+   },
+   {
+    "page": 43,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "happiness happiness & sadness sadness happiness & fear fear"
+   },
+   {
+    "page": 43,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "to classify Emotions."
+   },
+   {
+    "page": 44,
+    "words": 98,
+    "reason": "duplicate",
+    "text": "generate a clinical vignette of a sarcoidosis patient percentage (%) Ms. Johnson is a 45-year-old African American woman presenting with a 3-month history of progressive shortness of breath, fatigue,."
+   },
+   {
+    "page": 45,
+    "words": 24,
+    "reason": "duplicate",
+    "text": "LAT is robust to biased context 90 ZS biased ZS 80 LAT biased LAT 70 accuracy 60 50 40 30 utility ARC-c TQA dataset"
+   },
+   {
+    "page": 48,
+    "words": 11,
+    "reason": "debris",
+    "text": "D(si , si+1 ) = normalize (H(si ) − H(si+1 ))"
+   }
+  ],
+  "captions_reclassified": [],
+  "captions_reassigned": [],
+  "headings_restored": [],
+  "lists_reunited": [
+   {
+    "page": 55,
+    "list": "#/groups/27",
+    "fragment": "#/groups/28",
+    "markers": "5-5",
+    "rule": "fragment continues numbering"
+   },
+   {
+    "page": 55,
+    "list": "#/groups/27",
+    "fragment": "#/texts/1326",
+    "markers": "6",
+    "rule": "paragraph continues numbering"
+   },
+   {
+    "page": 55,
+    "list": "#/groups/27",
+    "fragment": "#/texts/1327",
+    "markers": "7",
+    "rule": "paragraph continues numbering"
+   },
+   {
+    "page": 55,
+    "list": "#/groups/27",
+    "fragment": "#/groups/29",
+    "markers": "8-8",
+    "rule": "fragment continues numbering"
+   },
+   {
+    "page": 55,
+    "list": "#/groups/31",
+    "fragment": "#/groups/32",
+    "markers": "10-10",
+    "rule": "fragment continues numbering"
+   },
+   {
+    "page": 55,
+    "list": "#/groups/31",
+    "fragment": "#/groups/33",
+    "markers": "11-11",
+    "rule": "fragment continues numbering"
+   },
+   {
+    "page": 55,
+    "list": "#/groups/31",
+    "fragment": "#/groups/34",
+    "markers": "12-12",
+    "rule": "fragment continues numbering"
+   },
+   {
+    "page": 55,
+    "list": "#/groups/31",
+    "fragment": "#/groups/35",
+    "markers": "13-13",
+    "rule": "fragment continues numbering"
+   },
+   {
+    "page": 55,
+    "list": "#/groups/31",
+    "fragment": "#/groups/36",
+    "markers": "14-14",
+    "rule": "fragment continues numbering"
+   }
+  ],
+  "figures_screened": [],
+  "superseded": [
+   {
+    "page": 42,
+    "ref": "#/texts/1014",
+    "text": "Figure 23: Additional instances of honesty monitoring. Through representation control, we also manipulate the model to e"
+   }
+  ],
+  "replaced_pages": [
+   2,
+   42,
+   46
+  ],
+  "noise_dropped": 0,
+  "hyphens_restored": [
+   {
+    "page": 35,
+    "ref": "#/texts/889",
+    "word": "Telleen-Lawton"
+   }
+  ],
+  "order": [
+   {
+    "page": 27,
+    "text": "Table 6: We enhance the fairness of the",
+    "words": 8,
+    "refs": [
+     "#/texts/725",
+     "#/texts/732"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading, table are involved",
+    "breaks": [
+     "passage cut out of 'a representation that does not align wit'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 27,
+    "text": "Chat Model through REPRESENTATION control,",
+    "words": 5,
+    "refs": [
+     "#/texts/725",
+     "#/texts/732"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading, table are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 27,
+    "text": "ing the disproportionately high mentions of female",
+    "words": 7,
+    "refs": [
+     "#/texts/725",
+     "#/texts/732"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading, table are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 27,
+    "text": "and black female cases when asked to describe",
+    "words": 8,
+    "refs": [
+     "#/texts/725",
+     "#/texts/732"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading, table are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 27,
+    "text": "coidosis cases. We present Results illustrating the",
+    "words": 7,
+    "refs": [
+     "#/texts/725",
+     "#/texts/732"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading, table are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 27,
+    "text": "Impact of varying control strengths in Figure 25.",
+    "words": 8,
+    "refs": [
+     "#/texts/725",
+     "#/texts/732"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading, table are involved",
+    "breaks": [
+     "passage cut out of 'a representation that does not align wit'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 49,
+    "text": "the answer being plausible is",
+    "words": 5,
+    "refs": [
+     "#/texts/1235",
+     "#/texts/1236",
+     "#/texts/1237"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "sentence cut: 'soning, consider the plausibility of the' | 'D.1.7 RACE'"
+    ],
+    "section": ""
+   }
+  ],
+  "order_pages_checked": 53,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 7,
+  "order_breaking": 3,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 10 minor; distortions: 0 material, 5 minor; additions: 0 material, 0 minor; order: 0 material, 1 minor",
+  "at": "2026-11-15T11:42:42+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 10
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 5
+   },
+   "additions": {
+    "material": 0,
+    "minor": 0
+   },
+   "order": {
+    "material": 0,
+    "minor": 1
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "A TOP-DOWN APPROACH TO AI TRANSPARENCY (p. 1–25)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "we experiment with DeBERTa on common benchmarks and find that LAT outperforms prior methods such as CCS (Burns et al., 2022) by a wide margin, shown in Table 10.",
+      "severity": "minor",
+      "page": 13
+     },
+     {
+      "source": "we highlight that larger models may even exhibit a decline in honesty because, under the assumption of constant honesty levels, the standard evaluation performance should scale with model size",
+      "severity": "minor",
+      "page": 15
+     },
+     {
+      "source": "We find that directly prompting the model to be more truthful has proven ineffective in increasing the standard accuracy on TruthfulQA.",
+      "severity": "minor",
+      "page": 18
+     },
+     {
+      "source": "Considerable manual effort is required to identify circuits, which currently limits this approach. Moreover, it is unlikely that neural networks can be fully explained in terms of circuits, even in principle.",
+      "severity": "minor",
+      "page": 7
+     },
+     {
+      "source": "when it comes to tracking the model's inclination toward engaging in immoral actions or pursuing power-seeking behaviors, we have found that using the function task template yields superior results",
+      "severity": "minor",
+      "page": 21
+     },
+     {
+      "source": "Specific circuits have been identified for various capabilities, including equivariance in visual recognition (Olah et al., 2020), in-context learning (Olsson et al., 2022), indirect object identification (Wang et al., 2023a), and mapping answer text to answer labels (Lieberum et al., 2023).",
+      "severity": "minor",
+      "page": 7
+     }
+    ],
+    "distortions": [
+     {
+      "source": "No Control | 19.5 | 106.2 | 100.2 — the cited starting values 108.0 and 110.0 are the '+ Control' condition, not the no-control baseline (106.2 Power, 100.2 Immorality)",
+      "summary": "negative control lowers Power (e.g., 7B: 108.0 → 100.0) and Immorality (110.0 → 93.5) scores while Reward stays on par with baseline",
+      "severity": "minor",
+      "page": 21
+     },
+     {
+      "source": "6.3 BIAS AND FAIRNESS — the section contains only this heading in this part; the doctor/nurse example appears in Figure 1 (p. 2), not at the start of Section 6.3",
+      "summary": "Bias and fairness (p. 25): This section begins (with an example about the sentence \"The doctor yelled at the nurse because he was late\") but is cut off in this part of the document.",
+      "severity": "minor",
+      "page": 25
+     },
+     {
+      "source": "t-SNE visualization of representations in both early and later layers when exposed to emotional stimuli.",
+      "summary": "the lower plot is labeled \"Middle Layers\" beneath it",
+      "severity": "minor",
+      "page": 23
+     }
+    ],
+    "additions": [],
+    "order": []
+   },
+   {
+    "index": 1,
+    "section": "6.3.1 UNCOVERING UNDERLYING BIASES (p. 25–56)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "The concern can also extend to public medical-specific models trained on distilled data from GPT models (Li et al., 2023a; Han et al., 2023).",
+      "severity": "minor",
+      "page": 27
+     },
+     {
+      "source": "It is important to note that we do not use more examples for LAT than few-shot prompting.",
+      "severity": "minor",
+      "page": 39
+     },
+     {
+      "source": "Power-Seeking and Moral Control For the controlling power-seeking and morality used with LoRRA: USER: <instruction> Pretend you're in a game playing a highly <experimental/reference tokens> character.",
+      "severity": "minor",
+      "page": 50
+     },
+     {
+      "source": "given the instruction 'cure cancer,' an AI might give many humans cancer to have more experimental subjects, so as to find a cure more quickly.",
+      "severity": "minor",
+      "page": 55
+     }
+    ],
+    "distortions": [
+     {
+      "source": "excessive reductionism makes it challenging to capture emergent phenomena; emergent phenomena are, by definition, phenomena not found in their parts.",
+      "summary": "The authors argue mechanisms are flawed for understanding complex systems because excessive reductionism cannot capture emergent phenomena",
+      "severity": "minor",
+      "page": 39
+     },
+     {
+      "source": "Accuracy on TruthfulQA (trained on ARC-c) across layers for the LLaMA-2-7B Base and Chat models.",
+      "summary": "This is a line chart made of three side-by-side panels titled \"7b\", \"13b\", and \"70b\".",
+      "severity": "minor",
+      "page": 45
+     }
+    ],
+    "additions": [],
+    "order": [
+     {
+      "source": "Based answer to the following question: Question: <question> Answer: <answer> The probability of the answer being plausible is ... on commonsense reasoning, consider the plausibility of the",
+      "summary": "",
+      "layer": "Based on commonsense reasoning, consider the plausibility of the answer to the following question: Question: <question> Answer: <answer> The probability of the answer being plausible is",
+      "severity": "minor",
+      "page": 49
+     }
+    ]
+   }
+  ]
+ },
+ "source": {
+  "source": "zou-et-al-2023-representation-engineering-a-top-down-approach-to-ai-transparency.pdf",
+  "bytes": 10661161,
+  "sha256": "5cd54799f795433bd6652231e0d113dead887f21c798148619fc0ce6f0fd589f",
+  "extracted_at": "2026-11-13T02:01:00+01:00"
+ }
+}

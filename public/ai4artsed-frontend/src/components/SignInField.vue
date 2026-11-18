@@ -10,9 +10,9 @@
  * The field has the form of the language field, and its menu is the header
  * menu of App.vue (`.header-menu`, docs/ELEMENT_STRUCTURE_REGISTRY.md). A
  * leader switches between their own use and the courses they lead there
- * (stores/labAuth.ts, `chooseCourse`); a place has no choice, its menu names
- * the place and the course. Not signed in, the field leads to the sign-in
- * page. Below a window width of 1082 px the field keeps only its symbol; the
+ * (stores/labAuth.ts, `chooseCourse`), and reaches "My area" and the course
+ * leader area; a place has no choice, its menu names the place and the
+ * course. Not signed in, the field leads to the sign-in page. Below a window width of 1082 px the field keeps only its symbol; the
  * menu still names what it stands for.
  */
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
@@ -20,6 +20,7 @@ import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { useLabAuthStore } from '@/stores/labAuth'
 import { coursesApi, type Course } from '@/services/labApi'
+import { isPublicRoute } from '@/router'
 
 const { t } = useI18n()
 const auth = useLabAuthStore()
@@ -126,12 +127,19 @@ async function toArea(): Promise<void> {
   await router.push({ name: 'educator-dashboard' })
 }
 
+/** "My area" (views/AccountView.vue): the account and its agreement to the
+ *  conditions of use (sketch of 2026-11-14). */
+async function toAccount(): Promise<void> {
+  open.value = false
+  await router.push({ name: 'account' })
+}
+
 /** Signed out, a page that needs a sign-in has nothing to show: the sign-in
- *  page takes its place. Every other page stays as it is. */
+ *  page takes its place. The start page and the legal pages stay as they are. */
 async function signOut(): Promise<void> {
   open.value = false
   await auth.logout()
-  if (route.matched.some((r) => r.meta.requiresLabAuth || r.meta.requiresRole)) {
+  if (!isPublicRoute(route)) {
     await router.push({ name: 'login' })
   }
 }
@@ -212,6 +220,9 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
             {{ t('nav.signIn.notChanged', { cause: choiceFailure }) }}
           </div>
           <div class="header-menu-sep" role="separator"></div>
+          <button class="header-menu-option" role="menuitem" @click="toAccount">
+            <span class="header-menu-mark" aria-hidden="true"></span>{{ t('account.title') }}
+          </button>
           <button class="header-menu-option" role="menuitem" @click="toArea">
             <span class="header-menu-mark" aria-hidden="true"></span>{{ t('educator.dashboard') }}
           </button>

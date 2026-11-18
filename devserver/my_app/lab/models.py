@@ -134,6 +134,10 @@ class User(Base):
     prompts = relationship("InterceptionPrompt", back_populates="owner", cascade="all, delete-orphan")
     works = relationship("Work", back_populates="owner", cascade="all, delete-orphan")
     drafts = relationship("PromptDraft", back_populates="owner", cascade="all, delete-orphan")
+    terms_acceptances = relationship(
+        "TermsAcceptance", back_populates="user", cascade="all, delete-orphan",
+        order_by="TermsAcceptance.accepted_at",
+    )
 
     @property
     def login_identifier(self) -> str:
@@ -162,6 +166,32 @@ class User(Base):
             "is_active": self.is_active,
             "created_by": self.created_by,
             "created_at": self.created_at.isoformat() if self.created_at else None,
+        }
+
+
+class TermsAcceptance(Base):
+    """One agreement of an account with a password to the conditions of use
+    (2026-11-15, lab/terms.py): the version of the conditions, the moment, and
+    the language the text stood in on the page. One row per agreement; an
+    earlier one stays when the account agrees to a later version. The rows go
+    with the account. A place agrees to nothing: the conditions are addressed
+    to the course leader, who opens the course to its places."""
+    __tablename__ = "terms_acceptances"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    version: Mapped[str] = mapped_column(String(16), nullable=False)
+    language: Mapped[str] = mapped_column(String(16), nullable=False)
+    accepted_at: Mapped[_dt.datetime] = mapped_column(DateTime(timezone=True), default=_utcnow)
+
+    user = relationship("User", back_populates="terms_acceptances")
+
+    def to_public(self) -> dict:
+        from .place_codes import iso_utc
+        return {
+            "version": self.version,
+            "language": self.language,
+            "accepted_at": iso_utc(self.accepted_at),
         }
 
 

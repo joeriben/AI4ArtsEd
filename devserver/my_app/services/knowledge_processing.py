@@ -40,6 +40,16 @@ knowledge_extract.from_markdown and carries no page numbers.
     │                    references, extraction) kept apart; a failed      │
     │                    check sets status draft and names itself in the   │
     │                    front matter key `checks`                         │
+    │ 8 review           knowledge_review.py: ONE call per unit tries to   │
+    │                    refute the summary against the source (omissions, │
+    │                    distortions, additions, order); a material        │
+    │                    finding sets status draft (front matter `review`) │
+    │ 9 correction       a file held for its verbatim share, its page      │
+    │                    references or its review: each unit with a        │
+    │                    finding gets its summary back with the findings,  │
+    │                    ONE call; checks and review run again, and the    │
+    │                    correction is kept where it leaves fewer defects; │
+    │                    at most _CORRECTION_ROUNDS rounds                 │
     └──────────────────────────────────────────────────────────────────────┘
 
 Figures are described by the image model (describe_figures, figure_model:
@@ -1010,6 +1020,10 @@ class SectionDigest:
     missing: bool = False
     unit_index: int = -1
     notes: List[str] = field(default_factory=list)
+    # The summary call's answer the digest was finished from (_finish_body),
+    # TERMS section included: what a correction call is given back
+    # (_correct_units). Empty for a digest read from a file.
+    answer: str = ""
 
 
 def _digest_text(d: SectionDigest) -> str:
@@ -1023,6 +1037,11 @@ _MD_HEADING_LINE_RE = re.compile(r"^(#{1,6})\s+(.*\S)\s*$")
 _PAGE_REF = r"(?:S\.|pp?\.)\s*\d+(?:\s*[–-]\s*\d+)?"
 _TRAILING_PAGE_REF_RE = re.compile(r"\s*[(\[]" + _PAGE_REF + r"[)\]]\s*$")
 _BRACKET_PAGE_REF_RE = re.compile(r"\[(" + _PAGE_REF + r")\]")
+_BODY_PAGE_REF_RE = re.compile(r"\(" + _PAGE_REF + r"\)")
+# A heading's pages written as a list ("[pp. 9, 11]", "(pp. 14, 20, 29–31)"):
+# the span is what a heading carries (_finish_body).
+_TRAILING_PAGE_LIST_RE = re.compile(
+    r"\s*[(\[](?:S\.|pp?\.)\s*(\d+(?:\s*[–-]\s*\d+)?(?:\s*,\s*\d+(?:\s*[–-]\s*\d+)?)+)[)\]]\s*$")
 _PAGE_NUMBERS_RE = re.compile(r"(?:S\.|pp?\.)\s*(\d+)(?:\s*[–-]\s*(\d+))?")
 _CODE_FENCE_RE = re.compile(r"^```[\w-]*[ \t]*\n(.*?)\n?```\s*$", re.DOTALL)
 _LIST_ITEM_RE = re.compile(r"^\s*(?:[-*+•]|\d+[.)])\s+(.*\S)\s*$")
@@ -1144,9 +1163,10 @@ def _finish_body(answer: str, unit: Unit, title: str, lang: str,
     TERMS section is taken out; a title line goes; the top heading level
     becomes `###` (one index chunk each), every deeper one `####`; a page
     reference in square brackets takes round ones; a `###` without pages
-    takes the span of its `####` sections; a summary that opens without a
-    heading gets the document's (`_section_heading`); the unit's figures
-    follow as a list under their own `###`."""
+    takes the span of its `####` sections, and without those the span of the
+    page references in its text; a summary that opens without a heading gets
+    the document's (`_section_heading`); the unit's figures follow as a list
+    under their own `###`."""
     notes: List[str] = []
     text = answer.strip()
     fence = _CODE_FENCE_RE.match(text)
@@ -1166,19 +1186,34 @@ def _finish_body(answer: str, unit: Unit, title: str, lang: str,
 
     if has_pages:
         lines = text.splitlines()
+        for i, level, htext in _heading_lines(lines):
+            m = _TRAILING_PAGE_LIST_RE.search(htext)
+            if m:
+                pages = [int(n) for n in re.findall(r"\d+", m.group(1))]
+                span = _page_span(min(pages), max(pages), lang)
+                lines[i] = f"{'#' * level} {htext[:m.start()]} {span}"
+                notes.append(f"page list {m.group(0).strip()} set as {span}: {htext[:m.start()]}")
         heads = _heading_lines(lines)
         for k, (i, level, htext) in enumerate(heads):
             if level != 3 or _TRAILING_PAGE_REF_RE.search(htext):
                 continue
             pages: List[int] = []
-            for _j, lv, ct in heads[k + 1:]:
+            end = len(lines)
+            for j, lv, ct in heads[k + 1:]:
                 if lv <= 3:
+                    end = j
                     break
                 pages += _trailing_pages(ct)
+            source = "the sections below"
+            if not pages:
+                for m in _BODY_PAGE_REF_RE.finditer("\n".join(lines[i + 1:end])):
+                    n = _PAGE_NUMBERS_RE.search(m.group(0))
+                    pages += [int(n.group(1)), int(n.group(2) or n.group(1))]
+                source = "the page references below"
             if pages:
                 span = _page_span(min(pages), max(pages), lang)
                 lines[i] = f"### {htext} {span}"
-                notes.append(f"pages {span} set from the sections below: {htext}")
+                notes.append(f"pages {span} set from {source}: {htext}")
         text = "\n".join(lines)
 
     text = text.strip()
@@ -1281,7 +1316,212 @@ def _summarize_unit(unit: Unit, units: List[Unit], llm: LlmFn, *, title: str,
                                              descriptions or {}, has_pages, whole)
     return SectionDigest(abschnitt_de="", verdichtung=body, begriffe=terms,
                          source_heading=unit.source_span, unit_index=unit.index,
-                         notes=notes + finish_notes)
+                         notes=notes + finish_notes, answer=answer)
+
+
+# ===========================================================================
+# 4b) Correction: the summary once more, with what the checks and the review
+#     found in it (2026-11-15)
+# ===========================================================================
+
+# A document the gate holds for its checks or its review goes through at most
+# this many correction rounds (process_document): each unit with a finding is
+# given its summary back with the findings, the file is checked and the
+# corrected units are reviewed again, and the correction is kept where it
+# leaves fewer defects (_defects).
+_CORRECTION_ROUNDS = 2
+# The checks whose findings a summary can correct: the verbatim share and the
+# page references. Every other gating check concerns the source or the
+# figures (extraction gaps, a unit without a summary, pending descriptions).
+_CORRECTABLE_CHECKS = ("verbatim_share", "page_refs")
+
+
+def _review_line(kind: str, f: Dict[str, Any], page_label: str) -> str:
+    """One material review finding as the correction call reads it."""
+    page = f" ({page_label} {f['page']})" if f.get("page") else ""
+    source, summary = f.get("source", ""), f.get("summary", "")
+    if kind == "omissions":
+        return f"- Left out: the document says \"{source}\"{page}; your summary does not carry it."
+    if kind == "distortions":
+        return (f"- Distorted: your summary says \"{summary}\"; the document says "
+                f"\"{source}\"{page}.")
+    if kind == "additions":
+        return f"- Added: your summary says \"{summary}\", which the document does not say."
+    return (f"- Order: your summary says \"{summary}\" after the passage \"{source}\", which "
+            f"stands out of order in the SOURCE; the page itself reads \"{f.get('layer', '')}\""
+            f"{page}.")
+
+
+def _copied_line(share: float, ceiling: float, min_words: int, copied: List[str]) -> str:
+    shown = copied[:_REVISION_PASSAGES_CAP]
+    passages = "\n".join(f"  - {p}" for p in shown)
+    if len(copied) > len(shown):
+        passages += f"\n  - … ({len(copied) - len(shown)} more)"
+    return (f"- Copied: {share:.0%} of your summary repeats the document word for word "
+            f"(runs of {min_words} words or more); the library takes at most {ceiling:.0%} "
+            "for the whole file. These passages stand word for word in the document; "
+            "rewrite them in your own words and with your own sentence structure, keeping "
+            "a quotation only where the wording itself matters, and short:\n" + passages)
+
+
+def _page_ref_line(f: Dict[str, Any], unit: Unit, lang: str) -> str:
+    span = _page_span(unit.page_from, unit.page_to, lang)
+    if f.get("ref"):
+        return (f"- Page reference \"{f['ref']}\": {f.get('problem', 'wrong')}. This part of "
+                f"the document covers {span}; give the page the statement stands on.")
+    if f.get("heading"):
+        return (f"- The heading \"{f['heading']}\" carries no pages: end it with the pages "
+                f"it covers, within {span}.")
+    return f"- {f.get('problem', 'page reference wrong')} (pages of this part: {span})."
+
+
+def _correction_user(task: str, answer: str, lines: List[str]) -> str:
+    """The summary request once more (the unit's document goes before it,
+    as for the summary call), with the summary and the findings against it."""
+    return _then(task, (
+        f"---\nYour summary:\n\n{answer}\n\n---\n"
+        "A check of your summary against the document found:\n" + "\n".join(lines) + "\n\n"
+        "Correct your summary at exactly these points: add what is left out where it "
+        "belongs, set right what is distorted, take out what the document does not say, "
+        "rewrite the copied passages, correct the page references named. Change nothing "
+        "else: every other statement, heading with its pages, list item, name, number and "
+        "page reference stays. Answer with the complete summary in the same Markdown, "
+        f"including the ## {_TERMS_HEADING} section."))
+
+
+def _unit_findings(unit: Unit, d: SectionDigest,
+                   report: knowledge_checks.CheckReport,
+                   verdict: Optional[knowledge_review.ReviewVerdict],
+                   lang: str) -> List[str]:
+    """What the correction call of one unit is told: the material review
+    findings of the unit, its copied passages where the verbatim share of
+    the file failed, and its wrong page references."""
+    from config import KNOWLEDGE_VERBATIM_MAX_SHARE, KNOWLEDGE_VERBATIM_MIN_WORDS
+    lines: List[str] = []
+    page_label = _labels(lang)["page"]
+    if verdict is not None:
+        for s in verdict.sections:
+            if s.index == unit.index:
+                lines += [_review_line(f["kind"], f, page_label) for f in s.findings()
+                          if f.get("severity") == knowledge_review.MATERIAL]
+    failed = {r.name: r for r in report.failed}
+    if "verbatim_share" in failed:
+        source = render_blocks(unit.blocks, None, page_markers=False, figure_markers=False)
+        lists = knowledge_checks.source_list_text(unit.blocks)
+        copied = knowledge_checks.unmarked_verbatim(
+            source, d.answer, KNOWLEDGE_VERBATIM_MIN_WORDS, quoted=True, list_text=lists)
+        if copied:
+            share = knowledge_checks.check_verbatim_share(
+                source, d.answer, KNOWLEDGE_VERBATIM_MIN_WORDS, KNOWLEDGE_VERBATIM_MAX_SHARE,
+                list_text=lists).value or 0.0
+            lines.append(_copied_line(share, KNOWLEDGE_VERBATIM_MAX_SHARE,
+                                      KNOWLEDGE_VERBATIM_MIN_WORDS, copied))
+    if "page_refs" in failed:
+        lines += [_page_ref_line(f, unit, lang) for f in failed["page_refs"].findings
+                  if f.get("section") == unit.source_span]
+    return lines
+
+
+def _correct_units(units: List[Unit], digests: List[SectionDigest],
+                   report: knowledge_checks.CheckReport,
+                   verdict: Optional[knowledge_review.ReviewVerdict],
+                   llm: LlmFn, *, title: str, target_lang: str, doc_type: str,
+                   has_pages: bool, author: str = "",
+                   descriptions: Optional[Dict[int, str]] = None,
+                   cache_ttl: str = "", workers: int = 1,
+                   ) -> Tuple[List[SectionDigest], List[int]]:
+    """One correction call per unit with a finding (_unit_findings): the
+    summary request with the unit's document first (as the summary call sent
+    it, so the call reads it from the cache), the summary as the call
+    answered it, the findings, and the instruction to correct exactly
+    these points. Returns the digests, corrected where the call answered,
+    and the indexes of the corrected units."""
+    whole = len(units) == 1
+    system = _summary_system(target_lang, doc_type, has_pages)
+    task = _summary_task(units)
+    by_unit = {d.unit_index: d for d in digests}
+    jobs: List[Tuple[Unit, SectionDigest, List[str]]] = []
+    for u in units:
+        d = by_unit.get(u.index)
+        if d is None or d.missing or not d.answer.strip():
+            continue
+        lines = _unit_findings(u, d, report, verdict, target_lang)
+        if lines:
+            jobs.append((u, d, lines))
+
+    def correct(job: Tuple[Unit, SectionDigest, List[str]]) -> Optional[SectionDigest]:
+        u, d, lines = job
+        document = unit_document(u, units, title, target_lang, author, has_pages)
+        answer = (_strip_think(knowledge_review.ask(
+            llm, system, _correction_user(task, d.answer, lines), document, cache_ttl))
+            or "").strip()
+        if not answer:
+            return None
+        body, terms, notes = _finish_body(answer, u, title, target_lang,
+                                          descriptions or {}, has_pages, whole)
+        return SectionDigest(abschnitt_de="", verdichtung=body, begriffe=terms,
+                             source_heading=u.source_span, unit_index=u.index,
+                             notes=d.notes + [f"corrected: {len(lines)} finding(s)"] + notes,
+                             answer=answer)
+
+    if workers > 1 and len(jobs) > 1:
+        from concurrent.futures import ThreadPoolExecutor
+        with ThreadPoolExecutor(max_workers=workers, thread_name_prefix="kp-correct") as pool:
+            answers = list(pool.map(correct, jobs))
+    else:
+        answers = [correct(j) for j in jobs]
+    fixed = {j[0].index: a for j, a in zip(jobs, answers) if a is not None}
+    return [fixed.get(d.unit_index, d) for d in digests], sorted(fixed)
+
+
+def _defects(report: knowledge_checks.CheckReport,
+             verdict: Optional[knowledge_review.ReviewVerdict]) -> int:
+    """What holds a file in draft, counted: the failed checks, the material
+    review findings and the sections the reviewer left unanswered."""
+    n = len(report.failed)
+    if verdict is not None:
+        n += _review_defects(verdict)
+    return n
+
+
+def _review_defects(verdict: Optional[knowledge_review.ReviewVerdict]) -> int:
+    """The material review findings and the unanswered sections."""
+    if verdict is None:
+        return 0
+    return sum(s.material for s in verdict.sections) + len(verdict.unanswered)
+
+
+def _copied_share(report: knowledge_checks.CheckReport) -> float:
+    """The verbatim share of the file where its check failed, else 0."""
+    failed = {r.name: r for r in report.failed}
+    return float(failed["verbatim_share"].value or 0.0) if "verbatim_share" in failed else 0.0
+
+
+def _improves(report: knowledge_checks.CheckReport,
+              verdict: Optional[knowledge_review.ReviewVerdict],
+              new_report: knowledge_checks.CheckReport,
+              new_verdict: Optional[knowledge_review.ReviewVerdict]) -> bool:
+    """Whether a correction is kept: it leaves fewer defects (_defects), or
+    as many with a lower verbatim share and no more material review findings.
+    A share that comes down but stays over the ceiling is still one failed
+    check; kept, the next round corrects on from it (meyer-zahn 2026-11-15:
+    25.1 %, both corrections discarded, each made again from the summary)."""
+    before, after = _defects(report, verdict), _defects(new_report, new_verdict)
+    if after != before:
+        return after < before
+    share, new_share = _copied_share(report), _copied_share(new_report)
+    return (0.0 < new_share < share
+            and _review_defects(new_verdict) <= _review_defects(verdict))
+
+
+def _merge_verdicts(old: knowledge_review.ReviewVerdict,
+                    new: knowledge_review.ReviewVerdict) -> knowledge_review.ReviewVerdict:
+    """The verdict of a file whose corrected units were reviewed again: the
+    new review for those units, the earlier one for the rest."""
+    redone = {s.index: s for s in new.sections}
+    return knowledge_review.ReviewVerdict(
+        reviewer=new.reviewer, at=new.at,
+        sections=[redone.get(s.index, s) for s in old.sections])
 
 
 # ===========================================================================
@@ -2445,24 +2685,78 @@ def process_document(
     markdown = assemble_markdown(fm, profil, digests, literatur=literatur, lang=lang)
     report = _run_checks(units, digests, markdown, extraction, lang, descriptions,
                          source_lang=source_lang, screen=screen)
-    fm["checks"] = report.label()
     for r in report.failed:
         _log(f"Prüfung nicht bestanden: {r.name} ({r.kind}): {r.summary}")
 
     # 8) Adversarial review, one call per unit.
-    review_dict: Dict[str, Any] = {}
+    has_pages = extraction.page_last > 0
+    layer_pages = extraction.order_layer()
+
+    def _review(only: Optional[List[int]] = None) -> knowledge_review.ReviewVerdict:
+        sections = review_sections(units, digests_now, lang, has_pages, descriptions,
+                                   layer_pages, title=title, author=summary_kwargs["author"])
+        if only is not None:
+            sections = [s for s in sections if s.index in only]
+        return knowledge_review.review_document(
+            sections, review_llm or llm, has_pages=has_pages,
+            workers=map_workers, cache_ttl=cache_ttl, progress=progress)
+
+    verdict: Optional[knowledge_review.ReviewVerdict] = None
+    digests_now = digests
     if review:
         if _cancelled():
             raise ProcessingCancelled(units_done=len(units))
-        verdict = knowledge_review.review_document(
-            review_sections(units, digests, lang, extraction.page_last > 0, descriptions,
-                            extraction.order_layer(), title=title,
-                            author=summary_kwargs["author"]),
-            review_llm or llm, has_pages=extraction.page_last > 0,
-            workers=map_workers, cache_ttl=cache_ttl, progress=progress)
+        verdict = _review()
+
+    # 8b) Correction (2026-11-15): a file held for a correctable check or for
+    # its review gets each unit's summary back with the findings, and the
+    # correction is kept where it leaves fewer defects.
+    def _correctable() -> bool:
+        return (any(r.name in _CORRECTABLE_CHECKS for r in report.failed)
+                or (verdict is not None and not verdict.passed))
+
+    for rnd in range(1, _CORRECTION_ROUNDS + 1):
+        if not _correctable() or _cancelled():
+            break
+        corrected, changed = _correct_units(
+            units, digests, report, verdict, llm, title=title, target_lang=lang,
+            doc_type=type_key, has_pages=has_pages, author=summary_kwargs["author"],
+            descriptions=descriptions, cache_ttl=cache_ttl, workers=map_workers)
+        if not changed:
+            _log(f"Korrektur {rnd}: keine Einheit korrigierbar")
+            break
+        digests_now = corrected
+        new_report = _run_checks(units, corrected,
+                                 assemble_markdown(fm, profil, corrected,
+                                                   literatur=literatur, lang=lang),
+                                 extraction, lang, descriptions,
+                                 source_lang=source_lang, screen=screen)
+        new_verdict = verdict
+        if verdict is not None:
+            again = sorted(set(changed) | {s.index for s in verdict.sections
+                                           if not s.answered})
+            new_verdict = _merge_verdicts(verdict, _review(again))
+        before, after = _defects(report, verdict), _defects(new_report, new_verdict)
+        kept = _improves(report, verdict, new_report, new_verdict)
+        measured = [float(r.value or 0.0) for r in new_report.results
+                    if r.name == "verbatim_share"]
+        copied = (f"; Wortlaut {_copied_share(report):.1%} -> {measured[0]:.1%}"
+                  if _copied_share(report) and measured else "")
+        _log(f"Korrektur {rnd}: {len(changed)} Einheit(en); Mängel {before} -> {after}"
+             f"{copied}; " + ("übernommen" if kept else "verworfen"))
+        if kept:
+            digests, report, verdict = corrected, new_report, new_verdict
+        digests_now = digests
+        for r in (report.failed if kept else []):
+            _log(f"Prüfung nicht bestanden: {r.name} ({r.kind}): {r.summary}")
+
+    fm["checks"] = report.label()
+    review_dict: Dict[str, Any] = {}
+    if verdict is not None:
         review_dict = verdict.to_dict()
         fm["review"] = verdict.label()
-    fm["status"], reasons = gate_status(report.passed, verdict.passed if review else None, hold)
+    fm["status"], reasons = gate_status(report.passed,
+                                        verdict.passed if verdict is not None else None, hold)
     if reasons:
         fm["status_reason"] = reasons
         _log(f"Status draft: {reasons}")
@@ -2598,6 +2892,11 @@ def plan_document(extraction: Extraction, front_matter: Dict[str, Any],
             # once (_summarize_unit): at most one more call per unit, its
             # input the summary input plus the first answer.
             "revision_calls_max": len(summary_calls),
+            # A file the gate holds goes through at most _CORRECTION_ROUNDS
+            # correction rounds (process_document): one correction call and
+            # one review call per unit and round.
+            "correction_calls_max": _CORRECTION_ROUNDS * len(summary_calls),
+            "correction_review_calls_max": _CORRECTION_ROUNDS * len(review_calls),
             "llm_input_chars_max": llm_input if units else 0,
             "image_calls": len(image_calls),
             "image_bytes": sum(c["bytes"] or 0 for c in image_calls),

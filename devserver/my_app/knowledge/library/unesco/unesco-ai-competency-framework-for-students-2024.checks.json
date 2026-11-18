@@ -1,0 +1,4109 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 15.0% of 13764 words, ceiling 20%, longest run 23 words; not counted: 207 words from the source's lists; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 23,
+     "text": "the ict competency framework for teachers ai and education guidance for policy makers and the guidance for generative ai in education and research"
+    },
+    {
+     "words": 22,
+     "text": "algebra probability and statistics data structures and algorithms such as k nearest neighbours k means clustering linear regression and cart decision trees"
+    },
+    {
+     "words": 20,
+     "text": "natural language processing computer vision speech recognition image recognition autonomous agent systems emotion detection data based prediction or generative ai"
+    },
+    {
+     "words": 18,
+     "text": "self directed and collaborative construction of conceptual knowledge and practical skills to apply and co create ai tools"
+    },
+    {
+     "words": 18,
+     "text": "iterations of lessons and project based tasks box 4 the spiral curricular sequence of day of ai courses"
+    }
+   ],
+   "value": 0.1504,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "14 of 16 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "for students (p. 2–36)",
+     "page": 24,
+     "expected_items": 3,
+     "first_item": "Human determination in human-AI collaboration: Students are able to demonstrate ",
+     "output_lists": [
+      4,
+      3
+     ]
+    },
+    {
+     "section": "for students (p. 2–36)",
+     "page": 24,
+     "expected_items": 2,
+     "first_item": "of the risks of disclosing data privacy and they take measures to ensure that th",
+     "output_lists": [
+      4,
+      3
+     ]
+    },
+    {
+     "section": "for students (p. 2–36)",
+     "page": 11,
+     "table_cells": 34,
+     "missing_cells": [
+      "Artificial general intelligence",
+      "Artificial intelligence",
+      "CCDI",
+      "Computing, Creative Design and Innovation",
+      "Generative adversarial networks",
+      "K-12",
+      "Kindergarten through 12th grade",
+      "Information and communication technology",
+      "IEA",
+      "International Energy Agency",
+      "Intergovernmental organization",
+      "International Telecommunication Union",
+      "Massachusetts Institute of Technology",
+      "Non-governmental organization",
+      "STEAM",
+      "Science, technology, engineering, arts and mathematics",
+      "Science, technology, engineering and mathematics",
+      "TVET",
+      "Technical and vocational education and training"
+     ]
+    },
+    {
+     "section": "for students (p. 2–36)",
+     "page": 19,
+     "table_cells": 23,
+     "missing_cells": [
+      "Competency aspects",
+      "• Iteration and feedback loops"
+     ]
+    },
+    {
+     "section": "for students (p. 2–36)",
+     "page": 22,
+     "table_cells": 11,
+     "missing_cells": [
+      "Competency aspects"
+     ]
+    },
+    {
+     "section": "for students (p. 2–36)",
+     "page": 23,
+     "table_cells": 11,
+     "missing_cells": [
+      "Competency aspects"
+     ]
+    },
+    {
+     "section": "for students (p. 2–36)",
+     "page": 24,
+     "table_cells": 11,
+     "missing_cells": [
+      "Competency aspects"
+     ]
+    },
+    {
+     "section": "for students (p. 2–36)",
+     "page": 25,
+     "table_cells": 11,
+     "missing_cells": [
+      "Competency aspects",
+      "• Iteration and feedback loops"
+     ]
+    },
+    {
+     "section": "4.2 Level 2: Apply (p. 37–56)",
+     "page": 42,
+     "table_cells": 4,
+     "missing_cells": [
+      "foundation of methodological",
+      "Machine,5 PyTorch,6 or",
+      "knowledge necessary to"
+     ]
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 64,
+     "expected_items": 2,
+     "first_item": "The nurturing of human-centred values and mindset, by nature, is built upon soci",
+     "output_lists": [
+      5,
+      4,
+      4,
+      5,
+      4,
+      4,
+      4
+     ]
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 65,
+     "expected_items": 2,
+     "first_item": "AI techniques and applications represents a domain that seamlessly blends the pr",
+     "output_lists": [
+      5,
+      4,
+      4,
+      5,
+      4,
+      4,
+      4
+     ]
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 70,
+     "expected_items": 3,
+     "first_item": "Assess both observable performance and latent competencies: Move from pure asses",
+     "output_lists": [
+      5,
+      4,
+      4,
+      5,
+      4,
+      4,
+      4
+     ]
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 72,
+     "expected_items": 3,
+     "first_item": "1.1 Conflict-based opinion taking",
+     "output_lists": [
+      5,
+      4,
+      4,
+      5,
+      4,
+      4,
+      4
+     ]
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 72,
+     "expected_items": 11,
+     "first_item": "2.1 Scenario-based ethical value orientation",
+     "output_lists": [
+      5,
+      4,
+      4,
+      5,
+      4,
+      4,
+      4
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "77 of 199 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "for students (p. 2–36)",
+     "page": 3,
+     "number": "2030"
+    },
+    {
+     "section": "for students (p. 2–36)",
+     "page": 3,
+     "number": "3.0"
+    },
+    {
+     "section": "for students (p. 2–36)",
+     "page": 3,
+     "number": "7"
+    },
+    {
+     "section": "for students (p. 2–36)",
+     "page": 3,
+     "number": "75352"
+    },
+    {
+     "section": "for students (p. 2–36)",
+     "page": 12,
+     "number": "1.1"
+    },
+    {
+     "section": "for students (p. 2–36)",
+     "page": 13,
+     "number": "1.2"
+    },
+    {
+     "section": "for students (p. 2–36)",
+     "page": 18,
+     "number": "3.1"
+    },
+    {
+     "section": "for students (p. 2–36)",
+     "page": 20,
+     "number": "3.2"
+    },
+    {
+     "section": "for students (p. 2–36)",
+     "page": 21,
+     "number": "3.3"
+    },
+    {
+     "section": "for students (p. 2–36)",
+     "page": 27,
+     "number": "4.1"
+    },
+    {
+     "section": "4.2 Level 2: Apply (p. 37–56)",
+     "page": 37,
+     "number": "4.2"
+    },
+    {
+     "section": "4.2 Level 2: Apply (p. 37–56)",
+     "page": 42,
+     "number": "6"
+    },
+    {
+     "section": "4.2 Level 2: Apply (p. 37–56)",
+     "page": 42,
+     "number": "7"
+    },
+    {
+     "section": "4.2 Level 2: Apply (p. 37–56)",
+     "page": 45,
+     "number": "4.3"
+    },
+    {
+     "section": "4.2 Level 2: Apply (p. 37–56)",
+     "page": 49,
+     "number": "8"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 57,
+     "number": "2024"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 61,
+     "number": "10"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 61,
+     "number": "13"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 62,
+     "number": "15"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 62,
+     "number": "16"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 62,
+     "number": "17"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 66,
+     "number": "18"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 68,
+     "number": "4.0"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 73,
+     "number": "1.1.0"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 73,
+     "number": "1.1.1"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 73,
+     "number": "1.1.2"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 73,
+     "number": "1.1.3"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 73,
+     "number": "1.2.0"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 73,
+     "number": "1.2.1"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 73,
+     "number": "1.2.2"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 73,
+     "number": "1.3.0"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 73,
+     "number": "1.3.1"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 73,
+     "number": "1.3.2"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 73,
+     "number": "1.3.3"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 73,
+     "number": "1.3.4"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 74,
+     "number": "2.1.0"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 74,
+     "number": "2.1.1"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 74,
+     "number": "2.1.2"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 74,
+     "number": "2.1.3"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 74,
+     "number": "2.2.0"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 74,
+     "number": "2.2.1"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 74,
+     "number": "2.2.2"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 74,
+     "number": "2.2.3"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 74,
+     "number": "2.2.4"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 74,
+     "number": "2.3.0"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 74,
+     "number": "2.3.1"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 74,
+     "number": "2.3.2"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 74,
+     "number": "2.3.3"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 74,
+     "number": "2.3.4"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 75,
+     "number": "3.1.0"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 75,
+     "number": "3.1.1"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 75,
+     "number": "3.1.2"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 75,
+     "number": "3.1.3"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 75,
+     "number": "3.1.4"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 75,
+     "number": "3.1.5"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 75,
+     "number": "3.1.6"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 75,
+     "number": "3.2.0"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 75,
+     "number": "3.2.1"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 75,
+     "number": "3.2.2"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 75,
+     "number": "3.2.3"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 75,
+     "number": "3.2.4"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 75,
+     "number": "3.2.5"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 75,
+     "number": "3.3.0"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 75,
+     "number": "3.3.1"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 75,
+     "number": "3.3.2"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 75,
+     "number": "3.3.3"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 76,
+     "number": "4.1.0"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 76,
+     "number": "4.1.1"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 76,
+     "number": "4.1.2"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 76,
+     "number": "4.2.0"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 76,
+     "number": "4.2.1"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 76,
+     "number": "4.2.2"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 76,
+     "number": "4.2.3"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 76,
+     "number": "4.3.0"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 76,
+     "number": "4.3.1"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 76,
+     "number": "4.3.2"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 76,
+     "number": "4.3.3"
+    }
+   ],
+   "value": 77.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "38 of 57 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "for students (p. 2–36)",
+     "page": 3,
+     "heading": "UNESCO - a global leader in education"
+    },
+    {
+     "section": "for students (p. 2–36)",
+     "page": 3,
+     "heading": "The Global Education 2030 Agenda"
+    },
+    {
+     "section": "for students (p. 2–36)",
+     "page": 4,
+     "heading": "Preparing students to be responsible and creative citizens in the era of AI"
+    },
+    {
+     "section": "for students (p. 2–36)",
+     "page": 11,
+     "heading": "List of acronyms and abbreviations"
+    },
+    {
+     "section": "for students (p. 2–36)",
+     "page": 12,
+     "heading": "1.1 Why an AI competency framework for students?"
+    },
+    {
+     "section": "for students (p. 2–36)",
+     "page": 13,
+     "heading": "1.2 Purpose and target audience"
+    },
+    {
+     "section": "for students (p. 2–36)",
+     "page": 14,
+     "heading": "2.1 Fostering a critical approach to AI"
+    },
+    {
+     "section": "for students (p. 2–36)",
+     "page": 15,
+     "heading": "2.2 Prioritizing human-centred interaction with AI"
+    },
+    {
+     "section": "for students (p. 2–36)",
+     "page": 15,
+     "heading": "2.3 Encouraging environmentally sustainable AI"
+    },
+    {
+     "section": "for students (p. 2–36)",
+     "page": 16,
+     "heading": "2.4 Promoting inclusivity in AI competency development"
+    },
+    {
+     "section": "for students (p. 2–36)",
+     "page": 17,
+     "heading": "2.5 Building core AI competencies for lifelong learning"
+    },
+    {
+     "section": "for students (p. 2–36)",
+     "page": 18,
+     "heading": "Chapter 3: Structure of the AI competency framework for students"
+    },
+    {
+     "section": "for students (p. 2–36)",
+     "page": 18,
+     "heading": "3.1 The framework"
+    },
+    {
+     "section": "for students (p. 2–36)",
+     "page": 20,
+     "heading": "3.2 Progression levels"
+    },
+    {
+     "section": "for students (p. 2–36)",
+     "page": 20,
+     "heading": "Level 2: Apply"
+    },
+    {
+     "section": "for students (p. 2–36)",
+     "page": 21,
+     "heading": "Level 3: Create"
+    },
+    {
+     "section": "for students (p. 2–36)",
+     "page": 21,
+     "heading": "3.3 Aspects"
+    },
+    {
+     "section": "for students (p. 2–36)",
+     "page": 22,
+     "heading": "Human-centred mindset"
+    },
+    {
+     "section": "for students (p. 2–36)",
+     "page": 23,
+     "heading": "Ethics of AI"
+    },
+    {
+     "section": "for students (p. 2–36)",
+     "page": 24,
+     "heading": "AI techniques and applications"
+    },
+    {
+     "section": "for students (p. 2–36)",
+     "page": 25,
+     "heading": "AI system design"
+    },
+    {
+     "section": "for students (p. 2–36)",
+     "page": 27,
+     "heading": "4.1 Level 1: Understand"
+    },
+    {
+     "section": "for students (p. 2–36)",
+     "page": 29,
+     "heading": "Table 2. Competency blocks for level 1: Understand"
+    },
+    {
+     "section": "4.2 Level 2: Apply (p. 37–56)",
+     "page": 37,
+     "heading": "4.2 Level 2: Apply"
+    },
+    {
+     "section": "4.2 Level 2: Apply (p. 37–56)",
+     "page": 45,
+     "heading": "4.3 Level 3: Create"
+    },
+    {
+     "section": "4.2 Level 2: Apply (p. 37–56)",
+     "page": 53,
+     "heading": "5.1 Aligning AI competencies as the foundation for national AI strategies"
+    },
+    {
+     "section": "4.2 Level 2: Apply (p. 37–56)",
+     "page": 53,
+     "heading": "Box 1: Recommendation on the Ethics of Artificial Intelligence"
+    },
+    {
+     "section": "4.2 Level 2: Apply (p. 37–56)",
+     "page": 55,
+     "heading": "Box 2: Supporting human resource development: The Republic of Korea's National Strategy for Artificial Intelligence"
+    },
+    {
+     "section": "4.2 Level 2: Apply (p. 37–56)",
+     "page": 56,
+     "heading": "5.2 Building interdisciplinary core and cluster AI curricula for AI competency"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 60,
+     "heading": "Box 4: The spiral curricular sequence of 'Day of AI' courses"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 61,
+     "heading": "Box 5: Typical enabling learning environment set up by governments' AI curricula"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 63,
+     "heading": "Box 6: An AI competency framework for AI subject teachers in China"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 66,
+     "heading": "Box 7: Pedagogical methodologies in the MIT curriculum on the ethics of AI for middle school students"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 69,
+     "heading": "Frame criterion-referenced assessments to measure the mastery of AI competencies"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 70,
+     "heading": "Adapt performance scenarios to assess overt performance and latent competencies"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 72,
+     "heading": "1. Human-centred mindset:"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 72,
+     "heading": "2. Ethics of AI:"
+    },
+    {
+     "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+     "page": 73,
+     "heading": "Table 5. Examples of assessment tasks"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "4 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "4 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "2 quoted texts in 1 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Image 11",
+     "page": 81,
+     "image": "fig-011-p80.png",
+     "quotes": [
+      "\"unesco\"",
+      "\"United Nations Educational, Scientific and Cultural Organization\""
+     ]
+    }
+   ],
+   "value": 2.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "47 page references valid (printed-folio pages 2–81)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "80 pages checked, 9 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "2 passages out of order break a sentence (2 of 3 not repairable; listed, not gated)",
+   "findings": [
+    {
+     "page": 3,
+     "words": 9,
+     "text": "educators in this integration, outlining 12 competencies across four",
+     "blocks": [
+      "#/texts/23",
+      "#/texts/24"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": true,
+     "breaks": [
+      "sentence start cut out of the block before: 'an three progression levels: Understand,' | 'educators in this integration, outlining'",
+      "passage cut out of 'The UNESCO AI competency framework for s'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 23,
+     "words": 50,
+     "text": "Human-centred mindset and it's associated ethical principles. The basic knowledge Structure and practical skills on data and AI programming is the foundation for the capacity to design and build AI sy",
+     "blocks": [
+      "#/texts/190",
+      "#/texts/192"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": true,
+     "breaks": [
+      "sentence start detached: \"hniques and applications' aspect implies\" | 'of the risks of disclosing data privacy '"
+     ],
+     "section": ""
+    }
+   ],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "unesco-ai-competency-framework-for-students-2024",
+ "doc_type": "framework_report",
+ "analyzed_at": "2026-11-15T10:04:53.822040+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "for students",
+   "derived_heading": "",
+   "part": 1,
+   "parts": 1,
+   "page_from": 2,
+   "page_to": 36,
+   "chars": 103175,
+   "blocks": 157,
+   "inner_headings": 31,
+   "figures": 3
+  },
+  {
+   "index": 1,
+   "heading": "4.2 Level 2: Apply",
+   "derived_heading": "",
+   "part": 1,
+   "parts": 1,
+   "page_from": 37,
+   "page_to": 56,
+   "chars": 109413,
+   "blocks": 48,
+   "inner_headings": 6,
+   "figures": 0
+  },
+  {
+   "index": 2,
+   "heading": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula",
+   "derived_heading": "",
+   "part": 1,
+   "parts": 1,
+   "page_from": 57,
+   "page_to": 81,
+   "chars": 77526,
+   "blocks": 103,
+   "inner_headings": 17,
+   "figures": 1
+  }
+ ],
+ "skipped": [
+  "Acknowledgements (p. 7)",
+  "Table of contents (p. 8)",
+  "List of tables (p. 10)",
+  "List of boxes (p. 10)",
+  "References (p. 79)",
+  "Endnotes (p. 80)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 80,
+  "gaps": [
+   {
+    "page": 18,
+    "text": "Understand • Human-centred • human agency",
+    "words": 6,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/tables/5"
+   },
+   {
+    "page": 30,
+    "text": "AI competency framework for students – Chapter 4: Specifications of AI competencies for students student curricular Goals suggested learning competency (AI curricula or Programmes pedagogical methods environments of study should…) (institutions and teachers (The following learning can consider and adapt the settings can be following learning methods.) provided and adapted.) Ethics of AI 4.1.2 Embodied Ethics • CG4.1.2.1 illustrate • case studies on scenarios • unplugged dilemmas around AI and containing controversies learning settings • students are identify the main reasons around AI: present ageand materials expected to be able behind ethical conflicts: appropriate real-world or including print to develop a basic based on concrete AI tools, simulated scenarios, and stories or case understanding of guide students to surface guide students to surface studies, worksheets the ethical issues dilemma decisions that controversies surrounding and posters. around AI, and the individual or corporate the AI tools and their uses. potential impact creators need to make in the discuss the main reasons • locally available of AI on human design and development of behind such ethical conflicts AI tools including rights, social AI (e.g. maximizing the scale and facilitate students to those available justice, inclusion, of data collection versus through mobile draw infographics or concept equity and climate protecting data ownership, phone apps. maps illustrating the core AI change within their recording users’ private ethical principles. • Predownloaded or local context and data for the training of AI • individual or group recorded videos with regard to their models versus protecting reflection on the personal and other resources personal lives. they their privacy, promoting implications of ethical related to specific will Understand, machine control to generate dilemmas: engage students cases or scenarios and internalize profit versus guaranteeing in group discussion and that present a the following key the primacy of'Human opinion taking on ethical dilemma. ethical principles, agency, and Prioritizing AI and will translate dilemmas that may arise • Search engines, safety versus accelerating these in their from uses of AI in daily life online videos or the Iteration of AI). support reflective practices students to associate and learning in local contexts resources related to and uses of AI tools perspectives on these (e.g. whether large language case studies. in their lives and models should use the dilemmas with the reasons learning: data of local communities behind ethical conflicts in their training or not; • Do no harm: around AI. to what extent AI has a Evaluating • CG4.1.2.2 facilitate negative environmental AI's regulatory Scenario-based impact or mitigates climate compliance and understandings of ethical change; how much of their potential to principles on AI and their privacy users should forego infringe on human personal implications: to exchange benefits of AI rights Offer students opportunities services). guide students • proportionality: to discuss age-appropriate to present their opinions assessing AI's real-world cases around through age-appropriate benefits against the six core AI ethical formats such as essays, risks and costs; principles: (1) ‘do no posters, drawings or Evaluating contextharm’, (2) proportionality, storyboards. appropriateness (3) non-discrimination, • Searching for and (4) sustainability, (5) • non-discrimination: human determination, validating Examples of detecting bias(es ‘AI for the public good’: and (6) transparency and promoting organize individual or and explainability. guide inclusivity and group scoping of Examples students to build a sustainability of AI tools or approaches knowledge framework on to the use of AI that the'ethics of AI and practice 31",
+    "words": 567,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/225"
+   },
+   {
+    "page": 31,
+    "text": "AI competency framework for students – Chapter 4: Specifications of AI competencies for students student curricular Goals suggested learning competency (AI curricula or Programmes pedagogical methods environments of study should…) (institutions and teachers (The following learning can consider and adapt the settings can be following learning methods.) provided and adapted.) Ethics of AI (understanding AI's them in Evaluating the AI support the public good, environmental and tools being used in their including promoting societal impacts) lives and schools. equity and inclusion for people with disabilities, • human • CG4.1.2.3 guide the preserving linguistic and determination: Embodied reflection and Cultural diversity, and Emphasizing internalization of ethical increasing social justice and human agency and principles on AI: guide environmental sustainability. accountability in students to Understand guide students to collect AI use the implications of ethical evidence on and discuss principles on AI for their • transparency: Examples that genuinely human rights, data advocating for serve the public good; privacy, safety, human the rights of users validate and categorize these agency, as well as for to Understand AI Examples. equity, inclusion, social operations and justice and environmental decisions sustainability. guide students to develop Embodied comprehension of ethical principles; and Offer opportunities to reflect on personal attitudes that can help address ethical challenges (e.g. advocating for inclusive interfaces for AI tools, promoting inclusion in AI and reporting discriminatory bias(es found in AI tools). AI techniques 4.1.3 AI foundations • CG4.1.3.1 exemplify the • Example-based definition • unplugged and definition and scope of and scope of AI: investigate learning settings • students are AI: based on Examples applications and experiment with and resources, expected to of AI tools (e.g. for facial Examples of AI tools (e.g. including develop basic recognition, social media in the medical field using textbooks, essays, knowledge, recommendations, pattern supervised learning and worksheets and understanding analyses underlying image classification for printed materials. and skills on AI, Scientific data, medical cancer diagnosis, or in particularly with business contexts using • online or diagnoses, self-driving cars respect to data and and predicting the Risk of natural language processing downloaded algorithms, and and generative AI for videos and other loan defaults), facilitate Understand the automated minute-taking media introducing students to Understand importance of the and composing literature AI innovations or what AI is and is not; guide interdisciplinary reviews). based on selected tools. students to find and share foundational exemplar tools under Examples, help students • locally available knowledge the main categories of AI to Understand what AI is AI tools including required for technologies and explain and is not, and the main basic AI-assisted gradually categories of AI technologies deepening adopted in daily life, as well 32",
+    "words": 443,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/227"
+   },
+   {
+    "page": 38,
+    "text": "AI competency framework for students – Chapter 4: Specifications of AI competencies for students student curricular Goals suggested learning competency (AI curricula or Programmes pedagogical methods environments of study should…) (institutions and teachers (The following learning can consider and adapt the settings can be following learning methods.) provided and adapted.) Humanscores (as happened during or predictions to usurp centred COVID-19) or decide on thinking processes, and mindset University admissions. give them insight into the competencies that students • CG4.2.1.3 nurture the need in order to steer the use personal attitude that of AI toward serving human human accountability capability development. requires personal competencies to steer the purposeful use of AI: guide students to interrogate how the automation of literature reviews, Writing and artistic creation may undermine human thinking processes and intellectual development. guide students to discuss concrete actions that they can take to protect themselves and their peers from the use of AI outputs or predictions to usurp human thought, intellectual practices and continuous capacity enhancement. Ethics of AI 4.2.2 Safe and • CG4.2.2.1 foster • designing an'ethics kit’ • unplugged responsible use self-awareness and for the self-disciplined, learning settings habitual compliance responsible use of AI: and resources, • students are with ethical principles design simulated scenarios including paperexpected to be for the responsible use containing potential ethical based worksheets, able to carry of AI: illustrate the ethical conflicts (e.g. sharing posters and out responsible principles or regulatory private data or protected checklists of ethical AI practices in articles concerning the content when chatting principles. compliance responsible use of AI, with AI systems, putting with ethical drawing on concrete AI AI-generated content • Predownloaded principles and tools and real-world use in a school assignment, privacy policies locally applicable scenarios. support students Creating a video using and AI regulations, regulations. they to iteratively build and Images of other people, or and Examples of are expected to be update a checkbox of ethical distributing misinformation, legal or ethical conscious of the principles for ensuring their disinformation or hate cases concerning risks of disclosing own lawful and responsible speech). organize the AI safety, data data privacy and practices when engaging drafting of an'ethics kit'that privacy and forms take measures to with AI systems. guide users need to habitually of consent. ensure that their students to practise and check when using AI, • locally available data are collected, habituate their compliance including articles drawn AI tools including used, shared, with these principles, such from locally applicable smartphone apps. archived and 39",
+    "words": 422,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/244"
+   },
+   {
+    "page": 40,
+    "text": "AI competency framework for students – Chapter 4: Specifications of AI competencies for students student curricular Goals suggested learning competency (AI curricula or Programmes pedagogical methods environments of study should…) (institutions and teachers (The following learning can consider and adapt the settings can be following learning methods.) provided and adapted.) Ethics of AI their knowledge on human • debate the ownership of rights to data protection AI-generated content and and privacy and the legal outputs from human-AI responsibilities of AI creators interactions: organize a to collect data with consent, debate to trigger students’ and guide them to practise reflections around the strategies for ensuring their ownership of content created personal data is collected, using AI. examine the used, shared, archived and availability and applicability deleted only with their of regulations on the informed consent. Expose recognition of copyright for students to simulated AI-generated content and scenarios containing Typical resources, and how relevant AI incidents, so they can regulations recognize practise precautionary and intellectual work that interactive strategies for the integrates different extents Safe use of AI and become of AI-generated content. familiar with regulations that can protect their safety or mitigate the negative impacts of AI incidents. AI 4.2.3 application skills • CG4.2.3.1 Offer • data bias(es lab: provide • Computers techniques opportunities to students with sample with internet • students are strengthen knowledge and datasets with and without connection. expected to be and skills on data outliers, guide students applications able to construct modelling, Engineering to conduct hands-on • Computer-based an age-appropriate and analysis: provide experimentation on how samples of datasets knowledge students with task-based the outliers impact the or locally accessible Structure on data, learning opportunities to model (e.g. in regression public datasets. AI algorithms and acquire age-appropriate or clustering Examples). • Computer-based programming, and knowledge and skills on For image classification, applications for AI acquire transferable datasets, including Applying ask students to conduct an programming or application skills. age-appropriate tools or experiment on how class locally accessible students are programming languages to imbalance (e.g. significantly online open-source expected to be acquire, clean and transform more data in one class than AI programming able to critically data into a suitable format the other) affects model libraries. evaluate and for storing, processing, and performance per class. leverage free and/ analysing databases (e.g. guide students to learn • Computer-based or or open-source AI SQL, NoSQL, SparkSQL or age-appropriate skills in locally accessible tools, programming Apache Flink). data Engineering to remove online AI tools. libraries and identifiable bias(es and datasets. • CG4.2.3.2 provide compare the results. opportunities to acquire age-appropriate technical • tailored optional modular skills in AI programming: courses on various AI explain Examples of AI algorithms to support systems that use different cohort-based learning: tailor free and/or open-source 41",
+    "words": 460,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/248"
+   },
+   {
+    "page": 41,
+    "text": "| libraries (e.g. Teachable | foundation of methodological |\n| Machine,5 PyTorch,6 or | knowledge necessary to |",
+    "words": 12,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/tables/23"
+   },
+   {
+    "page": 42,
+    "text": "AI competency framework for students – Chapter 4: Specifications of AI competencies for students student curricular Goals suggested learning competency (AI curricula or Programmes pedagogical methods environments of study should…) (institutions and teachers (The following learning can consider and adapt the settings can be following learning methods.) provided and adapted.) AI system 4.2.4 architecture • CG4.2.4.1 scaffold • simulating the • videos and metrics design design the acquisition of evaluation of frameworks showing how to methodological and components conduct ethical • students are knowledge and technical for AI architectural and technical expected to be able skills on AI architecture: configuration: based on evaluations of AI to cultivate basic facilitate students to acquire the problem statement and models. methodological and practise the necessary feasibility study, facilitate knowledge and Engineering thinking students to evaluate a • Computer-based or technical skills and operational skills to variety of frameworks locally accessible to configure evaluate a variety of AI for AI architectures (e.g. online Examples of a scalable, architectures with an aim TensorFlow, PyTorch, or AI systems. maintainable to choose an appropriate Scikit-learn). simulate the • Computer-based and reusable solution based on a defined evaluation and selection of samples of datasets architecture for an problem statement, solutions to the components or locally accessible AI system covering While considering openof the architecture (e.g. data public datasets. layers of data, source options. provide layer, algorithm layer, AI algorithms, models project-based learning model layer and interface • Computer-based and application opportunities to support layer) based on the selected applications for AI interfaces. students their acquisition of framework. configure a programming or are expected methodological knowledge prototype architecture locally accessible to develop the on the configuration of a encompassing the required online open-source interdisciplinary prototype AI architecture datasets, algorithm tools, AI programming skills necessary to encompassing an anti-AI model and required libraries. leverage datasets, bias data Structure, an computational resources, the • locally hosted or programming tools energy-efficient AI model design of main functionalities open-source cloud and computational to minimize the negative and interface, and the plans resources to Computing and environmental impact, the for deployment. guide other resources construct a Human-centred design of students to communicate prototype AI shared by performance and services, the configuration through institutions through system. this and metrics to test and abstractions such as includes the cloud platforms. improvise the maturity of flowcharts, diagrams or expectation the configuration. pseudocode. that they Apply deepened human- • CG4.2.4.2 support the • simulating the Leveraging centred values and preparation of advanced of resources to build an AI ethical principles in technical skills and system: facilitate students to their configuration, project management build the simulated AI system construction and competencies needed by based on locally hosted optimization. AI system Building: Offer Computing devices or locally project-based learning accessible cloud Computing opportunities to facilitate platforms (e.g. Hadoop or students to acquire and Spark), and the operating Apply the interdisciplinary systems (e.g. GNU) and technical skills demanded software needed to train the by the Building of a machine-learning models. prototype AI system guide students to conduct Designed for a simple trade-offs between cost and specific task (e.g. a chatbot Computing capability needs, imitating the responses of and between the robustness 43",
+    "words": 533,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/252"
+   },
+   {
+    "page": 48,
+    "text": "AI competency framework for students – Chapter 4: Specifications of AI competencies for students student curricular Goals suggested learning competency (AI curricula or Programmes pedagogical methods environments of study should…) (institutions and teachers (The following learning can consider and adapt the settings can be following learning methods.) provided and adapted.) AI 4.3.3 Creating AI tools • CG4.3.3.1 challenge and • task-based enhancement • locally accessible techniques enable advanced skills of datasets and free and/or Open- • students are to develop task-based AI programming codes and source online expected to be tools: provide task-based for crafting an AI tool: applications datasets, AI tools able to deepen and learning opportunities organize students to modify and programming Apply knowledge so students can transfer a dataset or Create a new libraries. and skills on data their values, knowledge one for real-world contexts, and algorithms to and skills to crafting an AI by drawing on an authentic • locally accessible customize existing tool based on existing AI task such as monitoring free and/or AI toolkits to models or toolkits. support the Energy consumption of open-source data Create task-based their mastery of advanced local schools or households, analytics tools. AI tools. students skills in critically analysing forecasting weather for a • locally accessible are expected to the relevance of existing specific location or route, or cloud-based integrate their AI tools to specific tasks, tracking an epidemic disease. Computing Human-centred assessing it's data collection Teach and facilitate students resources, locally mindset and ethical and processing needs, to leverage automatic hosted Computing considerations into deciding on whether a data-collection tools (e.g. resources (e.g. a the assessment low-code approach will be BeautifulSoup8 for scraping school server), of the existing AI adopted or AI algorithms Information from webpages); or Computing resources and the and programming language Apply AI programming resources shared test of self-created are required, and carrying skills to clean, encode and by trustable AI tools. they are out the operational preprocess the data; and institutions or also expected customization and/or use the data to customize AI industry agencies. to foster social programming. models or craft AI tools. and emotional skills needed to • CG4.3.3.2 enhance • AI application performance engage in creation students’ creativity in test lab: guide students with AI including Applying AI knowledge to Search for and adapt a adaptivity, complex and skills to customize free and/or open-source Communication AI toolkits and coding: performance matrix for the and teamwork design tasks around testing of AI applications skills. customizing AI tools to (e.g. accuracy, precision, solve authentic tasks. guide F-1 score, confusion students to acquire skills in matrices and ROC curves). Leveraging AI-development Let students experience platforms or toolkits, the use of adapted tools to enhancing datasets, and test the performance and modifying programming technological robustness of codes, including those the crafted AI application, based on open-source and simulate users’ feedback options; challenge and on ethical compliance. support students to explore Use automated tools and test creative ideas on to generate visualized the design of AI tools to reporting and summarize solve variations of problems. recommendations on the optimization of the AI application. 49",
+    "words": 517,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/267"
+   },
+   {
+    "page": 66,
+    "text": "generate explanations of their results.",
+    "words": 5,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/tables/35"
+   }
+  ],
+  "gaps_dismissed": [
+   {
+    "page": 2,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "across all actions."
+   },
+   {
+    "page": 3,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "of learning objectives"
+   },
+   {
+    "page": 3,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "in their national design."
+   },
+   {
+    "page": 18,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "• AI techniques and • AI foundations applications •"
+   },
+   {
+    "page": 18,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "| Apply | Create |\n| • human | • |"
+   },
+   {
+    "page": 18,
+    "words": 13,
+    "reason": "duplicate",
+    "text": "accountability of AI • Safe and responsible • Ethics by design use •"
+   },
+   {
+    "page": 21,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "Understand • Human-centred • human agency mindset"
+   },
+   {
+    "page": 21,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "22 Apply Create • human •"
+   },
+   {
+    "page": 21,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "accountability of AI"
+   },
+   {
+    "page": 22,
+    "words": 11,
+    "reason": "duplicate",
+    "text": "Apply Create • Safe and responsible • Ethics by design use"
+   },
+   {
+    "page": 23,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "Understand • AI techniques and • AI foundations applications"
+   },
+   {
+    "page": 27,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "and low-tech options."
+   },
+   {
+    "page": 28,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "curricular Goals suggested learning competency"
+   },
+   {
+    "page": 28,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "pedagogical methods environments of study should…) (institutions and teachers (The following learning"
+   },
+   {
+    "page": 28,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "settings can be following learning methods.)"
+   },
+   {
+    "page": 28,
+    "words": 17,
+    "reason": "duplicate",
+    "text": "4.1.1 human agency • CG4.1.1.1 foster an • Visualizing the abstract • unplugged centred understanding that AI"
+   },
+   {
+    "page": 28,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "learning settings • students are"
+   },
+   {
+    "page": 28,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "mindset like paper-based expected to be"
+   },
+   {
+    "page": 28,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "articles, printed able to recognize"
+   },
+   {
+    "page": 28,
+    "words": 11,
+    "reason": "duplicate",
+    "text": "including data ownership, • locally available integral comprehension of creators influence"
+   },
+   {
+    "page": 28,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "AI tools including how AI systems collecting and processing mobile phones with"
+   },
+   {
+    "page": 28,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "impact human AI applications."
+   },
+   {
+    "page": 28,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "• Predownloaded interaction, and"
+   },
+   {
+    "page": 28,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "human-controlled evaluation or recorded videos their own lives"
+   },
+   {
+    "page": 28,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "and other resources and societies. they"
+   },
+   {
+    "page": 28,
+    "words": 19,
+    "reason": "duplicate",
+    "text": "determination in AI-assisted related to specific are expected to deployment, and human decisionmaking. The case studies, or Understand the"
+   },
+   {
+    "page": 28,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "scenarios that implications of for decisionmaking. guide"
+   },
+   {
+    "page": 28,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "present a dilemma. protecting human"
+   },
+   {
+    "page": 28,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "of agency throughout"
+   },
+   {
+    "page": 28,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "• Search engines, the design, thinking or intellectual"
+   },
+   {
+    "page": 28,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "online videos and provision and use development. society. supplemental"
+   },
+   {
+    "page": 28,
+    "words": 10,
+    "reason": "duplicate",
+    "text": "online learning Understand what it • CG4.1.1.2 facilitate an •"
+   },
+   {
+    "page": 28,
+    "words": 23,
+    "reason": "duplicate",
+    "text": "be understanding on the courtroom debate to human-controlled, necessity of exercising evaluate creators’ intents and what the sufficient human underlying prohibited AI consequences"
+   },
+   {
+    "page": 28,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "students to real-world appropriate interpretation"
+   },
+   {
+    "page": 28,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "scenarios and guide"
+   },
+   {
+    "page": 28,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "systems prohibited under consequences of'Human"
+   },
+   {
+    "page": 28,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "when making highstakes"
+   },
+   {
+    "page": 28,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "help students Understand"
+   },
+   {
+    "page": 28,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "by undermining human"
+   },
+   {
+    "page": 29,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "curricular Goals suggested learning competency"
+   },
+   {
+    "page": 29,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "pedagogical methods environments of study should…) (institutions and teachers (The following learning"
+   },
+   {
+    "page": 29,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "settings can be following learning methods.)"
+   },
+   {
+    "page": 29,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "systems at regulatory,"
+   },
+   {
+    "page": 29,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "centred institutional and individual techniques to weaken mindset"
+   },
+   {
+    "page": 29,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "• CG4.1.1.3 nurture critical decision."
+   },
+   {
+    "page": 29,
+    "words": 13,
+    "reason": "duplicate",
+    "text": "• Scenario-based human agency and understanding of'Human- machine agency: Expose controlled interaction"
+   },
+   {
+    "page": 29,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "decision loops, support"
+   },
+   {
+    "page": 29,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "students to Understand"
+   },
+   {
+    "page": 29,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "may have limitations, revealing situations in underlining the importance"
+   },
+   {
+    "page": 29,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "machine agency might human capacities While"
+   },
+   {
+    "page": 29,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "ensuring human control."
+   },
+   {
+    "page": 29,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "• Debating the dynamic undetectable for human boundary between"
+   },
+   {
+    "page": 29,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "machine agency: based and autocorrection when"
+   },
+   {
+    "page": 29,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "of dilemmas surrounding captioning or automating"
+   },
+   {
+    "page": 29,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "video-production in the agency, encourage students development of course"
+   },
+   {
+    "page": 29,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "language translation, etc.)."
+   },
+   {
+    "page": 29,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "abstract boundaries the relationship between"
+   },
+   {
+    "page": 29,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "in real-world situations contexts."
+   },
+   {
+    "page": 32,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "curricular Goals suggested learning competency"
+   },
+   {
+    "page": 32,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "pedagogical methods environments of study should…) (institutions and teachers (The following learning"
+   },
+   {
+    "page": 32,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "settings can be following learning methods.)"
+   },
+   {
+    "page": 32,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "applications and of data"
+   },
+   {
+    "page": 32,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "activities. guide students installed on applications algorithms. appropriate manner."
+   },
+   {
+    "page": 32,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "smartphones. students should"
+   },
+   {
+    "page": 32,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "conceptual knowledge on"
+   },
+   {
+    "page": 32,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "for example image connect conceptual"
+   },
+   {
+    "page": 32,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "and/or video knowledge on AI"
+   },
+   {
+    "page": 32,
+    "words": 10,
+    "reason": "duplicate",
+    "text": "techniques used. creators, generative with their activities foster students’ example-"
+   },
+   {
+    "page": 32,
+    "words": 32,
+    "reason": "duplicate",
+    "text": "• spiral learning from based abstraction of recommendations life, concretizing Examples to abstract conceptual knowledge on social media. a Human-centred concepts and from on how machine-learning mind"
+   },
+   {
+    "page": 32,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "principles through techniques: Use selected"
+   },
+   {
+    "page": 32,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "understanding Examples to guide"
+   },
+   {
+    "page": 32,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "an age-appropriate and how AI"
+   },
+   {
+    "page": 32,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "interacts with is trained, including"
+   },
+   {
+    "page": 32,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "humans. namely, supervised learning,"
+   },
+   {
+    "page": 32,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "unsupervised learning and definition, data collection, reinforcement learning. this data processing, training,"
+   },
+   {
+    "page": 32,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "students’ development of"
+   },
+   {
+    "page": 32,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "the programming of"
+   },
+   {
+    "page": 32,
+    "words": 10,
+    "reason": "duplicate",
+    "text": "involving datasets, algorithms. algorithms, AI architectures, • CG4.1.3.3 foster Open-"
+   },
+   {
+    "page": 32,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "environments, design of and an interdisciplinary functionalities and interfaces,"
+   },
+   {
+    "page": 32,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "learning opportunities on"
+   },
+   {
+    "page": 32,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "interests and abilities applications. facilitate them"
+   },
+   {
+    "page": 32,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "Understand the interplay"
+   },
+   {
+    "page": 33,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "curricular Goals suggested learning competency"
+   },
+   {
+    "page": 33,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "pedagogical methods environments of study should…) (institutions and teachers (The following learning"
+   },
+   {
+    "page": 33,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "settings can be following learning methods.)"
+   },
+   {
+    "page": 33,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "practices, economic or interdisciplinary knowledge"
+   },
+   {
+    "page": 33,
+    "words": 10,
+    "reason": "duplicate",
+    "text": "• CG4.1.3.4 Concretize Human-centred • Solidifying considerations in the multidisciplinary"
+   },
+   {
+    "page": 33,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "mathematics: based on to students’ understanding lectures and problem-based"
+   },
+   {
+    "page": 33,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "inquiry, help students and societal relationships."
+   },
+   {
+    "page": 33,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "Highlight humans’ roles"
+   },
+   {
+    "page": 33,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "mathematics, and learning"
+   },
+   {
+    "page": 33,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "architecture engineers, data"
+   },
+   {
+    "page": 33,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "engineers, data workers,"
+   },
+   {
+    "page": 33,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "set. nurture students’ in human-AI interfaces"
+   },
+   {
+    "page": 33,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "compliance). guide students including relevant material"
+   },
+   {
+    "page": 33,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "training AI systems."
+   },
+   {
+    "page": 34,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "curricular Goals suggested learning competency"
+   },
+   {
+    "page": 34,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "pedagogical methods environments of study should…) (institutions and teachers (The following learning"
+   },
+   {
+    "page": 34,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "settings can be following learning methods.)"
+   },
+   {
+    "page": 34,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "4.1.4 problem scoping • CG4.1.4.1 scaffold critical •"
+   },
+   {
+    "page": 34,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "project proposals: organize learning settings • students are"
+   },
+   {
+    "page": 34,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "drawing from Examples,"
+   },
+   {
+    "page": 34,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "worksheets, paperto Understand the"
+   },
+   {
+    "page": 34,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "based case studies, importance of ‘AI"
+   },
+   {
+    "page": 34,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "and printouts of problem scoping’ as"
+   },
+   {
+    "page": 34,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "prototypes or the starting point"
+   },
+   {
+    "page": 34,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "for AI Innovation."
+   },
+   {
+    "page": 34,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "design. they are expected real-world challenges (e.g."
+   },
+   {
+    "page": 34,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "to be able to improving institutional • digital devices"
+   },
+   {
+    "page": 34,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "examine whether productivity, the with an internet"
+   },
+   {
+    "page": 34,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "sustainable development connection."
+   },
+   {
+    "page": 34,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "in certain situations"
+   },
+   {
+    "page": 34,
+    "words": 10,
+    "reason": "duplicate",
+    "text": "training data, ethical • selected online AI from legal, ethical"
+   },
+   {
+    "page": 34,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "| implications, environmental | systems. |\n| and logical | human decisionmaking) |"
+   },
+   {
+    "page": 34,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "solutions could achieve students are able and environmental"
+   },
+   {
+    "page": 34,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "to define the implications. provide clarity"
+   },
+   {
+    "page": 34,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "and constraints of"
+   },
+   {
+    "page": 34,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "review. a problem before"
+   },
+   {
+    "page": 34,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "attempting to train"
+   },
+   {
+    "page": 34,
+    "words": 17,
+    "reason": "duplicate",
+    "text": "• simulating the probleman AI model to scoping and justification non-AI solutions would solve it; students"
+   },
+   {
+    "page": 34,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "are also expected system: facilitate students"
+   },
+   {
+    "page": 34,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "environmental impact, knowledge and"
+   },
+   {
+    "page": 34,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "would weaken human skills needed"
+   },
+   {
+    "page": 34,
+    "words": 13,
+    "reason": "duplicate",
+    "text": "consciousness or manipulate in order to that could potentially human actions). conceptualize and"
+   },
+   {
+    "page": 34,
+    "words": 14,
+    "reason": "duplicate",
+    "text": "construct an AI • CG4.1.4.2 support automatic watering the system, including the acquisition and"
+   },
+   {
+    "page": 34,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "hard-of-hearing grandparent appropriateness"
+   },
+   {
+    "page": 34,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "defining the need project, support the"
+   },
+   {
+    "page": 34,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "devising test and"
+   },
+   {
+    "page": 34,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "model • data preprocessing lab:"
+   },
+   {
+    "page": 34,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "model, organize experiments"
+   },
+   {
+    "page": 35,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "curricular Goals suggested learning competency"
+   },
+   {
+    "page": 35,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "pedagogical methods environments of study should…) (institutions and teachers (The following learning"
+   },
+   {
+    "page": 35,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "settings can be following learning methods.)"
+   },
+   {
+    "page": 35,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "the automated tracking"
+   },
+   {
+    "page": 35,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "regions). students can classifying mystery Images)."
+   },
+   {
+    "page": 35,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "by formulating problem various data preprocessing"
+   },
+   {
+    "page": 35,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "augmentation, handling problems."
+   },
+   {
+    "page": 35,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "• CG4.1.4.3 develop skills"
+   },
+   {
+    "page": 35,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "and Computing resources: the data preprocessing Offer opportunities for"
+   },
+   {
+    "page": 35,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "students to develop performance."
+   },
+   {
+    "page": 36,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "curricular Goals suggested learning competency"
+   },
+   {
+    "page": 36,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "pedagogical methods environments of study should…) (institutions and teachers (The following learning"
+   },
+   {
+    "page": 36,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "settings can be following learning methods.)"
+   },
+   {
+    "page": 36,
+    "words": 17,
+    "reason": "duplicate",
+    "text": "• Writing guidelines on • unplugged centred accountability that human accountability human accountability for and/or offline mindset"
+   },
+   {
+    "page": 36,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "learning settings • students are"
+   },
+   {
+    "page": 36,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "| facilitate | and resources, |\n| expected to be | providers: Leveraging |"
+   },
+   {
+    "page": 36,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "including printable to recognize"
+   },
+   {
+    "page": 36,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "based case studies, that human"
+   },
+   {
+    "page": 36,
+    "words": 17,
+    "reason": "duplicate",
+    "text": "role-play scripts, accountabilities real-world lawsuits, guide and ethical accountabilities videos, worksheets are the legal students to Understand"
+   },
+   {
+    "page": 36,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "and flipcharts. obligations of AI"
+   },
+   {
+    "page": 36,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "collection and processing •"
+   },
+   {
+    "page": 36,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "service providers, institutions deploying AI"
+   },
+   {
+    "page": 36,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "example learning and Understand"
+   },
+   {
+    "page": 36,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "designing functionalities and management what human"
+   },
+   {
+    "page": 36,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "systems, social accountabilities"
+   },
+   {
+    "page": 36,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "media platforms they should"
+   },
+   {
+    "page": 36,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "and generative AI assume during the"
+   },
+   {
+    "page": 36,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "foster an awareness human accountability for"
+   },
+   {
+    "page": 36,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "that human safety incidents, ethical"
+   },
+   {
+    "page": 36,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "decisions on that Understand what human affect humanity accountabilities they should 37"
+   },
+   {
+    "page": 37,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "Humanand uphold the centred principle that mindset"
+   },
+   {
+    "page": 37,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "38 curricular Goals suggested learning"
+   },
+   {
+    "page": 37,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "pedagogical methods environments of study should…) (institutions and teachers (The following learning"
+   },
+   {
+    "page": 37,
+    "words": 16,
+    "reason": "duplicate",
+    "text": "settings can be following learning methods.) provided and adapted.) assume themselves when • Investigating the impact"
+   },
+   {
+    "page": 37,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "of AI-assisted decisions"
+   },
+   {
+    "page": 37,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "• CG4.2.1.2 generate regulations: Ask students the understanding that"
+   },
+   {
+    "page": 37,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "human accountability decisions about humans"
+   },
+   {
+    "page": 37,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "responsibility when using"
+   },
+   {
+    "page": 37,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "assisted assessment system about humanity: guide"
+   },
+   {
+    "page": 37,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "to assist decisionmaking."
+   },
+   {
+    "page": 37,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "to critically interrogate the"
+   },
+   {
+    "page": 37,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "genuine capabilities of economic background based"
+   },
+   {
+    "page": 37,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "evaluate the consequences"
+   },
+   {
+    "page": 37,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "international regulations (e.g. learning opportunities the EU AI Act)."
+   },
+   {
+    "page": 37,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "• Scenario-based practices candidates. lead"
+   },
+   {
+    "page": 37,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "to purposefully practise"
+   },
+   {
+    "page": 37,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "dignity. facilitate students foster their inquiry-based"
+   },
+   {
+    "page": 37,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "humans when making"
+   },
+   {
+    "page": 37,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "accountability (e.g. handing"
+   },
+   {
+    "page": 39,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "curricular Goals suggested learning competency"
+   },
+   {
+    "page": 39,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "pedagogical methods environments of study should…) (institutions and teachers (The following learning"
+   },
+   {
+    "page": 39,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "settings can be following learning methods.)"
+   },
+   {
+    "page": 39,
+    "words": 22,
+    "reason": "duplicate",
+    "text": "regulations and personal • online AI tools their deliberate and privacy, respecting responsibilities in making especially platforms and informed copyright, clearly marking"
+   },
+   {
+    "page": 39,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "containing consent. they are Where AI-generated content"
+   },
+   {
+    "page": 39,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "appears, and avoiding"
+   },
+   {
+    "page": 39,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "algorithms and conscious of Typical inputs or interactions"
+   },
+   {
+    "page": 39,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "content generators. AI incidents and"
+   },
+   {
+    "page": 39,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "involve disinformation, • simulation of Typical certain AI systems, misinformation, hate speech"
+   },
+   {
+    "page": 39,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "management: Expose protect their own identifiable individuals."
+   },
+   {
+    "page": 39,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "their peers when opportunities to"
+   },
+   {
+    "page": 39,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "using AI. reinforce self-discipline threaten harm. Familiarize"
+   },
+   {
+    "page": 39,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "them with precautionary"
+   },
+   {
+    "page": 39,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "and interactive strategies with opportunities to"
+   },
+   {
+    "page": 39,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "gain an age-appropriate"
+   },
+   {
+    "page": 39,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "understanding of their"
+   },
+   {
+    "page": 39,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "consequences of violating"
+   },
+   {
+    "page": 39,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "reinforce self-disciplined and well-being and/or behaviours, especially"
+   },
+   {
+    "page": 39,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "personal data, copyrighted •"
+   },
+   {
+    "page": 39,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "depicting identifiable privacy: encourage students"
+   },
+   {
+    "page": 39,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "AI-generated or digitally"
+   },
+   {
+    "page": 39,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "synthetized, and the"
+   },
+   {
+    "page": 39,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "spread of misinformation,"
+   },
+   {
+    "page": 39,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "disinformation and hate"
+   },
+   {
+    "page": 39,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "practical knowledge on"
+   },
+   {
+    "page": 39,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "awareness of locally relevant regulations. when applicable regulations:"
+   },
+   {
+    "page": 39,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "facilitate students to"
+   },
+   {
+    "page": 39,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "the regulatory agencies"
+   },
+   {
+    "page": 41,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "curricular Goals suggested learning competency"
+   },
+   {
+    "page": 41,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "pedagogical methods environments of study should…) (institutions and teachers (The following learning"
+   },
+   {
+    "page": 41,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "settings can be following learning methods.)"
+   },
+   {
+    "page": 41,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "and appropriate understanding"
+   },
+   {
+    "page": 41,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "students. develop optional supervised learning,"
+   },
+   {
+    "page": 41,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "unsupervised learning and"
+   },
+   {
+    "page": 41,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "algorithms that underlie •"
+   },
+   {
+    "page": 41,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "these categories. Where variations of authentic appropriate, provide"
+   },
+   {
+    "page": 41,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "students with task-based"
+   },
+   {
+    "page": 41,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "cultivate methodological interested students to"
+   },
+   {
+    "page": 41,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "conduct task-based algorithms."
+   },
+   {
+    "page": 41,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "students to develop"
+   },
+   {
+    "page": 41,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "analytical and synthesis"
+   },
+   {
+    "page": 41,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "• Debunking claims that tools: organize problem-"
+   },
+   {
+    "page": 41,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "and human students students’ acquisition of"
+   },
+   {
+    "page": 41,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "programming: facilitate and leverage open-source"
+   },
+   {
+    "page": 41,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "open-source AI algorithm"
+   },
+   {
+    "page": 41,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "explore more Human-centred"
+   },
+   {
+    "page": 41,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "and methods. challenge"
+   },
+   {
+    "page": 41,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "students to contemplate"
+   },
+   {
+    "page": 41,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "humans’ programming skills"
+   },
+   {
+    "page": 43,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "curricular Goals suggested learning competency"
+   },
+   {
+    "page": 43,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "pedagogical methods environments of study should…) (institutions and teachers (The following learning"
+   },
+   {
+    "page": 43,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "settings can be following learning methods.)"
+   },
+   {
+    "page": 43,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "an experienced teacher)."
+   },
+   {
+    "page": 43,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "design explore the Leveraging environmental impact, and normalization of"
+   },
+   {
+    "page": 43,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "datasets, assembling of"
+   },
+   {
+    "page": 43,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "virtual computational computational resources."
+   },
+   {
+    "page": 43,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "simulate the enhancement"
+   },
+   {
+    "page": 43,
+    "words": 10,
+    "reason": "duplicate",
+    "text": "| (e.g. hyperparameter | the optimization of |\n| optimization). guide | hyperparameters and/or fine- |"
+   },
+   {
+    "page": 43,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "learning model, including"
+   },
+   {
+    "page": 43,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "or non-trivial modifications"
+   },
+   {
+    "page": 43,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "to foundational models). selected and preprocessed practise using computational datasets. design and"
+   },
+   {
+    "page": 43,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "arrange opportunities to train machine-learning"
+   },
+   {
+    "page": 43,
+    "words": 10,
+    "reason": "duplicate",
+    "text": "| project management skills | selected and preprocessed |\n| including balancing the | datasets. |"
+   },
+   {
+    "page": 44,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "customizable datasets, programming"
+   },
+   {
+    "page": 44,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "project-based learning, problem-based"
+   },
+   {
+    "page": 44,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "curricular Goals suggested learning competency"
+   },
+   {
+    "page": 44,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "pedagogical methods environments of study should…) (institutions and teachers (The following learning"
+   },
+   {
+    "page": 44,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "settings can be following learning methods.)"
+   },
+   {
+    "page": 44,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "4.3.1 AI society • CG4.3.1.1 foster •"
+   },
+   {
+    "page": 44,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "• unplugged centred citizenship"
+   },
+   {
+    "page": 44,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "between an inclusive learning settings mindset"
+   },
+   {
+    "page": 44,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "and resources, • students are"
+   },
+   {
+    "page": 44,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "including expected to be inclusion, justice and"
+   },
+   {
+    "page": 44,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "worksheets, able to build sustainability: organize"
+   },
+   {
+    "page": 44,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "flipcharts, reports critical views on"
+   },
+   {
+    "page": 44,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "a supporting infrastructure or videos"
+   },
+   {
+    "page": 44,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "jobs and career human societies"
+   },
+   {
+    "page": 44,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "human societies. foster development in AI and expand"
+   },
+   {
+    "page": 44,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "societies, and printtheir human-"
+   },
+   {
+    "page": 44,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "based analytical centred values to Human-centred values."
+   },
+   {
+    "page": 44,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "case studies promoting the"
+   },
+   {
+    "page": 44,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "on the societal design and use"
+   },
+   {
+    "page": 44,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "environmental and sustainable"
+   },
+   {
+    "page": 44,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "inclusivity, or Prioritizing impact of AI-development. they"
+   },
+   {
+    "page": 44,
+    "words": 14,
+    "reason": "duplicate",
+    "text": "should be able pervasively embedded • online AI Access. develop students’ to solidify their"
+   },
+   {
+    "page": 44,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "systems or locally"
+   },
+   {
+    "page": 44,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "civic values and societies, and interrogate available AI tools amplified bias(es against"
+   },
+   {
+    "page": 44,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "for experiential females, marginalized responsibility as"
+   },
+   {
+    "page": 45,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "centred society. students mindset"
+   },
+   {
+    "page": 45,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "era. 46 curricular Goals suggested learning"
+   },
+   {
+    "page": 45,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "pedagogical methods environments of study should…) (institutions and teachers (The following learning"
+   },
+   {
+    "page": 45,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "settings can be following learning methods.) provided and adapted.)"
+   },
+   {
+    "page": 45,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "inequality, undermine tests including economically disadvantaged"
+   },
+   {
+    "page": 45,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "climate change. challenge smartphones that"
+   },
+   {
+    "page": 45,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "personal and social social responsibilities of responsibilities in AI"
+   },
+   {
+    "page": 45,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "conduct group discussions"
+   },
+   {
+    "page": 45,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "consideration both global"
+   },
+   {
+    "page": 45,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "sustainable and just"
+   },
+   {
+    "page": 45,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "centred purposes and"
+   },
+   {
+    "page": 45,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "students to continuously"
+   },
+   {
+    "page": 45,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "refine their personal ensuring humans have"
+   },
+   {
+    "page": 45,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "control and accountability citizens. challenge students"
+   },
+   {
+    "page": 45,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "upholding ethical principles"
+   },
+   {
+    "page": 45,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "self-reflections on personal"
+   },
+   {
+    "page": 45,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "to society. reinforce the resilience •"
+   },
+   {
+    "page": 45,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "of their Human-centred"
+   },
+   {
+    "page": 45,
+    "words": 10,
+    "reason": "duplicate",
+    "text": "• CG4.3.1.3 nurture the lifelong learning: organize sense of self-actualization"
+   },
+   {
+    "page": 45,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "work, lifelong learning attitude"
+   },
+   {
+    "page": 46,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "curricular Goals suggested learning competency"
+   },
+   {
+    "page": 46,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "pedagogical methods environments of study should…) (institutions and teachers (The following learning"
+   },
+   {
+    "page": 46,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "settings can be following learning methods.)"
+   },
+   {
+    "page": 46,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "in their self-actualization and relation to self-actualization."
+   },
+   {
+    "page": 46,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "sustainable development of"
+   },
+   {
+    "page": 46,
+    "words": 11,
+    "reason": "duplicate",
+    "text": "• CG4.3.2.1 build • simulating the due • unplugged awareness and"
+   },
+   {
+    "page": 46,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "learning settings • students are understanding on'ethics"
+   },
+   {
+    "page": 46,
+    "words": 13,
+    "reason": "duplicate",
+    "text": "AI and resources, expected to be by design’: provide development team: design including"
+   },
+   {
+    "page": 46,
+    "words": 17,
+    "reason": "duplicate",
+    "text": "conflict-based learning project-based learning worksheets, ethics-bydesign opportunities so students practices, ask students flipcharts and approach to the"
+   },
+   {
+    "page": 46,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "a print-based design, assessment"
+   },
+   {
+    "page": 46,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "AI Examples of due and use of AI"
+   },
+   {
+    "page": 46,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "company, including drafting diligence checks"
+   },
+   {
+    "page": 46,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "and reports, Ethics the review and"
+   },
+   {
+    "page": 46,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "labels and matrices, adaptation of"
+   },
+   {
+    "page": 46,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "privacy policies AI regulations."
+   },
+   {
+    "page": 46,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "the key due-diligence"
+   },
+   {
+    "page": 46,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "students are under conceptualization,"
+   },
+   {
+    "page": 46,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "regulations on AI. expected to be"
+   },
+   {
+    "page": 46,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "aware that the collection and Engineering,"
+   },
+   {
+    "page": 46,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "• locally available assessment and discrimination-free methods"
+   },
+   {
+    "page": 46,
+    "words": 13,
+    "reason": "duplicate",
+    "text": "or AI tools including ratification of the for training machine company. smartphone apps."
+   },
+   {
+    "page": 46,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "• online AI systems design should"
+   },
+   {
+    "page": 46,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "for ethical analysis. start from the"
+   },
+   {
+    "page": 46,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "stage and Cover algorithms: organize regulations on AI tools."
+   },
+   {
+    "page": 46,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "and lawsuits or life cycle. student • CG4.3.2.2 develop"
+   },
+   {
+    "page": 46,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "Apply parameters the ethics-bydesign"
+   },
+   {
+    "page": 46,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "to assess the principles behind"
+   },
+   {
+    "page": 46,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "compliance of an existing AI systems"
+   },
+   {
+    "page": 46,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "and algorithms: provide"
+   },
+   {
+    "page": 46,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "regulations and use students with opportunities"
+   },
+   {
+    "page": 47,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "curricular Goals suggested learning competency"
+   },
+   {
+    "page": 47,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "pedagogical methods environments of study should…) (institutions and teachers (The following learning"
+   },
+   {
+    "page": 47,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "settings can be following learning methods.)"
+   },
+   {
+    "page": 47,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "services, including collecting"
+   },
+   {
+    "page": 47,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "Information beyond their propose recommendations Published statements (e.g."
+   },
+   {
+    "page": 47,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "Recommendation platform violations of ethical"
+   },
+   {
+    "page": 47,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "principles or regulations,"
+   },
+   {
+    "page": 47,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "appropriate products, While"
+   },
+   {
+    "page": 47,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "social responsibilities to"
+   },
+   {
+    "page": 47,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "an regulations, guide students"
+   },
+   {
+    "page": 47,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "with the ethics-bydesign Suggest adaptations: invite"
+   },
+   {
+    "page": 47,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "to which corresponding"
+   },
+   {
+    "page": 47,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "Typical ethical risks"
+   },
+   {
+    "page": 47,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "embedded in algorithms adaptive Ethics matrix"
+   },
+   {
+    "page": 47,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "students’ awareness of,"
+   },
+   {
+    "page": 47,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "relevant stakeholders their social responsibilities"
+   },
+   {
+    "page": 47,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "AI creators, regulators, recommend modifications institutional deployers and"
+   },
+   {
+    "page": 47,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "individual users). students"
+   },
+   {
+    "page": 47,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "development of regulations"
+   },
+   {
+    "page": 49,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "AI system 4.3.4 Iteration and design"
+   },
+   {
+    "page": 49,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "50 curricular Goals suggested learning"
+   },
+   {
+    "page": 49,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "pedagogical methods environments of study should…) (institutions and teachers (The following learning"
+   },
+   {
+    "page": 49,
+    "words": 17,
+    "reason": "duplicate",
+    "text": "settings can be following learning methods.) provided and adapted.) • CG4.3.3.3 equip students • Comparing the creation"
+   },
+   {
+    "page": 49,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "optimize their self-crafted customizing datasets"
+   },
+   {
+    "page": 49,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "and programming codes to customize assessment"
+   },
+   {
+    "page": 49,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "methods and instruments applications based on"
+   },
+   {
+    "page": 49,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "peer assessments and"
+   },
+   {
+    "page": 49,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "the open-source datasets creators."
+   },
+   {
+    "page": 49,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "• CG4.3.4.1 develop • simulating the • locally accessible"
+   },
+   {
+    "page": 49,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "performance-test of online free and/ AI systems: provide"
+   },
+   {
+    "page": 49,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "or open-source project-based learning"
+   },
+   {
+    "page": 49,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "AI tools including opportunities for students"
+   },
+   {
+    "page": 49,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "data analytics tools"
+   },
+   {
+    "page": 49,
+    "words": 22,
+    "reason": "duplicate",
+    "text": "and programming testing the technological weaken human capacities, libraries. robustness and critiquing agency and consciousness, • locally hosted or the ethical appropriateness"
+   },
+   {
+    "page": 49,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "cloud Computing auditing whether the adapt performance metrics resources. model enhances human"
+   },
+   {
+    "page": 49,
+    "words": 15,
+    "reason": "duplicate",
+    "text": "| capacities, agency and | associated visualization | • downloaded |\n| consciousness, or weakens | tools including open-source | and adapted |"
+   },
+   {
+    "page": 49,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "instruments for the"
+   },
+   {
+    "page": 49,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "machine learning, confusion"
+   },
+   {
+    "page": 50,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "curricular Goals suggested learning"
+   },
+   {
+    "page": 50,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "pedagogical methods environments of study should…) (institutions and teachers (The following learning"
+   },
+   {
+    "page": 50,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "settings can be following learning methods.) provided and adapted.)"
+   },
+   {
+    "page": 50,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "and performance measuring the performance measure the"
+   },
+   {
+    "page": 50,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "• Access to applicable"
+   },
+   {
+    "page": 50,
+    "words": 27,
+    "reason": "duplicate",
+    "text": "gathering age-appropriate regulations on and environmental impact. qualitative and quantitative AI or governance market data) including • CG4.3.4.2 support the frameworks. feedback from (simulated) Bu"
+   },
+   {
+    "page": 50,
+    "words": 11,
+    "reason": "duplicate",
+    "text": "• locally accessible skills and social societal implications and online collaborative"
+   },
+   {
+    "page": 50,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "support resource system: Offer simulation"
+   },
+   {
+    "page": 50,
+    "words": 25,
+    "reason": "duplicate",
+    "text": "learning, and Understand corporate format. the collaborative social responsibility and design and creation • simulating AI engineers’ acquire interdisciplinary corporate decisionmaking of AI tools (e."
+   },
+   {
+    "page": 50,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "feedback. The activities results from feedback, should involve development"
+   },
+   {
+    "page": 50,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "of students’ technical"
+   },
+   {
+    "page": 50,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "responsibility. make an scenarios: (1) optimization: appropriate decision from optimizing the datasets,"
+   },
+   {
+    "page": 50,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "revisiting problem scoping"
+   },
+   {
+    "page": 50,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "(2) reconfiguration, Where"
+   },
+   {
+    "page": 50,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "fundamental flaws are"
+   },
+   {
+    "page": 50,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "discovered through tests"
+   },
+   {
+    "page": 50,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "vulnerable groups, students"
+   },
+   {
+    "page": 50,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "• CG4.3.4.3 foster students’ groups. support"
+   },
+   {
+    "page": 50,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "era: for optimization and"
+   },
+   {
+    "page": 50,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "reconfiguration, and learn"
+   },
+   {
+    "page": 51,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "curricular Goals suggested learning competency"
+   },
+   {
+    "page": 51,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "pedagogical methods environments of study should…) (institutions and teachers (The following learning"
+   },
+   {
+    "page": 51,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "settings can be following learning methods.)"
+   },
+   {
+    "page": 51,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "decisions about shutting"
+   },
+   {
+    "page": 51,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "AI technology. develop"
+   },
+   {
+    "page": 51,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "individual behaviours by co-creators. encourage"
+   },
+   {
+    "page": 51,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "discussions or collaborative"
+   },
+   {
+    "page": 51,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "regulations or policies share open-source datasets"
+   },
+   {
+    "page": 51,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "or AI toolkits. governance of AI. 52"
+   },
+   {
+    "page": 52,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "well-implemented, the implementation"
+   },
+   {
+    "page": 56,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "technology, mathematics, Engineering"
+   },
+   {
+    "page": 62,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "personnel management systems."
+   },
+   {
+    "page": 65,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "learning and prediction."
+   },
+   {
+    "page": 69,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "70 Applying the framework"
+   },
+   {
+    "page": 72,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "mindset taking evaluation"
+   },
+   {
+    "page": 72,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "‘human agency’. accountability’."
+   },
+   {
+    "page": 72,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "in supporting human that Artificial general planet's well-being? should"
+   },
+   {
+    "page": 72,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "technologies in supporting"
+   },
+   {
+    "page": 72,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "decisions in relation"
+   },
+   {
+    "page": 72,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "and personal emotional"
+   },
+   {
+    "page": 72,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "could be optimized."
+   },
+   {
+    "page": 72,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "accountability in the"
+   },
+   {
+    "page": 72,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "indispensable and trustworthy conceptualization and"
+   },
+   {
+    "page": 72,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "and administrative reports"
+   },
+   {
+    "page": 72,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "become stronger than"
+   },
+   {
+    "page": 72,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "human agency? explain"
+   },
+   {
+    "page": 73,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "progression levels Aspects Understand Apply"
+   },
+   {
+    "page": 73,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "‘ethical principles’. responsible use’."
+   },
+   {
+    "page": 73,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "expressed consent to"
+   },
+   {
+    "page": 73,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "Describe how personal"
+   },
+   {
+    "page": 73,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "considered when developing"
+   },
+   {
+    "page": 73,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "a ‘trustworthy’ generative"
+   },
+   {
+    "page": 73,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "draft a Recommendation provided service exceeding"
+   },
+   {
+    "page": 73,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "disclosed? Describe how"
+   },
+   {
+    "page": 73,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "sensitive personal data"
+   },
+   {
+    "page": 73,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "prompts or interactions"
+   },
+   {
+    "page": 73,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "one 2.1.3 Video-sharing"
+   },
+   {
+    "page": 73,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "can Understand what"
+   },
+   {
+    "page": 73,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "to recommend videos"
+   },
+   {
+    "page": 73,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "statements and Describe video-recommendation potential legal problems"
+   },
+   {
+    "page": 74,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "3.1 problem-based 3.2 tool-based conceptual"
+   },
+   {
+    "page": 74,
+    "words": 13,
+    "reason": "duplicate",
+    "text": "and AI knowledge and insights and transferable understanding operation 3.3.0 Computer-based individual applications"
+   },
+   {
+    "page": 74,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "3.1.0 competency-based 3.2.0 criterion-referenced,"
+   },
+   {
+    "page": 74,
+    "words": 17,
+    "reason": "duplicate",
+    "text": "or criterion-referenced Computer-based task-based AI tool. examination on key examination on the conceptual knowledge fluency, transferability and"
+   },
+   {
+    "page": 74,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "on AI. adaptability of operational"
+   },
+   {
+    "page": 74,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "programming. exemplify (using tools)"
+   },
+   {
+    "page": 74,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "3.2.1 exemplify applications exemplify personal, school-"
+   },
+   {
+    "page": 74,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "following: natural language"
+   },
+   {
+    "page": 74,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "processing, computer vision, reuse open-source datasets speech recognition, image"
+   },
+   {
+    "page": 74,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "recognition, autonomous difference between strong"
+   },
+   {
+    "page": 74,
+    "words": 11,
+    "reason": "duplicate",
+    "text": "agent systems, emotion AI and weak AI. proprietary enterprises. detection, data-based"
+   },
+   {
+    "page": 74,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "learning, unsupervised misusing big data."
+   },
+   {
+    "page": 74,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "learning and reinforcement 3.1.4 explain how"
+   },
+   {
+    "page": 74,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "machine-learning models 3.2.3 exemplify Typical"
+   },
+   {
+    "page": 74,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "optimized; explain why categories of supervised"
+   },
+   {
+    "page": 74,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "learning and reinforcement"
+   },
+   {
+    "page": 74,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "development and further"
+   },
+   {
+    "page": 74,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "‘Artificial neural Network’ generative AI system."
+   },
+   {
+    "page": 74,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "applicable for the open-source datasets and ‘Understand’ Level)."
+   },
+   {
+    "page": 75,
+    "words": 20,
+    "reason": "duplicate",
+    "text": "4.1 project-based design 4.2 project-based system 4.3 project-based Iteration design thinking configuration 4.3.0 Computer-based simulated 4.1.0 simulated tests 4.2.0 Computer-based"
+   },
+   {
+    "page": 75,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "including operational optimization"
+   },
+   {
+    "page": 75,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "request that students"
+   },
+   {
+    "page": 75,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "AI architectures; evaluation modifying the problem-scoping. be evaluated according"
+   },
+   {
+    "page": 75,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "statement including key"
+   },
+   {
+    "page": 75,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "requirements or features configuration."
+   },
+   {
+    "page": 75,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "algorithms, datasets and"
+   },
+   {
+    "page": 75,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "environmental impact. exemplify"
+   },
+   {
+    "page": 75,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "specific real-world system including locally"
+   },
+   {
+    "page": 75,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "challenge (Given by accessible cloud Computing"
+   },
+   {
+    "page": 75,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "techniques, drawing on"
+   },
+   {
+    "page": 75,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "including adjusting the"
+   },
+   {
+    "page": 75,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "feedback. include explanations data augmentation, minimize computational"
+   },
+   {
+    "page": 75,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "handling outliers, analysing resource waste when"
+   },
+   {
+    "page": 75,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "configuring AI architecture."
+   },
+   {
+    "page": 75,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "on modified datasets,"
+   },
+   {
+    "page": 75,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "AI models consumption"
+   },
+   {
+    "page": 75,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "of Computing resources, preprocessing affects harm."
+   },
+   {
+    "page": 75,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "the models performance"
+   },
+   {
+    "page": 75,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "dataset. environmental impact."
+   },
+   {
+    "page": 80,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "9 789231 007095 sustainable development Goals"
+   }
+  ],
+  "captions_reclassified": [
+   {
+    "page": 5,
+    "figure": "#/pictures/8",
+    "text": "© UNESCO"
+   },
+   {
+    "page": 5,
+    "figure": "#/pictures/9",
+    "text": "Stefania Giannini UNESCO Assistant Director-General for Education"
+   }
+  ],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [
+   {
+    "page": 1,
+    "image": "fig-001-p1.png",
+    "w": 257,
+    "h": 57,
+    "reason": "repeated"
+   },
+   {
+    "page": 1,
+    "image": "fig-003-p1.png",
+    "w": 137,
+    "h": 61,
+    "reason": "strip"
+   },
+   {
+    "page": 2,
+    "image": "fig-005-p2.png",
+    "w": 177,
+    "h": 76,
+    "reason": "strip"
+   },
+   {
+    "page": 2,
+    "image": "fig-006-p2.png",
+    "w": 107,
+    "h": 40,
+    "reason": "strip"
+   },
+   {
+    "page": 3,
+    "image": "fig-007-p3.png",
+    "w": 332,
+    "h": 73,
+    "reason": "strip"
+   },
+   {
+    "page": 4,
+    "image": "fig-008-p4.png",
+    "w": 256,
+    "h": 57,
+    "reason": "repeated"
+   },
+   {
+    "page": 5,
+    "image": "fig-010-p5.png",
+    "w": 153,
+    "h": 35,
+    "reason": "strip"
+   },
+   {
+    "page": 80,
+    "image": "fig-013-p80.png",
+    "w": 867,
+    "h": 60,
+    "reason": "strip"
+   },
+   {
+    "page": 80,
+    "image": "fig-014-p80.png",
+    "w": 88,
+    "h": 87,
+    "reason": "small"
+   }
+  ],
+  "superseded": [],
+  "replaced_pages": [
+   30,
+   31,
+   38,
+   40,
+   42,
+   48
+  ],
+  "noise_dropped": 21,
+  "hyphens_restored": [
+   {
+    "page": 78,
+    "ref": "#/texts/448",
+    "word": "Competency-Based"
+   },
+   {
+    "page": 78,
+    "ref": "#/texts/449",
+    "word": "AI-Ethics"
+   }
+  ],
+  "order": [
+   {
+    "page": 3,
+    "text": "educators in this integration, outlining 12 competencies across four",
+    "words": 9,
+    "refs": [
+     "#/texts/23",
+     "#/texts/24"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [
+     "sentence start cut out of the block before: 'an three progression levels: Understand,' | 'educators in this integration, outlining'",
+     "passage cut out of 'The UNESCO AI competency framework for s'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 23,
+    "text": "Human-centred mindset and it's associated ethical principles. The basic knowledge Structure and practical skills on data and AI programming is the foundation for the capacity to design and build AI systems, especially for students who have strong interests and abilities in the field. The ‘AI techniques and applications’ aspect implies",
+    "words": 50,
+    "refs": [
+     "#/texts/190",
+     "#/texts/192"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [
+     "sentence start detached: \"hniques and applications' aspect implies\" | 'of the risks of disclosing data privacy '"
+    ],
+    "section": ""
+   },
+   {
+    "page": 24,
+    "text": "field. students are also expected to deepen and practise ‘Ethics by design’. Although the systemic design thinking methodology, associated Human-centred values and ethical principles, and required knowledge and skills on AI may be embedded in all other Aspects of students’ AI competencies, this aspect mainly targets students who have a",
+    "words": 50,
+    "refs": [
+     "#/texts/198",
+     "#/texts/200"
+    ],
+    "repaired": true,
+    "note": "3 blocks replaced by the text layer's passage",
+    "breaks": [],
+    "section": ""
+   }
+  ],
+  "order_pages_checked": 55,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 2,
+  "order_breaking": 2,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 13 minor; distortions: 0 material, 6 minor; additions: 0 material, 0 minor; order: 0 material, 2 minor",
+  "at": "2026-11-15T10:06:10+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 13
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 6
+   },
+   "additions": {
+    "material": 0,
+    "minor": 0
+   },
+   "order": {
+    "material": 0,
+    "minor": 2
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "for students (p. 2–36)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "AI tools that are designed to support individuals with disabilities and promote linguistic and cultural diversity should be given priority.",
+      "severity": "minor",
+      "page": 16
+     },
+     {
+      "source": "Critical AI competencies, as proposed in this framework, can also guide students to understand the unique value of social interaction and of the creative works produced by humans that should not be replaced by AI outputs.",
+      "severity": "minor",
+      "page": 15
+     },
+     {
+      "source": "Students should be further encouraged to exploit their creativity in an effort to optimize existing AI models or co-create more meaningful AI.",
+      "severity": "minor",
+      "page": 17
+     },
+     {
+      "source": "Rather than considering them as fragmented and disparate topics to be learned in isolation, they can be connected and woven together as the operational organs of AI competency.",
+      "severity": "minor",
+      "page": 19
+     },
+     {
+      "source": "Studying at this level requires students to have acquired a basic understanding of the human-centred approach and essential ethical principles for AI, as well as basic AI knowledge and application skills.",
+      "severity": "minor",
+      "page": 20
+     },
+     {
+      "source": "The specifications include recommendations for configuring these environments in line with the curricular goals, with regard to inclusivity, the potential of open-source options, and the sharing of AI resources with academic institutes and the private sector.",
+      "severity": "minor",
+      "page": 27
+     }
+    ],
+    "distortions": [
+     {
+      "source": "Governments should commit to promoting inclusive access to basic internet connectivity, updated digital devices, open-source or affordable AI programmes and software, and essential AI devices",
+      "summary": "Governments should guarantee inclusive access to connectivity, up-to-date devices, and open-source or affordable AI programmes and software",
+      "severity": "minor",
+      "page": 16
+     },
+     {
+      "source": "By developing competencies for human-centred engagement with AI, the framework aims to prevent students from becoming addicted to or dependent on AI",
+      "summary": "Students should learn what data AI gathers about them, how such data trains models, and what this cycle means for privacy — so they neither become addicted to nor dependent on AI",
+      "severity": "minor",
+      "page": 15
+     }
+    ],
+    "additions": [],
+    "order": [
+     {
+      "source": "The UNESCO AI competency framework for students aims to help dimensions: Human-centred mindset, Ethics of AI, AI techniques and applications, and AI system design. These competencies span three progression levels: Understand, educators in this integration, outlining 12 competencies across four Apply, and Create.",
+      "summary": "",
+      "layer": "The UNESCO AI competency framework for students aims to help educators in this integration, outlining 12 competencies across four dimensions: Human-centred mindset, Ethics of AI, AI techniques and applications, and AI system design. These competencies span three progression levels: Understand, Apply, and Create.",
+      "severity": "minor",
+      "page": 4
+     },
+     {
+      "source": "The 'AI techniques and applications' aspect implies - of the risks of disclosing data privacy and they take measures to ensure that their data are collected, used, shared, archived and deleted only with their deliberate and informed consent.",
+      "summary": "",
+      "layer": "They are aware of the risks of disclosing data privacy and they take measures to ensure that their data are collected, used, shared, archived and deleted only with their deliberate and informed consent.",
+      "severity": "minor",
+      "page": 24
+     }
+    ]
+   },
+   {
+    "index": 1,
+    "section": "4.2 Level 2: Apply (p. 37–56)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "Lead discussions on why human accountability in using AI is essential to safeguard human rights and human dignity.",
+      "severity": "minor",
+      "page": 38
+     },
+     {
+      "source": "holding AI creators to account for protecting the rights of data owners and AI users",
+      "severity": "minor",
+      "page": 37
+     },
+     {
+      "source": "Where appropriate, provide students with task-based learning opportunities to cultivate methodological knowledge on selected AI algorithms.",
+      "severity": "minor",
+      "page": 42
+     },
+     {
+      "source": "the strategy seeks to expand learning opportunities on AI with a focus on computational thinking",
+      "severity": "minor",
+      "page": 55
+     },
+     {
+      "source": "Guide students to deepen their knowledge on human rights to data protection and privacy and the legal responsibilities of AI creators to collect data with consent",
+      "severity": "minor",
+      "page": 41
+     }
+    ],
+    "distortions": [
+     {
+      "source": "misuses of the AI service to control users",
+      "summary": "exploitative misuse of the service",
+      "severity": "minor",
+      "page": 37
+     }
+    ],
+    "additions": [],
+    "order": []
+   },
+   {
+    "index": 2,
+    "section": "Box 3: The United Arab Emirates' interdisciplinary approach to K-12 AI curricula (p. 57–81)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "By anchoring AI competencies in a human-centred mindset and embodied and social knowledge and skills in ethics, the AI CFS aims to prepare students to collaborate with future-oriented AI in a range of contexts.",
+      "severity": "minor",
+      "page": 59
+     },
+     {
+      "source": "The systemic AI design thinking, knowledge and skills are intended to foster an open knowledge schema that can support students to understand, use and create future generations of AI systems.",
+      "severity": "minor",
+      "page": 59
+     }
+    ],
+    "distortions": [
+     {
+      "source": "Research into the latter demonstrated the potential for such a curriculum to be delivered even by teachers with a limited computer science background",
+      "summary": "research on the latter showed it can be taught even by teachers with little computer science background",
+      "severity": "minor",
+      "page": 66
+     },
+     {
+      "source": "3.1.0 Competency-based or criterion-referenced examination on key conceptual knowledge on AI. … 4.1.0 Simulated tests on problem-scoping for AI system design.",
+      "summary": "Each level of each aspect opens with an integral paper and/or computer-based test on its main points (labelled 'Human agency', 'Human accountability', 'Social responsibility', 'Ethical principles', 'Safe and responsible use', 'Co-creating ethical rules')",
+      "severity": "minor",
+      "page": 75
+     },
+     {
+      "source": "governments should commit to universal access to internet connectivity for all schools and students",
+      "summary": "Governments should guarantee universal internet connectivity for every school and student",
+      "severity": "minor",
+      "page": 62
+     }
+    ],
+    "additions": [],
+    "order": []
+   }
+  ]
+ },
+ "source": {
+  "source": "unesco-ai-competency-framework-for-students-2024.pdf",
+  "bytes": 759221,
+  "sha256": "3485959ec214e223ab02ccba403bb5b7c34c8a451d9bba536466d5c8da7680f8",
+  "extracted_at": "2026-11-13T02:02:10+01:00"
+ }
+}

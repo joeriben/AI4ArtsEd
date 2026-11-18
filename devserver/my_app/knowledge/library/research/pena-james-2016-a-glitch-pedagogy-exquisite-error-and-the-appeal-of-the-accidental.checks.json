@@ -1,0 +1,596 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 17.3% of 2520 words, ceiling 20%, longest run 27 words; not counted: 186 words from the source's lists; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 27,
+     "text": "a glitch is a minute change of voltage in a wire which is enough to trigger another system out of proper sequence stimson jr 1961 p 232"
+    },
+    {
+     "words": 18,
+     "text": "stitch skipping automated voice to text fuzzy interpretation voice vaguing and natural language machine translation errors glot swapping"
+    },
+    {
+     "words": 18,
+     "text": "it is not computer technology that is dangerous it is the essence of computer technology that is dangerous"
+    },
+    {
+     "words": 16,
+     "text": "computational error logical accidents and procedural glitches as creative and productive forces in the lived curriculum"
+    },
+    {
+     "words": 16,
+     "text": "computational error logical accidents and procedural glitches as creative and productive forces in the lived curriculum"
+    }
+   ],
+   "value": 0.173,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "1 lists/tables complete",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "3 of 22 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "Abstract: (p. 108–127)",
+     "page": 116,
+     "number": "1930"
+    },
+    {
+     "section": "Abstract: (p. 108–127)",
+     "page": 117,
+     "number": "99.9"
+    },
+    {
+     "section": "Abstract: (p. 108–127)",
+     "page": 122,
+     "number": "14"
+    }
+   ],
+   "value": 3.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "2 of 15 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "Abstract: (p. 108–127)",
+     "page": 108,
+     "heading": "A Glitch Pedagogy:"
+    },
+    {
+     "section": "Abstract: (p. 108–127)",
+     "page": 108,
+     "heading": "Exquisite Error and the Appeal of the Accidental"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "7 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "7 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "34 quoted texts in 5 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Image 16",
+     "page": 118,
+     "image": "fig-016-p11.png",
+     "quotes": [
+      "\"are are are\"",
+      "\"you don't know what's,\"",
+      "\"Internet yesterday or are and the morning just say no remember that mommy does this SMS is okay mommy,\"",
+      "\"You doing daddy or or or or or you love her or her on you care or J or or or or or or be anything to thank you I love you hello,\"",
+      "\"I'm going to miss you.\""
+     ]
+    },
+    {
+     "figure": "Image 18",
+     "page": 119,
+     "image": "fig-018-p12.png",
+     "quotes": [
+      "\"they disagreed communist\"",
+      "\"but I what that would be pretty good iraq ice clear Europe\"",
+      "\"how can you pick up Hillary from a considerable\"",
+      "\"men who have already had your who keep mine in with the new church but\"",
+      "\"hate Muslims have to you have to community for\"",
+      "\"meet Islamic grady grady\""
+     ]
+    },
+    {
+     "figure": "Image 20",
+     "page": 120,
+     "image": "fig-020-p13.png",
+     "quotes": [
+      "\"care for stress test like leather,\"",
+      "\"Internet yesterday or are are,\"",
+      "\"you get up milk or user,\"",
+      "\"love to ride her her her her her,\"",
+      "\"You doing daddy or are or are or,\"",
+      "\"are are pressing messages,\"",
+      "\"hey hey hey,\"",
+      "\"SMS is,\"",
+      "\"tickets for letting us,\"",
+      "\"hello,\"",
+      "\"thank you I,\"",
+      "\"think.\""
+     ]
+    },
+    {
+     "figure": "Image 23",
+     "page": 121,
+     "image": "fig-023-p14.png",
+     "quotes": [
+      "“ᖷ,”",
+      "“Ø,”",
+      "“ϑ,”",
+      "“醤.”",
+      "“don’t yell at me don’t yell at the”",
+      "“brisketn her her hese hr herhat was O y O get dresse”"
+     ]
+    },
+    {
+     "figure": "Image 25",
+     "page": 122,
+     "image": "fig-025-p15.png",
+     "quotes": [
+      "\"Pena & James Glitch Sample7.mov\"",
+      "\"talk talk talk talk all the Google Google Google Google\"",
+      "\"Barack Obama for about two hours\"",
+      "\"03:35\"",
+      "\"-00:32\""
+     ]
+    }
+   ],
+   "value": 34.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "20 page references valid (printed-folio pages 108–127)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "20 pages checked, 1 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "2 of 2 passages out of order not repairable, none breaks a sentence of the body text",
+   "findings": [
+    {
+     "page": 1,
+     "words": 15,
+     "text": "A glitch pedagogy: Exquisite error and the Appeal of the Accidental Ernesto Peña Kedrick James",
+     "blocks": [
+      "#/texts/0",
+      "#/texts/3",
+      "#/texts/4",
+      "#/texts/6"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 1,
+     "words": 14,
+     "text": "the digital Literacy Centre1 Department of Language and Literacy Education University of British Columbia",
+     "blocks": [
+      "#/texts/0",
+      "#/texts/5",
+      "#/texts/6",
+      "#/repaired/0"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    }
+   ],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "pena-james-2016-a-glitch-pedagogy-exquisite-error-and-the-appeal-of-the-accidental",
+ "doc_type": "scholarly_article",
+ "analyzed_at": "2026-11-15T11:33:18.157114+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "Abstract:",
+   "derived_heading": "",
+   "part": 1,
+   "parts": 1,
+   "page_from": 108,
+   "page_to": 127,
+   "chars": 47368,
+   "blocks": 82,
+   "inner_headings": 14,
+   "figures": 7
+  }
+ ],
+ "skipped": [
+  "References (p. 124)",
+  "Endnotes (p. 127)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 20,
+  "gaps": [
+   {
+    "page": 1,
+    "text": "& the digital Literacy Centre1",
+    "words": 5,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/6"
+   }
+  ],
+  "gaps_dismissed": [],
+  "captions_reclassified": [
+   {
+    "page": 8,
+    "figure": "#/pictures/9",
+    "text": "Samples 1 & 2 (Top to Bottom):"
+   },
+   {
+    "page": 11,
+    "figure": "#/pictures/15",
+    "text": "Sample 3. Baby Babble Text."
+   },
+   {
+    "page": 14,
+    "figure": "#/pictures/21",
+    "text": "Sample 6. OCR Interpretation of Sample 5."
+   },
+   {
+    "page": 15,
+    "figure": "#/pictures/24",
+    "text": "Sample 7. Screen-Capture Video of Voice Recognition Software Interpreting a Pre-recorded Performance of Sample 3 Text. N"
+   }
+  ],
+  "captions_reassigned": [],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [
+   {
+    "page": 2,
+    "image": "fig-001-p2.png",
+    "w": 88,
+    "h": 33,
+    "reason": "small"
+   },
+   {
+    "page": 3,
+    "image": "fig-002-p3.png",
+    "w": 87,
+    "h": 30,
+    "reason": "small"
+   },
+   {
+    "page": 4,
+    "image": "fig-003-p4.png",
+    "w": 151,
+    "h": 30,
+    "reason": "repeated"
+   },
+   {
+    "page": 4,
+    "image": "fig-004-p4.png",
+    "w": 87,
+    "h": 31,
+    "reason": "small"
+   },
+   {
+    "page": 5,
+    "image": "fig-005-p5.png",
+    "w": 89,
+    "h": 31,
+    "reason": "small"
+   },
+   {
+    "page": 6,
+    "image": "fig-006-p6.png",
+    "w": 151,
+    "h": 27,
+    "reason": "strip"
+   },
+   {
+    "page": 6,
+    "image": "fig-007-p6.png",
+    "w": 87,
+    "h": 30,
+    "reason": "small"
+   },
+   {
+    "page": 7,
+    "image": "fig-009-p7.png",
+    "w": 87,
+    "h": 29,
+    "reason": "small"
+   },
+   {
+    "page": 8,
+    "image": "fig-010-p8.png",
+    "w": 151,
+    "h": 29,
+    "reason": "repeated"
+   },
+   {
+    "page": 8,
+    "image": "fig-012-p8.png",
+    "w": 86,
+    "h": 30,
+    "reason": "small"
+   },
+   {
+    "page": 9,
+    "image": "fig-013-p9.png",
+    "w": 87,
+    "h": 32,
+    "reason": "small"
+   },
+   {
+    "page": 10,
+    "image": "fig-014-p10.png",
+    "w": 151,
+    "h": 31,
+    "reason": "repeated"
+   },
+   {
+    "page": 10,
+    "image": "fig-015-p10.png",
+    "w": 87,
+    "h": 32,
+    "reason": "small"
+   },
+   {
+    "page": 11,
+    "image": "fig-017-p11.png",
+    "w": 87,
+    "h": 30,
+    "reason": "small"
+   },
+   {
+    "page": 12,
+    "image": "fig-019-p12.png",
+    "w": 86,
+    "h": 28,
+    "reason": "small"
+   },
+   {
+    "page": 13,
+    "image": "fig-021-p13.png",
+    "w": 87,
+    "h": 29,
+    "reason": "small"
+   },
+   {
+    "page": 14,
+    "image": "fig-022-p14.png",
+    "w": 151,
+    "h": 29,
+    "reason": "repeated"
+   },
+   {
+    "page": 14,
+    "image": "fig-024-p14.png",
+    "w": 86,
+    "h": 30,
+    "reason": "small"
+   },
+   {
+    "page": 15,
+    "image": "fig-026-p15.png",
+    "w": 87,
+    "h": 29,
+    "reason": "small"
+   },
+   {
+    "page": 16,
+    "image": "fig-027-p16.png",
+    "w": 151,
+    "h": 30,
+    "reason": "repeated"
+   },
+   {
+    "page": 16,
+    "image": "fig-028-p16.png",
+    "w": 87,
+    "h": 30,
+    "reason": "small"
+   },
+   {
+    "page": 17,
+    "image": "fig-029-p17.png",
+    "w": 87,
+    "h": 29,
+    "reason": "small"
+   },
+   {
+    "page": 20,
+    "image": "fig-030-p20.png",
+    "w": 87,
+    "h": 34,
+    "reason": "small"
+   }
+  ],
+  "superseded": [],
+  "replaced_pages": [],
+  "noise_dropped": 0,
+  "hyphens_restored": [],
+  "order": [
+   {
+    "page": 1,
+    "text": "A glitch pedagogy: Exquisite error and the Appeal of the Accidental Ernesto Peña Kedrick James",
+    "words": 15,
+    "refs": [
+     "#/texts/0",
+     "#/texts/3",
+     "#/texts/4",
+     "#/texts/6"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 1,
+    "text": "the digital Literacy Centre1 Department of Language and Literacy Education University of British Columbia",
+    "words": 14,
+    "refs": [
+     "#/texts/0",
+     "#/texts/5",
+     "#/texts/6",
+     "#/repaired/0"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   }
+  ],
+  "order_pages_checked": 20,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 2,
+  "order_breaking": 0,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 3 minor; distortions: 0 material, 3 minor; additions: 0 material, 1 minor; order: 0 material, 0 minor",
+  "at": "2026-11-15T11:41:14+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 3
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 3
+   },
+   "additions": {
+    "material": 0,
+    "minor": 1
+   },
+   "order": {
+    "material": 0,
+    "minor": 0
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "Abstract: (p. 108–127)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "we are aware that precisely because of the proprietary nature of many devices and applications, the room for glitching is limited to the affordances of the tools and to the previous experience of the witness of the glitch",
+      "severity": "minor",
+      "page": 112
+     },
+     {
+      "source": "his prediction will have more to do with the intractability of habit than with the capacity of intelligent algorithms",
+      "severity": "minor",
+      "page": 117
+     },
+     {
+      "source": "or by receiving explicit instruction on how to interact with such an object or system and going against such instruction",
+      "severity": "minor",
+      "page": 113
+     }
+    ],
+    "distortions": [
+     {
+      "source": "it is not computer technology that is dangerous; it is the essence of computer technology that is dangerous. (pp. 170-171)",
+      "summary": "\"it is not computer technology that is dangerous; it is the essence of computer technology that is dangerous\" (p. 112)",
+      "severity": "minor",
+      "page": 112
+     },
+     {
+      "source": "These two concepts: inquiry and consummatory experience are inextricably connected, as it is allegedly through reflexive inquiry that an experience can ultimately be consummatory in Dewey's terms.",
+      "summary": "Inquiry and consummatory experience are inextricably connected through reflexive inquiry.",
+      "severity": "minor",
+      "page": 111
+     },
+     {
+      "source": "This comparison of results between graphically glitched and sonically glitched source texts provokes further stages for research needed to explore the potential for transmediation across sensory domains.",
+      "summary": "This transmediation across sensory domains suggests further research.",
+      "severity": "minor",
+      "page": 121
+     }
+    ],
+    "additions": [
+     {
+      "summary": "Like digital gaming, glitch pedagogy offers a safe environment where failure is a powerful learning experience without real-life stigma (Schaff & Mohan, 2014)",
+      "severity": "minor"
+     }
+    ],
+    "order": []
+   }
+  ]
+ },
+ "source": {
+  "source": "pena-james-2016-a-glitch-pedagogy-exquisite-error-and-the-appeal-of-the-accidental.pdf",
+  "bytes": 2336562,
+  "sha256": "3b4086b5c2e58af0fdba16e1701e2724fad0b563ad2ab1cb5a2b9375870c7823",
+  "extracted_at": "2026-11-13T02:56:04+01:00"
+ }
+}

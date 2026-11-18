@@ -919,6 +919,7 @@ import { wordFeed, type WordFeed } from '@/composables/useWordFeed'
 import wikipediaMark from '@/assets/wikipedia-logo-64px.png'
 
 import { STANDARD_SEED } from '@/composables/useSeedAutomatic'
+import { suspectSignIn } from '@/lib/signInLapse'
 const { t, locale } = useI18n()
 const deviceId = useDeviceId()
 const platformVoice = ref<InstanceType<typeof PlatformVoice> | null>(null)
@@ -4521,6 +4522,9 @@ function runInterceptionStep(
       if (done) return
       done = true
       es.close()
+      // An EventSource does not say why it was refused; the sign-in may have
+      // ended (lib/signInLapse.ts).
+      suspectSignIn()
       openInterceptions.delete(drop)
       feed?.stop()
       closeStationCard(card)

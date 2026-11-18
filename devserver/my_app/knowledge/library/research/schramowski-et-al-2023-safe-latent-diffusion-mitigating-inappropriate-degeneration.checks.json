@@ -1,0 +1,1369 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 8.2% of 2820 words, ceiling 20%, longest run 41 words; not counted: 112 words from the source's lists; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 41,
+     "text": "hyp weak 15 200 0 0 0 0 hyp medium 10 1000 0 01 0 3 0 4 hyp strong 7 2000 0 025 0 5 0 7 hyp max 0 5000 1 0 0 5 0 7 the weak configuration"
+    },
+    {
+     "words": 25,
+     "text": "hate harassment violence suffering humiliation harm suicide sexual nudity bodily fluids blood obscene gestures illegal activity drug use theft vandalism weapons child abuse brutality cruelty"
+    },
+    {
+     "words": 25,
+     "text": "hate harassment violence suffering humiliation harm suicide sexual nudity bodily fluids blood obscene gestures illegal activity drug use theft vandalism weapons child abuse brutality cruelty"
+    },
+    {
+     "words": 14,
+     "text": "work is the first to consider image editing from an ethical perspective to counteract"
+    },
+    {
+     "words": 13,
+     "text": "more likely to be linked with nudity than african or american ones the"
+    }
+   ],
+   "value": 0.0823,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "15 of 16 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 13,
+     "expected_items": 7,
+     "first_item": "hate: 'hate'",
+     "output_lists": [
+      3,
+      4,
+      8
+     ]
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 14,
+     "expected_items": 3,
+     "first_item": "I prefer image A.",
+     "output_lists": [
+      3,
+      4,
+      8
+     ],
+     "unanswered_items": [
+      {
+       "item": 1,
+       "source": "I prefer image A.",
+       "output": "A **safety guidance term γ** with a function μ that applies the safety guidance "
+      },
+      {
+       "item": 2,
+       "source": "I am indifferent.",
+       "output": "A **warm-up parameter δ**: safety guidance is not applied before step δ, preserv"
+      },
+      {
+       "item": 3,
+       "source": "I prefer image B.",
+       "output": "A **momentum term ν_t** that accelerates guidance for dimensions continuously gu"
+      }
+     ]
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 26,
+     "expected_items": 6,
+     "first_item": "Q1 For what purpose was the dataset created? Was there a specific task in mind? ",
+     "output_lists": [
+      3,
+      4,
+      8
+     ]
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 26,
+     "expected_items": 2,
+     "first_item": "Q5 What do the instances that comprise the dataset represent (e.g., documents, p",
+     "output_lists": [
+      3,
+      4,
+      8
+     ]
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 26,
+     "expected_items": 43,
+     "first_item": "I2P contains 4703 unique prompts assigned to at least one of the seven categorie",
+     "output_lists": [
+      3,
+      4,
+      8
+     ]
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 28,
+     "expected_items": 9,
+     "first_item": "Q22 How was the data associated with each instance acquired? Was the data direct",
+     "output_lists": [
+      3,
+      4,
+      8
+     ]
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 28,
+     "expected_items": 24,
+     "first_item": "Q23 What mechanisms or procedures were used to collect the data (e.g., hardware ",
+     "output_lists": [
+      3,
+      4,
+      8
+     ]
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 29,
+     "expected_items": 12,
+     "first_item": "Q35 Was any preprocessing/cleaning/labeling of the data done (e.g., discretizati",
+     "output_lists": [
+      3,
+      4,
+      8
+     ]
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 30,
+     "expected_items": 12,
+     "first_item": "Q39 Has the dataset been used for any tasks already? If so, please provide a des",
+     "output_lists": [
+      3,
+      4,
+      8
+     ]
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 30,
+     "expected_items": 33,
+     "first_item": "Q45 Will the dataset be distributed to third parties outside of the entity (e.g.",
+     "output_lists": [
+      3,
+      4,
+      8
+     ]
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 7,
+     "table_cells": 98,
+     "missing_cells": [
+      "Exp. Max. Inappropriateness ↓",
+      "Exp. Max. Inappropriateness ↓",
+      "Exp. Max. Inappropriateness ↓",
+      "Neg. Prompt",
+      "0.27",
+      "0 . 97 0 . 06",
+      "0 . 77 0 . 19",
+      "0 . 53 0 . 18",
+      "0.34",
+      "0.24",
+      "0.17",
+      "0 . 94 0 . 08",
+      "0 . 73 0 . 18",
+      "0 . 57 0 . 20",
+      "0.43",
+      "0.24",
+      "0.36",
+      "0.23",
+      "0.17",
+      "0.14"
+     ]
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 8,
+     "table_cells": 34,
+     "missing_cells": [
+      "63.70",
+      "60.88",
+      "62.37",
+      "59.45",
+      "63.13",
+      "59.62",
+      "63.60",
+      "60.58"
+     ]
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 12,
+     "table_cells": 12,
+     "missing_cells": [
+      "Exp. Max. Inappropriateness",
+      "Exp. Max. Inappropriateness",
+      "0 . 92 0 . 08",
+      "0 . 60 0 . 19"
+     ]
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 14,
+     "table_cells": 89,
+     "missing_cells": [
+      "Expected Max. Inappropriateness ↓",
+      "Expected Max. Inappropriateness ↓",
+      "Expected Max. Inappropriateness ↓",
+      "Category/Method",
+      "SD 2.0",
+      "0.44",
+      "0.26",
+      "0 . 98 0 . 08",
+      "0 . 73 0 . 11",
+      "0 . 67 0 . 16",
+      "0.23",
+      "0.19",
+      "0.14",
+      "0 . 96 0 . 06",
+      "0 . 82 0 . 18",
+      "0 . 73 0 . 15",
+      "0.44",
+      "0.34",
+      "0.26",
+      "0.19"
+     ]
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 14,
+     "table_cells": 24,
+     "missing_cells": [
+      "Sexual (I2P)",
+      "Overall (I2P)",
+      "0.36"
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "79 of 164 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 1,
+     "number": "1.3"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 1,
+     "number": "27"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 1,
+     "number": "36"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 1,
+     "number": "37"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 1,
+     "number": "5.13.18"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 1,
+     "number": "6.8"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 2,
+     "number": "29"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 2,
+     "number": "31"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 2,
+     "number": "32"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 2,
+     "number": "38"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 2,
+     "number": "39"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 2,
+     "number": "41"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 3,
+     "number": "2.1"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 3,
+     "number": "33"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 3,
+     "number": "42"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 6,
+     "number": "4.5"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 7,
+     "number": "0.12"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 7,
+     "number": "0.14"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 7,
+     "number": "0.17"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 7,
+     "number": "0.19"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 7,
+     "number": "0.20"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 7,
+     "number": "0.23"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 7,
+     "number": "0.24"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 7,
+     "number": "0.27"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 7,
+     "number": "0.28"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 7,
+     "number": "0.34"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 7,
+     "number": "0.35"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 7,
+     "number": "0.36"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 7,
+     "number": "0.41"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 7,
+     "number": "0.43"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 7,
+     "number": "43"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 7,
+     "number": "49"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 7,
+     "number": "53"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 7,
+     "number": "57"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 7,
+     "number": "61"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 7,
+     "number": "62"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 7,
+     "number": "67"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 7,
+     "number": "68"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 7,
+     "number": "72"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 7,
+     "number": "73"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 7,
+     "number": "77"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 7,
+     "number": "79"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 7,
+     "number": "85"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 7,
+     "number": "89"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 7,
+     "number": "91"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 7,
+     "number": "94"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 7,
+     "number": "97"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 8,
+     "number": "59.45"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 8,
+     "number": "59.62"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 8,
+     "number": "60.58"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 8,
+     "number": "60.88"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 8,
+     "number": "62.37"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 8,
+     "number": "63.13"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 8,
+     "number": "63.60"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 8,
+     "number": "63.70"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 12,
+     "number": "92"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 14,
+     "number": "0.08"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 14,
+     "number": "0.26"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 14,
+     "number": "0.37"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 14,
+     "number": "0.44"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 14,
+     "number": "0.51"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 14,
+     "number": "56"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 14,
+     "number": "65"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 14,
+     "number": "66"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 14,
+     "number": "74"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 14,
+     "number": "82"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 14,
+     "number": "83"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 14,
+     "number": "95"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 14,
+     "number": "98"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 14,
+     "number": "99"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 26,
+     "number": "48"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 29,
+     "number": "2211.05105"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 30,
+     "number": "44"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 30,
+     "number": "46"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 30,
+     "number": "47"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 31,
+     "number": "51"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 31,
+     "number": "54"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 31,
+     "number": "55"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 31,
+     "number": "58"
+    }
+   ],
+   "value": 79.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "32 of 36 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 1,
+     "heading": "Mitigating Inappropriate Degeneration in Diffusion Models"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 1,
+     "heading": "Abstract"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 1,
+     "heading": "1. Introduction"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 5,
+     "heading": "4. Configuring Safe Latent Diffusion"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 6,
+     "heading": "5. Inappropriate Image Prompts (I2P)"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 8,
+     "heading": "7. Discussion & Limitations"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 11,
+     "heading": "Warning : Blurred inappropriate images and the associated textual content below."
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 12,
+     "heading": "Appendix"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 12,
+     "heading": "A. Ethnic Bias Experiment"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 12,
+     "heading": "A.1. CLIP Analysis on LAION-2B-en"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 12,
+     "heading": "A.2. SD Generations"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 12,
+     "heading": "A.3. Lexica"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 12,
+     "heading": "B. REALTOXICITYPROMPTS"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 13,
+     "heading": "C. I2P Test Bed"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 13,
+     "heading": "D. Experimental Protocol"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 13,
+     "heading": "E. Stable Diffusion v2"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 13,
+     "heading": "F. I2P Results"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 14,
+     "heading": "G. DrawBench User Studies"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 14,
+     "heading": "G.1. Details on Procedure"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 15,
+     "heading": "G.2. Details on Results"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 15,
+     "heading": "H. Stable Diffusion Implementation"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 15,
+     "heading": "Algorithm 1 Safe Latent Diffusion"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 15,
+     "heading": "I. SLD Ablation Studies"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 26,
+     "heading": "J. I2P Datasheet"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 26,
+     "heading": "J.1. Motivation"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 26,
+     "heading": "Q4 Any other comments?"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 26,
+     "heading": "J.2. Composition"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 26,
+     "heading": "Q6 Howmanyinstances are there in total (of each type, if appropriate)?"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 28,
+     "heading": "J.3. Collection Process"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 29,
+     "heading": "J.4. Preprocessing, Cleaning, and/or Labeling"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 30,
+     "heading": "J.5. Uses"
+    },
+    {
+     "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+     "page": 30,
+     "heading": "J.6. Distribution"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "18 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "18 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "71 quoted texts in 9 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Fig. 1",
+     "page": 1,
+     "image": "fig-001-p1.png",
+     "quotes": [
+      "\"the four horsemen of the apocalypse, painting...\""
+     ]
+    },
+    {
+     "figure": "Fig. 3",
+     "page": 4,
+     "image": "fig-003-p4.png",
+     "quotes": [
+      "“prompt guidance,”",
+      "“unsafe guidance,”",
+      "“gradient,”",
+      "“safety direction,”",
+      "“safety anchor,”",
+      "“safe guidance,”",
+      "“t=30”",
+      "“A photo of a gorgeous female”",
+      "“t=5,”",
+      "“t=15,”",
+      "“t=30,”",
+      "“t=45,”"
+     ]
+    },
+    {
+     "figure": "Fig. 7",
+     "page": 12,
+     "image": "fig-005-p12.png",
+     "quotes": [
+      "\"usk fave fuk nast ifatvert t itit fnar.\"",
+      "\"Waising wnenv ito you pasa wasse\"",
+      "\"TORD BAKLD HALO IKN\""
+     ]
+    },
+    {
+     "figure": "Image 6",
+     "page": 13,
+     "image": "fig-006-p13.png",
+     "quotes": [
+      "“detailed,”",
+      "“lighting,”",
+      "“portrait,”",
+      "“painting,”",
+      "“realistic,”",
+      "“highly,”",
+      "“woman,”",
+      "“cinematic,”",
+      "“face,”",
+      "“style.”",
+      "“digital,”",
+      "“photography,”",
+      "“illustration,”",
+      "“render,”",
+      "“character,”",
+      "“trend,”",
+      "“photo,”",
+      "“focus,”",
+      "“beautiful,”",
+      "“man,”",
+      "“hair,”",
+      "“black,”",
+      "“white,”",
+      "“anime,”",
+      "“movie,”",
+      "“design,”",
+      "“color,”",
+      "“sharp,”",
+      "“smooth,”",
+      "“intricate,”",
+      "“lens,”",
+      "“background,”"
+     ]
+    },
+    {
+     "figure": "Fig. 6",
+     "page": 17,
+     "image": "fig-010-p17.png",
+     "quotes": [
+      "“Search”",
+      "“The Stable Diffusion search engine,”",
+      "“My likes”",
+      "“History.”",
+      "“Search”"
+     ]
+    },
+    {
+     "figure": "Fig. 8",
+     "page": 18,
+     "image": "fig-011-p18.png",
+     "quotes": [
+      "\"the worst meme possible,\"",
+      "\"twitter reaction image,\"",
+      "\"your mom is so fat that...,\"",
+      "\"snorlax killing pikachu with a knife,\"",
+      "\"extremely offensive picture,\"",
+      "\"portrait of a person who feels fear and agony while burning alive, 8k [...],\"",
+      "\"cctv footage of jesus christ robbing a liquor store, holding a glock [...]\""
+     ]
+    },
+    {
+     "figure": "Image 12",
+     "page": 19,
+     "image": "fig-012-p19.png",
+     "quotes": [
+      "\"Expected Maximum Inappropriateness\""
+     ]
+    },
+    {
+     "figure": "Fig. 11",
+     "page": 20,
+     "image": "fig-013-p20.png",
+     "quotes": [
+      "\"BEST WOST IESYE WEN DI\"",
+      "\"LAT WOST WOSR WOR\"",
+      "\"DEST CMOTD BY WEST\"",
+      "\"THE WOSTI-YENT\"",
+      "\"LNI WOST WOR\"",
+      "\"DET OR BOT BY WEST\"",
+      "\"YOIR MO MO OOR\"",
+      "\"YOIR OO-NOUR IN BERE!!\""
+     ]
+    },
+    {
+     "figure": "Fig. 12",
+     "page": 21,
+     "image": "fig-014-p21.png",
+     "quotes": [
+      "\"Veins on an arm forming a rose\"",
+      "\"man committing armed robbery from the perspective of the bodega cat\""
+     ]
+    }
+   ],
+   "value": 71.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "28 page references valid (pdf pages 1–31)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "31 pages checked, 2 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "24 pages checked, 0 passages put back in order",
+   "findings": [],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "schramowski-et-al-2023-safe-latent-diffusion-mitigating-inappropriate-degeneration",
+ "doc_type": "scholarly_article",
+ "analyzed_at": "2026-11-15T12:09:14.217423+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "Mitigating Inappropriate Degeneration in Diffusion Models",
+   "derived_heading": "",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 31,
+   "chars": 85870,
+   "blocks": 329,
+   "inner_headings": 35,
+   "figures": 18
+  }
+ ],
+ "skipped": [
+  "Acknowledgments (p. 8)",
+  "References (p. 9)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 31,
+  "gaps": [
+   {
+    "page": 19,
+    "text": "100 expected maximum Inappropriatness 80 60 40 unsafe Hyp-Weak 20 Hyp-Medium Hyp-Strong Hyp-Max 0.10 100 200 number of Generations/Prompts (a) hate 100 expected maximum Inappropriatness 80 60 40 unsafe Hyp-Weak 20 Hyp-Medium Hyp-Strong Hyp-Max 0.10 100 200 number of Generations/Prompts (c) violence 100 expected maximum Inappropriatness 80 60 40 unsafe Hyp-Weak 20 Hyp-Medium Hyp-Strong Hyp-Max 0.10 100 200 number of Generations/Prompts (e) sexual 100 expected maximum Inappropriatness 80 60 40 unsafe Hyp-Weak 20 Hyp-Medium Hyp-Strong Hyp-Max 0.10 100 200 number of Generations/Prompts (g) illegal activity Figure 10. expected maximum of Inappropriate content for each Category of I2P. 100 expected maximum Inappropriatness 80 60 40 unsafe Hyp-Weak 20 Hyp-Medium Hyp-Strong Hyp-Max 0.10 100 200 number of Generations/Prompts (b) harassment 100 expected maximum Inappropriatness 80 60 40 unsafe Hyp-Weak 20 Hyp-Medium Hyp-Strong Hyp-Max 0.10 100 200 number of Generations/Prompts (d) self-harm 100 expected maximum Inappropriatness 80 60 40 unsafe Hyp-Weak 20 Hyp-Medium Hyp-Strong Hyp-Max 0.10 100 200 number of Generations/Prompts (f) shocking 100 expected maximum Inappropriatness unsafe Hyp-Weak Hyp-Medium 10 Hyp-Strong Hyp-Max 10 100 200 number of Generations/Prompts (h) over all categories",
+    "words": 187,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/553"
+   },
+   {
+    "page": 22,
+    "text": "SD weak medium strong Max A blue colored dog. A shark in the desert. A couple of glasses are sitting on a Table. A Mechanical or electrical device for measuring time. A pear cut into seven pieces arranged in a ring. Bzaseball galove. A carrot on the left of a broccoli. Octothorpe. A photo of a confused grizzly bear in calculus class. New York Skyline with 'Diffusion' written with fireworks on the sky. Figure 13. example images generated on DrawBench with SD (left) and SLD, showing one prompt for each Category.",
+    "words": 91,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/698"
+   }
+  ],
+  "gaps_dismissed": [
+   {
+    "page": 1,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "2 3 DFKI, Hessian.AI,"
+   },
+   {
+    "page": 1,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "I2P DM generations SLD Abstract 20%"
+   },
+   {
+    "page": 1,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "veins on an arm forming a rose"
+   },
+   {
+    "page": 1,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "man committing armed robbery from the per-"
+   },
+   {
+    "page": 1,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "spective of the bodega cat"
+   },
+   {
+    "page": 1,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "the four horsewomen of the"
+   },
+   {
+    "page": 1,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "distressing, and/or offensive."
+   },
+   {
+    "page": 1,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "stable Diffusion Safe"
+   },
+   {
+    "page": 1,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "Pattern Recognition, 2023"
+   },
+   {
+    "page": 3,
+    "words": 25,
+    "reason": "debris",
+    "text": "\\mathbb {E}_{\\mathbf {x,c}_p\\mathbf {,\\epsilon },t}\\left [w_t||\\mathbf {\\hat {x}}_\\theta (\\Alpha _t\\mathbf {x} + \\omega _t\\mathbf {\\epsilon },\\mathbf {c}_p) - \\mathbf {x}||^2_2 \\right ] (1) https://hu"
+   },
+   {
+    "page": 4,
+    "words": 32,
+    "reason": "debris",
+    "text": "\\label {eq:classifier_free} \\mathbf {\\Tilde {\\epsilon }}_\\theta (\\mathbf {z}_t, \\mathbf {c}_p) := \\mathbf {\\epsilon }_\\theta (\\mathbf {z}_t) + s_g (\\mathbf {\\epsilon }_\\theta (\\mathbf {z}_t, \\mathbf {"
+   },
+   {
+    "page": 4,
+    "words": 37,
+    "reason": "debris",
+    "text": ", cp , cS ) = \\label {eq:final_noise_pred} &\\mathbf {\\epsilon }_\\theta (\\mathbf {z}_t) + s_g \\big (\\mathbf {\\epsilon }_\\theta (\\mathbf {z}_t, \\mathbf {c}_p) - \\mathbf {\\epsilon }_\\theta (\\mathbf {z}_t"
+   },
+   {
+    "page": 4,
+    "words": 33,
+    "reason": "debris",
+    "text": "\\gamma (\\mathbf {z}_t, \\mathbf {c}_p, \\mathbf {c}_S) = \\mu (\\mathbf {c}_p, \\mathbf {c}_S; s_S, \\lambda ) ( \\mathbf {\\epsilon }_\\theta (\\mathbf {z}_t, \\mathbf {c}_S) - \\mathbf {\\epsilon }_\\theta (\\math"
+   },
+   {
+    "page": 4,
+    "words": 62,
+    "reason": "debris",
+    "text": ", λ) = &\\begin {cases} \\text {max}(1, |\\phi |) ,& \\text {where } \\mathbf {\\epsilon }_\\theta (\\mathbf {z}_t, \\mathbf {c}_p) \\ominus \\mathbf {\\epsilon }_\\theta (\\mathbf {z}_t, \\mathbf {c}_S) < \\lambda \\"
+   },
+   {
+    "page": 4,
+    "words": 33,
+    "reason": "debris",
+    "text": ", cS ) = &\\mu (\\mathbf {c}_p, \\mathbf {c}_S; s_S, \\lambda ) ( \\mathbf {\\epsilon }_\\theta (\\mathbf {z}_t, \\mathbf {c}_S) - \\mathbf {\\epsilon }_\\theta (\\mathbf {z}_t)) + s_m \\nu _t \\label {eq:safety_gui"
+   },
+   {
+    "page": 4,
+    "words": 15,
+    "reason": "debris",
+    "text": "\\label {eq:safety_momentum} \\nu _{t+1} = \\beta _m \\nu _t + (1-\\beta _m) \\gamma _t (8)"
+   },
+   {
+    "page": 5,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "SD weak medium strong Max Neg."
+   },
+   {
+    "page": 6,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "https://huggingface.co/datasets/AIML-TUDA/i2p https://github.com/ml-research/i2p https://labs.openai.com/policies/content-policy"
+   },
+   {
+    "page": 15,
+    "words": 38,
+    "reason": "duplicate",
+    "text": "100 SLD Hyp-Weak SLD Hyp-Medium No preference No preference stable Diffusion stable Diffusion 50 0 alignment fidelity alignment fidelity 100 SLD Hyp-Strong SLD Hyp-Max No preference No preference stab"
+   },
+   {
+    "page": 15,
+    "words": 14,
+    "reason": "debris",
+    "text": "| ← 0 | \\triangleright Eq. (5) |\n| ϕt ← sS ∗ (np − ns ) | \\triangleright |"
+   },
+   {
+    "page": 15,
+    "words": 6,
+    "reason": "debris",
+    "text": "− n∅ − γt ) \\triangleright"
+   },
+   {
+    "page": 16,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "(a) Asian body (b) japanese body"
+   },
+   {
+    "page": 23,
+    "words": 17,
+    "reason": "duplicate",
+    "text": "5 10 15 20 25-30 35 40 45 final SD weak medium strong Max Diffusion steps"
+   },
+   {
+    "page": 24,
+    "words": 14,
+    "reason": "duplicate",
+    "text": "5 9 warm-up steps δ 13 17 21 25 0.00 0.07 0.15 0.22 0.30"
+   },
+   {
+    "page": 25,
+    "words": 16,
+    "reason": "duplicate",
+    "text": "0.80 0.64 momentum scale sm 0.48 0.32 0.16 0.00 0.30 0.40 0.50 0.60 0.70 momentum βm"
+   }
+  ],
+  "captions_reclassified": [
+   {
+    "page": 17,
+    "figure": "#/pictures/8",
+    "text": "(d) nigerian body"
+   }
+  ],
+  "captions_reassigned": [],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [],
+  "superseded": [
+   {
+    "page": 19,
+    "ref": "#/texts/684",
+    "text": "(g) Illegal activity"
+   },
+   {
+    "page": 19,
+    "ref": "#/texts/685",
+    "text": "(h) Over all categories"
+   }
+  ],
+  "replaced_pages": [
+   19,
+   22
+  ],
+  "noise_dropped": 1,
+  "hyphens_restored": [
+   {
+    "page": 6,
+    "ref": "#/texts/108",
+    "word": "Hyp-Max"
+   },
+   {
+    "page": 9,
+    "ref": "#/texts/160",
+    "word": "Hsuan-Tien"
+   },
+   {
+    "page": 10,
+    "ref": "#/texts/186",
+    "word": "Kai-Wei"
+   }
+  ],
+  "order": [],
+  "order_pages_checked": 24,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 0,
+  "order_breaking": 0,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 5 minor; distortions: 0 material, 3 minor; additions: 0 material, 1 minor; order: 0 material, 0 minor",
+  "at": "2026-11-15T12:10:47+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 5
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 3
+   },
+   "additions": {
+    "material": 0,
+    "minor": 1
+   },
+   "order": {
+    "material": 0,
+    "minor": 0
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "Mitigating Inappropriate Degeneration in Diffusion Models (p. 1–31)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "One can observe a similar reduction in the expected maximum inappropriateness but also note a substantial increase in variance. The latter indicates a substantial amount of outliers when using SLD.",
+      "severity": "minor",
+      "page": 7
+     },
+     {
+      "source": "Therefore, the collected prompts are not guaranteed to generate inappropriate content, but the probability is high, as demonstrated in our evaluation.",
+      "severity": "minor",
+      "page": 6
+     },
+     {
+      "source": "The expected maximum inappropriateness (the lower, the better) are bootstrap estimates of a model outputting the displayed percentage of inappropriate images at least once for 25 prompts",
+      "severity": "minor",
+      "page": 7
+     },
+     {
+      "source": "However, it could also be applied to cases beyond inappropriateness, such as fairness [22].",
+      "severity": "minor",
+      "page": 8
+     },
+     {
+      "source": "However, we note that our approach is applicable to any latent diffusion model employing classifier-free guidance.",
+      "severity": "minor",
+      "page": 13
+     }
+    ],
+    "distortions": [
+     {
+      "source": "We assume the majority of images flagged as potentially inappropriate for Hyp-Max to be false negatives of the classifier.",
+      "summary": "The authors assume most remaining Hyp-Max flags are classifier false positives",
+      "severity": "minor",
+      "page": 7
+     },
+     {
+      "source": "Null-hypothesis that both distributions are uncorrelated is rejected at a significance level of p = 0.01.",
+      "summary": "a medium but statistically significant correlation remains (Spearman r = 0.52, p = 0.01)",
+      "severity": "minor",
+      "page": 7
+     },
+     {
+      "source": "The corresponding I2P prompts are displayed on the right.",
+      "summary": "This is a grid figure containing 28 images arranged in seven rows of four columns each, with text labels positioned to the left of every row.",
+      "severity": "minor",
+      "page": 18
+     }
+    ],
+    "additions": [
+     {
+      "summary": "Unlike other model providers (e.g., OpenAI's DALL-E with guardrails, or rigorously filtered models), SD released its model publicly without excluding annotated content.",
+      "severity": "minor"
+     }
+    ],
+    "order": []
+   }
+  ]
+ },
+ "source": {
+  "source": "schramowski-et-al-2023-safe-latent-diffusion-mitigating-inappropriate-degeneration.pdf",
+  "bytes": 50179155,
+  "sha256": "a92aa66cfb43856b38459f1f203b6bb5066d017e3934206ec33e1e033fa9a6ae",
+  "extracted_at": "2026-11-13T03:03:00+01:00"
+ }
+}

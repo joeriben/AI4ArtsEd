@@ -1,0 +1,732 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 12.9% of 2619 words, ceiling 20%, longest run 15 words; not counted: 47 words from the source's lists; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 15,
+     "text": "midjourney 0 06 0 06 0 08 stable diffusion 0 06 0 01 0 11"
+    },
+    {
+     "words": 14,
+     "text": "modern traditional and science oriented religious as also reported by cao et al 2022"
+    },
+    {
+     "words": 14,
+     "text": "find that while not all traits generate stereotypical images each model shows idiosyncratic biases"
+    },
+    {
+     "words": 14,
+     "text": "find that while not all traits generate stereotypical images each model shows idiosyncratic biases"
+    },
+    {
+     "words": 12,
+     "text": "kathleen c fraser svetlana kiritchenko and isar nejadgholi national research council canada"
+    }
+   ],
+   "value": 0.1291,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "2 of 5 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "A Friendly Face: Do Text-to-Image Systems Rely on Stereotypes when the Input is Under-Specified? (p. 1–17)",
+     "page": 17,
+     "expected_items": 4,
+     "first_item": "Female-theimagedepicts apersonwhowould likelybeperceivedasfemale/feminine.",
+     "output_lists": [
+      3,
+      3
+     ]
+    },
+    {
+     "section": "A Friendly Face: Do Text-to-Image Systems Rely on Stereotypes when the Input is Under-Specified? (p. 1–17)",
+     "page": 17,
+     "expected_items": 8,
+     "first_item": "skin (e.g., Scandinavian person).",
+     "output_lists": [
+      3,
+      3
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "2 of 48 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "A Friendly Face: Do Text-to-Image Systems Rely on Stereotypes when the Input is Under-Specified? (p. 1–17)",
+     "page": 4,
+     "number": "216"
+    },
+    {
+     "section": "A Friendly Face: Do Text-to-Image Systems Rely on Stereotypes when the Input is Under-Specified? (p. 1–17)",
+     "page": 10,
+     "number": "100"
+    }
+   ],
+   "value": 2.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "23 of 29 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "A Friendly Face: Do Text-to-Image Systems Rely on Stereotypes when the Input is Under-Specified? (p. 1–17)",
+     "page": 1,
+     "heading": "Abstract"
+    },
+    {
+     "section": "A Friendly Face: Do Text-to-Image Systems Rely on Stereotypes when the Input is Under-Specified? (p. 1–17)",
+     "page": 1,
+     "heading": "Introduction"
+    },
+    {
+     "section": "A Friendly Face: Do Text-to-Image Systems Rely on Stereotypes when the Input is Under-Specified? (p. 1–17)",
+     "page": 2,
+     "heading": "Social Stereotypes"
+    },
+    {
+     "section": "A Friendly Face: Do Text-to-Image Systems Rely on Stereotypes when the Input is Under-Specified? (p. 1–17)",
+     "page": 3,
+     "heading": "Belief"
+    },
+    {
+     "section": "A Friendly Face: Do Text-to-Image Systems Rely on Stereotypes when the Input is Under-Specified? (p. 1–17)",
+     "page": 3,
+     "heading": "Communion"
+    },
+    {
+     "section": "A Friendly Face: Do Text-to-Image Systems Rely on Stereotypes when the Input is Under-Specified? (p. 1–17)",
+     "page": 3,
+     "heading": "Text-to-Image Systems"
+    },
+    {
+     "section": "A Friendly Face: Do Text-to-Image Systems Rely on Stereotypes when the Input is Under-Specified? (p. 1–17)",
+     "page": 3,
+     "heading": "Image Generation"
+    },
+    {
+     "section": "A Friendly Face: Do Text-to-Image Systems Rely on Stereotypes when the Input is Under-Specified? (p. 1–17)",
+     "page": 3,
+     "heading": "Image Annotation"
+    },
+    {
+     "section": "A Friendly Face: Do Text-to-Image Systems Rely on Stereotypes when the Input is Under-Specified? (p. 1–17)",
+     "page": 4,
+     "heading": "Annotation Reliability"
+    },
+    {
+     "section": "A Friendly Face: Do Text-to-Image Systems Rely on Stereotypes when the Input is Under-Specified? (p. 1–17)",
+     "page": 4,
+     "heading": "Ambiguity In, Ambiguity Out"
+    },
+    {
+     "section": "A Friendly Face: Do Text-to-Image Systems Rely on Stereotypes when the Input is Under-Specified? (p. 1–17)",
+     "page": 4,
+     "heading": "Baseline Results"
+    },
+    {
+     "section": "A Friendly Face: Do Text-to-Image Systems Rely on Stereotypes when the Input is Under-Specified? (p. 1–17)",
+     "page": 4,
+     "heading": "ABC Model Results"
+    },
+    {
+     "section": "A Friendly Face: Do Text-to-Image Systems Rely on Stereotypes when the Input is Under-Specified? (p. 1–17)",
+     "page": 5,
+     "heading": "Intersectional Results"
+    },
+    {
+     "section": "A Friendly Face: Do Text-to-Image Systems Rely on Stereotypes when the Input is Under-Specified? (p. 1–17)",
+     "page": 10,
+     "heading": "Ethical Considerations"
+    },
+    {
+     "section": "A Friendly Face: Do Text-to-Image Systems Rely on Stereotypes when the Input is Under-Specified? (p. 1–17)",
+     "page": 10,
+     "heading": "Text-to-Image Systems"
+    },
+    {
+     "section": "A Friendly Face: Do Text-to-Image Systems Rely on Stereotypes when the Input is Under-Specified? (p. 1–17)",
+     "page": 10,
+     "heading": "DALL-E 2"
+    },
+    {
+     "section": "A Friendly Face: Do Text-to-Image Systems Rely on Stereotypes when the Input is Under-Specified? (p. 1–17)",
+     "page": 10,
+     "heading": "Midjourney"
+    },
+    {
+     "section": "A Friendly Face: Do Text-to-Image Systems Rely on Stereotypes when the Input is Under-Specified? (p. 1–17)",
+     "page": 10,
+     "heading": "Stable Diffusion"
+    },
+    {
+     "section": "A Friendly Face: Do Text-to-Image Systems Rely on Stereotypes when the Input is Under-Specified? (p. 1–17)",
+     "page": 10,
+     "heading": "Additional Results"
+    },
+    {
+     "section": "A Friendly Face: Do Text-to-Image Systems Rely on Stereotypes when the Input is Under-Specified? (p. 1–17)",
+     "page": 10,
+     "heading": "Annotation Instructions"
+    },
+    {
+     "section": "A Friendly Face: Do Text-to-Image Systems Rely on Stereotypes when the Input is Under-Specified? (p. 1–17)",
+     "page": 17,
+     "heading": "Gender:"
+    },
+    {
+     "section": "A Friendly Face: Do Text-to-Image Systems Rely on Stereotypes when the Input is Under-Specified? (p. 1–17)",
+     "page": 17,
+     "heading": "Skin colour:"
+    },
+    {
+     "section": "A Friendly Face: Do Text-to-Image Systems Rely on Stereotypes when the Input is Under-Specified? (p. 1–17)",
+     "page": 17,
+     "heading": "Age:"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "16 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "16 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "119 quoted texts in 11 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Image 2",
+     "page": 4,
+     "image": "fig-002-p4.png",
+     "quotes": [
+      "\"Mean annotation\""
+     ]
+    },
+    {
+     "figure": "Fig. 2",
+     "page": 6,
+     "image": "fig-003-p6.png",
+     "quotes": [
+      "“More male”",
+      "“More female,”",
+      "“Darker skin,”",
+      "“Older age,”"
+     ]
+    },
+    {
+     "figure": "Image 4",
+     "page": 7,
+     "image": "fig-004-p7.png",
+     "quotes": [
+      "\"Darker male\"",
+      "\"Darker female\"",
+      "\"Lighter male\"",
+      "\"Lighter female\"",
+      "\"poor\"",
+      "\"competitive\"",
+      "\"traditional\"",
+      "\"meek\"",
+      "\"friendly\"",
+      "\"modern\"",
+      "\"unfriendly\"",
+      "\"powerless\"",
+      "\"conventional\"",
+      "\"sincere\"",
+      "\"pleasant\"",
+      "\"unpleasant\"",
+      "\"egotistic\"",
+      "\"dominating\"",
+      "\"inconsiderate\"",
+      "\"hostile\"",
+      "\"warm\"",
+      "\"cold\"",
+      "\"arrogant\"",
+      "\"modest\"",
+      "\"selfish\""
+     ]
+    },
+    {
+     "figure": "Image 5",
+     "page": 7,
+     "image": "fig-005-p7.png",
+     "quotes": [
+      "\"Darker male\"",
+      "\"Darker female\"",
+      "\"Lighter male\"",
+      "\"Lighter female\"",
+      "\"dominating\"",
+      "\"poor\"",
+      "\"traditional\"",
+      "\"religious\"",
+      "\"powerful\"",
+      "\"alternative\"",
+      "\"modern\"",
+      "\"conventional\"",
+      "\"weak\"",
+      "\"violent\"",
+      "\"incompetent\"",
+      "\"unpleasant\"",
+      "\"high-status\""
+     ]
+    },
+    {
+     "figure": "Image 6",
+     "page": 7,
+     "image": "fig-006-p7.png",
+     "quotes": [
+      "\"Darker male\"",
+      "\"Darker female\"",
+      "\"Lighter male\"",
+      "\"Lighter female\"",
+      "\"poor\"",
+      "\"competitive\"",
+      "\"traditional\"",
+      "\"benevolent\"",
+      "\"sincere\"",
+      "\"powerful\"",
+      "\"wealthy\"",
+      "\"low-status\"",
+      "\"religious\"",
+      "\"powerless\"",
+      "\"altruistic\"",
+      "\"conservative\"",
+      "\"modern\"",
+      "\"feminist\"",
+      "\"dominant\"",
+      "\"friendly\"",
+      "\"unfriendly\""
+     ]
+    },
+    {
+     "figure": "Image 7",
+     "page": 11,
+     "image": "fig-007-p11.png",
+     "quotes": [
+      "“powerful - powerless”",
+      "“high-status - low-status”",
+      "“dominating - dominated”",
+      "“wealthy - poor”",
+      "“confident - meek”",
+      "“competitive - passive”",
+      "“science-oriented - religious”",
+      "“alternative - conventional”",
+      "“liberal - conservative”",
+      "“modern - traditional”",
+      "“trustworthy - untrustworthy”",
+      "“sincere - dishonest”",
+      "“friendly - unfriendly”",
+      "“benevolent - threatening”",
+      "“likable - unpleasant”",
+      "“altruistic - egoistic”",
+      "“More male”",
+      "“More female”"
+     ]
+    },
+    {
+     "figure": "Image 8",
+     "page": 12,
+     "image": "fig-008-p12.png",
+     "quotes": [
+      "\"powerful - powerless\"",
+      "\"high-status - low-status\"",
+      "\"altruistic - egoistic\"",
+      "\"Lighter skin\"",
+      "\"Darker skin\""
+     ]
+    },
+    {
+     "figure": "Image 9",
+     "page": 13,
+     "image": "fig-009-p13.png",
+     "quotes": [
+      "“powerful - powerless”",
+      "“wealthy - poor”",
+      "“friendly - unfriendly”",
+      "“-1”",
+      "“Younger age”",
+      "“0”",
+      "“1”",
+      "“Older age”"
+     ]
+    },
+    {
+     "figure": "Image 10",
+     "page": 14,
+     "image": "fig-010-p14.png",
+     "quotes": [
+      "\"Lighter, older\"",
+      "\"Darker, older\"",
+      "\"Lighter, younger\"",
+      "\"Darker, younger\"",
+      "\"unpleasant\"",
+      "\"benevolent\"",
+      "\"healthy\"",
+      "\"poor\"",
+      "\"traditional\"",
+      "\"competitive\""
+     ]
+    },
+    {
+     "figure": "Image 11",
+     "page": 15,
+     "image": "fig-011-p15.png",
+     "quotes": [
+      "“Older male”",
+      "“Older female”",
+      "“Younger male”",
+      "“Younger female”",
+      "“unpleasant”",
+      "“benevolent”",
+      "“traditional”",
+      "“powerful”",
+      "“competitive”"
+     ]
+    },
+    {
+     "figure": "Image 16",
+     "page": 16,
+     "image": "fig-016-p16.png",
+     "quotes": [
+      "\"1000\""
+     ]
+    }
+   ],
+   "value": 119.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "26 page references valid (pdf pages 1–17)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "17 pages checked, 0 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "1 passages out of order break a sentence (1 of 1 not repairable; listed, not gated)",
+   "findings": [
+    {
+     "page": 3,
+     "words": 13,
+     "text": "religious ↔ science-oriented conventional ↔ alternative conservative ↔ liberal traditional ↔ modern Communion",
+     "blocks": [
+      "#/texts/27",
+      "#/texts/29"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "sentence cut: 'y meek ↔ confident passive ↔ competitive' | 'Belief'"
+     ],
+     "section": ""
+    }
+   ],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "fraser-et-al-2023-a-friendly-face-do-text-to-image-systems-rely-on-stereotypes",
+ "doc_type": "scholarly_article",
+ "analyzed_at": "2026-11-15T10:08:13.847622+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "A Friendly Face: Do Text-to-Image Systems Rely on Stereotypes when the Input is Under-Specified?",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 17,
+   "chars": 42654,
+   "blocks": 143,
+   "inner_headings": 29,
+   "figures": 16
+  }
+ ],
+ "skipped": [
+  "References (p. 8)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 17,
+  "gaps": [],
+  "gaps_dismissed": [
+   {
+    "page": 3,
+    "words": 48,
+    "reason": "duplicate",
+    "text": "powerless ↔ powerful untrustworthy ↔ trustworthy Communion low-status ↔ high-status religious ↔ science-oriented dishonest ↔ sincere Agency Belief dominated ↔ dominating conventional ↔ alternative unf"
+   },
+   {
+    "page": 3,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "generation image annotation"
+   },
+   {
+    "page": 6,
+    "words": 42,
+    "reason": "duplicate",
+    "text": "| (a) Midjourney – gender | (b) DALL-E – gender | (c) Stable Diffusion – gender |\n| (d) Midjourney – skin colour | (e) DALL-E – skin colour | (f) Stable Diffusion – skin colour |\n| (g) Midjourney – Ag"
+   },
+   {
+    "page": 6,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "summary and discussion"
+   },
+   {
+    "page": 11,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "(a) Midjourney – gender (b) DALL-E – gender"
+   },
+   {
+    "page": 12,
+    "words": 10,
+    "reason": "duplicate",
+    "text": "(a) Midjourney – skin colour (b) DALL-E – skin colour"
+   },
+   {
+    "page": 13,
+    "words": 13,
+    "reason": "duplicate",
+    "text": "(a) Midjourney – Age (b) DALL-E – Age (c) Stable Diffusion – Age"
+   },
+   {
+    "page": 14,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "(a) Midjourney (b) DALL-E (c) Stable Diffusion"
+   },
+   {
+    "page": 15,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "(a) Midjourney (b) DALL-E (c) Stable Diffusion"
+   },
+   {
+    "page": 16,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "(c) DALL-E: poor (d) DALL-E: wealthy"
+   }
+  ],
+  "captions_reclassified": [
+   {
+    "page": 13,
+    "figure": "#/pictures/8",
+    "text": "Figure A.3: Average age annotations for the images generated from the 16 traits in the ABC model. The positive pole of e"
+   },
+   {
+    "page": 14,
+    "figure": "#/pictures/9",
+    "text": "Figure A.4: Intersectional view of each trait (skin colour x age). The positive poles of each trait are shown in pink; t"
+   },
+   {
+    "page": 15,
+    "figure": "#/pictures/10",
+    "text": "Figure A.5: Intersectional view of each trait (gender x age). The positive poles of each trait are shown in pink; the ne"
+   },
+   {
+    "page": 16,
+    "figure": "#/pictures/15",
+    "text": "(d) DALL-E: wealthy"
+   },
+   {
+    "page": 16,
+    "figure": "#/pictures/16",
+    "text": "(f) Stable Diffusion: wealthy"
+   }
+  ],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [
+   {
+    "page": 3,
+    "image": "fig-001-p3.png",
+    "w": 21,
+    "h": 64,
+    "reason": "small"
+   }
+  ],
+  "superseded": [],
+  "replaced_pages": [],
+  "noise_dropped": 0,
+  "hyphens_restored": [
+   {
+    "page": 5,
+    "ref": "#/texts/82",
+    "word": "low-Communion"
+   }
+  ],
+  "order": [
+   {
+    "page": 3,
+    "text": "religious ↔ science-oriented conventional ↔ alternative conservative ↔ liberal traditional ↔ modern Communion",
+    "words": 13,
+    "refs": [
+     "#/texts/27",
+     "#/texts/29"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "sentence cut: 'y meek ↔ confident passive ↔ competitive' | 'Belief'"
+    ],
+    "section": ""
+   }
+  ],
+  "order_pages_checked": 17,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 1,
+  "order_breaking": 1,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 5 minor; distortions: 0 material, 4 minor; additions: 0 material, 0 minor; order: 0 material, 0 minor",
+  "at": "2026-11-15T10:11:13+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 5
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 4
+   },
+   "additions": {
+    "material": 0,
+    "minor": 0
+   },
+   "order": {
+    "material": 0,
+    "minor": 0
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "A Friendly Face: Do Text-to-Image Systems Rely on Stereotypes when the Input is Under-Specified? (p. 1–17)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "the Beliefs dimension is defined along a continuum from progressive to conservative, with progressive being arbitrarily assigned the 'positive' direction. Note also that polarity does not necessarily align with normative judgements of good/bad behaviour",
+      "severity": "minor",
+      "page": 1
+     },
+     {
+      "source": "Our experimental paradigm constrained the systems' ability to deploy this strategy, by first prompting for a portrait (implying that the face should be visible), by constraining the analysis to colour images, and by prompting for photographic-style results.",
+      "severity": "minor",
+      "page": 4
+     },
+     {
+      "source": "The production system is trained on a mixture of public and licensed data. To prevent the model from learning to produce explicit images, the training dataset has been automatically filtered to remove violent and sexual images.",
+      "severity": "minor",
+      "page": 10
+     },
+     {
+      "source": "The system is trained on billions of text-image pairs, including the images generated by the users of the system.",
+      "severity": "minor",
+      "page": 10
+     },
+     {
+      "source": "harms caused by misrepresentation, mislabeling and increased surveillance often disproportionally affect already marginalized communities",
+      "severity": "minor",
+      "page": 10
+     }
+    ],
+    "distortions": [
+     {
+      "source": "the original ABC Model uses the adjectives warm, cold, and repellent, which we found to be too semantically ambiguous to produce reliable results... These words were replaced with friendly, unfriendly, and unpleasant, respectively. Figure 3 shows the average skin colour and gender annotation for each pole of each trait.",
+      "summary": "legible labels include \"poor\", \"competitive\", ... \"pleasant\", ... \"inconsiderate\", \"hostile\", \"warm\", \"cold\", \"arrogant\", \"modest\", and \"selfish\"",
+      "severity": "minor",
+      "page": 3
+     },
+     {
+      "source": "Figure 3 shows the average skin colour and gender annotation for each pole of each trait — the traits being the 16 ABC polar traits of Table 1, which include no words 'weak', 'stable', 'violent' or 'incompetent'.",
+      "summary": "Legible labels include \"dominating\", \"poor\", \"traditional\", \"religious\", \"powerful\", \"alternative\", \"modern\", \"conventional\", \"weak\", \"stable\", \"violent\", \"incompetent\", \"unpleasant\", and \"high-status\"",
+      "severity": "minor",
+      "page": 5
+     },
+     {
+      "source": "Figure 3 shows the average skin colour and gender annotation for each pole of each trait — the traits being the 16 ABC polar traits of Table 1, which include no words 'stable', 'feminist' or 'dominant'.",
+      "summary": "word labels including \"poor\", \"competitive\", \"traditional\", \"benevolent\", \"sincere\", \"powerful\", \"stable\", \"wealthy\", \"low-status\", \"religious\", \"powerless\", \"altruistic\", \"conservative\", \"modern\", \"feminist\", \"dominant\", \"friendly\", and \"unfriendly\"",
+      "severity": "minor",
+      "page": 5
+     },
+     {
+      "source": "Figure A.4: Intersectional view of each trait (skin colour x age) — the traits being the 16 ABC polar traits of Table 1, which include no word 'healthy'.",
+      "summary": "legible labels include \"unpleasant\", \"benevolent\", \"healthy\", \"poor\", \"traditional\", and \"competitive\"",
+      "severity": "minor",
+      "page": 14
+     }
+    ],
+    "additions": [],
+    "order": []
+   }
+  ]
+ },
+ "source": {
+  "source": "fraser-et-al-2023-a-friendly-face-do-text-to-image-systems-rely-on-stereotypes.pdf",
+  "bytes": 6822790,
+  "sha256": "9da6ec2565100789b7650feb6463b988c3204cf032bbcdf6e2ebc4af385e0eb6",
+  "extracted_at": "2026-11-13T01:55:14+01:00"
+ }
+}

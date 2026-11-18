@@ -443,6 +443,16 @@ def test_an_excerpt_carries_its_pages_into_the_spec_and_the_source_record(tmp_pa
     assert "pdf_seiten" not in run.source_record(blocks, did, None)
 
 
+def test_the_source_record_names_the_file_without_its_path(tmp_path):
+    """The record beside the extraction keeps the path; the provenance that
+    goes into the sidecar beside the library file names the file only."""
+    blocks = tmp_path / "doc-a.blocks.json"
+    local = {"source": str(tmp_path / "originals" / "a.pdf"), "sha256": "abc"}
+    run.source_record_path(blocks, "doc-a").write_text(json.dumps(local), encoding="utf-8")
+    assert run.source_record(blocks, "doc-a", None) == {"source": "a.pdf", "sha256": "abc"}
+    assert json.loads(run.source_record_path(blocks, "doc-a").read_text())["source"] == local["source"]
+
+
 def test_the_ledger_counts_the_records_of_the_run_s_models_only(tmp_path):
     """Another model's calls at the same time are not this run's (issue #138)."""
     ledger = run.UsageLedger(tmp_path / "ledger.jsonl")
@@ -455,6 +465,19 @@ def test_the_ledger_counts_the_records_of_the_run_s_models_only(tmp_path):
         == {"calls": 1, "input_tokens": 10, "output_tokens": 20}
     assert run.UsageLedger.tokens(ledger.since(mark, ["openrouter/z-ai/glm-5.3"]))["calls"] == 2
     assert run.UsageLedger.tokens(ledger.since(mark))["calls"] == 3
+
+
+def test_the_ledger_counts_the_calls_of_its_own_process_only(tmp_path):
+    """Seven GLM runs at once each counted all seven (2026-11-15)."""
+    import os
+    ledger = run.UsageLedger(tmp_path / "ledger.jsonl")
+    mark = ledger.mark()
+    ledger.path.write_text("\n".join(json.dumps(r) for r in [
+        {"model": "glm-5.3", "input_tokens": 100, "output_tokens": 50, "pid": os.getpid()},
+        {"model": "glm-5.3", "input_tokens": 9000, "output_tokens": 9000, "pid": -1},
+        {"model": "glm-5.3", "input_tokens": 1, "output_tokens": 2}]) + "\n")
+    assert run.UsageLedger.tokens(ledger.since(mark, ["openrouter/z-ai/glm-5.3"])) \
+        == {"calls": 2, "input_tokens": 101, "output_tokens": 52}
 
 
 def test_the_ledger_names_the_prompt_cache_where_the_records_carry_it(tmp_path):

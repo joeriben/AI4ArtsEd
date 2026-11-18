@@ -25,7 +25,7 @@
                not back out of. Nothing in this header may depend on run state
                again: a flag that can be left standing must not be able to take
                the way out with it. -->
-          <div class="mode-selector">
+          <div v-if="signedIn" class="mode-selector">
             <router-link to="/" class="mode-button" active-class="active">
               <span class="mode-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor">
@@ -72,13 +72,18 @@
         </div>
 
         <div class="header-right">
+          <!-- Without a sign-in the row holds the language and the legal
+               notices, and nothing else (2026-11-15): every other page needs
+               a sign-in, and the settings, the documentation, the voice, the
+               background tone and the conditions of the session belong to
+               them. -->
           <nav class="header-nav-links">
-            <button @click="openDokumentation" class="nav-link" :title="$t('nav.docs')">
+            <button v-if="signedIn" @click="openDokumentation" class="nav-link" :title="$t('nav.docs')">
               <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">
                 <path d="M478-240q21 0 35.5-14.5T528-290q0-21-14.5-35.5T478-340q-21 0-35.5 14.5T428-290q0 21 14.5 35.5T478-240Zm-36-154h74q0-33 7.5-52t42.5-52q26-26 41-49.5t15-56.5q0-56-41-86t-97-30q-57 0-92.5 30T342-618l66 26q5-18 22.5-39t53.5-21q32 0 48 17.5t16 38.5q0 20-12 37.5T506-526q-44 39-54 59t-10 73Zm38 314q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
               </svg>
             </button>
-            <button class="nav-link" :title="$t('nav.settings')" @click="showSettings = true">
+            <button v-if="signedIn" class="nav-link" :title="$t('nav.settings')" @click="showSettings = true">
               <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">
                 <path d="m370-80-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5v-27q0-6.5 1-13.5L78-585l110-190 119 50q11-8 23-15t24-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5v27q0 6.5-2 13.5l103 78-110 190-118-50q-11 8-23 15t-24 12L590-80H370Zm70-80h79l14-106q31-8 57.5-23.5T639-327l99 41 39-68-86-65q5-14 7-29.5t2-31.5q0-16-2-31.5t-7-29.5l86-65-39-68-99 42q-22-23-48.5-38.5T533-694l-13-106h-79l-14 106q-31 8-57.5 23.5T321-633l-99-41-39 68 86 64q-5 15-7 30t-2 32q0 16 2 31t7 30l-86 65 39 68 99-42q22 23 48.5 38.5T427-266l13 106Zm42-180q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Zm-2-140Z"/>
               </svg>
@@ -101,6 +106,7 @@
             </div>
             <!-- The voice, on or off, for everything that speaks here. -->
             <button
+              v-if="signedIn"
               class="nav-link voice-toggle"
               :class="{ off: !userPreferences.voiceChat }"
               :title="userPreferences.voiceChat ? $t('nav.voiceOff') : $t('nav.voiceOn')"
@@ -124,7 +130,7 @@
                 <button class="header-menu-option" @click="openDatenschutz">{{ $t('nav.privacy') }}</button>
               </div>
             </div>
-            <div class="bg-dropdown" ref="bgDropdownRef">
+            <div v-if="signedIn" class="bg-dropdown" ref="bgDropdownRef">
               <button @click="bgMenuOpen = !bgMenuOpen" class="nav-link bg-toggle" :title="$t('nav.background')">
                 <span class="bg-swatch" :style="{ background: userPreferences.currentTint().base }"></span>
                 <span class="lang-caret">&#9662;</span>
@@ -164,7 +170,7 @@
                  row: what the card draws and what it costs, the DSGVO setting
                  and the filter that holds. The fields are operated, this is
                  only read — so it closes the row rather than opening it. -->
-            <PolicyChips />
+            <PolicyChips v-if="signedIn" />
           </nav>
         </div>
       </div>
@@ -176,8 +182,8 @@
 
     <!-- The one mask. Which agent it is, and what it is called, come from the
          route table below — never from the overlay's own idea of itself. -->
-    <ChatOverlay :figure-label="t('figure.help')" />
-    <FooterGallery v-if="route.path !== '/'" />
+    <ChatOverlay v-if="signedIn" :figure-label="t('figure.help')" />
+    <FooterGallery v-if="signedIn && route.path !== '/'" />
 
     <!-- Global overlays -->
     <ModelInstallToast />
@@ -213,7 +219,7 @@
 import { computed, defineAsyncComponent, ref, onMounted, onUnmounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
-import { STALE_CHUNK } from './router'
+import { STALE_CHUNK, isPublicRoute } from './router'
 import ChatOverlay from './components/ChatOverlay.vue'
 import OverlayFrame from './components/OverlayFrame.vue'
 import FooterGallery from './components/FooterGallery.vue'
@@ -233,6 +239,7 @@ import {
 } from './stores/userPreferences'
 import { useSafetyLevelStore } from './stores/safetyLevel'
 import { useUiModeStore } from './stores/uiMode'
+import { useLabAuthStore } from './stores/labAuth'
 import { SUPPORTED_LANGUAGES, type SupportedLanguage } from './i18n'
 import { primeSpeech } from './composables/useSpeech'
 
@@ -262,6 +269,29 @@ const uiModeStore = useUiModeStore()
 if (!uiModeStore.loaded) uiModeStore.fetchMode()
 const route = useRoute()
 const router = useRouter()
+
+/**
+ * Every page but the start page, the sign-in, the imprint and the privacy
+ * notice needs a sign-in (2026-11-15, router/index.ts). Without one the
+ * header shows the sign-in, the language and the legal notices; the help and
+ * the gallery of the page foot belong to the pages behind the sign-in.
+ */
+const labAuth = useLabAuthStore()
+const signedIn = computed(() => labAuth.user !== null)
+
+// A sign-in that ends while a page stands open (stores/labAuth.ts,
+// `sessionLost`) leaves a page that needs one with nothing it may ask the
+// server; the sign-in page takes its place and leads back afterwards.
+watch(() => labAuth.sessionLost, () => {
+  if (isPublicRoute(route)) return
+  void router.push({ name: 'login', query: { redirect: route.fullPath } })
+})
+// The end of a place's sign-in is learned by its own check
+// (`checkPlaceSession`), which keeps the account on the page; reading the
+// session again ends it here as well.
+watch(() => labAuth.endedPlace, (place) => {
+  if (place !== null) void labAuth.fetchMe()
+})
 
 /**
  * The settings are a layer, not a page (since 2026-09-17). The gear opens it

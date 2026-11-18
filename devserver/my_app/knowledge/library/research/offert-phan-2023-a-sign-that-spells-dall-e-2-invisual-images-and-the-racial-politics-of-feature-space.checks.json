@@ -1,0 +1,287 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 5.0% of 1915 words, ceiling 20%, longest run 17 words; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 17,
+     "text": "literally putting words in the user s mouth it did not fix the model but the user"
+    },
+    {
+     "words": 11,
+     "text": "fanon 2008 hayles 1999 haraway 1997 2004 jackson 2020 weheliye 2014"
+    },
+    {
+     "words": 8,
+     "text": "literally putting words in the user s mouth"
+    },
+    {
+     "words": 8,
+     "text": "invisual methods see also offert and bell 2021"
+    },
+    {
+     "words": 8,
+     "text": "cultural techniques of feature extraction and semantic compression"
+    }
+   ],
+   "value": 0.0496,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "0 lists/tables complete",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "1 of 10 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "Fabian Offert (p. 1–3)",
+     "page": 3,
+     "number": "4"
+    }
+   ],
+   "value": 1.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "7 of 7 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "Fabian Offert (p. 1–3)",
+     "page": 1,
+     "heading": "Fabian Offert"
+    },
+    {
+     "section": "Fabian Offert (p. 1–3)",
+     "page": 1,
+     "heading": "Abstract"
+    },
+    {
+     "section": "Fabian Offert (p. 1–3)",
+     "page": 1,
+     "heading": "1 A Sign That Spells"
+    },
+    {
+     "section": "Fabian Offert (p. 1–3)",
+     "page": 1,
+     "heading": "Thao Phan"
+    },
+    {
+     "section": "Fabian Offert (p. 1–3)",
+     "page": 2,
+     "heading": "2 Reconfiguring Visual Culture, Reconceptualizing Reality"
+    },
+    {
+     "section": "Fabian Offert (p. 1–3)",
+     "page": 3,
+     "heading": "3 The Durability of Whiteness"
+    },
+    {
+     "section": "Fabian Offert (p. 1–3)",
+     "page": 3,
+     "heading": "4 Conclusion"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "1 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "1 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "1 quoted texts in 1 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Fig. 1",
+     "page": 2,
+     "image": "fig-001-p2.png",
+     "quotes": [
+      "\"ARFRICA\""
+     ]
+    }
+   ],
+   "value": 1.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "6 page references valid (printed-folio pages 1–4)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "4 pages checked, 0 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "4 pages checked, 0 passages put back in order",
+   "findings": [],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "offert-phan-2023-a-sign-that-spells-dall-e-2-invisual-images-and-the-racial-politics-of-feature-space",
+ "doc_type": "scholarly_article",
+ "analyzed_at": "2026-11-15T11:44:33.187711+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "Fabian Offert",
+   "derived_heading": "",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 3,
+   "chars": 10609,
+   "blocks": 18,
+   "inner_headings": 6,
+   "figures": 1
+  }
+ ],
+ "skipped": [
+  "References (p. 4)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 4,
+  "gaps": [],
+  "gaps_dismissed": [
+   {
+    "page": 1,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "Monash University offert@ucsb.edu thao.phan@monash.edu"
+   }
+  ],
+  "captions_reclassified": [],
+  "captions_reassigned": [],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [],
+  "superseded": [],
+  "replaced_pages": [],
+  "noise_dropped": 0,
+  "hyphens_restored": [],
+  "order": [],
+  "order_pages_checked": 4,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 0,
+  "order_breaking": 0,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 0 minor; distortions: 0 material, 4 minor; additions: 0 material, 0 minor; order: 0 material, 0 minor",
+  "at": "2026-11-15T11:44:59+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 0
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 4
+   },
+   "additions": {
+    "material": 0,
+    "minor": 0
+   },
+   "order": {
+    "material": 0,
+    "minor": 0
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "Fabian Offert (p. 1–3)",
+    "answered": true,
+    "omissions": [],
+    "distortions": [
+     {
+      "source": "The popularization of the term 'foundation model' by researchers at Stanford and elsewhere suggests this understanding indeed also serves as the ideological foundation of contemporary machine learning research.",
+      "summary": "when Stanford researchers and others popularized the label \"foundation model,\" they also entrenched this view as the ideology driving current machine learning research.",
+      "severity": "minor",
+      "page": 2
+     },
+     {
+      "source": "This technique is arguably an effective way of troubling the unmarked category of the human",
+      "summary": "an approach that unsettles the unmarked human category",
+      "severity": "minor",
+      "page": 3
+     },
+     {
+      "source": "when these systems are designed and understood to be complete representations of reality",
+      "summary": "when those systems are built and marketed as exhaustive accounts of reality",
+      "severity": "minor",
+      "page": 3
+     },
+     {
+      "source": "Generated image for the prompt 'A sign that spells', DALL·E 2, July 2022.",
+      "summary": "This is a photograph of a person wearing a sleeveless tan top, holding a white rectangular sign with both hands.",
+      "severity": "minor",
+      "page": 2
+     }
+    ],
+    "additions": [],
+    "order": []
+   }
+  ]
+ },
+ "source": {
+  "source": "offert-phan-2023-a-sign-that-spells-dall-e-2-invisual-images-and-the-racial-politics-of-feature-space.pdf",
+  "bytes": 218804,
+  "sha256": "06445d526783af10f3f4a1aa9580c1538f62207f6089284e6ed73ed8283b55e8",
+  "extracted_at": "2026-11-13T01:29:42+01:00"
+ }
+}

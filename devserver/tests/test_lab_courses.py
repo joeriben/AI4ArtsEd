@@ -73,6 +73,7 @@ from flask import Flask
 from my_app.lab.db import Base, engine, SessionLocal
 from my_app.lab import models as M
 from my_app.lab.auth_service import hash_password
+from my_app.lab.terms import TERMS_VERSION
 from my_app.lab import place_codes as PC
 from my_app.routes.auth_routes import auth_bp
 from my_app.routes.admin_users_routes import admin_users_bp
@@ -150,7 +151,10 @@ def _make_user(role, email=None, username=None, password="secret12", active=True
 
 
 def _login(client, identifier, password="secret12"):
-    return client.post("/api/auth/login", json={"identifier": identifier, "password": password})
+    # An account with a password signs in with its agreement to the
+    # conditions of use (lab/terms.py, 2026-11-15).
+    return client.post("/api/auth/login", json={"identifier": identifier, "password": password,
+                                                "accept_terms": TERMS_VERSION, "language": "en"})
 
 
 def _make_admin():
@@ -1022,7 +1026,9 @@ def test_an_end_inside_a_streamed_response_reaches_the_cookie(client, app):
 
 def test_a_place_login_drops_the_settings_flag(client, app):
     """A browser signed in to the settings enters a place: once the place
-    session ends, it reaches no admin account."""
+    session ends, it reaches no admin account. The settings password alone
+    signs nobody in since 2026-11-15 (lab/sign_in_gate.py, `signed_in_user`);
+    the flag still goes with the place login."""
     _make_admin()
     cid = _setup_course(client)
     _open(client, cid)
@@ -1030,7 +1036,7 @@ def test_a_place_login_drops_the_settings_flag(client, app):
     device = app.test_client()
     with device.session_transaction() as s:
         s["settings_authenticated"] = True
-    assert _me(device)["user"]["role"] == "admin"
+    assert _me(device)["user"] is None
     assert _enter(device, code).status_code == 200
     with device.session_transaction() as s:
         assert "settings_authenticated" not in s

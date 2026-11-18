@@ -1,6 +1,6 @@
 /**
  * How a run of the Encoder Fusion names its setting: the three factors, the
- * layout of the T5 block and the pooled vector, in one line, and how a record
+ * layout of the T5 block, the pooled vector and the CLIP encoders, in one line, and how a record
  * of such a run is read back into them.
  *
  * The instrument writes that line into the bar of a run's card
@@ -18,6 +18,17 @@ export type T5Rows = 'full' | 'tail'
 
 /** The pooled vector the model reads beside the table: as CLIP computes it, or zeros in its place. */
 export type Pooled = 'clip' | 'zero'
+
+/**
+ * Which CLIP encoders fill the CLIP block and the pooled vector: both, or one
+ * alone, the other one's columns and its half of the vector then zeros.
+ */
+export type ClipEncoder = 'both' | 'clip_l' | 'clip_g'
+
+/** The CLIP encoders as a record or a field names them; anything but one of the two is both. */
+export function recordedClipEncoder(v: unknown): ClipEncoder {
+  return v === 'clip_l' || v === 'clip_g' ? v : 'both'
+}
 
 /** A layout as a record or a field names it; anything but the tail is the full block. */
 export function recordedRows(v: unknown): T5Rows {
@@ -56,6 +67,7 @@ export interface RecordedFactors {
   c: number
   rows: T5Rows
   pooled: Pooled
+  clip: ClipEncoder
   /** Whether these are the run's own numbers, or an older record read back approximately. */
   exact: boolean
 }
@@ -73,7 +85,9 @@ export interface RecordedFactors {
  * tail, the only one the old node laid, with the pooled vector as that node
  * handed it on. For centered_fade, two_interceptions and legacy that is the
  * run's own arithmetic; dual_alpha scaled the tail by 0.15 · α and normalized
- * rescaled it row by row, which c 1 leaves out (c runs 0..1 here). A record
+ * rescaled it row by row, which c 1 leaves out (c ran 0..1 when this was written;
+ * dual_alpha's 0.15 · α would fit on c since 2026-11-15, normalized's row-by-row
+ * rescaling does not). A record
  * naming a strategy that cannot be read that way (the 2025 `original`, slerp,
  * the sphere) or naming none gives null: taking its number would put a
  * stranger's setting under this instrument's name.
@@ -85,8 +99,15 @@ export function recordedFactors(state: Record<string, unknown>): RecordedFactors
   if (a !== null && b !== null && c !== null) {
     // A three-factor record without the key ran before the layout could be
     // chosen, on the full block, which is what the reader returns for it; the
-    // same for the pooled vector: a record without the key ran with it.
-    return { a, b, c, rows: recordedRows(state.t5_rows), pooled: recordedPooled(state.pooled), exact: true }
+    // same for the pooled vector: a record without the key ran with it, and
+    // for the CLIP encoders: a record without the key ran on both.
+    return {
+      a, b, c,
+      rows: recordedRows(state.t5_rows),
+      pooled: recordedPooled(state.pooled),
+      clip: recordedClipEncoder(state.clip_encoder),
+      exact: true,
+    }
   }
   const alpha = recordedNumber(state.alpha_factor)
   const setting = parseFusionStrategy(String(state.fusion_strategy))
@@ -105,13 +126,14 @@ export function recordedFactors(state: Record<string, unknown>): RecordedFactors
   // options after '#') are read back approximately.
   const exact = (base === 'legacy' || base === 'centered_fade')
     && !String(state.fusion_strategy).includes('#')
-  return { a: two(weights.clip), b: two(weights.t5), c: 1, rows: 'tail', pooled: 'clip', exact }
+  return { a: two(weights.clip), b: two(weights.t5), c: 1, rows: 'tail', pooled: 'clip', clip: 'both', exact }
 }
 
 /**
- * The three factors of a run, its layout where that is the old one, and its
- * pooled vector where zeros stand in its place; the full block and the vector
- * are the rule and go unsaid.
+ * The three factors of a run, its layout where that is the old one, its CLIP
+ * encoder where one runs alone, and its pooled vector where zeros stand in
+ * its place; the full block, both encoders and the vector are the rule and go
+ * unsaid. The encoder is named as its field names it.
  */
 export function fusionSettingLabel(
   a: number,
@@ -119,11 +141,13 @@ export function fusionSettingLabel(
   c: number,
   rows: T5Rows,
   pool: Pooled,
+  clip: ClipEncoder,
   locale: string,
 ): string {
   const fmt = (x: number) => formatFactor(x, locale)
   const key = [`a ${fmt(a)} · b ${fmt(b)} · c ${fmt(c)}`]
   if (rows === 'tail') key.push('T5 77–511')
+  if (clip !== 'both') key.push(clip === 'clip_l' ? 'clip-l' : 'clip-g')
   if (pool === 'zero') key.push('pool 0')
   return key.join(' · ')
 }

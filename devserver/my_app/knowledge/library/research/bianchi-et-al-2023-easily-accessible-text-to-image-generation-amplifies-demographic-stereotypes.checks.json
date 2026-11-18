@@ -1,0 +1,1720 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 12.4% of 1928 words, ceiling 20%, longest run 23 words; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 23,
+     "text": "power relations can be maintained by good intentions and even good deeds stereotypes are perpetuated despite institutional guardrails the case of dall e"
+    },
+    {
+     "words": 21,
+     "text": "federico bianchi pratyusha kalluri esin durmus faisal ladhak myra cheng debora nozza tatsunori hashimoto dan jurafsky james zou and aylin caliskan"
+    },
+    {
+     "words": 21,
+     "text": "federico bianchi pratyusha kalluri esin durmus faisal ladhak myra cheng debora nozza tatsunori hashimoto dan jurafsky james zou and aylin caliskan"
+    },
+    {
+     "words": 15,
+     "text": "for 100 of backyards 96 of kitchens 99 of front doors and 99 of armchairs"
+    },
+    {
+     "words": 14,
+     "text": "we cannot prompt engineer our way to a more just inclusive and equitable future"
+    }
+   ],
+   "value": 0.124,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "0 lists/tables complete",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "64 of 90 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1493,
+     "number": "1145"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1493,
+     "number": "14"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1493,
+     "number": "23"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1493,
+     "number": "3593013.3594095"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1493,
+     "number": "52"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1493,
+     "number": "53"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1493,
+     "number": "57"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1493,
+     "number": "59"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1493,
+     "number": "60"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1493,
+     "number": "63"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1493,
+     "number": "68"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1493,
+     "number": "70"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1493,
+     "number": "72"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1493,
+     "number": "74"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1494,
+     "number": "16"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1494,
+     "number": "26"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1494,
+     "number": "42"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1494,
+     "number": "43"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1494,
+     "number": "69"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1494,
+     "number": "78"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1495,
+     "number": "2.1"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1495,
+     "number": "30"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1495,
+     "number": "40"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1495,
+     "number": "46"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1495,
+     "number": "47"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1495,
+     "number": "49"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1495,
+     "number": "51"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1495,
+     "number": "71"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1496,
+     "number": "19"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1496,
+     "number": "21"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1496,
+     "number": "36"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1496,
+     "number": "37"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1496,
+     "number": "45"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1496,
+     "number": "61"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1497,
+     "number": "2.2"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1497,
+     "number": "2.3"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1497,
+     "number": "31"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1497,
+     "number": "33"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1497,
+     "number": "55"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1497,
+     "number": "66"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1497,
+     "number": "73"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1497,
+     "number": "76"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1497,
+     "number": "77"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1498,
+     "number": "41"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1498,
+     "number": "67"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1499,
+     "number": "17"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1499,
+     "number": "18"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1499,
+     "number": "28"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1499,
+     "number": "64"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1500,
+     "number": "22"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1500,
+     "number": "27"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1500,
+     "number": "3.1"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1500,
+     "number": "3.2"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1500,
+     "number": "38"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1500,
+     "number": "54"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1500,
+     "number": "58"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1501,
+     "number": "20"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1501,
+     "number": "34"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1501,
+     "number": "39"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1501,
+     "number": "44"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1501,
+     "number": "48"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1501,
+     "number": "62"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1502,
+     "number": "24"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1502,
+     "number": "29"
+    }
+   ],
+   "value": 64.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "12 of 12 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1493,
+     "heading": "ABSTRACT"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1493,
+     "heading": "ACMReference Format:"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1493,
+     "heading": "1 INTRODUCTION"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1495,
+     "heading": "2 PROMPTS WITH NO IDENTITY LANGUAGE PERPETUATE AND AMPLIFY STEREOTYPES"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1495,
+     "heading": "2.1 Human traits and descriptors: Perpetuating stereotypes"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1497,
+     "heading": "2.2 Occupations: Stereotype amplification"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1499,
+     "heading": "2.3 The view from nowhere: Defaulting to Americanness"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1500,
+     "heading": "3 PROMPTS WITH IDENTITY LANGUAGE PERPETUATE STEREOTYPES, DESPITE MITIGATION EFFORTS"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1500,
+     "heading": "3.1 Stereotyping representations of groups"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1500,
+     "heading": "3.2 Stereotypes despite counter-stereotypes"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1501,
+     "heading": "4 STEREOTYPES ARE PERPETUATED DESPITE INSTITUTIONAL GUARDRAILS: THE CASE OF DALL·E"
+    },
+    {
+     "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+     "page": 1502,
+     "heading": "5 CONCLUSION"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "13 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "13 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "35 quoted texts in 7 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Fig. 1",
+     "page": 1494,
+     "image": "fig-001-p2.png",
+     "quotes": [
+      "\"TRAITS\"",
+      "\"OCCUPATIONS\"",
+      "\"OBJECTS\"",
+      "\"a poor person\"",
+      "\"a software engineer\"",
+      "\"a housekeeper\"",
+      "\"clothing\"",
+      "\"a house\"",
+      "\"NATIONAL IDENTITIES\"",
+      "\"ETHNIC IDENTITIES WITH COUNTER-STEREOTYPES\"",
+      "\"ETHNIC IDENTITIES WITH OBJECTS\"",
+      "\"a man from the USA\"",
+      "\"an Iraqi man\"",
+      "\"a wealthy African man and his house\"",
+      "\"a poor white person\"",
+      "\"Turkish clothing\"",
+      "\"an African house\""
+     ]
+    },
+    {
+     "figure": "Fig. 2",
+     "page": 1496,
+     "image": "fig-002-p4.png",
+     "quotes": [
+      "“an emotional person,”",
+      "“an exotic person,”"
+     ]
+    },
+    {
+     "figure": "Fig. 3",
+     "page": 1497,
+     "image": "fig-003-p5.png",
+     "quotes": [
+      "“a flight attendant,”",
+      "“a chef,”",
+      "“a cook,”",
+      "“a taxi driver,”"
+     ]
+    },
+    {
+     "figure": "Image 4",
+     "page": 1498,
+     "image": "fig-004-p6.png",
+     "quotes": [
+      "\"Percent of occupation identified as female.\"",
+      "\"No female\"",
+      "\"All female\"",
+      "\"Percent of occupation self-identified as female\"",
+      "\"Percent of generated images model represented as female.\""
+     ]
+    },
+    {
+     "figure": "Fig. 5",
+     "page": 1499,
+     "image": "fig-005-p7.png",
+     "quotes": [
+      "\"A photo of a front door,\"",
+      "\"A photo of a kitchen,\""
+     ]
+    },
+    {
+     "figure": "Fig. 6",
+     "page": 1500,
+     "image": "fig-006-p8.png",
+     "quotes": [
+      "\"An American man...\"",
+      "\"...and his house.\"",
+      "\"...and his car.\""
+     ]
+    },
+    {
+     "figure": "Fig. 7",
+     "page": 1500,
+     "image": "fig-007-p8.png",
+     "quotes": [
+      "“a poor person from diverse cultures”",
+      "“a poor white person”"
+     ]
+    }
+   ],
+   "value": 35.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "24 page references valid (printed-folio pages 1493–1504)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "12 pages checked, 0 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "28 of 36 passages out of order not repairable, none breaks a sentence of the body text",
+   "findings": [
+    {
+     "page": 6,
+     "words": 5,
+     "text": "like software developer and Pilot",
+     "blocks": [
+      "#/texts/144",
+      "#/texts/154",
+      "#/texts/158"
+     ],
+     "problem": "blocks of kind caption are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 11,
+     "words": 27,
+     "text": "Hritik Bansal, Da Yin, Masoud Monajatipoor, and Kai-Wei Chang. 2022. How well can Text-to-Image Generative models understand Ethical natural language interventions? ArXiv preprint abs/2210.15230 (2022",
+     "blocks": [
+      "#/texts/236",
+      "#/texts/237",
+      "#/texts/238"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 11,
+     "words": 14,
+     "text": "Bruce Lawrence Berg. 2001. qualitative research methods for the social sciences. Allyn & Bacon.",
+     "blocks": [
+      "#/texts/239",
+      "#/texts/240",
+      "#/texts/241"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 11,
+     "words": 22,
+     "text": "Eduardo Bonilla-Silva. 2006. racism without racists: Color-blind racism and the persistence of racial inequality in the United States. Rowman & Littlefield Publishers.",
+     "blocks": [
+      "#/texts/241",
+      "#/texts/242",
+      "#/texts/243"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 11,
+     "words": 15,
+     "text": "[11] Leo R Chavez. 2007. The condition of illegality. International Migration 45, 3 (2007), 192-196.",
+     "blocks": [
+      "#/texts/244",
+      "#/texts/245",
+      "#/texts/246",
+      "#/texts/247"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 11,
+     "words": 15,
+     "text": "CompVis. 2022. GitHub -CompVis/stable-diffusion: A latent Text-to-Image Diffusion model — github.com. https://github.com/CompVis/stable-diffusion. [Accessed 07-Nov-2022].",
+     "blocks": [
+      "#/texts/248",
+      "#/texts/249",
+      "#/texts/250"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 11,
+     "words": 19,
+     "text": "Karen Culcasi and Mahmut Gokmen. 2011. The face of Danger. Aether: The Journal of media Geography VIII.B (2011), 82-96.",
+     "blocks": [
+      "#/texts/250",
+      "#/texts/251",
+      "#/texts/252"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 11,
+     "words": 14,
+     "text": "Malcom Ferdinand. 2021. Decolonial Ecology: thinking from the Caribbean world. John Wiley & Sons.",
+     "blocks": [
+      "#/texts/254",
+      "#/texts/256",
+      "#/texts/257"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 11,
+     "words": 24,
+     "text": "Negin Ghavami and Letitia Anne Peplau. 2013. An intersectional analysis of gender and ethnic Stereotypes. psychology of women Quarterly 37 (2013), 113 – 127.",
+     "blocks": [
+      "#/texts/259",
+      "#/texts/260",
+      "#/texts/261"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [
+      "passage cut out of 'This work was funded in part by the Hoff'"
+     ],
+     "section": "bibliography"
+    },
+    {
+     "page": 11,
+     "words": 19,
+     "text": "Inderpal Grewal. 2003. Transnational America: race, gender and citizenship after 9/11. social identities 9, 4 (2003), 535-561. https://doi.org/10.1080/ 1350463032000174669",
+     "blocks": [
+      "#/texts/261",
+      "#/texts/262",
+      "#/texts/263"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 11,
+     "words": 14,
+     "text": "Linda A Jackson. 1992. Physical appearance and gender: Sociobiological and sociocultural perspectives. Suny Press.",
+     "blocks": [
+      "#/texts/265",
+      "#/texts/266",
+      "#/texts/267"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 11,
+     "words": 25,
+     "text": "in Computing systems, CHI 2015, Seoul, Republic of Korea, April 18-23, 2015, Bo Begole, Jinwoo Kim, Kori Inkpen, and Woontack Woo (Eds.). ACM, 3819-3828. https://doi.org/10.1145/2702123.2702520",
+     "blocks": [
+      "#/texts/268",
+      "#/texts/269",
+      "#/texts/270"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 11,
+     "words": 21,
+     "text": "Celia Kitzinger. 2005. Heteronormativity in action: reproducing the heterosexual nuclear family in after-hours Medical calls. social problems 52, 4 (2005), 477-498.",
+     "blocks": [
+      "#/texts/271",
+      "#/texts/272",
+      "#/texts/273"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 11,
+     "words": 13,
+     "text": "Max Liboiron. 2021. Pollution is colonialism. In Pollution Is colonialism. Duke University Press.",
+     "blocks": [
+      "#/texts/274",
+      "#/texts/275",
+      "#/texts/276"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 11,
+     "words": 19,
+     "text": "Jon May. 1996. ’A little taste of something more exotic’: The imaginative geographies of everyday life. Geography (1996), 57-64.",
+     "blocks": [
+      "#/texts/277",
+      "#/texts/278",
+      "#/texts/279"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 11,
+     "words": 26,
+     "text": "Ilan H Meyer. 2003. Prejudice, social stress, and mental health in lesbian, gay, and bisexual populations: conceptual issues and research evidence. psychological bulletin 129, 5 (2003),",
+     "blocks": [
+      "#/texts/280",
+      "#/texts/281"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 12,
+     "words": 11,
+     "text": "Safiya Umoja Noble. 2018. Algorithms of oppression. New York University Press.",
+     "blocks": [
+      "#/texts/286",
+      "#/texts/287",
+      "#/texts/288"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 12,
+     "words": 11,
+     "text": "2022. Dall·E 2: extending Creativity — openai.com. https://openai. com/blog/dall-e-2-extending-creativity/. [Accessed 01-Nov-2022].",
+     "blocks": [
+      "#/texts/288",
+      "#/texts/289",
+      "#/texts/290"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 12,
+     "words": 26,
+     "text": "Jemima Pierre. 2004. Black immigrants in the United States and the\" cultural narratives\" of ethnicity. identities: Global studies in culture and power 11, 2 (2004), 141-170.",
+     "blocks": [
+      "#/texts/292",
+      "#/texts/293",
+      "#/texts/294"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 12,
+     "words": 24,
+     "text": "Aditya Ramesh, Prafulla Dhariwal, Alex Nichol, Casey Chu, and mark Chen. 2022. Hierarchical text-conditional image Generation with CLIP latents. ArXiv preprint abs/2204.06125 (2022). https://arxiv.org",
+     "blocks": [
+      "#/texts/295",
+      "#/texts/296",
+      "#/texts/297"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 12,
+     "words": 22,
+     "text": "Robin Rombach, Andreas Blattmann, Dominik Lorenz, Patrick Esser, and Björn Ommer. 2022. High-resolution image synthesis with latent Diffusion models. In Proceedings of",
+     "blocks": [
+      "#/texts/297",
+      "#/texts/298",
+      "#/texts/299"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 12,
+     "words": 4,
+     "text": "and pattern recognition. 10684-10695.",
+     "blocks": [
+      "#/texts/297",
+      "#/texts/298",
+      "#/texts/299"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 12,
+     "words": 28,
+     "text": "Morgan Paul Slusher and Craig A. Anderson. 1987. when reality Monitoring Fails: The role of Imagination in stereotype Maintenance. Journal of personality and social psychology 52 (1987), 653-662.",
+     "blocks": [
+      "#/texts/301",
+      "#/texts/302",
+      "#/texts/303"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 12,
+     "words": 20,
+     "text": "Shirley Tate. 2007. Black beauty: Shade, hair and anti-racist aesthetics. ethnic and racial studies 30, 2 (2007), 300-319. https://doi.org/10.1080/01419870601143992 arXiv:https://doi.org/10.1080/01419",
+     "blocks": [
+      "#/texts/303",
+      "#/texts/304",
+      "#/texts/305"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 12,
+     "words": 25,
+     "text": "Chandra DL Waring. 2013. \"they See Me as exotic... that Intrigues them:\" gender, sexuality and the Racially Ambiguous body. race, gender & class (2013), 299-317.",
+     "blocks": [
+      "#/texts/307",
+      "#/texts/308",
+      "#/texts/309"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 12,
+     "words": 15,
+     "text": "Robert Wolfe, Mahzarin R. Banaji, and Aylin Caliskan. 2022. evidence for Hypodescent in visual semantic",
+     "blocks": [
+      "#/texts/311",
+      "#/texts/312",
+      "#/texts/313"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 12,
+     "words": 7,
+     "text": "Aylin Caliskan. 2022. Markedness in visual semantic",
+     "blocks": [
+      "#/texts/313",
+      "#/texts/314",
+      "#/texts/315"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 12,
+     "words": 16,
+     "text": "Dolf Zillmann. 2006. Exemplification effects in the Promotion of Safety and health. Journal of Communication (2006).",
+     "blocks": [
+      "#/texts/317",
+      "#/texts/318"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    }
+   ],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "bianchi-et-al-2023-easily-accessible-text-to-image-generation-amplifies-demographic-stereotypes",
+ "doc_type": "scholarly_article",
+ "analyzed_at": "2026-11-15T09:30:01.173312+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1493,
+   "page_to": 1502,
+   "chars": 48109,
+   "blocks": 106,
+   "inner_headings": 12,
+   "figures": 13
+  }
+ ],
+ "skipped": [
+  "ACKNOWLEDGMENTS (p. 1503)",
+  "REFERENCES (p. 1503)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 12,
+  "gaps": [],
+  "gaps_dismissed": [
+   {
+    "page": 1,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "USA USA fede@stanford.edu pkalluri@stanford.edu esdurmus@stanford.edu"
+   },
+   {
+    "page": 1,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "Italy USA myra@cs.stanford.edu debora.nozza@unibocconi.it faisal@cs.columbia.edu"
+   },
+   {
+    "page": 1,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "| USA | USA |\n| thashim@stanford.edu | jurafsky@stanford.edu |"
+   },
+   {
+    "page": 1,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "ACMReference Format:"
+   },
+   {
+    "page": 1,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "jurafsky@stanford.edu, jamesz@stanford.edu, aylin@uw.edu"
+   },
+   {
+    "page": 2,
+    "words": 20,
+    "reason": "debris",
+    "text": "75$,76 2&&83$7,216 2%-(&76 ȉDQ\u0003DWWUDFWLYH\u0003SHUVRQȊ ȉD\u0003VRIWZDUH\u0003HQJLQHHUȊ ȉFORWKLQJȊ ȉD\u0003SRRU\u0003SHUVRQȊ ȉD\u0003KRXVHNHHSHUȊ ȉD\u0003KRXVHȊ (7+1,&\u0003,'(17,7,(6\u0003:,7+\u0003 (7+1,&\u0003,'(17,7,(6\u0003 1$7,21$/\u0003,'(17,7,(6 ȉD\u0003PDQ\u0003IURP\u0003"
+   },
+   {
+    "page": 3,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "1 https://github.com/vinid/text-to-image-bias 1495"
+   },
+   {
+    "page": 4,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "dangerous assumptions. 1496"
+   },
+   {
+    "page": 6,
+    "words": 6,
+    "reason": "debris",
+    "text": "3HUFHQW\u0003RI\u0003RFFXSDWLRQ\u0003LGHQWLΈHG\u0003DV\u0003IHPDOH 3HUFHQW\u0003RI\u0003RFFXSDWLRQ\u0003 VHOI\u0010LGHQWLΈHG\u0003DV\u0003IHPDOH 3HUFHQW\u0003RI\u0003JHQHUDWHG\u0003LPDJHV PRGHO\u0003UHSUHVHQWHG\u0003DV\u0003IHPDOH 3HUFHQW\u0003RI\u0003RFFXSDWLRQ\u0003LGHQWLΈHG\u0003DV\u0003QRQ\u0010ZKLWH"
+   },
+   {
+    "page": 10,
+    "words": 5,
+    "reason": "debris",
+    "text": "òū̧\u0001ũĠƜŉđòū̧ũòū̧ƤưòūĘŉūĻ̧ūĠǖư̧ưŶ̧ òū̧\u0001ĺƜŉđòū̧ũòū̧ƤưòūĘŉūĻ̧ūĠǖư̧ òū̧\u0001ĺƜŉđòū̧ũòū̧òūĘ̧òū̧\u0001ũĠƜŉđòū̧ ò̧ŃŶƸƤĠ ưŶ̧ò̧ŃŶƸƤĠ"
+   }
+  ],
+  "captions_reclassified": [
+   {
+    "page": 10,
+    "figure": "#/pictures/7",
+    "text": "òū̧ ũĠƜŉđòū̧ũòū̧ƤưòūĘŉūĻ̧ūĠǖư̧ưŶ̧ ò̧ŃŶƸƤĠ"
+   },
+   {
+    "page": 10,
+    "figure": "#/pictures/9",
+    "text": "òū̧ ĺƜŉđòū̧ũòū̧ƤưòūĘŉūĻ̧ūĠǖư̧ ưŶ̧ò̧ŃŶƸƤĠ"
+   },
+   {
+    "page": 10,
+    "figure": "#/pictures/10",
+    "text": "òū̧ ĺƜŉđòū̧ũòū̧òūĘ̧òū̧ ũĠƜŉđòū̧ ũòū̧ƤưòūĘŉūĻ̧ūĠǖư̧ưŶ̧ò̧ŃŶƸƤĠ"
+   },
+   {
+    "page": 10,
+    "figure": "#/pictures/11",
+    "text": "ò̧ĘŉƤòďŠĠĘ̧ǑŶũòū̧ŠĠòĘŉūĻ̧ò̧ũĠĠưŉūĻ"
+   },
+   {
+    "page": 10,
+    "figure": "#/pictures/12",
+    "text": "̧ŃòƙƙǗ̧ĺòũŉŠǗ"
+   }
+  ],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [],
+  "superseded": [],
+  "replaced_pages": [],
+  "noise_dropped": 0,
+  "hyphens_restored": [
+   {
+    "page": 11,
+    "ref": "#/texts/234",
+    "word": "Knight-Hennessy"
+   }
+  ],
+  "order": [
+   {
+    "page": 1,
+    "text": "pkalluri@stanford.edu Myra Cheng*",
+    "words": 3,
+    "refs": [
+     "#/texts/2",
+     "#/texts/3",
+     "#/texts/5"
+    ],
+    "repaired": true,
+    "note": "4 blocks replaced by the text layer's passage",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 2,
+    "text": "For descriptors that have comparable real-world statistics across Demographic groups, such as occupations, Wefind cases of neartotal stereotype amplification. In these cases, the model does not merely reflect societal disparities, and instead actually exacerbates them. For example, 99% of the generated software developer",
+    "words": 44,
+    "refs": [
+     "#/texts/53",
+     "#/texts/54"
+    ],
+    "repaired": true,
+    "note": "2 blocks replaced by the text layer's passage",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 3,
+    "text": "Furthermore, when a prompt mentions social groups (e.g. race or nationality), Stable Diffusion generates images that tie specific groups to negative or taboo associations like malnourishment, poverty, and subordination. For everyday things like household objects, Wefind that the model implicitly makes similar associations: the image of an Ethiopian man and his car produces Animage of poverty, while the same prompt with American does not. The model also perpetuates cultural defaults and harmful norms for various settings, from everyday events to special occasions: Animage of a front door is perceived as if that the door is in North America, while happy couple generates only straight-passing couples. more concerningly, even when these Stereotypes are explicitly countered in the prompts (such as adding wealthy to a prompt that otherwise generates unintended images of poverty), we demonstrate that the model may still be unable to generate these images at all and continue to perpetuate Stereotypes. despite the veneer of claiming to generate anything imaginable, Stable Diffusion is actually limited to generating images that align with dominant Stereotypes, even when asked to produce the contrary. Wefind that these associations are mitigated by neither carefully written user prompts nor the “guardrails” against stereotyping that have been added to models like Dall·E [51].",
+    "words": 213,
+    "refs": [
+     "#/texts/58",
+     "#/texts/59",
+     "#/texts/60"
+    ],
+    "repaired": true,
+    "note": "3 blocks replaced by the text layer's passage",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 3,
+    "text": "Further, Wefind a poor person and a thug generate faces with dark skin tone and features stereotypically associated with Blackness [35], and a person stealing similarly generates faces with dark skin and stereotypically Black features, perpetuating patterns in media that are known to invoke anxiety, hostile behavior, criminalization, and increased endorsement of violence against people perceived as Black men [9, 25, 49, 63]. prompting the Stable Diffusion model to generate a terrorist results in brown faces with",
+    "words": 78,
+    "refs": [
+     "#/texts/66",
+     "#/texts/67"
+    ],
+    "repaired": true,
+    "note": "2 blocks replaced by the text layer's passage",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 6,
+    "text": "like software developer and Pilot",
+    "words": 5,
+    "refs": [
+     "#/texts/144",
+     "#/texts/154",
+     "#/texts/158"
+    ],
+    "repaired": false,
+    "note": "blocks of kind caption are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "this finding connects to the American-focused demographics and norms of Internet-based datasets [4]. Notably, this does not reflect real-world population statistics: based on population, There are many more front doors and kitchens in other parts of world, yet the generated outputs only reflect American one's. By generating images that are stylized as American when prompted with",
+    "words": 56,
+    "refs": [
+     "#/texts/174",
+     "#/texts/175"
+    ],
+    "repaired": true,
+    "note": "2 blocks replaced by the text layer's passage",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "Moreover, Wefind that, even when prompts are carefully written to oppose the observed stereotype, socially salient Stereotypes persist. For instance, to counter the pattern of “a poor person” generating faces with dark skin tone (Figure 2), a possible attempt could be using the prompt of “a White poor person.” However, Wefind that even using this modified prompt, most of the images exhibit darker skin tones and merely incorporate some features that are typically associated with whiteness, such as blue eyes. In other words, the model continues to generate stereotypically Black faces for “poor person” despite being explicitly prompted to do otherwise. similarly, to counter the dominant stereotype of “a terrorist,” we attempt to use the prompt of “a White terrorist.” with this modified prompt, Wefind that many of the generated images have long beards that are stereotypically associated with Middle-Eastern men (Figure ??). these examples suggest that the model is fundamentally unable to disentangle poverty from Blackness and terrorism from Middle-Eastern identity regardless of the text of the prompt.",
+    "words": 172,
+    "refs": [
+     "#/texts/208",
+     "#/texts/209"
+    ],
+    "repaired": true,
+    "note": "2 blocks replaced by the text layer's passage",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "first, we reproduce the experiment of generating images of everyday objects, as well as these objects in various continents (section 2.3). sample images, analogous to Figure 5, are in Figure ??. Wefind similar trends in the Stable Diffusion and Dall·E produced images, where not specifying any country results in images that are the most similar to “North America,” while including “Africa” in the prompt leads to images that reinforce the narrative that African countries are first and foremost places of poverty.",
+    "words": 82,
+    "refs": [
+     "#/texts/211",
+     "#/texts/212",
+     "#/texts/213"
+    ],
+    "repaired": true,
+    "note": "3 blocks replaced by the text layer's passage",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 10,
+    "text": "We urge users to exercise caution and refrain from using such image Generation models in any applications that have downstream effects on the real-world, and we call for users, model-owners, and society at Large to take a critical view of the consequences of these models. The examples and patterns we demonstrate make it clear that these models, while appearing to be unprecedentedly powerful and versatile in creating images of things that do not exist, are in reality brittle and extremely limited in the worlds they will create.",
+    "words": 87,
+    "refs": [
+     "#/texts/228",
+     "#/texts/229"
+    ],
+    "repaired": true,
+    "note": "2 blocks replaced by the text layer's passage",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 11,
+    "text": "Hritik Bansal, Da Yin, Masoud Monajatipoor, and Kai-Wei Chang. 2022. How well can Text-to-Image Generative models understand Ethical natural language interventions? ArXiv preprint abs/2210.15230 (2022). https://arxiv.org/abs/2210. 15230",
+    "words": 27,
+    "refs": [
+     "#/texts/236",
+     "#/texts/237",
+     "#/texts/238"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 11,
+    "text": "Bruce Lawrence Berg. 2001. qualitative research methods for the social sciences. Allyn & Bacon.",
+    "words": 14,
+    "refs": [
+     "#/texts/239",
+     "#/texts/240",
+     "#/texts/241"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 11,
+    "text": "Eduardo Bonilla-Silva. 2006. racism without racists: Color-blind racism and the persistence of racial inequality in the United States. Rowman & Littlefield Publishers.",
+    "words": 22,
+    "refs": [
+     "#/texts/241",
+     "#/texts/242",
+     "#/texts/243"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 11,
+    "text": "[11] Leo R Chavez. 2007. The condition of illegality. International Migration 45, 3 (2007), 192-196.",
+    "words": 15,
+    "refs": [
+     "#/texts/244",
+     "#/texts/245",
+     "#/texts/246",
+     "#/texts/247"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 11,
+    "text": "CompVis. 2022. GitHub -CompVis/stable-diffusion: A latent Text-to-Image Diffusion model — github.com. https://github.com/CompVis/stable-diffusion. [Accessed 07-Nov-2022].",
+    "words": 15,
+    "refs": [
+     "#/texts/248",
+     "#/texts/249",
+     "#/texts/250"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 11,
+    "text": "Karen Culcasi and Mahmut Gokmen. 2011. The face of Danger. Aether: The Journal of media Geography VIII.B (2011), 82-96.",
+    "words": 19,
+    "refs": [
+     "#/texts/250",
+     "#/texts/251",
+     "#/texts/252"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 11,
+    "text": "Malcom Ferdinand. 2021. Decolonial Ecology: thinking from the Caribbean world. John Wiley & Sons.",
+    "words": 14,
+    "refs": [
+     "#/texts/254",
+     "#/texts/256",
+     "#/texts/257"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 11,
+    "text": "Negin Ghavami and Letitia Anne Peplau. 2013. An intersectional analysis of gender and ethnic Stereotypes. psychology of women Quarterly 37 (2013), 113 – 127.",
+    "words": 24,
+    "refs": [
+     "#/texts/259",
+     "#/texts/260",
+     "#/texts/261"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [
+     "passage cut out of 'This work was funded in part by the Hoff'"
+    ],
+    "section": "bibliography"
+   },
+   {
+    "page": 11,
+    "text": "Inderpal Grewal. 2003. Transnational America: race, gender and citizenship after 9/11. social identities 9, 4 (2003), 535-561. https://doi.org/10.1080/ 1350463032000174669",
+    "words": 19,
+    "refs": [
+     "#/texts/261",
+     "#/texts/262",
+     "#/texts/263"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 11,
+    "text": "Linda A Jackson. 1992. Physical appearance and gender: Sociobiological and sociocultural perspectives. Suny Press.",
+    "words": 14,
+    "refs": [
+     "#/texts/265",
+     "#/texts/266",
+     "#/texts/267"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 11,
+    "text": "in Computing systems, CHI 2015, Seoul, Republic of Korea, April 18-23, 2015, Bo Begole, Jinwoo Kim, Kori Inkpen, and Woontack Woo (Eds.). ACM, 3819-3828. https://doi.org/10.1145/2702123.2702520",
+    "words": 25,
+    "refs": [
+     "#/texts/268",
+     "#/texts/269",
+     "#/texts/270"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 11,
+    "text": "Celia Kitzinger. 2005. Heteronormativity in action: reproducing the heterosexual nuclear family in after-hours Medical calls. social problems 52, 4 (2005), 477-498.",
+    "words": 21,
+    "refs": [
+     "#/texts/271",
+     "#/texts/272",
+     "#/texts/273"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 11,
+    "text": "Max Liboiron. 2021. Pollution is colonialism. In Pollution Is colonialism. Duke University Press.",
+    "words": 13,
+    "refs": [
+     "#/texts/274",
+     "#/texts/275",
+     "#/texts/276"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 11,
+    "text": "Jon May. 1996. ’A little taste of something more exotic’: The imaginative geographies of everyday life. Geography (1996), 57-64.",
+    "words": 19,
+    "refs": [
+     "#/texts/277",
+     "#/texts/278",
+     "#/texts/279"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 11,
+    "text": "Ilan H Meyer. 2003. Prejudice, social stress, and mental health in lesbian, gay, and bisexual populations: conceptual issues and research evidence. psychological bulletin 129, 5 (2003),",
+    "words": 26,
+    "refs": [
+     "#/texts/280",
+     "#/texts/281"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 12,
+    "text": "Safiya Umoja Noble. 2018. Algorithms of oppression. New York University Press.",
+    "words": 11,
+    "refs": [
+     "#/texts/286",
+     "#/texts/287",
+     "#/texts/288"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 12,
+    "text": "2022. Dall·E 2: extending Creativity — openai.com. https://openai. com/blog/dall-e-2-extending-creativity/. [Accessed 01-Nov-2022].",
+    "words": 11,
+    "refs": [
+     "#/texts/288",
+     "#/texts/289",
+     "#/texts/290"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 12,
+    "text": "Jemima Pierre. 2004. Black immigrants in the United States and the\" cultural narratives\" of ethnicity. identities: Global studies in culture and power 11, 2 (2004), 141-170.",
+    "words": 26,
+    "refs": [
+     "#/texts/292",
+     "#/texts/293",
+     "#/texts/294"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 12,
+    "text": "Aditya Ramesh, Prafulla Dhariwal, Alex Nichol, Casey Chu, and mark Chen. 2022. Hierarchical text-conditional image Generation with CLIP latents. ArXiv preprint abs/2204.06125 (2022). https://arxiv.org/abs/2204.06125",
+    "words": 24,
+    "refs": [
+     "#/texts/295",
+     "#/texts/296",
+     "#/texts/297"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 12,
+    "text": "Robin Rombach, Andreas Blattmann, Dominik Lorenz, Patrick Esser, and Björn Ommer. 2022. High-resolution image synthesis with latent Diffusion models. In Proceedings of",
+    "words": 22,
+    "refs": [
+     "#/texts/297",
+     "#/texts/298",
+     "#/texts/299"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 12,
+    "text": "and pattern recognition. 10684-10695.",
+    "words": 4,
+    "refs": [
+     "#/texts/297",
+     "#/texts/298",
+     "#/texts/299"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 12,
+    "text": "Morgan Paul Slusher and Craig A. Anderson. 1987. when reality Monitoring Fails: The role of Imagination in stereotype Maintenance. Journal of personality and social psychology 52 (1987), 653-662.",
+    "words": 28,
+    "refs": [
+     "#/texts/301",
+     "#/texts/302",
+     "#/texts/303"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 12,
+    "text": "Shirley Tate. 2007. Black beauty: Shade, hair and anti-racist aesthetics. ethnic and racial studies 30, 2 (2007), 300-319. https://doi.org/10.1080/01419870601143992 arXiv:https://doi.org/10.1080/01419870601143992",
+    "words": 20,
+    "refs": [
+     "#/texts/303",
+     "#/texts/304",
+     "#/texts/305"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 12,
+    "text": "Chandra DL Waring. 2013. \"they See Me as exotic... that Intrigues them:\" gender, sexuality and the Racially Ambiguous body. race, gender & class (2013), 299-317.",
+    "words": 25,
+    "refs": [
+     "#/texts/307",
+     "#/texts/308",
+     "#/texts/309"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 12,
+    "text": "Robert Wolfe, Mahzarin R. Banaji, and Aylin Caliskan. 2022. evidence for Hypodescent in visual semantic",
+    "words": 15,
+    "refs": [
+     "#/texts/311",
+     "#/texts/312",
+     "#/texts/313"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 12,
+    "text": "Aylin Caliskan. 2022. Markedness in visual semantic",
+    "words": 7,
+    "refs": [
+     "#/texts/313",
+     "#/texts/314",
+     "#/texts/315"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 12,
+    "text": "Dolf Zillmann. 2006. Exemplification effects in the Promotion of Safety and health. Journal of Communication (2006).",
+    "words": 16,
+    "refs": [
+     "#/texts/317",
+     "#/texts/318"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   }
+  ],
+  "order_pages_checked": 12,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 28,
+  "order_breaking": 0,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 7 minor; distortions: 0 material, 4 minor; additions: 0 material, 0 minor; order: 0 material, 0 minor",
+  "at": "2026-11-15T09:39:50+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 7
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 4
+   },
+   "additions": {
+    "material": 0,
+    "minor": 0
+   },
+   "order": {
+    "material": 0,
+    "minor": 0
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "Easily Accessible Text-to-Image Generation Amplifies Demographic Stereotypes at Large Scale (p. 1493–1502)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "This notion is related to the ideology of 'colorblindness,' which has long been criticized for perpetuating racism.",
+      "severity": "minor",
+      "page": 1495
+     },
+     {
+      "source": "use cases for these models, including creating stock photos [40] or supporting creative tasks [50], render these issues particularly troubling. these applications are mass disseminating images and Stereotypes while failing to articulate and invisibilizing other ways of being.",
+      "severity": "minor",
+      "page": 1495
+     },
+     {
+      "source": "We focus on the prototypical, publicly available Stable Diffusion model by [59], as all components of the model are openly documented and available for analysis.",
+      "severity": "minor",
+      "page": 1494
+     },
+     {
+      "source": "We release additional information on an online repository.",
+      "severity": "minor",
+      "page": 1495
+     },
+     {
+      "source": "Algorithmic amplification of associations between gender and race and occupations, and particularly the erasure of minority and historically disadvantaged groups from prestigious occupations, exacerbates existing inequities and results in allocational and representational harms",
+      "severity": "minor",
+      "page": 1499
+     },
+     {
+      "source": "The compounding issues in the multi-modal domain, as AI systems are headed towards increasing multi-modality (for example, generating videos), have only increasingly drastic impacts on our lives.",
+      "severity": "minor",
+      "page": 1502
+     },
+     {
+      "source": "We also cannot expect end users of these technologies to be careful as we have been when prompting for images.",
+      "severity": "minor",
+      "page": 1502
+     }
+    ],
+    "distortions": [
+     {
+      "source": "Stereotype amplification is the process of real-world correlations between social identities like race and gender and social roles becoming distorted and exaggerated, possibly to the point of being perceived as ubiquitous [55]. Prior work has demonstrated that previous language models and word embeddings can amplify biases",
+      "summary": "The paper introduces **stereotype amplification**: real-world correlations linking social identities to social roles get distorted and exaggerated",
+      "severity": "minor",
+      "page": 1497
+     },
+     {
+      "source": "the image of an Ethiopian man and his car produces Animage of poverty... the prompt 'an Ethiopian man' often generates images of apparently malnourished individuals",
+      "summary": "'an Ethiopian man and his car' yields broken-down cars and images of apparently malnourished individuals",
+      "severity": "minor",
+      "page": 1500
+     },
+     {
+      "source": "The model seems unable to disentangle the constructed concepts of race, nation, and wealth",
+      "summary": "a combined prompt ('an African man and an American man standing next to a house') yields a house in good condition, showing the model cannot disentangle race, nation, and wealth",
+      "severity": "minor",
+      "page": 1501
+     },
+     {
+      "source": "For each occupation, we compare the reported percent of the occupation that self-identified as female and non-white (from U.S. Bureau of Labor Statistics 2021 data) to the percent of the occupation-generated images the model represented as female and non-white.",
+      "summary": "This is a horizontal bar chart titled \"Percent of occupation identified as female.\" ... A legend on the right states that the vertical line is the \"Percent of occupation self-identified as female\" and the diamond is the \"Percent of generated images model represented as female.\"",
+      "severity": "minor",
+      "page": 1498
+     }
+    ],
+    "additions": [],
+    "order": []
+   }
+  ]
+ },
+ "source": {
+  "source": "bianchi-et-al-2023-easily-accessible-text-to-image-generation-amplifies-demographic-stereotypes.pdf",
+  "bytes": 7795726,
+  "sha256": "9bb4caa7a00e788d405bfc9f63201eecee2e356a3016e86d6a6f659b1646df03",
+  "extracted_at": "2026-11-13T01:50:50+01:00"
+ }
+}

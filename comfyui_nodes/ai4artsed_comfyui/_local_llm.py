@@ -13,11 +13,13 @@ it (_card.room_for) and the model is announced to ComfyUI right after
 free at start and took further buffers on demand, which is what this
 replaces.
 
-What a call needs beyond the weights is announced up front, as the
-memory_required of the load: the key/value cache of the context window this
-call may use, and the activations of the vision tower when a picture is
-attached. ComfyUI frees for that sum before the first token, so a generation
-that runs to its window does not run into a card another model still holds.
+What a call needs beyond the weights is booked with the load, as its
+memory_required: the key/value cache of the prompt and of a first step of
+the answer, the working memory of the pass over the prompt, and the
+activations of the vision tower when a picture is attached. As the answer
+grows, its cache is booked a step at a time (CacheBooking). ComfyUI frees
+for each booking before the tokens it covers, so a generation does not run
+into a card another model still holds.
 
 The weights are safetensors snapshots under <ComfyUI>/models/llm/<repo dir>/,
 one folder per repository, written by the DevServer's installer from
@@ -73,13 +75,21 @@ KEEP_BUILT = 3
 VISION_RESERVE_BYTES = 2048 * 1024 * 1024
 
 # The context window a call may use when the caller names none: prompt and
-# answer together, 64k. The key/value cache for it is announced to ComfyUI
-# before the model is put on the card, and the answer ends with finish_reason
-# "length" when it reaches the window -- said, never cut in silence. A caller
-# with a longer prompt names a wider window (context_tokens); the reserve
-# grows with it. This is the one ceiling of the platform's rule (no cap below
-# ~64k), the window and not a cap on the answer within it.
+# answer together, 64k. The answer ends with finish_reason "length" when it
+# reaches the window -- said, never cut in silence. A caller with a longer
+# prompt names a wider window (context_tokens). This is the one ceiling of
+# the platform's rule (no cap below ~64k), the window and not a cap on the
+# answer within it. The card is booked for what a run fills of the window,
+# not for the window (CacheBooking).
 DEFAULT_CONTEXT_TOKENS = 65536
+
+# The key/value cache is booked on the card in steps of this many positions:
+# the prompt and one step before the first token, one step more each time
+# the sequence reaches what is booked (CacheBooking). Until 2026-11-16 the
+# cache of the whole window was booked before the first token: for Qwen 1.5
+# 7B, whose 32 key/value heads in 32 layers keep 0.5 MiB per position, 32 GiB
+# beside its weights, for a chat that fills a few thousand positions.
+CACHE_STEP_TOKENS = 4096
 
 # The event a running generation publishes on ComfyUI's websocket, one per
 # piece of text, to the client that queued the prompt. The DevServer's client
@@ -179,16 +189,16 @@ def _kv_cache_bytes(config: Any, tokens: int) -> int:
     """The key/value cache of `tokens` positions, from the model's config.
 
     Two floats per position per head per layer, in the cache's dtype (bf16,
-    two bytes, whichever precision the weights have). Layers that are not
-    full attention (a hybrid model lists them under layer_types) keep a state
-    that does not grow with the window and are left out. The text part of a
+    two bytes, whichever precision the weights have). A model that mixes
+    layers lists them under layer_types: a sliding-window layer keeps at
+    most its window of positions (transformers' DynamicSlidingWindowLayer),
+    and a layer of any other kind (linear attention) keeps a state that does
+    not grow with the sequence and is left out. The text part of a
     vision-language config carries the numbers.
     """
     text = getattr(config, "text_config", None) or config
     n = int(getattr(text, "num_hidden_layers", 0) or 0)
-    layer_types = getattr(text, "layer_types", None)
-    full = ([i for i, t in enumerate(layer_types) if t == "full_attention"]
-            if layer_types else list(range(n)))
+    layer_types = list(getattr(text, "layer_types", None) or ["full_attention"] * n)
     # A config whose layers differ from one another (Gemma 4: 256-wide heads on
     # the sliding layers, 512-wide on the full ones) carries the numbers per
     # layer, and transformers refuses to answer the global attribute at all
@@ -198,8 +208,18 @@ def _kv_cache_bytes(config: Any, tokens: int) -> int:
     # what the global numbers gave. The fallback to the config covers a
     # transformers without the attribute.
     per_layer = getattr(text, "per_layer_config", None)
-    width = sum(_kv_width(per_layer[i] if per_layer is not None else text) for i in full)
-    return 2 * width * 2 * int(tokens)
+    total = 0
+    for i, kind in enumerate(layer_types):
+        c = per_layer[i] if per_layer is not None else text
+        if kind == "full_attention":
+            positions = int(tokens)
+        elif kind == "sliding_attention":
+            window = getattr(c, "sliding_window", None) or getattr(text, "sliding_window", None)
+            positions = min(int(tokens), int(window)) if window else int(tokens)
+        else:
+            continue
+        total += _kv_width(c) * positions
+    return 2 * total * 2
 
 
 def _kv_width(c: Any) -> int:
@@ -531,6 +551,70 @@ class _Stop(StoppingCriteria):
         return torch.full((input_ids.shape[0],), done, dtype=torch.bool, device=input_ids.device)
 
 
+class CacheBooking(StoppingCriteria):
+    """The card booked for the key/value cache as the generation fills it.
+
+    The caller books the prompt, the first CACHE_STEP_TOKENS and the pass
+    over the prompt with the weights (first_reserve). transformers asks
+    this criterion after every token; when the sequence reaches what is
+    booked, one step more is asked of ComfyUI the way the first was
+    (_card.room_for, the model's own load kept): other models are taken
+    off the card for it. When the card has no room for the step after
+    every other model left, the run ends at the next token with the card's
+    sentence ("out of memory on the card ...") and the number of tokens
+    the answer had; the token the refusal came at may have ended the
+    answer, which then stands whole. The criterion never returns True.
+    No booking reaches past `window`, the positions the run may fill.
+
+    This holds for a cache that grows with the sequence. The callers ask
+    for one (cache_implementation="dynamic"): a static cache is allocated
+    for the whole window at the first token, past the booking.
+
+    `held` is what was put on the card (a Built, or a station's holder; its
+    patcher is the load kept). `offset` is what the sequence the criterion
+    is handed leaves out of the positions in the cache: 0 where generate
+    hands back the prompt with the answer, the prompt where it hands back
+    the answer alone (MiDashengLM, _media_reading.describe_audio)."""
+
+    def __init__(self, held: Any, config: Any, prompt_len: int, window: int, name: str,
+                 offset: int = 0):
+        super().__init__()
+        self.held, self.config, self.name, self.offset = held, config, name, int(offset)
+        self.prompt_len, self.window = int(prompt_len), int(window)
+        self.booked = min(self.prompt_len + CACHE_STEP_TOKENS, self.window)
+        self.refused: Optional[BaseException] = None
+
+    def first_reserve(self) -> int:
+        """The cache of the prompt and the first step, and the working
+        memory of the pass over the prompt, for the load. The latter is the
+        figure measured for ComfyUI's own implementation
+        (_comfy_llm.PREFILL_BYTES_PER_TOKEN_AND_WIDTH); transformers' pass
+        was not measured. A picture's tokens are prompt tokens here."""
+        from ._comfy_llm import PREFILL_BYTES_PER_TOKEN_AND_WIDTH
+        text = getattr(self.config, "text_config", None) or self.config
+        width = int(getattr(text, "hidden_size", 0) or 0)
+        return (_kv_cache_bytes(self.config, self.booked)
+                + self.prompt_len * width * PREFILL_BYTES_PER_TOKEN_AND_WIDTH)
+
+    def __call__(self, input_ids, scores, **kwargs):
+        positions = self.offset + int(input_ids.shape[1])
+        if self.refused is not None:
+            raise RuntimeError(f"{self.refused}; the answer broke off after "
+                               f"{positions - self.prompt_len} tokens") from self.refused
+        if self.booked <= positions < self.window:
+            further = min(self.booked + CACHE_STEP_TOKENS, self.window)
+            step = _kv_cache_bytes(self.config, further) - _kv_cache_bytes(self.config, self.booked)
+            mm = comfy.model_management
+            ours = [lm for lm in mm.current_loaded_models if lm.model is self.held.patcher]
+            try:
+                _card.room_for(0, step, self.name, keep=ours)
+            except RuntimeError as refusal:
+                self.refused = refusal
+            else:
+                self.booked = further
+        return torch.zeros((input_ids.shape[0],), dtype=torch.bool, device=input_ids.device)
+
+
 class _Finite(LogitsProcessor):
     """Ends the run before a token is taken from scores none can be taken from.
 
@@ -858,7 +942,8 @@ def generate(dir_name: str,
         tail = built.tokenizer.decode(inputs["input_ids"][0, -8:].tolist())
         opened = prompt is None and tail.rstrip().endswith(_Spoken.OPEN)
 
-        reserve = _kv_cache_bytes(built.config, context_tokens)
+        booking = CacheBooking(built, built.config, prompt_len, int(context_tokens), dir_name)
+        reserve = booking.first_reserve()
         if pils:
             reserve += VISION_RESERVE_BYTES
         device = _on_card(built, reserve)
@@ -874,7 +959,11 @@ def generate(dir_name: str,
         gen_kwargs: Dict[str, Any] = dict(
             max_new_tokens=max_new,
             streamer=streamer,
-            stopping_criteria=StoppingCriteriaList([stop]),
+            stopping_criteria=StoppingCriteriaList([stop, booking]),
+            # The cache that grows with the sequence, which the booking
+            # follows; a checkpoint's generation_config may name a static
+            # one, allocated for the whole window at the first token.
+            cache_implementation="dynamic",
             logits_processor=LogitsProcessorList(
                 [_Finite(dir_name, prompt_len)]
                 + ([_Presence(prompt_len, maker["presence_penalty"])]

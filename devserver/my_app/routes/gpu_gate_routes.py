@@ -27,15 +27,16 @@ The old host listened on 127.0.0.1 only; this one is reachable through the
 tunnel. The routes that take, keep or give back the slot therefore pass the
 settings guard: a request from this machine goes through as before, a
 request through the tunnel needs the settings session, and a request from
-another machine on the network is refused by its address. The readings stay
-open — they name the leases and carry no token.
+another machine on the network is refused by its address. The readings need a
+sign-in, as every route does since 2026-11-15 (lab/sign_in_gate.py); the three
+lease routes are named there for the services on this machine.
 """
 
 import logging
 
 from flask import Blueprint, jsonify, request
 
-from my_app.routes.settings_routes import require_settings_auth
+from my_app.routes.settings_routes import require_machine_or_settings_auth, require_settings_auth
 from my_app.services.gpu_gate import GpuBusy, get_gpu_gate
 
 logger = logging.getLogger(__name__)
@@ -55,7 +56,7 @@ def _busy(e: GpuBusy):
 
 
 @gpu_gate_bp.route("/lease/acquire", methods=["POST"])
-@require_settings_auth
+@require_machine_or_settings_auth
 def acquire_lease():
     data = request.get_json(force=True, silent=True) or {}
     if not isinstance(data, dict):
@@ -92,7 +93,7 @@ def acquire_lease():
 
 
 @gpu_gate_bp.route("/lease/heartbeat", methods=["POST"])
-@require_settings_auth
+@require_machine_or_settings_auth
 def heartbeat_lease():
     data = request.get_json(force=True, silent=True) or {}
     token = data.get("token") if isinstance(data, dict) else None
@@ -101,7 +102,7 @@ def heartbeat_lease():
 
 
 @gpu_gate_bp.route("/lease/release", methods=["POST"])
-@require_settings_auth
+@require_machine_or_settings_auth
 def release_lease():
     data = request.get_json(force=True, silent=True) or {}
     token = data.get("token") if isinstance(data, dict) else None

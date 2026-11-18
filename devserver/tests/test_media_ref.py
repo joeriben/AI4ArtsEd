@@ -448,8 +448,12 @@ def test_the_research_table_counts_one_medium_for_a_run_that_kept_a_latent(
     monkeypatch.setattr(settings_routes, "get_cached_metadata_files",
                         lambda base_path: [info])
 
-    body = _client(settings_routes.settings_bp).get(
-        "/api/settings/sessions").get_json()
+    # The settings table needs the settings password, also on the machine
+    # the server runs on (2026-11-15, settings_routes._settings_admitted).
+    client = _client(settings_routes.settings_bp)
+    with client.session_transaction() as s:
+        s["settings_authenticated"] = True
+    body = client.get("/api/settings/sessions").get_json()
     session = next(s for s in body["sessions"] if s["run_id"] == LATENT_RUN)
     assert session["entity_count"] == 2
     assert session["media_count"] == 1

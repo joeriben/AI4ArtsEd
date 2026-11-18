@@ -13,7 +13,11 @@ import i18n from '@/i18n'
 
 const http = vi.hoisted(() => ({ post: vi.fn(), clientGet: vi.fn(), get: vi.fn() }))
 vi.mock('axios', () => ({
-  default: { create: () => ({ post: http.post, get: http.clientGet }), get: http.get, post: vi.fn() },
+  default: {
+    create: () => ({ post: http.post, get: http.clientGet, interceptors: { response: { use: vi.fn() } } }),
+    get: http.get,
+    post: vi.fn(),
+  },
 }))
 
 import TrainingView from '../TrainingView.vue'

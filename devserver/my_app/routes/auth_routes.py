@@ -4,7 +4,8 @@
 Mirrors the style of settings_routes.py (Flask Blueprint, JSON, server session).
 Scope:
   - POST /api/auth/login   {identifier, password} — educator/admin via
-    email-or-username + password.
+    email-or-username + password, and the agreement to the conditions of use
+    (lab/terms.py, 2026-11-15).
   - POST /api/auth/participant-login {code} — a device enters an EXCLUSIVE
     course room (BAUPLAN Entscheid 2) with the code of one of the course's
     places (2026-09-23, lab/place_codes.py). NO password, NO name. The session
@@ -21,7 +22,7 @@ from __future__ import annotations
 
 import logging
 
-from flask import Blueprint, current_app, request, jsonify
+from flask import Blueprint, current_app, request, jsonify, session
 
 from my_app.lab.db import SessionLocal
 from my_app.lab.models import User, Role, Course, MembershipStatus
@@ -29,7 +30,10 @@ from my_app.lab.auth_service import (
     check_place_session, current_user, current_course_id, current_place_number,
     is_course_educator, is_session_course, login_user, login_place,
     logout_user, place_session_unverified, set_active_course, verify_password,
+    is_published_password, SET_ADMIN_COMMAND,
 )
+from my_app.lab import terms
+from my_app.lab.sign_in_gate import sign_in_unreadable, signed_in_user
 from my_app.utils.url_ids import MAX_ROW_ID
 from my_app.lab.login_attempts import attempts_of, client_address
 from my_app.lab.place_codes import access_open, find_place, has_code_form
@@ -50,17 +54,35 @@ def login():
     An educator login does NOT set course_id: the educator picks the active
     course explicitly in the sign-in field of the header (BAUPLAN Entscheid
     1; POST /active-course).
+
+    Body: {identifier, password, accept_terms?, language?}. 403
+    `published_password` for a password earlier versions built into the code
+    (auth_service.is_published_password), whoever's it is. 409
+    `terms_required`, with `terms_version`, where the credentials hold and the
+    account has not agreed to the version of the conditions that stands
+    (lab/terms.py); the same request with `accept_terms` set to that version
+    and `language` set to the language the text stood in keeps the agreement
+    and signs in.
     """
     data = request.get_json(silent=True) or {}
     identifier = (data.get("identifier") or "").strip()
     password = data.get("password") or ""
     if not identifier or not password:
         return jsonify({"error": "identifier and password required"}), 400
+    # A password earlier versions built into the code is refused before any
+    # account is looked up, so the answer says nothing about the account.
+    if is_published_password(password):
+        logger.warning("[AUTH] refused a password that was published with the code; "
+                       "set a new one with: %s", SET_ADMIN_COMMAND)
+        return jsonify({"error": "published_password"}), 403
 
     db = SessionLocal()
+    # Addresses are stored in lower case (admin_users_routes.py,
+    # scripts/set_admin_account.py), so one typed in any case is found, as in
+    # courses_routes.py.
     user = (
         db.query(User)
-        .filter((User.email == identifier) | (User.username == identifier))
+        .filter((User.email == identifier.lower()) | (User.username == identifier))
         .first()
     )
     # A place enters with its code and nowhere else. An account with the
@@ -73,7 +95,22 @@ def login():
         logger.warning("[AUTH] failed login")
         return jsonify({"error": "Invalid credentials"}), 401
 
+    # The conditions of use are agreed to with the sign-in (lab/terms.py). An
+    # account that has not agreed to the version that stands is not signed in:
+    # the answer names the version, and the page asks again with
+    # `accept_terms` set to it and `language`, the language the text stood in.
+    if terms.needs_terms(user) and not terms.has_accepted(db, user):
+        if data.get("accept_terms") != terms.TERMS_VERSION:
+            return jsonify({"error": "terms_required", "terms_version": terms.TERMS_VERSION}), 409
+        language = data.get("language")
+        if not isinstance(language, str) or language not in terms.LANGUAGES:
+            return jsonify({"error": "language required"}), 400
+        terms.record(db, user, language)
+        logger.info("[AUTH] account %s agreed to the conditions of %s", user.id, terms.TERMS_VERSION)
+
     login_user(user)
+    if terms.needs_terms(user):
+        session[terms.SESSION_KEY] = terms.TERMS_VERSION
     logger.info("[AUTH] login ok: %s (%s)", user.login_identifier, user.role.value)
     return jsonify({"user": user.to_public()}), 200
 
@@ -156,11 +193,16 @@ def me():
     (stores/labAuth.ts, `checkPlaceSession`). Where the check of this
     request's place session failed, the answer carries `unverified`: its
     null user ends nothing, and the session stays for the next request.
+
+    Signed in is what the gate lets through (lab/sign_in_gate.py): an account
+    with a password that has not agreed to the conditions with this sign-in
+    answers here as no one. Where the sign-in could not be read at all (the
+    lab database refused), the answer carries `unverified` as well.
     """
-    user = current_user()
+    user = signed_in_user()
     if user is None:
         body = {"user": None, "course_id": None, "course": None, "place": None}
-        if place_session_unverified():
+        if sign_in_unreadable() or place_session_unverified():
             body["unverified"] = True
         return jsonify(body), 200
     return jsonify(_identity(user)), 200
@@ -172,17 +214,24 @@ def _identity(user: User) -> dict:
     where no course is active, or where the course under the session's id is
     not the one it entered (the safety level then holds the strictest)."""
     cid = current_course_id()
+    db = SessionLocal()
     course = None
     if cid is not None:
-        found = SessionLocal().get(Course, cid)
+        found = db.get(Course, cid)
         if found is not None and is_session_course(found):
             course = {"id": found.id, "name": found.name}
-    return {
+    body = {
         "user": user.to_public(),
         "course_id": cid,
         "course": course,
         "place": current_place_number(),
     }
+    # The profile shows when the account agreed to which version of the
+    # conditions (views/AccountView.vue); a place agrees to none.
+    if terms.needs_terms(user):
+        agreed = terms.latest(db, user)
+        body["terms"] = agreed.to_public() if agreed is not None else None
+    return body
 
 
 @auth_bp.route("/active-course", methods=["POST"])

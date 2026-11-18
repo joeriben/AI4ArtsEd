@@ -146,11 +146,20 @@ echo ""
 echo "  2. Settings: ${BLUE}devserver/user_settings.json${NC} (copy user_settings.json.example),"
 echo "     or the Settings page once the server runs (UI mode, safety level, models)."
 echo "     PORT: 17802 by default (devserver/config.py); 5_start_backend_prod.sh exports 17801."
+echo "     No password is built in. After the first start of the backend:"
+echo "     ${BLUE}./venv/bin/python devserver/scripts/set_admin_account.py${NC}  (as the user the backend runs as)"
+echo "     sets the admin account and the settings password."
 echo ""
 echo "  3. Provider keys: one key file per provider under devserver/, named in"
 echo "     ${BLUE}devserver/config/llm_providers.json${NC} (key_file), or the env_var it names."
 echo ""
 echo "  4. See ${BLUE}docs/installation/INSTALLATION.md${NC} for the whole path"
+# The versioned git hooks (scripts/git-hooks): among them the gates that keep
+# passwords, keys and tokens out of commits, their messages and pushes.
+if git -C "$SCRIPT_DIR" rev-parse --git-dir >/dev/null 2>&1; then
+    "$SCRIPT_DIR/scripts/install-hooks.sh"
+fi
+
 echo ""
 echo -e "${GREEN}[✓]${NC} Setup complete!"
 echo ""

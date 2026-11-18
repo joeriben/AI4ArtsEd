@@ -1,0 +1,1007 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 10.3% of 3057 words, ceiling 20%, longest run 17 words; not counted: 24 words from the source's lists; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 17,
+     "text": "conditioning and data distribution but suffering from additional degradations such as low capacity and or under training"
+    },
+    {
+     "words": 17,
+     "text": "extrapolating between the two denoising results by a factor w setting w 0 or w 1 recovers"
+    },
+    {
+     "words": 15,
+     "text": "images by reversing a stochastic corruption process an image is revealed from pure noise by"
+    },
+    {
+     "words": 15,
+     "text": "1 01 for 64 64 and 1 25 for 512 512 using publicly available networks"
+    },
+    {
+     "words": 14,
+     "text": "nvidia a100 gpus python 3 11 7 pytorch 2 2 0 cuda 11 8"
+    }
+   ],
+   "value": 0.1027,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "4 of 5 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 16,
+     "expected_items": 4,
+     "first_item": "Model capacity: All available model capacities (EDM2-XXS, EDM2-XS, etc.) up to a",
+     "output_lists": [
+      3,
+      3,
+      4,
+      5
+     ]
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 18,
+     "expected_items": 3,
+     "first_item": "The input of F θ should have zero mean and unit magnitude. This is achieved thro",
+     "output_lists": [
+      3,
+      3,
+      4,
+      5
+     ],
+     "unanswered_items": [
+      {
+       "item": 3,
+       "source": "After training, √ g θ · F θ should have approximately unit magnitude. This is ac",
+       "output": "**Mismatched degradations:** If D_1 is corrupted by dropout and D_0 by input noi"
+      }
+     ]
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "table_cells": 178,
+     "missing_cells": [
+      "0.130",
+      "0.190",
+      "1.90",
+      "0.085",
+      "0.085",
+      "2.10",
+      "3.20",
+      "0.085",
+      "0.085",
+      "2.10",
+      "0.070",
+      "0.125",
+      "2.45",
+      "0.120",
+      "0.165",
+      "- Same EMA for both",
+      "1.95",
+      "40.81",
+      "0.115",
+      "0.115"
+     ]
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 19,
+     "table_cells": 12,
+     "missing_cells": [
+      "• EDM2 models [24]:",
+      "Creative Commons BY-NC-SA 4.0 license",
+      "• DeepFloyd IF models [50]:",
+      "• Stable Diffusion VAE model [42]:",
+      "CreativeML Open RAIL++-M license",
+      "• InceptionV3 model [52]:",
+      "Apache 2.0 license",
+      "• DINOv2 model [37]:",
+      "Apache 2.0 license",
+      "• ImageNet dataset [8]:"
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "85 of 164 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 1,
+     "number": "21"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 1,
+     "number": "22"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 1,
+     "number": "23"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 1,
+     "number": "24"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 1,
+     "number": "35"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 1,
+     "number": "36"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 1,
+     "number": "38"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 1,
+     "number": "41"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 1,
+     "number": "43"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 1,
+     "number": "45"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 1,
+     "number": "46"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 1,
+     "number": "47"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 1,
+     "number": "48"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 1,
+     "number": "49"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 1,
+     "number": "53"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 1,
+     "number": "56"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 1,
+     "number": "57"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 2,
+     "number": "51"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 3,
+     "number": "39"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 3,
+     "number": "40"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 3,
+     "number": "58"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 5,
+     "number": "33"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 6,
+     "number": "25"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 6,
+     "number": "42"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 6,
+     "number": "5.1"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "1.15"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "1.20"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "1.70"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "1.80"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "1.81"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "1.85"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "1.90"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "1.91"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "1.95"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "105"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "110"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "115"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "120"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "125"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "130"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "140"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "145"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "155"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "160"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "165"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "170"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "175"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "190"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "2.05"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "2.10"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "2.20"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "2.30"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "2.45"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "2.85"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "2.90"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "205"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "3.20"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "33.09"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "40.81"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "41.84"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "42.27"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "42.84"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "58.52"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "59.89"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "70"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "85"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "number": "90"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 9,
+     "number": "31"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 9,
+     "number": "5.2"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 10,
+     "number": "17"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 10,
+     "number": "18"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 10,
+     "number": "44"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 10,
+     "number": "54"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 10,
+     "number": "55"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 17,
+     "number": "12"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 17,
+     "number": "134217"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 17,
+     "number": "2147483"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 17,
+     "number": "49999"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 18,
+     "number": "0.0120"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 18,
+     "number": "0.0170"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 18,
+     "number": "128"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 18,
+     "number": "2048"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 19,
+     "number": "34"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 19,
+     "number": "37"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 19,
+     "number": "52"
+    }
+   ],
+   "value": 85.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "16 of 18 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 1,
+     "heading": "Abstract"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 1,
+     "heading": "1 Introduction"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 5,
+     "heading": "4 Our method"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 6,
+     "heading": "5 Results"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 7,
+     "heading": "5.1 Ablations"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 9,
+     "heading": "5.2 Qualitative results"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 10,
+     "heading": "6 Discussion and Future work"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 13,
+     "heading": "Appendices"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 13,
+     "heading": "A Additional results"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 13,
+     "heading": "Interpolation between CFG and our method"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 14,
+     "heading": "B Implementation details"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 16,
+     "heading": "B.1 Hyperparameter search"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 16,
+     "heading": "B.2 DeepFloyd IF experiments"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 16,
+     "heading": "C Details of the 2D toy example"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 19,
+     "heading": "D Broader societal impact"
+    },
+    {
+     "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+     "page": 19,
+     "heading": "E Licenses"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "10 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "10 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "6 quoted texts in 3 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Fig. 2",
+     "page": 4,
+     "image": "fig-002-p4.png",
+     "quotes": [
+      "“(a) p₁(x|c; σ_mid)”",
+      "“(b) p₀(x; σ_mid)”"
+     ]
+    },
+    {
+     "figure": "Fig. 3",
+     "page": 7,
+     "image": "fig-003-p7.png",
+     "quotes": [
+      "“EMA_m”",
+      "“EMA_g”"
+     ]
+    },
+    {
+     "figure": "Fig. 7",
+     "page": 14,
+     "image": "fig-008-p14.png",
+     "quotes": [
+      "“(b) FD”",
+      "“DINOv2”"
+     ]
+    }
+   ],
+   "value": 6.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "22 page references valid (printed-folio pages 1–19)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "19 pages checked, 2 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "18 pages checked, 0 passages put back in order",
+   "findings": [],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "karras-et-al-2024-guiding-a-diffusion-model-with-a-bad-version-of-itself",
+ "doc_type": "scholarly_article",
+ "analyzed_at": "2026-11-15T11:42:23.690093+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "Guiding a Diffusion Model with a Bad Version of Itself",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 19,
+   "chars": 51409,
+   "blocks": 132,
+   "inner_headings": 18,
+   "figures": 10
+  }
+ ],
+ "skipped": [
+  "Acknowledgments (p. 10)",
+  "References (p. 10)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 19,
+  "gaps": [
+   {
+    "page": 16,
+    "text": "measurements using the existing command-line scripts. We only had to modify one line of code in the sampling loop to pass in the class label",
+    "words": 25,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "before #/texts/462"
+   },
+   {
+    "page": 16,
+    "text": "in addition to the main network. Algorithm 1 demonstrates the steps needed to reproduce one of our results from Table 1; the rest can be reproduced by repeating the same steps with different models and hyperparameters as indicated in the Table. For the four cases where a pre-trained Model was unavailable, we trained the models ourselves as detailed in Algorithm 2.",
+    "words": 61,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "before #/texts/462"
+   }
+  ],
+  "gaps_dismissed": [
+   {
+    "page": 1,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "| Miika Aittala | Tuomas Kynkäänniemi |\n| NVIDIA | NVIDIA |"
+   },
+   {
+    "page": 1,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "Timo Aila Samuli Laine"
+   },
+   {
+    "page": 1,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "NVIDIA, Aalto University NVIDIA"
+   },
+   {
+    "page": 2,
+    "words": 12,
+    "reason": "debris",
+    "text": "47, 49] dxσ = −σ∇xσ log p(xσ ; σ) dσ (1) \u0001"
+   },
+   {
+    "page": 2,
+    "words": 18,
+    "reason": "debris",
+    "text": "θ = arg minθ Ey∼pdata ,σ∼ptrain ,n∼N (0,σ2 I) ∥Dθ (y + n; σ) − y∥22 , (2)"
+   },
+   {
+    "page": 2,
+    "words": 19,
+    "reason": "debris",
+    "text": "w: Dw (x; σ, c) = wD1 (x; σ, c) + (1 − w)D0 (x; σ, c). (3) 2"
+   },
+   {
+    "page": 3,
+    "words": 33,
+    "reason": "duplicate",
+    "text": "\u0012 \u0014 \u0015w \u0013 2 p1 (x|c; σ) Dw (x; σ, c) ≈ x + σ ∇x log p0 (x|c; σ) . (4) p0 (x|c; σ) | {z } ∝: pw (x|c; σ)"
+   },
+   {
+    "page": 3,
+    "words": 24,
+    "reason": "duplicate",
+    "text": "p1 (x|c; σ) ∇x log pw (x|c; σ) = ∇x log p1 (x|c; σ) + (w − 1)∇x log . (5) p0 (x|c; σ)"
+   },
+   {
+    "page": 4,
+    "words": 15,
+    "reason": "duplicate",
+    "text": "(a) Ground truth (b) No guidance (c) classifier-free (d) Naive truncation (e) autoguidance guidance (Ours)"
+   },
+   {
+    "page": 4,
+    "words": 23,
+    "reason": "debris",
+    "text": "(a) p1 (x|c; σmid ) (b) p0 (x; σmid ) (c) ratio p1 /p0 (d) No guidance (e) CFG with w = 4"
+   },
+   {
+    "page": 7,
+    "words": 66,
+    "reason": "duplicate",
+    "text": "FID FID FID T /32 T /16⋆ T /8 XXS XS⋆ S EMAm EMAg 3.5 3.5 3.5 3.0 3.0 3.0 2.5 2.5 2.5 2020 2.0 1.47 1.51 1.5 1.5 1.5 1.40 1.34 1.41 1.34 1.34 1.34 w=1.0 1.5 2.0 2.5 3.0 w=1.0 1.5 2.0 2.5 3.0 EMA = 0.0"
+   },
+   {
+    "page": 8,
+    "words": 10,
+    "reason": "duplicate",
+    "text": "w=1 w=2 w=3 w=1 w=2 w=3 CFG Ours CFG Ours"
+   },
+   {
+    "page": 9,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "increasing CFG weight"
+   },
+   {
+    "page": 14,
+    "words": 43,
+    "reason": "duplicate",
+    "text": "7 classifier-free guidance classifier-free guidance 1.20 guidance Interval guidance Interval 6 autoguidance (Ours) autoguidance (Ours) 100 5 4 80 3 60 2.23 52.32 46.25 2 1.68 40 1.34 36.67 w=1.0 1.5 2"
+   },
+   {
+    "page": 15,
+    "words": 39,
+    "reason": "duplicate",
+    "text": "(b) CFG (c) autoguidance (d) CFG (e) autoguidance (a) p1 (x|c; σ) p0 (x; σ) p0 (x|c; σ) ratio p1 /p0 ratio p1 /p0 σ = 0.5 σ = 0.25 σ = 0.08 σ = 0.03 σ = 0.01"
+   },
+   {
+    "page": 16,
+    "words": 27,
+    "reason": "debris",
+    "text": "X \u0001 Dw (x; σ, c) := Dm (x; σ, c) + (wi − 1) Dm (x; σ, c) − Di (x; σ, c) , (6) i∈{u,c}"
+   },
+   {
+    "page": 17,
+    "words": 40,
+    "reason": "debris",
+    "text": "X pdata (x|c) = ϕi N (x; µi , Σi ), where (7) i∈Mc \u0012 \u0013 1)+1 ⊤ −1 N (x; µ, Σ) = p exp − (x − µ) Σ (x − µ) . (8) (2π)2 det(Σ) 2"
+   },
+   {
+    "page": 17,
+    "words": 22,
+    "reason": "debris",
+    "text": "X ϕi N x; µi , Σ∗i,σ , where Σ∗i,σ = Σi + σ 2 I. \u0001 p(x|c; σ) = (9) i∈Mc"
+   },
+   {
+    "page": 17,
+    "words": 34,
+    "reason": "debris",
+    "text": "P ∗ \u0001 ∗ \u0001−1 \u0001 i∈Mc ϕi N x; µi , Σi,σ Σi,σ µi − x ∇x log p(x|c; σ) = P ∗ \u0001 . (10) i∈Mc ϕi N x; µi , Σi,σ"
+   },
+   {
+    "page": 18,
+    "words": 19,
+    "reason": "debris",
+    "text": "Z \u0001. \u0001 pθ (x|c; σ) = exp Gθ (x; σ, c) exp Gθ (x; σ, c) dx. (1)+1)"
+   },
+   {
+    "page": 18,
+    "words": 27,
+    "reason": "duplicate",
+    "text": "| ∇x log pθ (x|c; σ) = ∇x Gθ (x; σ, c) | (12) |\n| Dθ (x; σ, c) = x + σ 2 ∇x Gθ (x; σ, c). | (13) |"
+   },
+   {
+    "page": 18,
+    "words": 39,
+    "reason": "debris",
+    "text": "n \u00112 1 2 gθ X \u0010 1 x Gθ (x; σ, c) = − ∥x∗ ∥2 − Fθ,i x∗ ; log σ, c , where x∗ = p (14) 2 σn i=1 4 2 2 σ + σdata"
+   },
+   {
+    "page": 19,
+    "words": 21,
+    "reason": "debris",
+    "text": "2 L(θ) = Eσ∼ptrain ,x∼p(x; σ) σ 2 ∇x log pθ (x; σ) − ∇x log p(x; σ) 2 , (15)"
+   }
+  ],
+  "captions_reclassified": [
+   {
+    "page": 13,
+    "figure": "#/pictures/6",
+    "text": "'A fairytale castle floating in the sky, tethered by ancient vines'"
+   }
+  ],
+  "captions_reassigned": [],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [],
+  "superseded": [],
+  "replaced_pages": [],
+  "noise_dropped": 0,
+  "hyphens_restored": [],
+  "order": [],
+  "order_pages_checked": 18,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 0,
+  "order_breaking": 0,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 3 minor; distortions: 0 material, 2 minor; additions: 0 material, 0 minor; order: 0 material, 0 minor",
+  "at": "2026-11-15T11:43:51+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 3
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 2
+   },
+   "additions": {
+    "material": 0,
+    "minor": 0
+   },
+   "order": {
+    "material": 0,
+    "minor": 0
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "Guiding a Diffusion Model with a Bad Version of Itself (p. 1–19)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "the former effect is due to CFG implicitly raising the conditional part of the probability density to a power greater than one",
+      "severity": "minor",
+      "page": 1
+     },
+     {
+      "source": "during training, the network has only seen real noisy images as inputs, and during sampling it may not be prepared to deal with the unlikely samples it is handed down from the higher noise levels",
+      "severity": "minor",
+      "page": 3
+     },
+     {
+      "source": "The truncation 'overshoots' the correction and produces a narrower distribution than the ground truth, but in practice this does not appear to have an adverse effect on the images",
+      "severity": "minor",
+      "page": 5
+     }
+    ],
+    "distortions": [
+     {
+      "source": "We hope that using both guiding methods simultaneously will serve as a new, useful artistic control.",
+      "summary": "The authors suggest using both simultaneously as a new artistic control.",
+      "severity": "minor",
+      "page": 9
+     },
+     {
+      "source": "For guidance to be successful, the quality gap should be large enough to make the systematic spreading-out of the density outweigh these random effects.",
+      "summary": "the quality gap must be large enough that systematic spreading-out of the density outweighs random effects",
+      "severity": "minor",
+      "page": 6
+     }
+    ],
+    "additions": [],
+    "order": []
+   }
+  ]
+ },
+ "source": {
+  "source": "karras-et-al-2024-guiding-a-diffusion-model-with-a-bad-version-of-itself.pdf",
+  "bytes": 25208943,
+  "sha256": "09157454c4636e5de97e0f8e898efdd2a61b00c722c97bafccb24fdbd7f6f088",
+  "extracted_at": "2026-11-13T02:38:52+01:00"
+ }
+}

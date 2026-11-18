@@ -154,6 +154,10 @@ def load_config(config_name: str) -> dict:
 def get_context(config: dict, lang: str) -> str:
     """Get context in matching language, fallback to EN."""
     ctx = config.get("context", {})
+    if isinstance(ctx, list):
+        # A pool draws another stance on every call; a comparison across
+        # models needs one fixed text per config.
+        raise ValueError("a pool perspective (list-valued context) has no fixed text to compare")
     return ctx.get(lang, ctx.get("en", ""))
 
 

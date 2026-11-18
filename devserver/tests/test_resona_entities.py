@@ -4,10 +4,11 @@
 The entities a room works out are represented on the canvas (not only the
 produced media), if need be only as memory anchors.
 
-Four kinds. The library passage may lie on the surface because the library holds
+Five kinds. The library passage may lie on the surface because the library holds
 knowledge it has PROCESSED and never the original text; an
 external page carries its link and none of its body, which is the same reason
-read the other way round.
+read the other way round. A teaching scenario of the use reports comes whole,
+because no page of the platform shows the scenarios (2026-11-15).
 
 Run:  python3 -m pytest devserver/tests/test_resona_entities.py -q
 """
@@ -174,6 +175,50 @@ def test_a_page_read_that_says_nothing_useful_falls_back_to_the_url():
 
 # --- Everything else ---------------------------------------------------------
 
+# --- The teaching scenario ---------------------------------------------------
+
+def test_an_opened_scenario_becomes_a_card_with_its_whole_wording():
+    """No page of the platform shows the teaching scenarios: the card is the
+    one place the educator can read the scenario a proposal rests on, so its
+    back carries all of it, unclipped, one part per paragraph. The report's
+    uncertainty stays off the card: it speaks in the first person of the
+    report's author, whom nobody at the board can name. The instrument is
+    named in the conversation's language; the source travels as data."""
+    from my_app.services import platform_items as pi
+    rec, scen = pi.scenario_by_id("07/S1")
+    card = re_.from_tool_call("read_scenario", {"id": "07/S1"}, "what the tool said")
+    assert card["kind"] == "scenario"
+    assert card["key"] == "scenario:07/S1"
+    assert card["name"] == scen["title"]
+    parts = ("setting", "text", "sequence", "subject_link")
+    for key in parts:
+        assert " ".join(scen[key].split()) in card["detail"], key
+    assert len(card["detail"].split("\n\n")) == sum(1 for k in parts if scen.get(k))
+    assert "Sequence: " in card["detail"] and "Subject link: " in card["detail"]
+    assert scen.get("uncertainty")
+    assert " ".join(scen["uncertainty"].split()) not in card["detail"]
+    assert "Uncertainty" not in card["detail"]
+    assert len(card["detail"]) > re_.EXCERPT_CHARS
+    names = (pi.item_for_route(rec["route"]) or {}).get("names") or {}
+    en = names.get("en") or rec["name"]
+    assert card["facts"] == [f"{en} ({rec['route']})"]
+    assert card["source"] == {"version": str(pi.USE_REPORTS.get("version")),
+                              "scenario": "07/S1"}
+    de = re_.from_tool_call("read_scenario", {"id": "07/S1"}, "", language="de")
+    assert de["facts"] == [f"{names.get('de') or en} ({rec['route']})"]
+
+
+def test_every_spelling_of_one_scenario_is_one_card():
+    keys = {re_.from_tool_call("read_scenario", {"id": raw}, "")["key"]
+            for raw in ("07/S1", "7 S1", "07-s1", " 7/1 ")}
+    assert keys == {"scenario:07/S1"}
+
+
+def test_a_scenario_that_is_not_there_is_no_card():
+    for raw in ("07/S99", "99/S1", "nope", "", None, 7):
+        assert re_.from_tool_call("read_scenario", {"id": raw}, "x") is None, raw
+
+
 def test_a_tool_that_worked_nothing_out_lays_nothing_down():
     for name in ("lookup_knowledge", "search_websites", "generate_media",
                  "run_canvas_graph", "view_run", "recall"):
@@ -236,3 +281,50 @@ def test_the_card_goes_out_before_the_closing_sentence(app_ctx, monkeypatch):
     assert card["detail"] == "hat im Kurs getragen"
     # And again in the closing payload: the blocking mouth reads nothing else.
     assert evs[-1]["worked_entities"] == [card]
+
+
+SCENARIO_CALL = [{
+    "id": "call_s", "type": "function",
+    "function": {"name": "read_scenario", "arguments": json.dumps({"id": "07/S1"})},
+}]
+
+
+def test_a_scenario_read_on_together_lays_its_card(app_ctx, monkeypatch):
+    monkeypatch.setattr(chat_routes, "call_chat_helper_stream", _rounds(
+        ([], _answer("", SCENARIO_CALL)),
+        (["Gelesen."], _answer("Gelesen.")),
+    ))
+    evs = list(chat_routes._chat_events({
+        "message": "welches Szenario passt?",
+        "context": {"resona_mode": True, "language": "de", "device_id": "test-device"},
+    }))
+    cards = [e["entity"] for e in evs if e["type"] == "entity"]
+    assert [c["key"] for c in cards] == ["scenario:07/S1"], cards
+    assert evs[-1]["worked_entities"] == cards
+
+
+def test_help_reads_the_same_scenario_and_lays_nothing_down(app_ctx, monkeypatch):
+    """Help reads the scenarios too, and has no board: no card, and no
+    sentence telling the model there is one."""
+    seen = {}
+
+    def execute_spy(name, args, **kw):
+        out = real_execute(name, args, **kw)
+        seen[name] = out
+        return out
+
+    registry = get_tool_registry()
+    real_execute = registry.execute
+    monkeypatch.setattr(registry, "execute", execute_spy)
+    monkeypatch.setattr(chat_routes, "call_chat_helper_stream", _rounds(
+        ([], _answer("", SCENARIO_CALL)),
+        (["Gelesen."], _answer("Gelesen.")),
+    ))
+    evs = list(chat_routes._chat_events({
+        "message": "welches Szenario passt?",
+        "context": {"language": "de"},
+    }))
+    assert "read_scenario" in seen, list(seen)
+    assert "on the board" not in seen["read_scenario"]
+    assert not [e for e in evs if e["type"] == "entity"]
+    assert not evs[-1].get("worked_entities")

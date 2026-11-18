@@ -1,0 +1,468 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 13.9% of 2409 words, ceiling 20%, longest run 39 words; not counted: 1361 words from the source's lists",
+   "findings": [
+    {
+     "words": 39,
+     "text": "innovate and expand partnerships and coordination mechanisms at international regional national and local levels among governmental bodies cultural institutions schools memorial and heritage sites local communities civil society the private sector media learners educators artists and other cultural "
+    },
+    {
+     "words": 26,
+     "text": "unesco creative cities network and unesco global network of learning cities community centres cultural and natural heritage sites memorial sites and other arts and cultural institutions"
+    },
+    {
+     "words": 17,
+     "text": "strengthen existing or establish new long term mechanisms for systematic comprehensive collaborative interdisciplinary and transdisciplinary research and"
+    },
+    {
+     "words": 17,
+     "text": "universal declaration on cultural diversity 2001 the recommendation concerning the status of the artist 1980 the recommendation"
+    },
+    {
+     "words": 16,
+     "text": "specialized schools museums galleries libraries performing arts venues creative hubs cities and municipalities including members of"
+    }
+   ],
+   "value": 0.1395,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "17 of 17 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "UNESCO Framework for Culture and Arts Education (p. 1–10)",
+     "page": 1,
+     "expected_items": 8,
+     "first_item": "We, the Ministers of Culture and Education , have gathered from 13 to 15 Februar",
+     "output_lists": []
+    },
+    {
+     "section": "UNESCO Framework for Culture and Arts Education (p. 1–10)",
+     "page": 3,
+     "expected_items": 6,
+     "first_item": "Developments such as digital transformation and unprecedented human mobility, as",
+     "output_lists": []
+    },
+    {
+     "section": "UNESCO Framework for Culture and Arts Education (p. 1–10)",
+     "page": 4,
+     "expected_items": 7,
+     "first_item": "Ensure culture and arts education as a common good of humanity that should be ac",
+     "output_lists": []
+    },
+    {
+     "section": "UNESCO Framework for Culture and Arts Education (p. 1–10)",
+     "page": 4,
+     "expected_items": 4,
+     "first_item": "The UNESCO Framework is intended to provide guidance and policy recommendations ",
+     "output_lists": []
+    },
+    {
+     "section": "UNESCO Framework for Culture and Arts Education (p. 1–10)",
+     "page": 5,
+     "expected_items": 3,
+     "first_item": "The UNESCO Framework considers culture and arts education as an ecosystem, which",
+     "output_lists": []
+    },
+    {
+     "section": "UNESCO Framework for Culture and Arts Education (p. 1–10)",
+     "page": 5,
+     "expected_items": 5,
+     "first_item": "Access is a critical foundation for exercising the right to education and cultur",
+     "output_lists": []
+    },
+    {
+     "section": "UNESCO Framework for Culture and Arts Education (p. 1–10)",
+     "page": 6,
+     "expected_items": 2,
+     "first_item": "Education guided by human rights and responsive to global challenges faced by hu",
+     "output_lists": []
+    },
+    {
+     "section": "UNESCO Framework for Culture and Arts Education (p. 1–10)",
+     "page": 6,
+     "expected_items": 2,
+     "first_item": "Culture, in its rich diversity, should be integrated in and across formal, non-f",
+     "output_lists": []
+    },
+    {
+     "section": "UNESCO Framework for Culture and Arts Education (p. 1–10)",
+     "page": 6,
+     "expected_items": 2,
+     "first_item": "Educational environments and settings should fully leverage culture and the arts",
+     "output_lists": []
+    },
+    {
+     "section": "UNESCO Framework for Culture and Arts Education (p. 1–10)",
+     "page": 7,
+     "expected_items": 2,
+     "first_item": "Enhance awareness of the value of culture and arts education for holistic develo",
+     "output_lists": []
+    },
+    {
+     "section": "UNESCO Framework for Culture and Arts Education (p. 1–10)",
+     "page": 7,
+     "expected_items": 2,
+     "first_item": "Transform governance and policies for culture and arts education through sustain",
+     "output_lists": []
+    },
+    {
+     "section": "UNESCO Framework for Culture and Arts Education (p. 1–10)",
+     "page": 7,
+     "expected_items": 2,
+     "first_item": "Integrate diverse local knowledge systems, tangible and intangible cultural reso",
+     "output_lists": []
+    },
+    {
+     "section": "UNESCO Framework for Culture and Arts Education (p. 1–10)",
+     "page": 8,
+     "expected_items": 4,
+     "first_item": "Diversify the teaching profession, ensuring that it embodies the rich cultural d",
+     "output_lists": []
+    },
+    {
+     "section": "UNESCO Framework for Culture and Arts Education (p. 1–10)",
+     "page": 8,
+     "expected_items": 5,
+     "first_item": "Leverage media and information literacy to support the effective provision of cu",
+     "output_lists": []
+    },
+    {
+     "section": "UNESCO Framework for Culture and Arts Education (p. 1–10)",
+     "page": 9,
+     "expected_items": 2,
+     "first_item": "Mobilize financing, including through public and private partnerships, for the d",
+     "output_lists": []
+    },
+    {
+     "section": "UNESCO Framework for Culture and Arts Education (p. 1–10)",
+     "page": 9,
+     "expected_items": 7,
+     "first_item": "With a view to advancing the strategic goals of the UNESCO Framework and assessi",
+     "output_lists": []
+    },
+    {
+     "section": "UNESCO Framework for Culture and Arts Education (p. 1–10)",
+     "page": 10,
+     "expected_items": 4,
+     "first_item": "networks and actors encompassing, inter alia , UNESCO Chairs and UNESCO Associat",
+     "output_lists": []
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "21 numbers present",
+   "findings": [],
+   "value": 0.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "14 of 22 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "UNESCO Framework for Culture and Arts Education (p. 1–10)",
+     "page": 1,
+     "heading": "UNESCO Framework for Culture and Arts Education"
+    },
+    {
+     "section": "UNESCO Framework for Culture and Arts Education (p. 1–10)",
+     "page": 5,
+     "heading": "a) Access, inclusion, and equity in and through culture and arts education"
+    },
+    {
+     "section": "UNESCO Framework for Culture and Arts Education (p. 1–10)",
+     "page": 6,
+     "heading": "b) Contextual, quality, lifelong and lifewide learning in and through culture and arts education"
+    },
+    {
+     "section": "UNESCO Framework for Culture and Arts Education (p. 1–10)",
+     "page": 6,
+     "heading": "c) Appreciation of cultural diversity and the capacity for critical engagement"
+    },
+    {
+     "section": "UNESCO Framework for Culture and Arts Education (p. 1–10)",
+     "page": 6,
+     "heading": "d) Skills to shape resilient, just and sustainable futures"
+    },
+    {
+     "section": "UNESCO Framework for Culture and Arts Education (p. 1–10)",
+     "page": 7,
+     "heading": "e) Institutionalization and valorization of culture and arts education ecosystems"
+    },
+    {
+     "section": "UNESCO Framework for Culture and Arts Education (p. 1–10)",
+     "page": 7,
+     "heading": "a) Governance, legislation and policies"
+    },
+    {
+     "section": "UNESCO Framework for Culture and Arts Education (p. 1–10)",
+     "page": 7,
+     "heading": "b) Learning environments"
+    },
+    {
+     "section": "UNESCO Framework for Culture and Arts Education (p. 1–10)",
+     "page": 7,
+     "heading": "c) Learning experiences"
+    },
+    {
+     "section": "UNESCO Framework for Culture and Arts Education (p. 1–10)",
+     "page": 8,
+     "heading": "d) Teachers and educators"
+    },
+    {
+     "section": "UNESCO Framework for Culture and Arts Education (p. 1–10)",
+     "page": 8,
+     "heading": "e) Digital technologies and AI"
+    },
+    {
+     "section": "UNESCO Framework for Culture and Arts Education (p. 1–10)",
+     "page": 9,
+     "heading": "f) Partnerships, interinstitutional coordination"
+    },
+    {
+     "section": "UNESCO Framework for Culture and Arts Education (p. 1–10)",
+     "page": 9,
+     "heading": "g) Financing"
+    },
+    {
+     "section": "UNESCO Framework for Culture and Arts Education (p. 1–10)",
+     "page": 9,
+     "heading": "h) Research, data and assessment"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "0 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "0 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "every quoted text in the figure descriptions confirmed by the source",
+   "findings": [],
+   "value": 0.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "21 page references valid (printed-folio pages 1–10)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "10 pages checked, 0 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "10 pages checked, 0 passages put back in order",
+   "findings": [],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "unesco-a-framework-for-culture-and-arts-education-2024",
+ "doc_type": "framework_report",
+ "analyzed_at": "2026-11-15T10:11:42.716958+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "UNESCO Framework for Culture and Arts Education",
+   "derived_heading": "",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 10,
+   "chars": 39726,
+   "blocks": 99,
+   "inner_headings": 21,
+   "figures": 0
+  }
+ ],
+ "skipped": [],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 10,
+  "gaps": [],
+  "gaps_dismissed": [],
+  "captions_reclassified": [],
+  "headings_restored": [],
+  "lists_reunited": [
+   {
+    "page": 2,
+    "list": "#/groups/0",
+    "fragment": "#/groups/1",
+    "markers": "5-8",
+    "rule": "fragment continues numbering"
+   }
+  ],
+  "figures_screened": [
+   {
+    "page": 1,
+    "image": "fig-001-p1.png",
+    "w": 257,
+    "h": 57,
+    "reason": "strip"
+   },
+   {
+    "page": 1,
+    "image": "fig-002-p1.png",
+    "w": 266,
+    "h": 83,
+    "reason": "strip"
+   }
+  ],
+  "superseded": [],
+  "replaced_pages": [],
+  "noise_dropped": 0,
+  "hyphens_restored": [],
+  "order": [],
+  "order_pages_checked": 10,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 0,
+  "order_breaking": 0,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 8 minor; distortions: 0 material, 1 minor; additions: 0 material, 1 minor; order: 0 material, 0 minor",
+  "at": "2026-11-15T10:12:30+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 8
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 1
+   },
+   "additions": {
+    "material": 0,
+    "minor": 1
+   },
+   "order": {
+    "material": 0,
+    "minor": 0
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "UNESCO Framework for Culture and Arts Education (p. 1–10)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "Culture is at the heart of what makes us human, and provides the foundation of our values, choices and relationships with one another and with nature, endowing us with critical thinking, a sense of identity, and the ability to respect and embrace otherness.",
+      "severity": "minor",
+      "page": 2
+     },
+     {
+      "source": "teaching and learning about, with and through the arts and culture, as well as all forms of cultural and artistic expressions",
+      "severity": "minor",
+      "page": 3
+     },
+     {
+      "source": "the whole of their personality, sense of dignity, talents and mental and physical abilities, within and for the benefit of local, national, regional and global communities, and ecosystems",
+      "severity": "minor",
+      "page": 3
+     },
+     {
+      "source": "counter gender discrimination and bias, harmful content and violence in all educational settings, as well as experiences and practices related to culture and arts education",
+      "severity": "minor",
+      "page": 4
+     },
+     {
+      "source": "cultural diversity as a defining feature and common heritage of humanity that expands the choices, capacities and nurtures the values of individuals and societies",
+      "severity": "minor",
+      "page": 4
+     },
+     {
+      "source": "the responsible stewardship of cultural and biological diversity through learning with the environment for sustainable development",
+      "severity": "minor",
+      "page": 6
+     },
+     {
+      "source": "Advance the professionalization of culture and arts ecosystems, the recognition of cultural, artistic and creative skills, and the development of infrastructure by strengthening Technical and Vocational Education and Training (TVET)",
+      "severity": "minor",
+      "page": 7
+     },
+     {
+      "source": "in supporting engaging learning environments, generating new forms of creation, expression and ways of sharing creativity",
+      "severity": "minor",
+      "page": 9
+     }
+    ],
+    "distortions": [
+     {
+      "source": "Access is a critical foundation for exercising the right to education and cultural rights.",
+      "summary": "Access is the critical foundation for the rights to education and cultural life",
+      "severity": "minor",
+      "page": 5
+     }
+    ],
+    "additions": [
+     {
+      "summary": "The Framework is the outcome document of the UNESCO World Conference on Culture and Arts Education",
+      "severity": "minor"
+     }
+    ],
+    "order": []
+   }
+  ]
+ },
+ "source": {
+  "source": "unesco-a-framework-for-culture-and-arts-education-2024.pdf",
+  "bytes": 253377,
+  "sha256": "4a2046ccd58faf38b1d5531dc84856ac48f770bc100164a1181a1c9e00ccbe06",
+  "extracted_at": "2026-11-13T01:28:01+01:00"
+ }
+}

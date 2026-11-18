@@ -32,6 +32,11 @@ from pathlib import Path
 from typing import Optional
 
 import requests
+# Every route of the DevServer needs a sign-in (2026-11-15); the sign-in of a
+# script reads the account or the code of a place from the environment
+# (devserver_sign_in.py, beside this file).
+sys.path.append(str(Path(__file__).resolve().parent))
+from devserver_sign_in import devserver
 
 logger = logging.getLogger("probe_workshop_models")
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
@@ -80,7 +85,7 @@ def make_test_image(side: int = 256) -> bytes:
 def upload_test_image(base_url: str) -> Optional[str]:
     png = make_test_image(256)
     try:
-        resp = requests.post(
+        resp = devserver(base_url).post(
             f"{base_url}/api/media/upload/image",
             files={"file": ("probe_input.png", png, "image/png")},
             timeout=30,
@@ -140,7 +145,7 @@ def probe(
     media_format: Optional[str] = None
 
     try:
-        with requests.get(url, params=params, stream=True, timeout=per_model_timeout) as resp:
+        with devserver(base_url).get(url, params=params, stream=True, timeout=per_model_timeout) as resp:
             if not resp.ok:
                 return {
                     "status": "http_error",

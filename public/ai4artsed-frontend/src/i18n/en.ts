@@ -271,6 +271,13 @@ export const en = {
   settings: {
     authIncorrectPassword: 'Incorrect password',
     authError: 'Authentication error',
+    authPlaceRefused: 'The settings need a sign-in as a course leader or an admin.',
+    authSignInEnded: 'The sign-in of this browser has ended. Sign in again to open the settings.',
+    // 403 `published_password` of /api/settings/auth (2026-11-15).
+    authPublishedPassword: 'This password stands in the published code of the platform and opens nothing. On the server, devserver/scripts/set_admin_account.py sets a new one.',
+    // 503 `settings_password_not_set`: settings_password.key is missing; only
+    // a signed-in course leader meets this dialog then (2026-11-15).
+    authNotSet: 'The settings password is not set. On the server, devserver/scripts/set_admin_account.py sets it. An admin who is signed in opens the settings without it.',
     authRequired: 'Authentication Required',
     authPrompt: 'Please enter the password to access settings:',
     passwordPlaceholder: 'Enter password...',
@@ -1422,7 +1429,6 @@ export const en = {
       noGuarantee: 'No technical system can replace pedagogical supervision.',
     },
     checkbox: 'I agree to these conditions and accept responsibility as workshop leader for the supervised use of this platform.',
-    acceptButton: 'Continue',
   },
   docs: {
     license: {
@@ -2209,7 +2215,7 @@ export const en = {
     // its two fields since 2026-09-17.
     description: 'Three factors on the conditioning table of Stable Diffusion 3.5: a on the CLIP block, b for T5’s rows 0–76 added into it, c on the T5 block.',
     infoDescription: 'Encoder Fusion is an instrument of the Latent Lab that changes the conditioning of the image model Stable Diffusion 3.5 before the model runs: the table of numbers that three text encoders compute from the prompt and that the model computes the picture from. The table has 4096 columns. The two CLIP encoders, CLIP-L and CLIP-G, fill rows 0–76 up to column 2047, and columns 2048–4095 of those rows are zero; the encoder T5-XXL fills 512 rows below across every column, more when the prompt has more T5 pieces, 589 rows in all for a prompt up to that length. A row holds one piece of the prompt, a start or end mark, or padding past the text’s end. CLIP-L and CLIP-G were trained on pairs of images and captions and T5-XXL on text alone, so the two blocks hold two different encodings of the same prompt. Three factors act on the table: a multiplies the CLIP block, c multiplies the T5 block, and b adds T5’s rows 0–76 into the CLIP block cell by cell, each T5 row onto the CLIP row of the same number, whatever piece of the prompt either row holds. The T5 block holds all of those rows or, in the layout of the earlier Surrealizer, rows 77–511 alone, so that T5’s rows 0–76 reach the model only as the b-fold addend inside the CLIP block; the two fields in the line of c set which. Beside the table the model reads the pooled vector, pool in the drawing, CLIP-L’s 768 and CLIP-G’s 1280 numbers joined, as an input of the modulation, the numbers by which each layer of the model scales and shifts what passes through it; the two fields in the line of a set whether the model receives that vector or zeros in its place. Standard, a 1, b 0, c 1, pool CLIP, is the table and the vector as they stand without this instrument. What the instrument is for is the tables beyond that one. With the T5 block zeroed, or with the CLIP block and the pooled vector zeroed, on rows 0–511, the model runs in a state its training contained; a row holding both encodings, which b above 0 produces, or a block with its sign turned, which a below 0 produces, is a conditioning beyond what any prompt produces, and a run shows what the model computes from it. Every run keeps a card under Runs, the strip under the surface, labelled with its three factors, on rows 77–511 with that layout and under zeros in the pooled vector’s place with pool 0, so that runs with different settings stand side by side.',
-    purposeText: 'Enter a prompt in the field; it goes to CLIP-L, CLIP-G and T5 alike. The six fields over the drawing set all three factors, the layout of the T5 block and the pooled vector, pool in the drawing, at once. Standard (a 1, b 0, c 1, pool CLIP) is the table and the vector as Stable Diffusion 3.5 runs on its own. CLIP only (a 1, b 0, c 0, pool CLIP) zeroes the T5 block, the setting without T5 that Esser et al. (2024) measured. T5 only (a 0, b 0, c 1, pool 0) zeroes the CLIP block and puts zeros in the pooled vector’s place: the model then runs on T5’s numbers alone. Surrealization 5, 15 and 35 (a 1 − n, b n, c 1, T5 block rows 77–511, pool CLIP) carry the arithmetic of the earlier Surrealizer at its strengths 5, 15 and 35: the CLIP block with its sign turned and stretched, T5’s rows 0–76 added n-fold, and under the CLIP block T5’s rows 77–511 alone. The three sliders under the drawing move each factor on its own, a and b from −75 to 75, c from 0 to 1. a at 0 removes CLIP’s numbers from rows 0–76; a below 0 turns the sign of every CLIP cell and multiplies it by the factor’s size. b at 0 adds nothing to the CLIP block; b above 0 writes sums of both encodings into rows 0–76; b below 0 subtracts T5’s rows instead. c at 0 empties the T5 block. The two fields in the line of c set which rows the T5 block holds: rows 0–511, the layout Stable Diffusion 3.5 runs on its own, or rows 77–511 alone, the layout of the earlier Surrealizer, under which T5’s rows 0–76 reach the model only as the b-fold addend inside the CLIP block; Standard, CLIP only and T5 only stand on rows 0–511, the three Surrealization fields on rows 77–511, and the label of a run on rows 77–511 carries T5 77–511. The two fields in the line of a set the pooled vector: pool CLIP, the vector as CLIP-L and CLIP-G compute it, or pool 0, zeros in its place; T5 only stands on pool 0, the other five fields on pool CLIP, and the label of a run on pool 0 carries pool 0. The token table under the sliders lists, row by row, the CLIP piece and the T5 piece that b pairs; pieces of a long prompt beyond the CLIP block reach T5 alone, and the table counts them. Under Advanced settings stand the negative prompt, which runs under the same three factors, layout and pooled vector, the CFG scale and the seed. The triangle, Execute in its tooltip, shows the picture on the surface and adds a card under Runs, labelled a · b · c; the key in a card’s bar puts that run back on the surface: prompt, factors, layout, pooled vector, negative prompt, CFG, seed and picture.',
+    purposeText: 'Enter a prompt in the field; it goes to CLIP-L, CLIP-G and T5 alike. The six fields over the drawing set all three factors, the layout of the T5 block and the pooled vector, pool in the drawing, at once. Standard (a 1, b 0, c 1, pool CLIP) is the table and the vector as Stable Diffusion 3.5 runs on its own. CLIP only (a 1, b 0, c 0, pool CLIP) zeroes the T5 block, the setting without T5 that Esser et al. (2024) measured. T5 only (a 0, b 0, c 1, pool 0) zeroes the CLIP block and puts zeros in the pooled vector’s place: the model then runs on T5’s numbers alone. Surrealization 5, 15 and 35 (a 1 − n, b n, c 1, T5 block rows 77–511, pool CLIP) carry the arithmetic of the earlier Surrealizer at its strengths 5, 15 and 35: the CLIP block with its sign turned and stretched, T5’s rows 0–76 added n-fold, and under the CLIP block T5’s rows 77–511 alone. The three sliders under the drawing move each factor on its own, from −75 to 75. a at 0 removes CLIP’s numbers from rows 0–76; a below 0 turns the sign of every CLIP cell and multiplies it by the factor’s size. b at 0 adds nothing to the CLIP block; b above 0 writes sums of both encodings into rows 0–76; b below 0 subtracts T5’s rows instead. c at 0 empties the T5 block; c below 0 turns the sign of every cell in the T5 block and multiplies it by the factor’s size. The two fields in the line of c set which rows the T5 block holds: rows 0–511, the layout Stable Diffusion 3.5 runs on its own, or rows 77–511 alone, the layout of the earlier Surrealizer, under which T5’s rows 0–76 reach the model only as the b-fold addend inside the CLIP block; Standard, CLIP only and T5 only stand on rows 0–511, the three Surrealization fields on rows 77–511, and the label of a run on rows 77–511 carries T5 77–511. The two fields in the line of a set the pooled vector: pool CLIP, the vector as CLIP-L and CLIP-G compute it, or pool 0, zeros in its place; T5 only stands on pool 0, the other five fields on pool CLIP, and the label of a run on pool 0 carries pool 0. The token table under the sliders lists, row by row, the CLIP piece and the T5 piece that b pairs; pieces of a long prompt beyond the CLIP block reach T5 alone, and the table counts them. Under Advanced settings stand the negative prompt, which runs under the same three factors, layout and pooled vector, the CFG scale and the seed. The triangle, Execute in its tooltip, shows the picture on the surface and adds a card under Runs, labelled a · b · c; the key in a card’s bar puts that run back on the surface: prompt, factors, layout, pooled vector, negative prompt, CFG, seed and picture.',
     techText: 'The arithmetic runs in ComfyUI in the node AI4ArtsEdSD3ThreeFactors (comfyui_nodes/ai4artsed_sd3_conditioning.py), on the parts the encode node of the same family delivers for the prompt: rows 0–76 receive a · CLIP + b · T5[0..76], the rows from 77 on receive c · T5, in float32, nothing clamped. T5 runs at 512 rows (T5TokenizerOptions, min_length 512, devserver/schemas/engine/comfyui_chunk_support.py) or at the prompt’s own length past that. The layout of the block is the fourth parameter, t5_rows: full, rows 0–511 under the CLIP block, a table of 589 rows, or tail, rows 77–511 alone, a table of 512 rows, the layout of the earlier Surrealizer, in which T5’s rows 0–76 reach the model only as the b-fold addend inside the CLIP block. The pooled vector, CLIP-L’s 768 and CLIP-G’s 1280 numbers joined, is the fifth parameter, pooled. Under clip the node hands it on as the two encoders compute it; under zero it hands on zeros of the same shape, which is what ComfyUI itself assembles for the vector when it runs without a CLIP encoder (comfy/text_encoders/sd3_clip.py). The three factors act on the table; the vector passes whole. The negative prompt passes through a second node of the same kind under the same five parameters; an empty negative is the encoding of the empty string. (1, 0, 1, full, clip) is the sequence and the vector as ComfyUI assembles them on its own; (1 − α, α, 1, tail, clip) is the earlier node AI4ArtsEdSD3Fusion under legacy at α, bit for bit, which is what the three Surrealization fields send. Inside the model the whole table passes through one linear layer to the transformer’s width, the same weights for every row, and position encodings are added to the image patches only (Esser et al. 2024, section 4, Figure 2), so a text row’s place in the table plays no part in the computation; a T5 row added into a CLIP row is a sum at that layer’s input. The model reads the pooled vector apart from the table: embeddings of the timestep, the step of the run the model is at, and of this vector are the inputs to the modulation mechanism (Esser et al. 2024, section 4), which every transformer block of the model carries (comfy/ldm/modules/diffusionmodules/mmdit.py), so that zeros in its place change that modulation in every transformer block and leave the table as it is. Esser et al. (2024, “Scaling Rectified Flow Transformers for High-Resolution Image Synthesis”, ICML 2024, https://doi.org/10.48550/arXiv.2403.03206) describe the assembly in appendix B.2, the CLIP rows zero-padded along the channel axis to 4096 and concatenated along the sequence axis with the T5 rows; the training with each encoder set to zero independently at 46.4 % (B.3); and the ablation without T5 in section 5.3.3, with win rates against the full model of 50 % for aesthetics, 46 % for prompt adherence and 38 % for written text. In the paper the T5 context has 77 rows; ComfyUI runs T5 at 512 rows here. CLIP-L is the text encoder of Radford et al. (2021, “Learning Transferable Visual Models From Natural Language Supervision”, ICML 2021, https://doi.org/10.48550/arXiv.2103.00020), CLIP-G that of the OpenCLIP ViT-bigG/14 of Cherti et al. (2023, “Reproducible Scaling Laws for Contrastive Language-Image Learning”, CVPR 2023, https://doi.org/10.48550/arXiv.2212.07143), both trained on image–caption pairs; T5-XXL is the encoder of Raffel et al. (2020, “Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer”, JMLR 21, https://doi.org/10.48550/arXiv.1910.10683), trained on text alone.',
     sliderLabel: 'Extrapolation (α)',
     sliderCfBothFull: 'both full',
@@ -2254,6 +2260,18 @@ export const en = {
     pooledZero: 'pool 0',
     pooledClipTitle: 'CLIP-L’s and CLIP-G’s pooled vector, 768 and 1280 numbers joined',
     pooledZeroTitle: 'Zeros of the same shape in the pooled vector’s place',
+    // The three fields in the line of a, before the pool's two (since
+    // 2026-11-15): which CLIP encoders fill the CLIP block and the pooled
+    // vector. clip-l or clip-g alone puts zeros in the other encoder's columns
+    // and in its part of the pooled vector, which is what ComfyUI assembles
+    // without that encoder (comfy/text_encoders/sd3_clip.py). The three labels
+    // are dictated wording and stay verbatim in every language.
+    clipEncoderL: 'clip-l',
+    clipEncoderG: 'clip-g',
+    clipEncoderBoth: 'both',
+    clipEncoderLTitle: 'CLIP-L alone, columns 0–767; zeros in CLIP-G’s columns 768–2047 and in its 1280 numbers of the pooled vector',
+    clipEncoderGTitle: 'CLIP-G alone, columns 768–2047; zeros in CLIP-L’s columns 0–767 and in its 768 numbers of the pooled vector',
+    clipEncoderBothTitle: 'CLIP-L in columns 0–767 and CLIP-G in columns 768–2047, both in the pooled vector',
     // Written into the drawing (components/ConditioningTable.vue).
     table: {
       columnsClip: 'columns 0–2047',
@@ -2815,7 +2833,7 @@ export const en = {
       // Purpose written from the documented group wording and the use
       // report; no supplied wording of the project lead for this page.
       // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
-      purpose: 'With an adapter, the ordinary meaning of a word that stood in the captions can shift along. For a motif outside the adapter\'s training set, the column shows whether the pictures with the adapter render the motif in a trained manner or the subjects of its training set.',
+      purpose: 'An adapter can drift, as the note "LoRA Explorer" says with Ruiz et al. (2023): the ordinary meaning of a word that stood in the captions can shift along. For a motif outside the adapter\'s training set, the column shows whether the pictures with the adapter render the motif in a trained manner or the subjects of its training set.',
       generate: 'Run the comparison',
       adapterLabel: 'Adapter',
       noAdapters: 'Nothing has been trained here yet. The Training Studio makes an adapter.',
@@ -2842,7 +2860,7 @@ export const en = {
       // half is SUPPLIED WORDING, recast by the project lead on 2026-10-31 without address.
       // Address, German authored, English set after it (2026-11-07).
       // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
-      story: 'Several image models receive the base prompt once on its own and beside it with a culture or a country named in it: "Yoruba", "Sámi", "Franconian". Every line in the field "Variations (further columns)" replaces the asterisk "*" in the base prompt once and gets a column of its own. The list for the variations offers cultures and six emotions, for a base prompt such as "a person feeling *". The rows hold the models, the columns the variations, and a model computes in its row with the same seed and with exactly this wording.',
+      story: 'Several image models receive the base prompt once on its own and beside it with a culture or a country named in it: "Yoruba", "Sámi", "Franconian". Every line in the field "Variations (further columns)" replaces the asterisk "*" in the base prompt once and gets a column of its own. The list for the variations offers cultures and six emotions, for a base prompt such as "a person feeling *". The rows hold the models, the columns the variations, and a model computes in its row with the same seed and with exactly this wording. A further run computes the changed and the empty cells anew, the other pictures stay. The numbers in the note "Stereotype Analysis" come from the studies named there.',
       // Closing sentence is SUPPLIED WORDING of the project lead (2026-10-31).
       // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
       purpose: 'The field "Variations (further columns)" takes any own word: one\'s own region, town, community or language. Whoever knows the place can judge whether a model shows a meal, a festival or a greeting from there as it looks there. If only one model is selected, five different variations (seeds) are used, so that a range of results can be compared.',
@@ -2901,9 +2919,9 @@ export const en = {
         // the finding a visitor is here to make.
         // Address, German authored, English set after it (2026-11-07).
         // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
-        story: 'Prompt Interception is the step in which a language model writes a prompt over again through a perspective. Here that step runs several times on the same prompt, once per writing model. Enter the prompt, choose the perspective it is to be written through, and choose the set of models that are to write ("Writing models"); one image model generates a picture for each text. The top row holds the prompt as it was entered, and what the image model makes of it with that step left out.',
+        story: 'Prompt Interception is the step in which a language model writes a prompt over again through a perspective. Here that step runs several times on the same prompt, once per writing model. Enter the prompt, choose the perspective it is to be written through, and choose the set of models that are to write ("Writing models"); one image model generates a picture for each text. The top row holds the prompt as it was entered, and what the image model makes of it with that step left out. The row heads name the models of the set that run in this installation. A change of set adds its rows on top, and the rows so far keep their text and picture.',
         // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
-        purpose: 'The matter of the comparison is the texts: the form each model sets and names, what it keeps of the prompt, what it drops and what it adds, and its register. Where a perspective names a tradition, such as “Bauhaus”, “Literati” or “Renaissance”, the text shows whether a model writes its forms or a cliché of them.',
+        purpose: 'The matter of the comparison is the texts: the form each model sets and names, what it keeps of the prompt, what it drops and what it adds, and its register. The picture beside a text shows what an image model made of this text. Where a perspective names a tradition, such as “Bauhaus”, “Literati” or “Renaissance”, the text shows whether a model writes its forms or a cliché of them.',
         generate: 'Run the series',
         // The one perspective every row is written through. It stands in the
         // column as a disc, and where none is chosen yet as the empty place of
@@ -2995,7 +3013,7 @@ export const en = {
         // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
         story: 'Prompt Interception is the step in which a language model writes a prompt over again through a perspective. Here that step runs several times on the same prompt, once per chosen perspective, and one image model generates a picture for each rewritten prompt. With a typed prompt, the first picture shows what the image model makes of the prompt itself, with that step left out.',
         // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
-        purpose: 'This surface serves getting to know Prompt Interception: a work stands under several perspectives, and the differences between the results are the matter of the conversation about them. A classical painting dragged onto the field is such a work: for instance Caspar David Friedrich\'s “Wanderer above the Sea of Fog” (1818), written over again through the perspective “Slang”. Compared with the work, the new prompt shows what stays under this perspective, what changes and in which register the language model writes.',
+        purpose: 'This surface serves getting to know Prompt Interception: a work stands under several perspectives, and the differences between the results are the matter of the conversation about them. A classical painting dragged onto the field is such a work: for instance Caspar David Friedrich\'s “Wanderer above the Sea of Fog” (1818), written over again through the perspective “Slang”. Compared with the work, the new prompt shows what stays under this perspective, what changes and in which register the language model writes. The numbers in the note "Interception Scope" come from the studies named there.',
         generate: 'Run the series',
         templateLabel: 'Template',
         perspectivesLabel: 'Perspectives',
@@ -3083,7 +3101,7 @@ export const en = {
     workbench: {
       // Address, German authored, English set after it (2026-11-07).
       // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
-      story: 'After "Run sweep" the image model generates a grid of pictures, one picture per cell. In the preset, the columns are the chosen fusion strategies ("X · columns") and the rows the denoising windows ("Y · rows"), and in each cell the fusion of the encodings of CLIP and T5 acts in the steps its window covers.',
+      story: 'After "Run sweep" the image model generates a grid of pictures from one prompt at one seed, one picture per cell. In the preset, the columns are the chosen fusion strategies ("X · columns") and the rows the denoising windows ("Y · rows"), and in each cell the fusion of the encodings of CLIP and T5 acts in the steps its window covers. The text behind "T5 expand" goes to the T5 encoder alone and is the same in every cell.',
       // Purpose written from the documented group wording and the use
       // report; no supplied wording of the project lead for this page.
       // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
@@ -3486,7 +3504,7 @@ export const en = {
       // 2026-11-15: sentences 1 and 2 restored from the wording accepted on 2026-09-24 (WO-2026-09-24-C1), sentences 3 and 4 from the version of 2026-11-08 (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
       story: 'An image generator starts from pure random noise, a flicker with no object in it, and removes that noise step by step, preset at 25, until a scene is left. The platform holds every single one of those steps; the slider in the left column picks which of them fills the view. After the run the view stands at step 1, the noise. Two nets stand at the Backbone to choose from, SDXL (2023) and SD 3.5 (2024), and every run stays under "Runs".',
       // 2026-11-15: sentences 2 and 3 restored from the wording accepted on 2026-09-24, sentence 3 corrected by the two backbones. The imperatives direct concrete seeing and stay (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
-      purpose: 'The subject of this page is denoising: at every step the net computes from the noisy interim state a less noisy one. Go back and forth along the slider and watch for the step from which the scene is recognisable. That point shifts with the prompt and with the model; for that, compare two runs with the same prompt, one on SDXL and one on SD 3.5.',
+      purpose: 'The subject of this page is denoising: at every step the net computes from the noisy interim state a less noisy one. According to Choi et al. (2022, in the note), the net settles the coarse features at high noise, the content in the middle and the details at the end, measured by noise level. As a place in the run, this division is a rough orientation, as the note says. Go back and forth along the slider and watch for the step from which the scene is recognisable. That point shifts with the prompt and with the model; for that, compare two runs with the same prompt, one on SDXL and one on SD 3.5.',
       headerSubtitle: 'Observe every single denoising step.',
       headerSubtitleDetail: 'Observe every single denoising step. Diffusion models don\'t draw left-to-right \u2014 they work everywhere simultaneously, from rough shapes to fine detail.',
       explanationToggle: 'Show detailed explanation',
@@ -3603,7 +3621,7 @@ export const en = {
         // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
         story: 'Three language models, one per column from the "Model" list, answer the same message. System prompt and randomness are the same for all three. The list names for the models country, year and size, and whether they compute locally. The field "System Prompt" shows the text of the chosen preset and stays editable.',
         // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
-        purpose: 'The matter of the comparison is what a language model says, what it leaves out or declines and how it says it: register, hedges, lists, the wording of a refusal. Three models from three countries on the same message show whether one declines or redirects, and in which words.',
+        purpose: 'The matter of the comparison is what a language model says, what it leaves out or declines and how it says it: register, hedges, lists, the wording of a refusal. Three models from three countries on the same message show whether one declines or redirects, and in which words. A local model computes on this installation\'s server, a cloud model at its provider.',
         inputPlaceholder: 'Type a message to send to all three models...',
         noModel: 'No model chosen',
         modelsUnavailable: 'The list of models did not arrive.',
@@ -4087,7 +4105,7 @@ export const en = {
       model: {
         // Address, German authored, English set after it (2026-11-07).
         // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
-        story: 'Two sets of three stand to choose from: three of today\'s AI models, or the same family from three years, 2022, 2023 and 2024. All three compute with the same prompt and the same seed. Besides the sets, the models can also be chosen one by one. To the prompt, the platform also searches for pictures on Wikimedia Commons.',
+        story: 'Two sets of three stand to choose from: three of today\'s AI models, or the same family from three years, 2022, 2023 and 2024. All three compute with the same prompt and the same seed. Besides the sets, the models can also be chosen one by one. At least two models stay selected. To the prompt, the platform also searches for pictures on Wikimedia Commons. The row "Results for this prompt" shows these finds. The platform forms the search term from the prompt.',
         // Sentences 1 and 2 are the SUPPLIED WORDING of the project lead named in
         // the comment above `address`; sentences 2 and 4 of the earlier text were
         // struck by the project lead on 2026-10-31.
@@ -4097,19 +4115,22 @@ export const en = {
       'vlm-analysis': {
         // Address, German authored, English set after it (2026-11-07).
         // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
-        story: 'The page takes in a picture, uploaded or drawn here, and offers six perspectives underneath: two descriptions, an art-historical one, an educational-theory one, an ethical one, a critical one. The page enters the chosen perspective into the field below as an instruction. Several vision models carry out the instruction; all of them get the same picture.',
+        story: 'The page takes in a picture, uploaded or drawn here, and offers six perspectives underneath: two descriptions, an art-historical one, an educational-theory one, an ethical one, a critical one. The perspectives range from two sentences ("Neutral description") to a page-long framework ("Educational theory"). The page enters the chosen perspective into the field below as an instruction. Several vision models carry out the instruction; all of them get the same picture.',
         // 2026-11-15: sentences 1 and 2 stand again as they stood until 2026-11-08; the project lead
         // confirmed them on 2026-11-15, they stay word for word. The source comment in pageAddress.ts
-        // held sentence 1. The sentences after them: struck and corrected, nothing newly written
+        // held sentence 1. Sentence 3 also stood until 2026-11-08; use report 08, section 6, names it as
+        // content of the help text. The sentences after it: struck and corrected, nothing newly written
         // (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
-        purpose: 'This is not here to take the work of interpreting a picture off anyone\'s hands: the machine\'s interpretations are themselves the matter. Machine image analysis decides about people: diagnoses, arrests and refusals at a border follow from it — people have been arrested because a system matched their face to a picture, and those affected rarely get to see the analysis itself. The comparison with the picture separates, in a reading, what it describes, what it interprets and what it adds. A reading can name things missing from the picture, for instance a colour in a black-and-white photograph. The same picture in two runs under two perspectives shows what the perspective changes in the reading: the form, and sometimes the claims of fact.',
+        purpose: 'This is not here to take the work of interpreting a picture off anyone\'s hands: the machine\'s interpretations are themselves the matter. Machine image analysis decides about people: diagnoses, arrests and refusals at a border follow from it — people have been arrested because a system matched their face to a picture, and those affected rarely get to see the analysis itself. Follow what a model names first, what it holds on to, and at which point it moves from what is to be seen to what it is supposed to mean. The comparison with the picture separates, in a reading, what it describes, what it interprets and what it adds. A reading can name things missing from the picture, for instance a colour in a black-and-white photograph. The same picture in two runs under two perspectives shows what the perspective changes in the reading: the form, and sometimes the claims of fact.',
       },
       language: {
         // Address, German authored, English set after it (2026-11-07).
         // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
         story: 'Every column holds the same prompt, each one in a different language. Two to four languages stand to choose from: the platform\'s languages and ten further ones, among them Hornjoserbšćina, Yorùbá and Runasimi. Every selected image model generates a picture for it in every column, one row per model; within a row, the model computes all the pictures with the same seed. Above each column stands the translation the models computed with, and under it, to read along, its back-translation.',
-        // 2026-11-15: sentences struck and corrected on this text, nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
-        purpose: 'Where the back-translation above a column departs from the prompt as entered, the models in that column may have received a different prompt. The comparison along a row shows in which languages a model puts the scene of the prompt into the picture and in which something else. A model can set the prompt in the column\'s language into the picture as lettering.',
+        // 2026-11-15: sentences 3 and 4 stand again as until 2026-11-08: the matter of fact the source
+        // comment in pageAddress.ts marks. Sentence 5 corrected. Other sentences: struck and corrected,
+        // nothing newly written (docs/analysis/copy/SEITENTEXTE_DIFF_2026-11-15.md).
+        purpose: 'Where the back-translation above a column departs from the prompt as entered, the models in that column may have received a different prompt. The comparison along a row shows in which languages a model puts the scene of the prompt into the picture and in which something else. The text parts of SD 3.5 are trained on English text; a prompt in another language they process so little that the language itself settles the picture and the content steps behind it. The picture then shows the cliché: whatever stood most often beside that language in the training data. The box beneath the models names, with sources, the text parts through which the image models read the prompt. A model can set the prompt in the column\'s language into the picture as lettering.',
       },
       voice: {
         // The sentence is picked from a drop-down beside a free input field,
@@ -4756,6 +4777,9 @@ export const en = {
     unfoldMemo: 'unfold the memo',
     planCopied: 'Copied',
     broughtAttr: '— brought along',
+    // The signature under a memo lifted from a reply on the board: the page's
+    // name, as resona.title gives it.
+    resonaAttr: '— Together',
     hearAgain: 'Hear this again',
     tapToHear: 'Tap to hear it',
   },
@@ -4810,6 +4834,8 @@ export const en = {
     note: 'Note',
     document: 'Document',
     page: 'Page',
+    scenario: 'Teaching scenario',
+    scenarioSource: 'Use report V {version}, scenario {scenario}',
     detailLabel: 'Excerpt',
     factsLabel: 'Reference',
     keptHere: 'The reference is what this card keeps.',
@@ -4887,6 +4913,10 @@ export const en = {
     // name no active place (devserver/my_app/lab/login_attempts.py); {n} is
     // the server's wait in seconds. SUPPLIED WORDING, verbatim.
     codeTooManyAttempts: 'Too many unknown codes from this network. Try again in {n} seconds.',
+    // 403 `published_password` of the sign-in: a password that earlier
+    // versions built into the code (devserver/my_app/lab/auth_service.py),
+    // refused for every account (2026-11-15).
+    passwordPublished: 'This password stands in the published code of the platform and opens nothing. On the server, devserver/scripts/set_admin_account.py sets a new one.',
     // The row over any page when the sign-in of this device's place has
     // ended while the page stood open (components/PlaceSignInEnded.vue);
     // {n} is the number of the place.
@@ -4894,10 +4924,23 @@ export const en = {
     login: 'Sign in',
     loggingIn: 'Signing in\u2026',
     logout: 'Sign out',
+    // An account with a password agrees to the conditions of use with its
+    // sign-in (2026-11-15, views/LoginView.vue); the line over the
+    // conditions where it has not agreed to the version that stands. {date}
+    // is the date of that version.
+    termsPending: 'This account has not yet confirmed the usage agreement in the version of {date}.',
+    // The button of the sign-in while the conditions stand under the password.
+    agreeAndSignIn: 'Agree and sign in',
   },
   account: {
     title: 'My area',
-    comingSoon: 'Your works, drafts and saved prompts will appear here soon.',
+    // "My area" (views/AccountView.vue): when the account agreed to which
+    // version of the conditions of use. {date} and {time} are the moment,
+    // {version} the date of the version.
+    termsAgreedAt: 'Agreed on {date} at {time}, version of {version}',
+    // Under the conditions: the sentence at the checkbox the account agreed
+    // with (usageAgreement.checkbox), quoted.
+    termsAgreedSentence: 'Agreed: “{sentence}”',
   },
   educator: {
     dashboard: 'Course leader area',

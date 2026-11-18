@@ -41,8 +41,9 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -336,7 +337,130 @@ def format_scenario(scen: dict) -> str:
     return " ".join(out)
 
 
-def use_report_block(item: dict, language: Optional[str] = None) -> str:
+# A scenario id as the tools take it: '22/S1', also '22 S1', '22-S1', '22/s1'.
+SCENARIO_ID = re.compile(r"^\s*(\d{1,2})\s*[/\s-]\s*s?(\d+)\s*$", re.I)
+
+# A sentence ends at a full stop, question or exclamation mark (with any
+# closing quotation mark or bracket) before a capital, an opening bracket or an
+# opening quotation mark; not after an abbreviation, not inside brackets and
+# not inside a quotation.
+_BOUNDARY = re.compile("[.!?][\"\u201d\u2019)]*\\s+(?=[A-Z(\"\u201c\u201e])")
+_CLOSERS = "\"\u201d\u2019)"
+_ABBREVIATIONS = {"e.g", "i.e", "etc", "cf", "vs", "ca", "approx", "fig", "no", "nr",
+                  "p", "pp", "z.b", "d.h", "u.a", "bzw", "vgl", "st", "dr", "prof"}
+# The list gives whole sentences up to at least this many characters, so an
+# opening like "The seed stays as it is." is followed by what the group does.
+OPENING_MIN = 160
+# A first sentence longer than this is cut at its last semicolon, comma or
+# space before it and marked with an ellipsis; read_scenario gives it whole.
+OPENING_MAX = 320
+
+
+def scenario_by_id(raw: Any) -> Optional[tuple]:
+    """(record, scenario) for an id like '07/S1', or None.
+
+    The id as read_scenario takes it (SCENARIO_ID). None for anything that is
+    no id, a number no report carries, or a scenario the report does not hold.
+    """
+    m = SCENARIO_ID.match(raw) if isinstance(raw, str) else None
+    if not m:
+        return None
+    num, sid = m.group(1).zfill(2), f"S{int(m.group(2))}"
+    for rec in (USE_REPORTS.get("by_route") or {}).values():
+        if str(rec.get("number")) != num:
+            continue
+        for scen in rec.get("scenarios") or []:
+            if isinstance(scen, dict) and scen.get("id") == sid:
+                return rec, scen
+        return None
+    return None
+
+
+def _sentence_ends(text: str):
+    """The positions after which a sentence of `text` ends (_BOUNDARY)."""
+    for m in _BOUNDARY.finditer(text):
+        end = m.start() + 1
+        while end < len(text) and text[end] in _CLOSERS:
+            end += 1
+        head = text[:end]
+        if text[m.start()] == ".":
+            word = re.search(r"([\w.]+)\.$", text[:m.start() + 1])
+            if word and word.group(1).lower().rstrip(".") in _ABBREVIATIONS:
+                continue
+            if word and len(word.group(1)) == 1 and word.group(1).isalpha():
+                continue  # an initial or a single-letter list mark
+        if head.count("(") > head.count(")"):
+            continue
+        if head.count('"') % 2 or \
+                head.count("\u201c") + head.count("\u201e") > head.count("\u201d"):
+            continue
+        yield end
+
+
+def scenario_opening(scen: dict) -> str:
+    """The opening of a scenario's text in the report's wording: whole
+    sentences up to at least OPENING_MIN characters, or the whole text; cut
+    with an ellipsis where that runs past OPENING_MAX."""
+    text = scen.get("text") if isinstance(scen, dict) else None
+    if not isinstance(text, str) or not text.strip():
+        return ""
+    text = " ".join(text.split())
+    opening = text
+    for end in _sentence_ends(text):
+        if end >= OPENING_MIN:
+            opening = text[:end].strip()
+            break
+    if len(opening) <= OPENING_MAX:
+        return opening
+    head = opening[:OPENING_MAX]
+    for mark in ("; ", ", ", " "):
+        cut = head.rfind(mark)
+        if cut >= OPENING_MIN:
+            return head[:cut].rstrip(" ,;") + " \u2026"
+    return head.rstrip() + " \u2026"
+
+
+def format_scenario_listed(scen: dict, number: str) -> str:
+    """One scenario of section 8 as a line of a list: id, title, setting, the
+    opening of its text (scenario_opening) and its subject link. Its sequence,
+    the rest of its text and its uncertainty come with read_scenario. "" for a
+    malformed one."""
+    if not isinstance(scen, dict) or not isinstance(scen.get("id"), str):
+        return ""
+    head = f"{number}/{scen['id']} — {scen.get('title') or ''}".rstrip()
+    if scen.get("setting"):
+        head += f" ({scen['setting']})"
+    out = [head + "."]
+    opening = scenario_opening(scen)
+    if opening:
+        out.append(opening)
+    link = scen.get("subject_link")
+    if isinstance(link, str) and link:
+        out.append(f"Subject link: {link}")
+    return " ".join(out)
+
+
+def scenario_card_text(scen: dict) -> str:
+    """A scenario in full for its card on the board: setting, text, sequence
+    and subject link, one paragraph each, in the report's wording ("Sequence:"
+    and "Subject link:" are the report's own words). The title stands on the
+    front of the card. The uncertainty line stays with read_scenario: its "I"
+    is the report's author, whom the card does not name, and on Together's
+    board it would read as Together speaking."""
+    if not isinstance(scen, dict):
+        return ""
+    parts = []
+    for key, label in (("setting", None), ("text", None), ("sequence", "Sequence"),
+                       ("subject_link", "Subject link")):
+        value = scen.get(key)
+        if isinstance(value, str) and value.strip():
+            value = " ".join(value.split())
+            parts.append(f"{label}: {value}" if label else value)
+    return "\n\n".join(parts)
+
+
+def use_report_block(item: dict, language: Optional[str] = None,
+                     scenarios_in_full: bool = True) -> str:
     """The use report of this page, with its version, or "" when none stands for it.
 
     Kept apart from render(): that text is what the page says about its own
@@ -351,6 +475,11 @@ def use_report_block(item: dict, language: Optional[str] = None) -> str:
     hand-edited record cannot take Help down on that page. A catalogue item is
     named in `language` (display_name); a page without one by the report's
     name.
+
+    With scenarios_in_full=False the teaching scenarios stand as a list
+    (format_scenario_listed): id, title, setting, opening, subject link. Together reads them so, because a scenario it builds on is then
+    opened with read_scenario, and that lays it on the board, the one place
+    the educator can read it (2026-11-15).
     """
     if not isinstance(item, dict):
         return ""
@@ -397,12 +526,21 @@ def use_report_block(item: dict, language: Optional[str] = None) -> str:
                    + (f"\n\n{note}" if note else ""))
     elif note:
         out.append(f"Use possibilities (section 7):\n{note}")
-    scenarios = [s for s in (format_scenario(x) for x in rec.get("scenarios") or []) if s]
+    number = str(rec.get("number") or "")
+    if scenarios_in_full:
+        scenarios = [s for s in (format_scenario(x) for x in rec.get("scenarios") or []) if s]
+    else:
+        scenarios = [s for s in (format_scenario_listed(x, number)
+                                 for x in rec.get("scenarios") or []) if s]
     if scenarios:
         intro = rec.get("scenarios_intro")
         head = "Teaching scenarios (section 8):"
         if isinstance(intro, str) and intro.strip():
             head += " " + intro.strip()
+        if not scenarios_in_full:
+            head += (" Listed by title, setting, the opening of the text and subject link; "
+                     f"read_scenario('{number}/S1') gives one in full and lays it "
+                     "on the board as a card.")
         out.append(head + "\n" + "\n".join(scenarios))
     mapping = rec.get("mapping") if isinstance(rec.get("mapping"), dict) else {}
     a_lines = [x for x in (format_mapping_entry(e) for e in mapping.get("a") or []) if x]

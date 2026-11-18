@@ -20,12 +20,14 @@ Architecture:
       └── read_knowledge        (Knowledge library Phase 1: read a doc passage + citation; scope=['resona'])
       └── lookup_place          (Places grant 2026-08-11: what a lab instrument or comparison
                                   mode says about its own technology, and since 2026-11-06 the
-                                  page's use report; scopes default+resona)
+                                  page's use report; scopes default+resona; on Together's
+                                  board (_board, 2026-11-15) its scenarios as a list)
       └── lookup_scenarios      (2026-11-06: search the teaching scenarios of the use reports
                                   by subject, form, duration, competence, instrument or text;
                                   scopes default+resona)
       └── read_scenario         (2026-11-06: one scenario in full with the mapping entries
-                                  that cite it; scopes default+resona)
+                                  that cite it; scopes default+resona; on Together's board the
+                                  scenario is laid down as a card, resona_entities, 2026-11-15)
       └── lookup_research       (Research grant 2026-08-11: search the library's Tier-R section; universal)
       └── read_research         (Research grant 2026-08-11: read a Tier-R passage + citation; universal)
       └── (future) check_model_availability (later phase)
@@ -201,6 +203,12 @@ class ToolRegistry:
                 resolved by the chat route as for the system prompt. Handed to
                 the tool as `_language`, like `_level` never taken from the
                 model. lookup_place names a page in it.
+
+        A context with "board" (Together's turn, chat_routes.py) hands the
+        tool `_board`: what a scenario read lays down lands on a board the
+        educator sees. lookup_place then lists a page's scenarios, so the one
+        a proposal rests on is opened with read_scenario and lies there as a
+        card (2026-11-15).
         """
         tool = self._tools.get(name)
         if not tool:
@@ -226,6 +234,8 @@ class ToolRegistry:
             if "look_image" in context:
                 effective_args["_look_image"] = context["look_image"]
                 effective_args["_look_may_leave"] = bool(context.get("look_may_leave"))
+            if context.get("board"):
+                effective_args["_board"] = True
             if "for_model" in context:
                 # Which model is being answered, for look_at_image: it decides
                 # whether that model's provider has a delegate that can see.
@@ -2037,12 +2047,17 @@ def _register_builtin_tools(registry: ToolRegistry):
         # A bare number is a report number ("1" is Flow), never a part of a
         # catalogue name ("Bias Archaeology 1"); the catalogue answers only
         # when no report carries it.
+        # On Together's board the scenarios stand as a list: the one a
+        # proposal rests on is opened with read_scenario, which lays it on the
+        # board (2026-11-15). Help keeps them in full.
+        in_full = not args.get("_board")
         place = _pi.find_place(query) if query.isdigit() else None
         if place:
             item = _pi.item_for_route(place["route"])
             if not item:
                 return (f"{place['name']}\n\nRoute: {place['route']}\n\nThis part has no "
-                        "catalogue text of its own.\n\n" + _pi.use_report_block(place))
+                        "catalogue text of its own.\n\n"
+                        + _pi.use_report_block(place, scenarios_in_full=in_full))
         else:
             item = _pi.find(query)
         if not item:
@@ -2055,7 +2070,8 @@ def _register_builtin_tools(registry: ToolRegistry):
             item = _pi.item_for_route(place["route"]) if place else None
             if place and not item:
                 return (f"{place['name']}\n\nRoute: {place['route']}\n\nThis part has no "
-                        "catalogue text of its own.\n\n" + _pi.use_report_block(place))
+                        "catalogue text of its own.\n\n"
+                        + _pi.use_report_block(place, scenarios_in_full=in_full))
             if not item:
                 return (
                     f"'{query}' is not in this catalogue — it holds the instruments "
@@ -2067,7 +2083,7 @@ def _register_builtin_tools(registry: ToolRegistry):
                     + _pi.place_menu()
                 )
         text = _pi.render(item, lang)
-        block = _pi.use_report_block(item, lang)
+        block = _pi.use_report_block(item, lang, scenarios_in_full=in_full)
         if block:
             text += "\n\n" + block
         children = [it for it in _pi.ITEMS.values() if it.get("parent") == item["id"]]
@@ -2125,7 +2141,7 @@ def _register_builtin_tools(registry: ToolRegistry):
     _BOTH_FORMS = {"formalornonformal", "nonformalorformal", "formal/nonformal"}
     _COMPETENCE = re.compile(
         r"^\s*(engage|create|manage|shape)\s*(\d)(?:\s+(basic|intermediate|advanced))?\s*$", re.I)
-    _SCENARIO_ID = re.compile(r"^\s*(\d{1,2})\s*[/\s-]\s*s?(\d+)\s*$", re.I)
+    _SCENARIO_ID = _pi.SCENARIO_ID
 
     def _reports() -> List[dict]:
         return list((_pi.USE_REPORTS.get("by_route") or {}).values())
@@ -2263,7 +2279,8 @@ def _register_builtin_tools(registry: ToolRegistry):
                 if duration and duration not in (s.get("duration") or "").lower():
                     continue
                 if query and query not in " ".join(
-                        (s.get("title") or "", s.get("text") or "", s.get("subjects") or "",
+                        (s.get("title") or "", s.get("setting") or "", s.get("text") or "",
+                         s.get("sequence") or "", s.get("subjects") or "",
                          s.get("subject_link") or "", name)).lower():
                     continue
                 hits.append((num, sid, rec, s))
@@ -2345,7 +2362,7 @@ def _register_builtin_tools(registry: ToolRegistry):
         parameters={
             "type": "object",
             "properties": {
-                "query": {"type": "string", "description": "Free text, matched in title, text, subjects, subject link and instrument name."},
+                "query": {"type": "string", "description": "Free text, matched in title, setting, text, sequence, subjects, subject link and instrument name."},
                 "form": {"type": "string", "description": "'formal' (school lessons) or 'non-formal' (workshops); scenarios open to both match either."},
                 "subject": {"type": "string", "description": "A school subject or field, e.g. 'art', 'ethics', 'music'."},
                 "duration": {"type": "string", "description": "Part of the duration as the scenario states it, e.g. '45 min', '90 min', '2 h'."},
@@ -2388,6 +2405,12 @@ def _register_builtin_tools(registry: ToolRegistry):
                "what it says, never speak as its author; the Uncertainty line names what was "
                "not verified.",
                head]
+        if args.get("_board") and _pi.scenario_card_text(scen):
+            # resona_entities lays it down from the same record and on the
+            # same condition (2026-11-15).
+            out.insert(1, "It now lies on the board as a card under its title, with its "
+                          "setting, text, sequence and subject link in the report's "
+                          "English wording.")
         for key, label in (("text", None), ("sequence", "Sequence"),
                            ("subject_link", "Subject link"), ("uncertainty", "Uncertainty")):
             value = scen.get(key)
@@ -2633,7 +2656,16 @@ def _get_interception_config(configs_dir: Path, config_id: str) -> str:
 
     # The pedagogical transformation context (the core content)
     context = data.get("context", {})
-    if context:
+    if isinstance(context, list):
+        # A pool: each pick draws one entry (config_loader.draw_from_pool).
+        parts.append(f"\nThis perspective is a pool of {len(context)} stances. Each time it "
+                     "is picked, one of them is drawn at random and stands in the field "
+                     "as its wording. The stances (English):")
+        for number, entry in enumerate(context, 1):
+            text = entry.get("en", "") if isinstance(entry, dict) else str(entry or "")
+            if text:
+                parts.append(f"{number}. {text}")
+    elif context:
         context_en = context.get("en", "")
         if context_en:
             parts.append(f"\nTransformation rules (English):\n{context_en}")

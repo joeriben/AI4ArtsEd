@@ -1,0 +1,3728 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 9.4% of 2603 words, ceiling 20%, longest run 27 words; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 27,
+     "text": "that diffusion models are much less private than prior generative models such as gans and that mitigating these vulnerabilities may require new advances in privacy preserving training"
+    },
+    {
+     "words": 25,
+     "text": "image diffusion models such as dall e 2 imagen and stable diffusion memorize individual images from their training data and emit them at generation time"
+    },
+    {
+     "words": 13,
+     "text": "the art models ranging from photographs of individual people to trademarked company logos"
+    },
+    {
+     "words": 10,
+     "text": "to its 1 000 nearest neighbors in the training dataset"
+    },
+    {
+     "words": 10,
+     "text": "at timestep 100 divided by a shadow model s loss"
+    }
+   ],
+   "value": 0.0937,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "10 of 13 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 16,
+     "expected_items": 11,
+     "first_item": "Nicholas, Jamie, Vikash, and Eric each independently proposed the problem statem",
+     "output_lists": [
+      2,
+      2,
+      3
+     ]
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 17,
+     "expected_items": 20,
+     "first_item": "Borja Balle, Giovanni Cherubin, and Jamie Hayes. Reconstructing training data wi",
+     "output_lists": [
+      2,
+      2,
+      3
+     ]
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 18,
+     "expected_items": 22,
+     "first_item": "Vitaly Feldman and Chiyuan Zhang. What neural networks memorize and why: Discove",
+     "output_lists": [
+      2,
+      2,
+      3
+     ]
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 19,
+     "expected_items": 20,
+     "first_item": "medical image analysis. Artificial Intelligence in Medicine , 2020.",
+     "output_lists": [
+      2,
+      2,
+      3
+     ]
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 20,
+     "expected_items": 14,
+     "first_item": "namics. In International Conference on Machine Learning , 2015.",
+     "output_lists": [
+      2,
+      2,
+      3
+     ]
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 20,
+     "expected_items": 5,
+     "first_item": "Shengyu Zhao, Zhijian Liu, Ji Lin, Jun-Yan Zhu, and Song Han. Differentiable aug",
+     "output_lists": [
+      2,
+      2,
+      3
+     ]
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 23,
+     "expected_items": 2,
+     "first_item": "(a) How membership attack success changes as a training example is processed rep",
+     "output_lists": [
+      2,
+      2,
+      3
+     ]
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 12,
+     "table_cells": 27,
+     "missing_cells": [
+      "Images Extracted",
+      "StyleGAN-ADA [43]",
+      "DiffBigGAN [82]",
+      "E2GAN [69]",
+      "NDA [63]",
+      "WGAN-ALP [68]",
+      "DDPMs",
+      "OpenAI-DDPM [52]",
+      "DDPMs",
+      "DDPM [33]"
+     ]
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 16,
+     "table_cells": 64,
+     "missing_cells": [
+      "JH",
+      "MJ",
+      "VS",
+      "Conceived Project",
+      "Formalized Memorization Definition",
+      "Experimented with Stable Diffusion",
+      "Experimented with Imagen",
+      "Experimented with CIFAR-10 Diffusion",
+      "Experimented with GANs",
+      "Experimented with Defenses",
+      "Prepared Figures",
+      "Analyzed Data",
+      "Wrote Paper",
+      "Managed the Project"
+     ]
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 21,
+     "table_cells": 75,
+     "missing_cells": [
+      "Who trained it?",
+      "Sampling strategy",
+      "Stability AI",
+      "PLMS",
+      "Stability AI",
+      "PLMS",
+      "Figure 3",
+      "Stability AI",
+      "PLMS",
+      "Figure 6",
+      "Uncond Diffusion",
+      "Ours",
+      "DDIM",
+      "Figure 7",
+      "Uncond Diffusion",
+      "Ours",
+      "DDIM",
+      "Figure 8",
+      "Uncond Diffusion",
+      "Ours"
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "90 of 168 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 1,
+     "number": "18"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 1,
+     "number": "3.0"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 1,
+     "number": "37"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 1,
+     "number": "46"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 1,
+     "number": "51"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 1,
+     "number": "53"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 1,
+     "number": "56"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 1,
+     "number": "59"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 1,
+     "number": "60"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 1,
+     "number": "65"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 1,
+     "number": "66"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 2,
+     "number": "34"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 2,
+     "number": "45"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 2,
+     "number": "54"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 2,
+     "number": "62"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 2,
+     "number": "67"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 2,
+     "number": "73"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 2,
+     "number": "76"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 2,
+     "number": "78"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 2,
+     "number": "80"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 2,
+     "number": "81"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 3,
+     "number": "3.1"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 3,
+     "number": "4.1"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 4,
+     "number": "4.2"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 4,
+     "number": "41"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 4,
+     "number": "47"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 4,
+     "number": "512"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 5,
+     "number": "4.2.1"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 5,
+     "number": "4.2.2"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 7,
+     "number": "4.3"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 7,
+     "number": "4.4"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 7,
+     "number": "5.1"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 7,
+     "number": "5.3"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 9,
+     "number": "5.2"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 9,
+     "number": "5.2.1"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 10,
+     "number": "5.2.3"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 10,
+     "number": "79"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 11,
+     "number": "38"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 11,
+     "number": "48"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 12,
+     "number": "42"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 12,
+     "number": "43"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 12,
+     "number": "52"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 12,
+     "number": "55"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 12,
+     "number": "63"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 12,
+     "number": "68"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 12,
+     "number": "69"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 12,
+     "number": "74"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 12,
+     "number": "82"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 14,
+     "number": "275"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 14,
+     "number": "36"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 14,
+     "number": "40"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 14,
+     "number": "7.1"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 14,
+     "number": "7.2"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 14,
+     "number": "7.3"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 14,
+     "number": "85"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 15,
+     "number": "72"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 15,
+     "number": "75"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 15,
+     "number": "77"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 17,
+     "number": "2006"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 17,
+     "number": "2008"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 17,
+     "number": "2016"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 17,
+     "number": "2019"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 17,
+     "number": "2020"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 17,
+     "number": "2021"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 17,
+     "number": "2022"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 17,
+     "number": "2023"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 17,
+     "number": "2202.07646"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 17,
+     "number": "2210.04133"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 17,
+     "number": "2210.09929"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 17,
+     "number": "2211.12737"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 17,
+     "number": "91784"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 18,
+     "number": "2014"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 18,
+     "number": "2015"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 18,
+     "number": "2017"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 18,
+     "number": "2018"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 18,
+     "number": "2206.09479"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 18,
+     "number": "2210.17546"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 18,
+     "number": "2211.08411"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 18,
+     "number": "2301.09956"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 19,
+     "number": "2112.10741"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 19,
+     "number": "2204.06125"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 19,
+     "number": "2205.11487"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 19,
+     "number": "2209.07162"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 19,
+     "number": "2210.12113"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 20,
+     "number": "2210.00968"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 20,
+     "number": "2212.03860"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 20,
+     "number": "2212.06470"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 23,
+     "number": "500000"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 23,
+     "number": "99"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 29,
+     "number": "200000"
+    }
+   ],
+   "value": 90.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "39 of 39 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 1,
+     "heading": "Abstract"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 1,
+     "heading": "1 Introduction"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 2,
+     "heading": "2 Background"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 2,
+     "heading": "3 Motivation and Threat Model"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 3,
+     "heading": "3.1 Threat Model"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 3,
+     "heading": "3.2 Ethics and Broader Impact"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 4,
+     "heading": "4 Extracting Training Data from State-ofthe-art Diffusion Models"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 4,
+     "heading": "4.1 Defining Image Memorization"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 4,
+     "heading": "4.2 Extracting Data from Stable Diffusion"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 5,
+     "heading": "4.2.1 Extraction Methodology"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 5,
+     "heading": "4.2.2 Extraction Results"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 7,
+     "heading": "4.3 Extracting Data from Imagen"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 7,
+     "heading": "4.4 Extracting Outlier Examples"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 7,
+     "heading": "5 Investigating Memorization"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 8,
+     "heading": "5.1 Untargeted Extraction"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 9,
+     "heading": "5.2 Membership Inference Attacks"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 9,
+     "heading": "5.2.1 Baseline Attack Results"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 10,
+     "heading": "5.2.2 Augmentations Improve Attacks"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 10,
+     "heading": "5.2.3 Memorization Versus Utility"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 11,
+     "heading": "5.3 Inpainting Attacks"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 12,
+     "heading": "6 Comparing Diffusion Models to GANs"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 14,
+     "heading": "7 Defenses and Recommendations"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 14,
+     "heading": "7.1 Deduplicating Training Data"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 14,
+     "heading": "7.2 Differentially-Private Training"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 14,
+     "heading": "7.3 Auditing with Canaries"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 15,
+     "heading": "8 Related Work"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 15,
+     "heading": "9 Discussion and Conclusion"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 16,
+     "heading": "Acknowledgements and Conflicts of Interest"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 16,
+     "heading": "Contributions"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 21,
+     "heading": "A Collected Details for Figures"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 22,
+     "heading": "B All CIFAR-10 Memorized Images"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 23,
+     "heading": "C Additional Attacks on CIFAR-10"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 23,
+     "heading": "C.1 Membership Inference at Different Training Steps"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 24,
+     "heading": "C.2 Membership Inference with Different Augmentation Strategies"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 25,
+     "heading": "C.3 Membership Inference Inliers and Outliers"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 26,
+     "heading": "C.4 Membership Inference on Conditional and Unconditional Models"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 27,
+     "heading": "D More Inpainting Attacks on CIFAR-10"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 29,
+     "heading": "E GAN Training Setup"
+    },
+    {
+     "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+     "page": 29,
+     "heading": "F Additional GAN Extraction Results"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "34 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "34 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "18 quoted texts in 9 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Fig. 3",
+     "page": 5,
+     "image": "fig-004-p5.png",
+     "quotes": [
+      "\"NETFLIX\""
+     ]
+    },
+    {
+     "figure": "Fig. 12",
+     "page": 11,
+     "image": "fig-013-p11.png",
+     "quotes": [
+      "“ℓ₂ distance when x isn't in training”",
+      "“ℓ₂ distance when x is in training,”"
+     ]
+    },
+    {
+     "figure": "Fig. 13",
+     "page": 12,
+     "image": "fig-014-p12.png",
+     "quotes": [
+      "\"Masked: x_m\""
+     ]
+    },
+    {
+     "figure": "Image 26",
+     "page": 28,
+     "image": "fig-026-p28.png",
+     "quotes": [
+      "\"Pearson correlation coefficient: 0.41\"",
+      "\"ℓ₂ distance to target\"",
+      "\"Loss (of main model)\""
+     ]
+    },
+    {
+     "figure": "Image 27",
+     "page": 28,
+     "image": "fig-027-p28.png",
+     "quotes": [
+      "\"Loss (of main model)\"",
+      "\"Loss (of support model)\""
+     ]
+    },
+    {
+     "figure": "Image 29",
+     "page": 28,
+     "image": "fig-029-p28.png",
+     "quotes": [
+      "\"Pearson correlation coefficient: 0.63\"",
+      "\"l2 distance to target\""
+     ]
+    },
+    {
+     "figure": "Image 31",
+     "page": 29,
+     "image": "fig-031-p29.png",
+     "quotes": [
+      "\"Pearson correlation coefficient: 0.15\"",
+      "\"l₂ distance to target\"",
+      "\"Loss (of main model)\""
+     ]
+    },
+    {
+     "figure": "Image 32",
+     "page": 29,
+     "image": "fig-032-p29.png",
+     "quotes": [
+      "\"Loss (of main model)\"",
+      "\"Loss (of support model)\""
+     ]
+    },
+    {
+     "figure": "Image 35",
+     "page": 29,
+     "image": "fig-035-p29.png",
+     "quotes": [
+      "\"Pearson correlation coefficient 0.18\"",
+      "\"ℓ₂ distance to target\""
+     ]
+    }
+   ],
+   "value": 18.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "13 page references valid (printed-folio pages 1–31)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "31 pages checked, 1 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "20 passages out of order break a sentence (82 of 82 not repairable; listed, not gated)",
+   "findings": [
+    {
+     "page": 1,
+     "words": 183,
+     "text": "Denoising Diffusion Models are an emerging class of generative neural networks that produce images from a Training distribution via an iterative Denoising process [64, 66, 33]. Compared to prior appro",
+     "blocks": [
+      "#/texts/6",
+      "#/texts/7",
+      "#/texts/14"
+     ],
+     "problem": "blocks of kind caption are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 5,
+     "words": 7,
+     "text": "Our extraction approach adapts the Methodology from",
+     "blocks": [
+      "#/texts/72",
+      "#/texts/79"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 5,
+     "words": 10,
+     "text": "prior work [11] to images and consists of two steps:",
+     "blocks": [
+      "#/texts/72",
+      "#/texts/79"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'The 500 images that we generate for each'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 5,
+     "words": 7,
+     "text": "generate many examples using the Diffusion model",
+     "blocks": [
+      "#/texts/73",
+      "#/texts/79",
+      "#/texts/80"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 5,
+     "words": 6,
+     "text": "standard sampling manner and With the",
+     "blocks": [
+      "#/texts/73",
+      "#/texts/80"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 5,
+     "words": 6,
+     "text": "known prompts from the prior Section.",
+     "blocks": [
+      "#/texts/73",
+      "#/texts/80"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'To compute the distance measure d among '"
+     ],
+     "section": ""
+    },
+    {
+     "page": 5,
+     "words": 6,
+     "text": "perform membership inference to separate the",
+     "blocks": [
+      "#/texts/74",
+      "#/texts/80"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'To compute the distance measure d among '"
+     ],
+     "section": ""
+    },
+    {
+     "page": 5,
+     "words": 6,
+     "text": "Models novel generations from those generations",
+     "blocks": [
+      "#/texts/74",
+      "#/texts/80"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'To compute the distance measure d among '"
+     ],
+     "section": ""
+    },
+    {
+     "page": 5,
+     "words": 5,
+     "text": "which are memorized Training examples.",
+     "blocks": [
+      "#/texts/74",
+      "#/texts/80"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'To compute the distance measure d among '"
+     ],
+     "section": ""
+    },
+    {
+     "page": 5,
+     "words": 26,
+     "text": "generating many images. The first step is trivial but computationally expensive: we query the Gen function in a black-box manner using the selected prompts as in-",
+     "blocks": [
+      "#/texts/75",
+      "#/texts/80",
+      "#/texts/82"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 5,
+     "words": 9,
+     "text": "put. To reduce the computational overhead of our experi-",
+     "blocks": [
+      "#/texts/75",
+      "#/texts/80",
+      "#/texts/82"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 5,
+     "words": 7,
+     "text": "ments, we use the timestep-resampled generation imple-",
+     "blocks": [
+      "#/texts/75",
+      "#/texts/82"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 5,
+     "words": 9,
+     "text": "mentation that is available in the Stable Diffusion code-",
+     "blocks": [
+      "#/texts/75",
+      "#/texts/82"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 5,
+     "words": 9,
+     "text": "base [58]. this process generates images in a more",
+     "blocks": [
+      "#/texts/75",
+      "#/texts/82"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 5,
+     "words": 9,
+     "text": "gressive fashion by removing larger amounts of noise at",
+     "blocks": [
+      "#/texts/75",
+      "#/texts/82"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 5,
+     "words": 10,
+     "text": "each time step and results in slightly lower visual fidelity",
+     "blocks": [
+      "#/texts/75",
+      "#/texts/82"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 5,
+     "words": 9,
+     "text": "at a significant (∼ 10×) performance increase. We gener-",
+     "blocks": [
+      "#/texts/75",
+      "#/texts/82"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 5,
+     "words": 7,
+     "text": "images for each text Prompt to increase",
+     "blocks": [
+      "#/texts/75",
+      "#/texts/82"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 5,
+     "words": 6,
+     "text": "the likelihood that we find memorization.",
+     "blocks": [
+      "#/texts/75",
+      "#/texts/82"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'In order to evaluate the effectiveness o'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 5,
+     "words": 6,
+     "text": "Performing membership inference. The second step",
+     "blocks": [
+      "#/texts/76",
+      "#/texts/82"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'In order to evaluate the effectiveness o'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 5,
+     "words": 8,
+     "text": "requires flagging generations that appear to be memo-",
+     "blocks": [
+      "#/texts/76",
+      "#/texts/82"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 5,
+     "words": 8,
+     "text": "rized Training images. Since we assume a black-box",
+     "blocks": [
+      "#/texts/76",
+      "#/texts/82"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 6,
+     "text": "evaluate membership inference With more tra-",
+     "blocks": [
+      "#/texts/182",
+      "#/texts/185"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 8,
+     "text": "ditional attack techniques that use white-box access, as",
+     "blocks": [
+      "#/texts/182",
+      "#/texts/185"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 8,
+     "text": "opposed to Section 4.2.1 that assumed black-box access.",
+     "blocks": [
+      "#/texts/182",
+      "#/texts/185"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'Choosing a loss function. Both membershi'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 9,
+     "text": "We will show that all examples have significant privacy",
+     "blocks": [
+      "#/texts/182",
+      "#/texts/185"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'Choosing a loss function. Both membershi'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 6,
+     "text": "leakage under membership inference attacks, Compared",
+     "blocks": [
+      "#/texts/182",
+      "#/texts/185"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 10,
+     "text": "to the small fraction that are sensitive to Data extraction.",
+     "blocks": [
+      "#/texts/182",
+      "#/texts/185"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'Choosing a loss function. Both membershi'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 8,
+     "text": "We consider two membership inference attacks on our",
+     "blocks": [
+      "#/texts/182",
+      "#/texts/185"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'Choosing a loss function. Both membershi'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 4,
+     "text": "Class-conditional CIFAR-10-trained Diffusion models.7",
+     "blocks": [
+      "#/texts/182",
+      "#/texts/185"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 8,
+     "text": "loss threshold attack. Yeom et al. [80] introduce",
+     "blocks": [
+      "#/texts/183",
+      "#/texts/185",
+      "#/texts/187"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 7,
+     "text": "the simplest membership inference attack: because mod-",
+     "blocks": [
+      "#/texts/183",
+      "#/texts/185",
+      "#/texts/187"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 9,
+     "text": "trained to minimize their loss on the Training set,",
+     "blocks": [
+      "#/texts/183",
+      "#/texts/187"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 9,
+     "text": "we should expect that Training examples have lower loss",
+     "blocks": [
+      "#/texts/183",
+      "#/texts/187"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'We must thus compute the optimal timeste'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 6,
+     "text": "than non-training examples. The loss threshold",
+     "blocks": [
+      "#/texts/183",
+      "#/texts/187"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 13,
+     "text": "thus computes the loss l = L (x; f ) and reports “mem-",
+     "blocks": [
+      "#/texts/183",
+      "#/texts/187"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 4,
+     "text": "for some chosen threshold",
+     "blocks": [
+      "#/texts/183",
+      "#/texts/187"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 4,
+     "text": "“non-member’. The value of",
+     "blocks": [
+      "#/texts/183",
+      "#/texts/187",
+      "#/texts/188"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 5,
+     "text": "can be selected to max-",
+     "blocks": [
+      "#/texts/183",
+      "#/texts/187",
+      "#/texts/188"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 10,
+     "text": "imize a desired metric (e.g., true positive rate at some",
+     "blocks": [
+      "#/texts/183",
+      "#/texts/188"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 8,
+     "text": "false positive rate or the Overall attack accuracy).",
+     "blocks": [
+      "#/texts/183",
+      "#/texts/188"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 8,
+     "text": "The likelihood Ratio attack (LiRA). Carlini et al.",
+     "blocks": [
+      "#/texts/184",
+      "#/texts/188"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 7,
+     "text": "[8] introduce the stateof-the-art approach to Performing",
+     "blocks": [
+      "#/texts/184",
+      "#/texts/188"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 8,
+     "text": "membership inference attacks. LiRA first trains a col-",
+     "blocks": [
+      "#/texts/184",
+      "#/texts/188"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 9,
+     "text": "lection of shadow Models, each model on random sub-",
+     "blocks": [
+      "#/texts/184",
+      "#/texts/188"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 10,
+     "text": "sets of the Training dataset. LiRA then computes the loss",
+     "blocks": [
+      "#/texts/184",
+      "#/texts/188"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 7,
+     "text": "example x under each of these shadow",
+     "blocks": [
+      "#/texts/184",
+      "#/texts/188"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 9,
+     "text": "these losses are split into two sets: the losses",
+     "blocks": [
+      "#/texts/184",
+      "#/texts/188"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 8,
+     "text": "IN = {l ini } for the example",
+     "blocks": [
+      "#/texts/184",
+      "#/texts/188"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 10,
+     "text": "that did see the example x During Training, and the",
+     "blocks": [
+      "#/texts/184",
+      "#/texts/188"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'Figure 9 plots the timestep used to comp'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 9,
+     "text": "losses OUT = {l outi } for the example",
+     "blocks": [
+      "#/texts/184",
+      "#/texts/188"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 11,
+     "text": "Models { f j } that did not see the example",
+     "blocks": [
+      "#/texts/184",
+      "#/texts/188"
+     ],
+     "problem": "blocks of kind footnote are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 28,
+     "text": "ing. LiRA finishes the initialization process by fitting Gaussians NIN to the IN set and NOUT to OUT set of losses. Finally, to predict membership inference for a",
+     "blocks": [
+      "#/texts/184",
+      "#/texts/188",
+      "#/texts/189"
+     ],
+     "problem": "blocks of kind footnote, heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 18,
+     "text": "new model f ∗ , we compute l ∗ = L (x, f ∗ ) and then mea-",
+     "blocks": [
+      "#/texts/184",
+      "#/texts/189",
+      "#/texts/190"
+     ],
+     "problem": "blocks of kind footnote, heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 10,
+     "text": "sure whether Pr[l ∗ |NIN ] > Pr[l ∗ |NOUT",
+     "blocks": [
+      "#/texts/184",
+      "#/texts/190"
+     ],
+     "problem": "blocks of kind footnote, heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 6,
+     "text": "a loss function. both membership inference",
+     "blocks": [
+      "#/texts/185",
+      "#/texts/190"
+     ],
+     "problem": "blocks of kind footnote, heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 12,
+     "text": "attacks use a loss function L . In the case of classifica-",
+     "blocks": [
+      "#/texts/185",
+      "#/texts/190"
+     ],
+     "problem": "blocks of kind footnote, heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 9,
+     "words": 11,
+     "text": "tion Models, Carlini et al. [8] find that Choosing a loss",
+     "blocks": [
+      "#/texts/185",
+      "#/texts/190"
+     ],
+     "problem": "blocks of kind footnote, heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 16,
+     "words": 25,
+     "text": "Martı́n Abadi, Andy Chu, Ian Goodfellow, H Brendan McMahan, Ilya Mironov, Kunal Talwar, and Li Zhang. Deep learning With differential privacy. In ACM CCS, 2016.",
+     "blocks": [
+      "#/texts/430",
+      "#/texts/438",
+      "#/texts/439"
+     ],
+     "problem": "blocks of kind heading, list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 16,
+     "words": 23,
+     "text": "Hazrat Ali, Shafaq Murad, and Zubair Shah. Spot the fake lungs: generating synthetic medical images using neural Diffusion Models. arXiv preprint arXiv:2211.00902, 2022.",
+     "blocks": [
+      "#/texts/431",
+      "#/texts/440",
+      "#/texts/441"
+     ],
+     "problem": "blocks of kind heading, list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 16,
+     "words": 23,
+     "text": "Sanjeev Arora, Andrej Risteski, and Yi Zhang. Do GANs learn the distribution? some theory and empirics. In International Conference on learning Representations, 2018.",
+     "blocks": [
+      "#/texts/432",
+      "#/texts/441",
+      "#/texts/442"
+     ],
+     "problem": "blocks of kind heading, list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 16,
+     "words": 29,
+     "text": "Yogesh Balaji, Hamed Hassani, Rama Chellappa, and Soheil Feizi. Entropic GANs meet VAEs: A statistical approach to compute sample likelihoods in GANs. In International Conference on machine learning, ",
+     "blocks": [
+      "#/texts/433",
+      "#/texts/443",
+      "#/texts/444"
+     ],
+     "problem": "blocks of kind heading, list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": "bibliography"
+    },
+    {
+     "page": 20,
+     "words": 9,
+     "text": "Gerrit van den Burg and Chris Williams. On mem-",
+     "blocks": [
+      "#/texts/512",
+      "#/texts/513",
+      "#/texts/519"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 20,
+     "words": 9,
+     "text": "orization in Probabilistic Deep generative Models. advances in neural",
+     "blocks": [
+      "#/texts/512",
+      "#/texts/513",
+      "#/texts/519"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 20,
+     "words": 6,
+     "text": "James Vincent. The lawsuit that could",
+     "blocks": [
+      "#/texts/513",
+      "#/texts/520"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'Gowthami Somepalli, Vasu Singla, Micah G'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 20,
+     "words": 7,
+     "text": "rewrite the rules of AI copyright. https:",
+     "blocks": [
+      "#/texts/513",
+      "#/texts/514",
+      "#/texts/520"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 20,
+     "words": 4,
+     "text": "tion. advances in neural",
+     "blocks": [
+      "#/texts/514",
+      "#/texts/521"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 20,
+     "words": 5,
+     "text": "David Terjék. Adversarial lipschitz regularization.",
+     "blocks": [
+      "#/texts/516",
+      "#/texts/522",
+      "#/texts/523"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 20,
+     "words": 4,
+     "text": "learning Representations, 2019.",
+     "blocks": [
+      "#/texts/516",
+      "#/texts/522",
+      "#/texts/523"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 20,
+     "words": 8,
+     "text": "Yuan Tian, Qin Wang, Zhiwu Huang, Wen Li,",
+     "blocks": [
+      "#/texts/517",
+      "#/texts/523"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'Jiayuan Ye, Aadyaa Maddi, Sasi Kumar Mur'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 20,
+     "words": 8,
+     "text": "Dengxin Dai, Minghao Yang, Jun Wang, and Olga",
+     "blocks": [
+      "#/texts/517",
+      "#/texts/523"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'Jiayuan Ye, Aadyaa Maddi, Sasi Kumar Mur'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 20,
+     "words": 6,
+     "text": "Fink. Off-policy reinforcement learning for effi-",
+     "blocks": [
+      "#/texts/517",
+      "#/texts/523"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 20,
+     "words": 8,
+     "text": "cient and effective gan Architecture search. In Eu-",
+     "blocks": [
+      "#/texts/517",
+      "#/texts/523",
+      "#/texts/524"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 20,
+     "words": 6,
+     "text": "ropean Conference on Computer Vision, 2020.",
+     "blocks": [
+      "#/texts/517",
+      "#/texts/523",
+      "#/texts/524"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 20,
+     "words": 7,
+     "text": "Patrick Tinsley, Adam Czajka, and Patrick Flynn.",
+     "blocks": [
+      "#/texts/518",
+      "#/texts/524"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'Samuel Yeom, Irene Giacomelli, Matt Fred'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 20,
+     "words": 9,
+     "text": "this face does not exist... but it might be",
+     "blocks": [
+      "#/texts/518",
+      "#/texts/524"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'Samuel Yeom, Irene Giacomelli, Matt Fred'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 20,
+     "words": 7,
+     "text": "yours! Identity leakage in generative Models. In",
+     "blocks": [
+      "#/texts/518",
+      "#/texts/524"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'Samuel Yeom, Irene Giacomelli, Matt Fred'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 20,
+     "words": 6,
+     "text": "IEEE/CVF Winter Conference on Applications of",
+     "blocks": [
+      "#/texts/518",
+      "#/texts/524",
+      "#/texts/525"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 20,
+     "words": 5,
+     "text": "Rob Toews. synthetic Data is",
+     "blocks": [
+      "#/texts/525",
+      "#/texts/528"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 20,
+     "words": 4,
+     "text": "form Artificial Intelligence. https://www.",
+     "blocks": [
+      "#/texts/525",
+      "#/texts/528"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 20,
+     "words": 6,
+     "text": "Florian Tramer, Gautam Kamath, and Nicholas",
+     "blocks": [
+      "#/texts/527",
+      "#/texts/529"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 20,
+     "words": 4,
+     "text": "information Processing systems, 2020.",
+     "blocks": [
+      "#/texts/527",
+      "#/texts/529"
+     ],
+     "problem": "blocks of kind list_item are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'Florian Tram` er, Gautam Kamath, and Nic'"
+     ],
+     "section": ""
+    }
+   ],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "carlini-et-al-2023-extracting-training-data-from-diffusion-models",
+ "doc_type": "scholarly_article",
+ "analyzed_at": "2026-11-15T11:58:44.049790+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "Extracting Training Data from Diffusion Models",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 31,
+   "chars": 92058,
+   "blocks": 320,
+   "inner_headings": 39,
+   "figures": 34
+  }
+ ],
+ "skipped": [
+  "References (p. 16)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 31,
+  "gaps": [
+   {
+    "page": 17,
+    "text": "artist-finds-private-medical-record-photos-in-popula 2022. [24]",
+    "words": 3,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "after #/texts/465"
+   }
+  ],
+  "gaps_dismissed": [
+   {
+    "page": 1,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "Training Set Generated Image"
+   },
+   {
+    "page": 1,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "(`2 distance = 0.031). 1 Introduction"
+   },
+   {
+    "page": 1,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "“digital forgery” [65]."
+   },
+   {
+    "page": 2,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "fθ removes the noise ε"
+   },
+   {
+    "page": 2,
+    "words": 32,
+    "reason": "debris",
+    "text": "N1 ∑i Et,ε L (xi ,t, ε; fθ ), where √ L (xi ,t, ε; fθ ) = kε − fθ ( at xi + 1 − at ε,t)k22 . (1) p"
+   },
+   {
+    "page": 4,
+    "words": 11,
+    "reason": "duplicate",
+    "text": "x̂ ∈ X where `(x, x̂) ≤ δ . Again, `"
+   },
+   {
+    "page": 5,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "4.2.1 extraction Methodology"
+   },
+   {
+    "page": 5,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "4.2.2 extraction results"
+   },
+   {
+    "page": 6,
+    "words": 21,
+    "reason": "duplicate",
+    "text": "1.0 0.9 attack precision 0.8 0.7 manual inspection 0.6 (`2 , 0.15)-Extraction 0 20 40 60 80 100 memorized examples extracted"
+   },
+   {
+    "page": 6,
+    "words": 4,
+    "reason": "debris",
+    "text": "definitions of memorization-either"
+   },
+   {
+    "page": 6,
+    "words": 15,
+    "reason": "duplicate",
+    "text": "y. 30 Frequency 20 10 0 10 30 100 300 1000 3000 number of duplicates"
+   },
+   {
+    "page": 8,
+    "words": 16,
+    "reason": "duplicate",
+    "text": "8 103 Frequency 102 101 100 0.00 0.25 0.50 0.75 1.00 0.00 0.25 0.50 0.75 1.00"
+   },
+   {
+    "page": 8,
+    "words": 17,
+    "reason": "debris",
+    "text": "`2 (x̂, x) `(x̂, x; Sx̂ ) = . α · Ey∈Sx̂ [`2 (x̂, y)] where Sx̂"
+   },
+   {
+    "page": 10,
+    "words": 17,
+    "reason": "duplicate",
+    "text": "0.7 0.6 0.5 TPR@FPR=1% 0.4 0.3 0.2 0.1 0.0 1 200 400 600 800 1000 Diffusion time-step"
+   },
+   {
+    "page": 10,
+    "words": 37,
+    "reason": "duplicate",
+    "text": "= Eε∼N (0,I) [L (x,t, ε)]. 10 100 true positive rate 10 1 10 2 Strong LiRA. AUC: 0.997 LiRA. AUC: 0.982 threshold. AUC: 0.613 10 3 3 10 10 2 10 1 100 false positive rate"
+   },
+   {
+    "page": 11,
+    "words": 19,
+    "reason": "duplicate",
+    "text": "1e6 1.0 3.0 0.8 2.5 TPR@FPR=1% update step 0.6 2015 0.4 1.0 0.2 0.5 4 6 8 FID"
+   },
+   {
+    "page": 11,
+    "words": 33,
+    "reason": "duplicate",
+    "text": "2 distance when x is in Training Cat example 0.30 bird example 100 other samples 0.25 0.20 0.15 0.10 0.05 0.05 0.10 0.15 0.20 0.25 0.30 2 distance when x isn't in Training"
+   },
+   {
+    "page": 12,
+    "words": 13,
+    "reason": "duplicate",
+    "text": "reconstruction when x reconstruction when x target: x masked: xm is in Training."
+   },
+   {
+    "page": 12,
+    "words": 13,
+    "reason": "duplicate",
+    "text": "reconstruction when x reconstruction when x target: x masked: xm is in Training."
+   },
+   {
+    "page": 13,
+    "words": 99,
+    "reason": "duplicate",
+    "text": "100 100 100 10−1 10−1 10−1 true positive rate true positive rate true positive rate 10−2 10−2 10−2 10−3 10−3 10−3 LiRA LiRA LiRA 10−4 auc=0.891, TPR@FPR=0.001: 0.109 10−4 auc=0.971, TPR@FPR=0.001: 0.2"
+   },
+   {
+    "page": 13,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "(a) StyleGAN (b) MHGAN (c) BigGAN"
+   },
+   {
+    "page": 14,
+    "words": 19,
+    "reason": "duplicate",
+    "text": "14 10 maximum exposure 8 6 random 4 2 1 2 3 4 8 16 32 64 duplicate count"
+   },
+   {
+    "page": 16,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "NC Conceived Project"
+   },
+   {
+    "page": 16,
+    "words": 35,
+    "reason": "duplicate",
+    "text": "X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X"
+   },
+   {
+    "page": 20,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "arXiv:2212.03860, 2022. //www.theverge.com/2022/11/8/23446821/ microsoft-openai-github-copilot-class-action-lawsuit- [66]"
+   },
+   {
+    "page": 20,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "[67] Midjourney Team. https://www.midjourney. [78]"
+   },
+   {
+    "page": 20,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "2018. Computer Vision, 2021. [81]"
+   },
+   {
+    "page": 20,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "synthetic-data-is-about-to-transform-artificial-intelligence/, 2022. [82]"
+   },
+   {
+    "page": 21,
+    "words": 15,
+    "reason": "duplicate",
+    "text": "| CIFAR10 | Ours | DDIM |\n| CIFAR10 | Ours | DDIM |\n| CIFAR10 | Ours | DDIM |\n| CIFAR10 | Ours | inpainting |\n| CIFAR10 | Ours | inpainting |"
+   },
+   {
+    "page": 21,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "| CIFAR10 | Ours | DDIM |\n| CIFAR10 | Ours | DDIM |\n| CIFAR10 | Ours | inpainting |\n| CIFAR10 | Ours | inpainting |"
+   },
+   {
+    "page": 23,
+    "words": 34,
+    "reason": "duplicate",
+    "text": "1.0 1.0 0.8 0.8 true positive rate TPR@FPR=1% TPR@FPR=1% 0.6 0.6 0.4 0.4 0.2 0.2 1000 2000 3000 4000 0.2 0.4 0.6 0.8 1.0 each train example processed X times Training Data seen 1e8"
+   },
+   {
+    "page": 23,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "processed repeatedly throughout throughout Training. Training."
+   },
+   {
+    "page": 23,
+    "words": 31,
+    "reason": "duplicate",
+    "text": "100 10 1 Data seen: 5M AUC: 0.742 TPR@FPR=1%: 0.050 10 2 Data seen: 102M AUC: 0.997 TPR@FPR=1%: 0.989 10 3 3 10 10 2 10 1 100 false positive rate"
+   },
+   {
+    "page": 24,
+    "words": 88,
+    "reason": "duplicate",
+    "text": "100 100 n: 1 AUC: 0.982 TPR@FPR=0.1%: 0.071 w/o Aug true positive rate true positive rate 10 1 n: 2 AUC: 0.991 10 1 n: 20 TPR@FPR=0.1%: 0.128 AUC: 0.997 n: 5 AUC: 0.995 TPR@FPR=0.1%: 0.294 TPR@FPR=0.1"
+   },
+   {
+    "page": 26,
+    "words": 30,
+    "reason": "duplicate",
+    "text": "true positive rate 100 10 1 Unconditional. AUC: 0.970 TPR@FPR=1%: 0.549 10 2 Conditional. AUC: 0.982 TPR@FPR=1%: 0.714 10 3 3 10 10 2 10 1 100 false positive rate"
+   },
+   {
+    "page": 28,
+    "words": 7,
+    "reason": "duplicate",
+    "text": ". examples xrec . main model loss"
+   },
+   {
+    "page": 28,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "support model loss ."
+   },
+   {
+    "page": 29,
+    "words": 7,
+    "reason": "duplicate",
+    "text": ". examples xrec . main model loss"
+   },
+   {
+    "page": 29,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "support model loss ."
+   },
+   {
+    "page": 30,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "(a) StyleGAN (b) MHGAN"
+   },
+   {
+    "page": 31,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "(a) WGAN (b) E2GAN (c) NDA (d) DiffAugment-BigGAN (e) StyleGAN-ADA (f) DDPM"
+   }
+  ],
+  "captions_reclassified": [
+   {
+    "page": 1,
+    "figure": "#/pictures/0",
+    "text": "Caption: Living in the light with Ann Graham Lotz"
+   },
+   {
+    "page": 1,
+    "figure": "#/pictures/1",
+    "text": "Prompt: Ann Graham Lotz"
+   },
+   {
+    "page": 23,
+    "figure": "#/pictures/20",
+    "text": "(c) ROC curve for the membership attack for different training steps."
+   },
+   {
+    "page": 28,
+    "figure": "#/pictures/25",
+    "text": "(a) Loss (using the main model at diffusion timestep 100) on all 5,000 inpainted examples Xrec ."
+   },
+   {
+    "page": 28,
+    "figure": "#/pictures/28",
+    "text": "(b) Comparison of loss on main and support models (at diffusion timestep 100) on all 5,000 inpainted examples."
+   },
+   {
+    "page": 28,
+    "figure": "#/pictures/29",
+    "text": "(d) 8 inpainted examples with the smallest loss. Leftmost is the original example, second to left is the masked example "
+   },
+   {
+    "page": 29,
+    "figure": "#/pictures/30",
+    "text": "(a) Loss (using the main model at diffusion timestep 100) on all 5,000 inpainted examples Xrec ."
+   },
+   {
+    "page": 29,
+    "figure": "#/pictures/32",
+    "text": "(b) Comparison of loss on main and support models (at diffusion timestep 100) on all 5,000 inpainted examples."
+   },
+   {
+    "page": 29,
+    "figure": "#/pictures/34",
+    "text": "(c) Contrastive loss ( main model loss support model loss ) on all 5,000 inpainted examples Xrec ."
+   },
+   {
+    "page": 29,
+    "figure": "#/pictures/35",
+    "text": "(e) 8 inpainted examples with the smallest main model loss support model loss . Leftmost is the original example, second"
+   }
+  ],
+  "captions_reassigned": [],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [
+   {
+    "page": 28,
+    "image": "fig-028-p28.png",
+    "w": 402,
+    "h": 41,
+    "reason": "strip"
+   },
+   {
+    "page": 28,
+    "image": "fig-030-p28.png",
+    "w": 402,
+    "h": 40,
+    "reason": "strip"
+   },
+   {
+    "page": 29,
+    "image": "fig-034-p29.png",
+    "w": 37,
+    "h": 37,
+    "reason": "small"
+   },
+   {
+    "page": 29,
+    "image": "fig-036-p29.png",
+    "w": 38,
+    "h": 37,
+    "reason": "small"
+   },
+   {
+    "page": 29,
+    "image": "fig-037-p29.png",
+    "w": 36,
+    "h": 36,
+    "reason": "small"
+   },
+   {
+    "page": 29,
+    "image": "fig-038-p29.png",
+    "w": 38,
+    "h": 35,
+    "reason": "small"
+   }
+  ],
+  "superseded": [],
+  "replaced_pages": [],
+  "noise_dropped": 2,
+  "hyphens_restored": [
+   {
+    "page": 14,
+    "ref": "#/texts/389",
+    "word": "DP-SGD"
+   },
+   {
+    "page": 19,
+    "ref": "#/texts/493",
+    "word": "Callison-Burch"
+   }
+  ],
+  "order": [
+   {
+    "page": 1,
+    "text": "Denoising Diffusion Models are an emerging class of generative neural networks that produce images from a Training distribution via an iterative Denoising process [64, 66, 33]. Compared to prior approaches such as GANs [30] or VAEs [46], Diffusion Models produce higher-quality samples [18] and are easier to scale [56] and control [51]. Consequently, they have rapidly become the de-facto method for generating high-resolution images, and large-scale Models such as DALL-E 2 [56] have attracted significant public interest. The appeal of generative Diffusion Models is rooted in their ability to synthesize novel images that are ostensibly unlike anything in the Training set. Indeed, past large-scale Training efforts “do not find overfitting to be an issue”, [60] and researchers in privacy-sensitive domains have even suggested that Diffusion Models could “protect[] the privacy [...] of real images” [37] by generating synthetic examples [13, 14, 59, 2, 53]. this line of work relies on the assumption that Diffusion Models do not memorize and regenerate their Training Data. If they did, it would violate all privacy guarantees and raise numerous questions regarding model generalization and “digital forgery” [65].",
+    "words": 183,
+    "refs": [
+     "#/texts/6",
+     "#/texts/7",
+     "#/texts/14"
+    ],
+    "repaired": false,
+    "note": "blocks of kind caption are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 5,
+    "text": "Our extraction approach adapts the Methodology from",
+    "words": 7,
+    "refs": [
+     "#/texts/72",
+     "#/texts/79"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 5,
+    "text": "prior work [11] to images and consists of two steps:",
+    "words": 10,
+    "refs": [
+     "#/texts/72",
+     "#/texts/79"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [
+     "passage cut out of 'The 500 images that we generate for each'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 5,
+    "text": "generate many examples using the Diffusion model",
+    "words": 7,
+    "refs": [
+     "#/texts/73",
+     "#/texts/79",
+     "#/texts/80"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 5,
+    "text": "standard sampling manner and With the",
+    "words": 6,
+    "refs": [
+     "#/texts/73",
+     "#/texts/80"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 5,
+    "text": "known prompts from the prior Section.",
+    "words": 6,
+    "refs": [
+     "#/texts/73",
+     "#/texts/80"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [
+     "passage cut out of 'To compute the distance measure d among '"
+    ],
+    "section": ""
+   },
+   {
+    "page": 5,
+    "text": "perform membership inference to separate the",
+    "words": 6,
+    "refs": [
+     "#/texts/74",
+     "#/texts/80"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [
+     "passage cut out of 'To compute the distance measure d among '"
+    ],
+    "section": ""
+   },
+   {
+    "page": 5,
+    "text": "Models novel generations from those generations",
+    "words": 6,
+    "refs": [
+     "#/texts/74",
+     "#/texts/80"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [
+     "passage cut out of 'To compute the distance measure d among '"
+    ],
+    "section": ""
+   },
+   {
+    "page": 5,
+    "text": "which are memorized Training examples.",
+    "words": 5,
+    "refs": [
+     "#/texts/74",
+     "#/texts/80"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [
+     "passage cut out of 'To compute the distance measure d among '"
+    ],
+    "section": ""
+   },
+   {
+    "page": 5,
+    "text": "generating many images. The first step is trivial but computationally expensive: we query the Gen function in a black-box manner using the selected prompts as in-",
+    "words": 26,
+    "refs": [
+     "#/texts/75",
+     "#/texts/80",
+     "#/texts/82"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 5,
+    "text": "put. To reduce the computational overhead of our experi-",
+    "words": 9,
+    "refs": [
+     "#/texts/75",
+     "#/texts/80",
+     "#/texts/82"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 5,
+    "text": "ments, we use the timestep-resampled generation imple-",
+    "words": 7,
+    "refs": [
+     "#/texts/75",
+     "#/texts/82"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 5,
+    "text": "mentation that is available in the Stable Diffusion code-",
+    "words": 9,
+    "refs": [
+     "#/texts/75",
+     "#/texts/82"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 5,
+    "text": "base [58]. this process generates images in a more",
+    "words": 9,
+    "refs": [
+     "#/texts/75",
+     "#/texts/82"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 5,
+    "text": "gressive fashion by removing larger amounts of noise at",
+    "words": 9,
+    "refs": [
+     "#/texts/75",
+     "#/texts/82"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 5,
+    "text": "each time step and results in slightly lower visual fidelity",
+    "words": 10,
+    "refs": [
+     "#/texts/75",
+     "#/texts/82"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 5,
+    "text": "at a significant (∼ 10×) performance increase. We gener-",
+    "words": 9,
+    "refs": [
+     "#/texts/75",
+     "#/texts/82"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 5,
+    "text": "images for each text Prompt to increase",
+    "words": 7,
+    "refs": [
+     "#/texts/75",
+     "#/texts/82"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 5,
+    "text": "the likelihood that we find memorization.",
+    "words": 6,
+    "refs": [
+     "#/texts/75",
+     "#/texts/82"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "passage cut out of 'In order to evaluate the effectiveness o'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 5,
+    "text": "Performing membership inference. The second step",
+    "words": 6,
+    "refs": [
+     "#/texts/76",
+     "#/texts/82"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "passage cut out of 'In order to evaluate the effectiveness o'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 5,
+    "text": "requires flagging generations that appear to be memo-",
+    "words": 8,
+    "refs": [
+     "#/texts/76",
+     "#/texts/82"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 5,
+    "text": "rized Training images. Since we assume a black-box",
+    "words": 8,
+    "refs": [
+     "#/texts/76",
+     "#/texts/82"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "evaluate membership inference With more tra-",
+    "words": 6,
+    "refs": [
+     "#/texts/182",
+     "#/texts/185"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "ditional attack techniques that use white-box access, as",
+    "words": 8,
+    "refs": [
+     "#/texts/182",
+     "#/texts/185"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "opposed to Section 4.2.1 that assumed black-box access.",
+    "words": 8,
+    "refs": [
+     "#/texts/182",
+     "#/texts/185"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [
+     "passage cut out of 'Choosing a loss function. Both membershi'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "We will show that all examples have significant privacy",
+    "words": 9,
+    "refs": [
+     "#/texts/182",
+     "#/texts/185"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [
+     "passage cut out of 'Choosing a loss function. Both membershi'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "leakage under membership inference attacks, Compared",
+    "words": 6,
+    "refs": [
+     "#/texts/182",
+     "#/texts/185"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "to the small fraction that are sensitive to Data extraction.",
+    "words": 10,
+    "refs": [
+     "#/texts/182",
+     "#/texts/185"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [
+     "passage cut out of 'Choosing a loss function. Both membershi'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "We consider two membership inference attacks on our",
+    "words": 8,
+    "refs": [
+     "#/texts/182",
+     "#/texts/185"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [
+     "passage cut out of 'Choosing a loss function. Both membershi'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "Class-conditional CIFAR-10-trained Diffusion models.7",
+    "words": 4,
+    "refs": [
+     "#/texts/182",
+     "#/texts/185"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "loss threshold attack. Yeom et al. [80] introduce",
+    "words": 8,
+    "refs": [
+     "#/texts/183",
+     "#/texts/185",
+     "#/texts/187"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "the simplest membership inference attack: because mod-",
+    "words": 7,
+    "refs": [
+     "#/texts/183",
+     "#/texts/185",
+     "#/texts/187"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "trained to minimize their loss on the Training set,",
+    "words": 9,
+    "refs": [
+     "#/texts/183",
+     "#/texts/187"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "we should expect that Training examples have lower loss",
+    "words": 9,
+    "refs": [
+     "#/texts/183",
+     "#/texts/187"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [
+     "passage cut out of 'We must thus compute the optimal timeste'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "than non-training examples. The loss threshold",
+    "words": 6,
+    "refs": [
+     "#/texts/183",
+     "#/texts/187"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "thus computes the loss l = L (x; f ) and reports “mem-",
+    "words": 13,
+    "refs": [
+     "#/texts/183",
+     "#/texts/187"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "for some chosen threshold",
+    "words": 4,
+    "refs": [
+     "#/texts/183",
+     "#/texts/187"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "“non-member’. The value of",
+    "words": 4,
+    "refs": [
+     "#/texts/183",
+     "#/texts/187",
+     "#/texts/188"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "can be selected to max-",
+    "words": 5,
+    "refs": [
+     "#/texts/183",
+     "#/texts/187",
+     "#/texts/188"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "imize a desired metric (e.g., true positive rate at some",
+    "words": 10,
+    "refs": [
+     "#/texts/183",
+     "#/texts/188"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "false positive rate or the Overall attack accuracy).",
+    "words": 8,
+    "refs": [
+     "#/texts/183",
+     "#/texts/188"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "The likelihood Ratio attack (LiRA). Carlini et al.",
+    "words": 8,
+    "refs": [
+     "#/texts/184",
+     "#/texts/188"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "[8] introduce the stateof-the-art approach to Performing",
+    "words": 7,
+    "refs": [
+     "#/texts/184",
+     "#/texts/188"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "membership inference attacks. LiRA first trains a col-",
+    "words": 8,
+    "refs": [
+     "#/texts/184",
+     "#/texts/188"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "lection of shadow Models, each model on random sub-",
+    "words": 9,
+    "refs": [
+     "#/texts/184",
+     "#/texts/188"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "sets of the Training dataset. LiRA then computes the loss",
+    "words": 10,
+    "refs": [
+     "#/texts/184",
+     "#/texts/188"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "example x under each of these shadow",
+    "words": 7,
+    "refs": [
+     "#/texts/184",
+     "#/texts/188"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "these losses are split into two sets: the losses",
+    "words": 9,
+    "refs": [
+     "#/texts/184",
+     "#/texts/188"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "IN = {l ini } for the example",
+    "words": 8,
+    "refs": [
+     "#/texts/184",
+     "#/texts/188"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "that did see the example x During Training, and the",
+    "words": 10,
+    "refs": [
+     "#/texts/184",
+     "#/texts/188"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [
+     "passage cut out of 'Figure 9 plots the timestep used to comp'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "losses OUT = {l outi } for the example",
+    "words": 9,
+    "refs": [
+     "#/texts/184",
+     "#/texts/188"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "Models { f j } that did not see the example",
+    "words": 11,
+    "refs": [
+     "#/texts/184",
+     "#/texts/188"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "ing. LiRA finishes the initialization process by fitting Gaussians NIN to the IN set and NOUT to OUT set of losses. Finally, to predict membership inference for a",
+    "words": 28,
+    "refs": [
+     "#/texts/184",
+     "#/texts/188",
+     "#/texts/189"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote, heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "new model f ∗ , we compute l ∗ = L (x, f ∗ ) and then mea-",
+    "words": 18,
+    "refs": [
+     "#/texts/184",
+     "#/texts/189",
+     "#/texts/190"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote, heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "sure whether Pr[l ∗ |NIN ] > Pr[l ∗ |NOUT",
+    "words": 10,
+    "refs": [
+     "#/texts/184",
+     "#/texts/190"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote, heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "a loss function. both membership inference",
+    "words": 6,
+    "refs": [
+     "#/texts/185",
+     "#/texts/190"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote, heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "attacks use a loss function L . In the case of classifica-",
+    "words": 12,
+    "refs": [
+     "#/texts/185",
+     "#/texts/190"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote, heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 9,
+    "text": "tion Models, Carlini et al. [8] find that Choosing a loss",
+    "words": 11,
+    "refs": [
+     "#/texts/185",
+     "#/texts/190"
+    ],
+    "repaired": false,
+    "note": "blocks of kind footnote, heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 16,
+    "text": "Martı́n Abadi, Andy Chu, Ian Goodfellow, H Brendan McMahan, Ilya Mironov, Kunal Talwar, and Li Zhang. Deep learning With differential privacy. In ACM CCS, 2016.",
+    "words": 25,
+    "refs": [
+     "#/texts/430",
+     "#/texts/438",
+     "#/texts/439"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading, list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 16,
+    "text": "Hazrat Ali, Shafaq Murad, and Zubair Shah. Spot the fake lungs: generating synthetic medical images using neural Diffusion Models. arXiv preprint arXiv:2211.00902, 2022.",
+    "words": 23,
+    "refs": [
+     "#/texts/431",
+     "#/texts/440",
+     "#/texts/441"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading, list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 16,
+    "text": "Sanjeev Arora, Andrej Risteski, and Yi Zhang. Do GANs learn the distribution? some theory and empirics. In International Conference on learning Representations, 2018.",
+    "words": 23,
+    "refs": [
+     "#/texts/432",
+     "#/texts/441",
+     "#/texts/442"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading, list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 16,
+    "text": "Yogesh Balaji, Hamed Hassani, Rama Chellappa, and Soheil Feizi. Entropic GANs meet VAEs: A statistical approach to compute sample likelihoods in GANs. In International Conference on machine learning, 2019.",
+    "words": 29,
+    "refs": [
+     "#/texts/433",
+     "#/texts/443",
+     "#/texts/444"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading, list_item are involved",
+    "breaks": [],
+    "section": "bibliography"
+   },
+   {
+    "page": 20,
+    "text": "Gerrit van den Burg and Chris Williams. On mem-",
+    "words": 9,
+    "refs": [
+     "#/texts/512",
+     "#/texts/513",
+     "#/texts/519"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 20,
+    "text": "orization in Probabilistic Deep generative Models. advances in neural",
+    "words": 9,
+    "refs": [
+     "#/texts/512",
+     "#/texts/513",
+     "#/texts/519"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 20,
+    "text": "James Vincent. The lawsuit that could",
+    "words": 6,
+    "refs": [
+     "#/texts/513",
+     "#/texts/520"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [
+     "passage cut out of 'Gowthami Somepalli, Vasu Singla, Micah G'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 20,
+    "text": "rewrite the rules of AI copyright. https:",
+    "words": 7,
+    "refs": [
+     "#/texts/513",
+     "#/texts/514",
+     "#/texts/520"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 20,
+    "text": "tion. advances in neural",
+    "words": 4,
+    "refs": [
+     "#/texts/514",
+     "#/texts/521"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 20,
+    "text": "David Terjék. Adversarial lipschitz regularization.",
+    "words": 5,
+    "refs": [
+     "#/texts/516",
+     "#/texts/522",
+     "#/texts/523"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 20,
+    "text": "learning Representations, 2019.",
+    "words": 4,
+    "refs": [
+     "#/texts/516",
+     "#/texts/522",
+     "#/texts/523"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 20,
+    "text": "Yuan Tian, Qin Wang, Zhiwu Huang, Wen Li,",
+    "words": 8,
+    "refs": [
+     "#/texts/517",
+     "#/texts/523"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [
+     "passage cut out of 'Jiayuan Ye, Aadyaa Maddi, Sasi Kumar Mur'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 20,
+    "text": "Dengxin Dai, Minghao Yang, Jun Wang, and Olga",
+    "words": 8,
+    "refs": [
+     "#/texts/517",
+     "#/texts/523"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [
+     "passage cut out of 'Jiayuan Ye, Aadyaa Maddi, Sasi Kumar Mur'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 20,
+    "text": "Fink. Off-policy reinforcement learning for effi-",
+    "words": 6,
+    "refs": [
+     "#/texts/517",
+     "#/texts/523"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 20,
+    "text": "cient and effective gan Architecture search. In Eu-",
+    "words": 8,
+    "refs": [
+     "#/texts/517",
+     "#/texts/523",
+     "#/texts/524"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 20,
+    "text": "ropean Conference on Computer Vision, 2020.",
+    "words": 6,
+    "refs": [
+     "#/texts/517",
+     "#/texts/523",
+     "#/texts/524"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 20,
+    "text": "Patrick Tinsley, Adam Czajka, and Patrick Flynn.",
+    "words": 7,
+    "refs": [
+     "#/texts/518",
+     "#/texts/524"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [
+     "passage cut out of 'Samuel Yeom, Irene Giacomelli, Matt Fred'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 20,
+    "text": "this face does not exist... but it might be",
+    "words": 9,
+    "refs": [
+     "#/texts/518",
+     "#/texts/524"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [
+     "passage cut out of 'Samuel Yeom, Irene Giacomelli, Matt Fred'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 20,
+    "text": "yours! Identity leakage in generative Models. In",
+    "words": 7,
+    "refs": [
+     "#/texts/518",
+     "#/texts/524"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [
+     "passage cut out of 'Samuel Yeom, Irene Giacomelli, Matt Fred'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 20,
+    "text": "IEEE/CVF Winter Conference on Applications of",
+    "words": 6,
+    "refs": [
+     "#/texts/518",
+     "#/texts/524",
+     "#/texts/525"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 20,
+    "text": "Rob Toews. synthetic Data is",
+    "words": 5,
+    "refs": [
+     "#/texts/525",
+     "#/texts/528"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 20,
+    "text": "form Artificial Intelligence. https://www.",
+    "words": 4,
+    "refs": [
+     "#/texts/525",
+     "#/texts/528"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 20,
+    "text": "Florian Tramer, Gautam Kamath, and Nicholas",
+    "words": 6,
+    "refs": [
+     "#/texts/527",
+     "#/texts/529"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 20,
+    "text": "information Processing systems, 2020.",
+    "words": 4,
+    "refs": [
+     "#/texts/527",
+     "#/texts/529"
+    ],
+    "repaired": false,
+    "note": "blocks of kind list_item are involved",
+    "breaks": [
+     "passage cut out of 'Florian Tram` er, Gautam Kamath, and Nic'"
+    ],
+    "section": ""
+   }
+  ],
+  "order_pages_checked": 30,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 82,
+  "order_breaking": 20,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 5 minor; distortions: 0 material, 1 minor; additions: 0 material, 0 minor; order: 0 material, 0 minor",
+  "at": "2026-11-15T11:59:38+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 5
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 1
+   },
+   "additions": {
+    "material": 0,
+    "minor": 0
+   },
+   "order": {
+    "material": 0,
+    "minor": 0
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "Extracting Training Data from Diffusion Models (p. 1–31)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "we assume that an adversary who attacks a conditional image generator knows the captions for some images in the training set-thus allowing us to study the worst-case privacy risk in diffusion models.",
+      "severity": "minor",
+      "page": 3
+     },
+     {
+      "source": "Our results also suggest that Feldman's theory that memorization is necessary for generalization in classifiers [24] may extend to generative models, raising the question of whether the improved performance of diffusion models... is precisely because diffusion models memorize more.",
+      "severity": "minor",
+      "page": 3
+     },
+     {
+      "source": "even when the GAN attack is strengthened due to having access to the discriminator (which would be unlikely in practice, as only the generator is necessary to create new images).",
+      "severity": "minor",
+      "page": 12
+     },
+     {
+      "source": "If an example is processed more than 2000 times during training, invariably membership attacks are perfect against that example.",
+      "severity": "minor",
+      "page": 23
+     },
+     {
+      "source": "We plot the membership attack ROC curve in Figure 21 and note that the conditional model is marginally more vulnerable.",
+      "severity": "minor",
+      "page": 26
+     }
+    ],
+    "distortions": [
+     {
+      "source": "We do not count the generated image of Obama (at left) as memorized... The four nearest training images are shown at right, each has a distance above 0.3.",
+      "summary": "This is a close-up color photograph of a smiling man's face, cropped around the head and upper shoulders.",
+      "severity": "minor",
+      "page": 4
+     }
+    ],
+    "additions": [],
+    "order": []
+   }
+  ]
+ },
+ "source": {
+  "source": "carlini-et-al-2023-extracting-training-data-from-diffusion-models.pdf",
+  "bytes": 9410277,
+  "sha256": "10e53f4e6284b0653b85fff9426898d9799caccaf5379b24f9f0de00719caacf",
+  "extracted_at": "2026-11-13T02:26:53+01:00"
+ }
+}

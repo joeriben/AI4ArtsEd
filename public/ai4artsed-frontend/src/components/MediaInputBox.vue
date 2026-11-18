@@ -268,6 +268,7 @@ import {
 import { postStreamedRun } from '@/services/directRun'
 import { wordFeed, type WordFeed } from '@/composables/useWordFeed'
 import { apiBase } from '@/services/labApi'
+import { suspectSignIn } from '@/lib/signInLapse'
 
 const { t, locale } = useI18n()
 const safetyStore = useSafetyEventStore()
@@ -1124,6 +1125,9 @@ function startStreaming() {
     }
 
     console.error('[MediaInputBox] Stream error:', event)
+    // An EventSource does not say why it was refused; the sign-in may have
+    // ended (lib/signInLapse.ts).
+    suspectSignIn()
     emit('stream-error', 'Stream connection failed')
     closeStream()
   })

@@ -10,12 +10,13 @@ as the settings-admin (session['settings_authenticated']) but no user_id is set,
 we treat it as the seeded admin user. The existing settings login is untouched.
 
 Password hashing uses werkzeug.security exactly like settings_routes.py
-(pbkdf2:sha256), so the seeded settings-password hash verifies here unchanged.
+(pbkdf2:sha256); devserver/scripts/set_admin_account.py writes both with it.
 
 Location: devserver/my_app/lab/auth_service.py
 """
 from __future__ import annotations
 
+import hashlib
 import logging
 from functools import wraps
 from typing import Optional
@@ -35,6 +36,36 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 # Password helpers (identical scheme to settings_routes.py)
 # ---------------------------------------------------------------------------
+# Stored where an account has no password at all: a place enters with its
+# code, and the seeded admin until a password is set. It has no method
+# segment, so check_password_hash answers False for every input.
+UNUSABLE_PASSWORD_HASH = "!"
+
+# The three passwords that earlier versions built into the code: the settings
+# password a fresh installation received from 2025-12-18 (6b5760e1), the one
+# that replaced it on 2026-01-05 (77aa5635) and stood until 2026-11-15, which
+# the first start of the lab system also copied onto the admin account
+# (2026-07-05 to 2026-11-15), and the one the admin account was seeded with
+# where settings_password.key was missing (2026-07-05 to 2026-11-15). All
+# three stand in the history of the repository, so an installation that kept
+# one is open to whoever reads it. The sign-in and the settings password
+# refuse them (routes/auth_routes.py, routes/settings_routes.py), and
+# scripts/set_admin_account.py does not set them. Kept as SHA-256 digests:
+# the passwords are public, and the digest keeps them out of the tree.
+# tests/test_set_admin_account.py checks the three against the history.
+PUBLISHED_PASSWORD_DIGESTS = frozenset({
+    "55f2458efe5c7c179918a90bdcd695b9220e623c34dc485291210b8698a3a879",
+    "792903ba6b8e6d8f6e6a0cae6a9ae9aa9dbf46fe924c50baad12f1088afd5ff7",
+    "48ce26b6e0a4ee87a1b0ed1e418e8fb2ab66e6bb4c7a8cc953bb5e9b217b59fd",
+})
+SET_ADMIN_COMMAND = "./venv/bin/python devserver/scripts/set_admin_account.py"
+
+
+def is_published_password(plain: str) -> bool:
+    """Whether `plain` is one of the passwords earlier versions built in."""
+    return hashlib.sha256(plain.encode("utf-8")).hexdigest() in PUBLISHED_PASSWORD_DIGESTS
+
+
 def hash_password(plain: str) -> str:
     return generate_password_hash(plain, method="pbkdf2:sha256")
 
@@ -53,6 +84,13 @@ def login_user(user: User) -> None:
     session.pop("course_stamp", None)
     session.pop("place_id", None)
     session.pop("place_code", None)
+    # The agreement a previous sign-in of this browser made is not this one's:
+    # the sign-in route sets it for the account it signs in (lab/terms.py).
+    session.pop("terms_version", None)
+    # Nor are the settings somebody opened in this browser with the settings
+    # password before (routes/settings_routes.py, `_settings_admitted`): a
+    # course leader signing in there would have had them (2026-11-15).
+    session.pop("settings_authenticated", None)
     session["user_id"] = user.id
     session["user_stamp"] = account_stamp(user)
     session["role"] = user.role.value
@@ -76,6 +114,7 @@ def login_place(place: CourseMembership) -> None:
     """
     from .place_codes import code_stamp, course_stamp
     session.pop("settings_authenticated", None)
+    session.pop("terms_version", None)
     session["user_id"] = place.user_id
     session["user_stamp"] = account_stamp(place.user)
     session["role"] = Role.participant.value
@@ -168,6 +207,7 @@ def logout_user() -> None:
     session.pop("course_stamp", None)
     session.pop("place_id", None)
     session.pop("place_code", None)
+    session.pop("terms_version", None)
     # The sign-in through the settings password: kept, it made the browser the
     # first admin again after the sign-out (`current_user`), and what the
     # browser kept then belonged to that account.

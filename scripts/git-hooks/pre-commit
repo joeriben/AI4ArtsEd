@@ -172,4 +172,13 @@ fi
 # --------------------------------------------------------------------------------
 "$PY" "$REPO/devserver/tests/test_public_surface_clean.py" --staged || exit 1
 
+# --------------------------------------------------------------------------------
+# 11. No password, key or token is written into the repository.
+#     From 2025-12-18 to 2026-11-15 the settings password that every new
+#     installation received stood in the code, and no gate looked for it. The
+#     message of a commit is judged by the commit-msg hook, a push by pre-push.
+#     Rule and reasoning: devserver/tests/test_no_secrets_in_code.py
+# --------------------------------------------------------------------------------
+"$PY" "$REPO/devserver/tests/test_no_secrets_in_code.py" --staged || exit 1
+
 exit 0

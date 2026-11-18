@@ -71,6 +71,19 @@ describe('chooseCourse', () => {
 })
 
 describe('fetchMe', () => {
+  it('reads the session once the gate refused the choice for want of a sign-in', async () => {
+    const auth = useLabAuthStore()
+    get.mockResolvedValueOnce(inCourse(4, 'Klasse 7b'))
+    await auth.fetchMe()
+    post.mockRejectedValueOnce(Object.assign(new Error('401'),
+      { response: { status: 401, data: { error: 'sign_in_required' } } }))
+    get.mockResolvedValueOnce({ data: { user: null, course_id: null, course: null, place: null } })
+    expect(await auth.chooseCourse(5)).toBe('sign_in_required')
+    await vi.waitFor(() => expect(auth.user).toBeNull())
+    expect(auth.sessionLost).toBe(1)
+    expect(get).toHaveBeenCalledTimes(2)
+  })
+
   it('ends a choice the server has ended', async () => {
     localStorage.setItem('ai4artsed.activeCourseId', '4')
     const auth = useLabAuthStore()

@@ -379,6 +379,32 @@ def test_finish_body_keeps_a_first_section_with_sections_of_its_own():
     assert not any("title line" in n for n in notes)
 
 
+def test_finish_body_sets_a_heading_without_sections_from_the_page_references_below():
+    """A `###` without pages and without sections of its own takes the span
+    of the page references in its text (Jörissen 2022: four headings without
+    pages over 17 references)."""
+    answer = ("## Zusammenfassung\n\nA (S. 4). B (S. 4–5).\n\n## Fazit\n\nC (S. 5).\n\n"
+              "## Ohne Seiten\n\nD.")
+    body, _terms, notes = kp._finish_body(answer, _figure_unit(), "Monster", "de", {},
+                                          True, True)
+    assert body.startswith("### Zusammenfassung (S. 4–5)\n\nA (S. 4).")
+    assert "### Fazit (S. 5)\n\nC (S. 5)." in body
+    assert "### Ohne Seiten\n\nD." in body
+    assert any("set from the page references below: Fazit" in n for n in notes)
+
+
+def test_finish_body_turns_a_page_list_in_a_heading_into_its_span():
+    """Kynkäänniemi 2019 "[pp. 9, 11]", Chinchure 2024 "(pp. 14, 20, 29–31)";
+    a page list in the text stays a list."""
+    answer = ("## Validation [S. 4, 5]\n\nA (S. 4, 5).\n\n## Schluss (S. 4, 5)\n\nB.\n\n"
+              "### Teil (S. 4, 5)\n\nC.")
+    body, _terms, notes = kp._finish_body(answer, _figure_unit(), "Monster", "de", {},
+                                          True, True)
+    assert body.startswith("### Validation (S. 4–5)\n\nA (S. 4, 5).")
+    assert "### Schluss (S. 4–5)" in body and "#### Teil (S. 4–5)" in body
+    assert any("page list [S. 4, 5] set as (S. 4–5): Validation" in n for n in notes)
+
+
 def test_finish_body_heads_a_bare_summary_and_lists_the_figures_at_the_end():
     body, _terms, _notes = kp._finish_body("Nur Text.", _figure_unit(), "Monster", "de",
                                            {1: "Ein gezeichnetes Monster mit drei Augen."},

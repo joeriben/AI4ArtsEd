@@ -119,6 +119,19 @@ def test_bias_and_synonym_discourses_trigger():
     assert len(v) == 1
 
 
+def test_a_page_name_is_no_discourse():
+    """Naming the page a proposal runs on invokes nothing: "Stereotype
+    Analysis" and "Bias Research 1" name pages of this platform
+    (2026-11-15). A discourse word outside a name still counts."""
+    for reply in ("Auf der Seite Stereotype Analysis legt die Gruppe zwei Linsen an.",
+                  "Die Stereotypen-Analyse zeigt die Bilder nebeneinander.",
+                  "Open Bias Research 1 and run the prompt twice."):
+        assert ED.validate(reply, ledger=[], lexicon=LEX) == [], reply
+    v = ED.validate("On Stereotype Analysis the pictures repeat a stereotype of the place.",
+                    ledger=[], lexicon=LEX)
+    assert len(v) == 1
+
+
 def test_echo_of_the_educators_own_words_is_exempt():
     user = "Wir wollen mit indigener Kunst arbeiten - was meinst du?"
     v = ED.validate("Indigene Kunst also - was zieht die Gruppe dahin?",

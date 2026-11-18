@@ -52,11 +52,16 @@ export function usePlaceSessionCheck() {
   })
 
   /** "Sign in" on the row: the row goes, the store takes over what the server
-   *  says now, and the login page opens. */
+   *  says now, and the login page opens with the address it leads back to.
+   *  Where the page already stands on it (App.vue sends a page that needs a
+   *  sign-in there when the sign-in ends), it stays; where App.vue's way there
+   *  is still under way, this one asks for the same address. */
   async function signInAgain(): Promise<void> {
     auth.dismissEndedPlace()
     await auth.fetchMe()
-    await router.push({ name: 'login' })
+    const here = router.currentRoute.value
+    if (here.name === 'login') return
+    await router.push({ name: 'login', query: { redirect: here.fullPath } })
   }
 
   return { signInAgain }

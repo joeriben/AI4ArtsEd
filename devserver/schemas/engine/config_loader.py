@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from pathlib import Path
 import json
 import logging
+import random
 
 logger = logging.getLogger(__name__)
 
@@ -28,8 +29,30 @@ EXCLUDED_CONFIG_DIRS = frozenset({
 })
 
 
+def draw_from_pool(context):
+    """One entry of a pool, or the context unchanged when it is no pool.
+
+    A context written as a LIST is a pool: a perspective that is another one
+    each time it is taken. It brings back the random generators of the
+    ComfyUI nodes (docs/reference/fyi_comfyui-customnodes_ai4artsed_comfyui/:
+    random_instruction_generator, random_artform_generator), which drew per
+    queue run because the queue was the only moment they had. Here the draw
+    happens where a perspective is handed out: the chooser asks for its
+    wording (/api/config/<id>/context), the drawn entry stands in the field,
+    runs as context_prompt and is recorded as such -- what the field shows
+    is what runs. A reader that meets the list without the field draws for
+    itself. Each entry is a context of its own: str or {en:..., de:...}.
+    """
+    if isinstance(context, list):
+        entries = [entry for entry in context if entry]
+        return random.choice(entries) if entries else None
+    return context
+
+
 def resolve_context_language(context, language=None):
-    """Resolve context to string — handles both str and {en:..., de:...} dict."""
+    """Resolve context to string — handles str, {en:..., de:...} dict, and a
+    pool (list), from which one entry is drawn (draw_from_pool)."""
+    context = draw_from_pool(context)
     if context is None:
         return ''
     if isinstance(context, str):

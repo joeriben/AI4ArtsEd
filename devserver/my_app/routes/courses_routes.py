@@ -38,6 +38,7 @@ from my_app.lab.auth_service import (
     account_stamp, current_user, current_course_id, is_course_educator, is_course_member,
     require_auth, require_role,
     require_course_access, require_course_owner, require_course_leader,
+    UNUSABLE_PASSWORD_HASH,
 )
 from my_app.lab.place_codes import access_open, iso_utc, issue_code
 from my_app.services.favorites_store import drop_owned, editing
@@ -50,10 +51,6 @@ courses_bp = Blueprint("courses", __name__, url_prefix="/api/courses")
 # What a course may carry: kids or youth, or the installation's level. A course
 # only tightens the installation's level (services/safety_level_resolver.py).
 _SAFETY_LEVELS = {"kids", "youth", COURSE_USES_INSTALLATION}
-
-# Participants never authenticate with a password; store an unusable sentinel
-# so the NOT NULL password_hash column is satisfied and no password can match.
-_UNUSABLE_PW_HASH = "!"
 
 # How many places one request makes at most. A school class is some thirty
 # devices; the bound catches a typo that would hand out a thousand codes.
@@ -308,7 +305,7 @@ def add_places(course_id: int):
         for number in range(last + 1, last + 1 + count):
             account = User(
                 role=Role.participant,
-                password_hash=_UNUSABLE_PW_HASH,  # a place enters with its code alone
+                password_hash=UNUSABLE_PASSWORD_HASH,  # a place enters with its code alone
                 created_by=leader_id,
                 is_active=True,
             )

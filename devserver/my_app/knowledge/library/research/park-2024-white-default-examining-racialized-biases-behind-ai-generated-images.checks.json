@@ -1,0 +1,1732 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 8.3% of 1614 words, ceiling 20%, longest run 17 words; not counted: 44 words from the source's lists; not counted: figure descriptions",
+   "findings": [
+    {
+     "words": 17,
+     "text": "data patterns inscribed into pictures that tell stories about that dataset and the human decisions behind it"
+    },
+    {
+     "words": 15,
+     "text": "asian women as submissive and exotic sexual objects to satisfy white males desires and fantasies"
+    },
+    {
+     "words": 14,
+     "text": "toni morrison maxine hong kingston and leslie marmon silko are relegated to multicultural literature"
+    },
+    {
+     "words": 11,
+     "text": "stereotyped images signify and question who builds and sustains the systems"
+    },
+    {
+     "words": 9,
+     "text": "in which emerging technologies increasingly permeate every dimension of"
+    }
+   ],
+   "value": 0.083,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "1 of 3 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "expected_items": 2,
+     "first_item": "Uchida, A. (1998). The Orientalization of Asian women in America. Women's Studie",
+     "output_lists": [
+      6,
+      4,
+      3,
+      4
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "131 of 160 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 1,
+     "number": "10912"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 1,
+     "number": "23"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 1,
+     "number": "2325"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 1,
+     "number": "26"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 1,
+     "number": "3125"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 1,
+     "number": "5161"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "106"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "13"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "14"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "17"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "191"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "192"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "195"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "2016"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "27"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "34"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "37"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "38"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "40"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "41"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "42"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "44"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "46"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "48"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "49"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "53"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "64"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "65"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "66"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "67"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "68"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "69"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "70"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "71"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "72"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "74"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "75"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "76"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "78"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "79"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "80"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "81"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "82"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "83"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "84"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "85"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "86"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "87"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "88"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "number": "89"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 9,
+     "number": "2002"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 10,
+     "number": "507"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "00043125.2021.1986459"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "00393541.2021.1896252"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "101"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "1064751"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "1070167"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "1080"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "1090821"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "112"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "125"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "130"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "132"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "141"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "149"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "152"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "161"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "167936"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "167947"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "170"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "174"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "197"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "1998"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "20"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "2001"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "2003"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "2007"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "2011"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "2014"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "2017"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "2019"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "2021.3136898"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "21"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "2110.01963"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "213"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "214"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "22"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "2211.03759"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "227"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "2301.01902"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "23405149"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "24"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "25.2021.1938454"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "26.3.347"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "277"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "29"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "31"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "3125.2006.11651602"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "315"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "316"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "319"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "323"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "334"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "345"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "347"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "348"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "358"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "363"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "3759"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "39"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "393541.2003.11651739"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "393541.2015.11518964"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "393541.2023.2180310"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "397.013.16"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "415446"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "4557"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "51"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "5395"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "56"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "59"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "60"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "62"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "627"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "651640"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "651748"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "65256"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "7342"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "839"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "90"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "978"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 11,
+     "number": "98"
+    }
+   ],
+   "value": 131.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "5 of 12 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 1,
+     "heading": "White Default: Examining Racialized Biases Behind AI-Generated Images"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 2,
+     "heading": "White Default:"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 10,
+     "heading": "Learning and teaching how to read AI images can serve as a critical pedagogy that is committed to advancing social justice by not only exposing invisible power structures in contemporary society, but also critiquing institutionalized oppression."
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 10,
+     "heading": "Author Note"
+    },
+    {
+     "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+     "page": 10,
+     "heading": "ORCID"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "11 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "11 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "8 quoted texts in 3 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Image 1",
+     "page": 1,
+     "image": "fig-001-p1.png",
+     "quotes": [
+      "\"ART EDUCATION,\"",
+      "\"The Journal of the National Art Education Association.\"",
+      "\"Teaching Visual Culture in the New Digital Mediascape.\"",
+      "\"ARTICLES\"",
+      "\"INTERACTIVE REVIEWS,\""
+     ]
+    },
+    {
+     "figure": "Fig. 6",
+     "page": 7,
+     "image": "fig-016-p7.png",
+     "quotes": [
+      "“Black Flare”",
+      "“GONY”"
+     ]
+    },
+    {
+     "figure": "Image 18",
+     "page": 9,
+     "image": "fig-018-p9.png",
+     "quotes": [
+      "\"Americca\""
+     ]
+    }
+   ],
+   "value": 8.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "19 page references valid (printed-labels pages 1–11)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "11 pages checked, 3 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "13 passages out of order break a sentence (17 of 17 not repairable; listed, not gated)",
+   "findings": [
+    {
+     "page": 3,
+     "words": 30,
+     "text": "In this article, I explore social and ethical implications of generative AI models that need to be addressed in art Education by investigating how DALL-E 2 visualizes existing power structures.",
+     "blocks": [
+      "#/texts/34",
+      "#/texts/38"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "sentence cut: 'thout being aware of their biased nature' | 'Algorithms are trained on data sets from'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 3,
+     "words": 20,
+     "text": "Because OpenAI does not provide access to data sets for DALL-E 2, I attempt to examine inductively Racialized assumptions and",
+     "blocks": [
+      "#/texts/34",
+      "#/texts/38"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "sentence cut: 'thout being aware of their biased nature' | 'Algorithms are trained on data sets from'",
+      "passage cut out of 'Algorithms are trained on data sets from'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 3,
+     "words": 10,
+     "text": "Biases inscribed in the system through a method of critical",
+     "blocks": [
+      "#/texts/34",
+      "#/texts/38"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "sentence cut: 'thout being aware of their biased nature' | 'Algorithms are trained on data sets from'",
+      "passage cut out of 'Algorithms are trained on data sets from'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 3,
+     "words": 19,
+     "text": "analysis suggested by new media artist and researcher Eryk Salvaggio (2022). Then, I will discuss the implications of the",
+     "blocks": [
+      "#/texts/34",
+      "#/texts/38"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "sentence cut: 'thout being aware of their biased nature' | 'Algorithms are trained on data sets from'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 3,
+     "words": 6,
+     "text": "findings for art teaching and learning.",
+     "blocks": [
+      "#/texts/34",
+      "#/texts/38"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "sentence cut: 'thout being aware of their biased nature' | 'Algorithms are trained on data sets from'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 6,
+     "words": 13,
+     "text": "“White woman in Visual culture,” and “White female in Visual culture” (figures 2–4).",
+     "blocks": [
+      "#/texts/57",
+      "#/texts/58",
+      "#/texts/60"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "sentence cut: ' how I racially identify myself, I found' | 'interesting outputs generated with the p'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 6,
+     "words": 10,
+     "text": "As illustrated in the Images, women in different racial categories",
+     "blocks": [
+      "#/texts/58",
+      "#/texts/61"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": true,
+     "breaks": [
+      "sentence cut: ' how I racially identify myself, I found' | 'interesting outputs generated with the p'",
+      "passage cut out of 'Based on the method suggested by Salvagg'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 6,
+     "words": 9,
+     "text": "are portrayed differently, reinforcing racial stereotypes; while it is",
+     "blocks": [
+      "#/texts/58",
+      "#/texts/61"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": true,
+     "breaks": [
+      "sentence cut: ' how I racially identify myself, I found' | 'interesting outputs generated with the p'",
+      "passage cut out of 'Based on the method suggested by Salvagg'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 6,
+     "words": 11,
+     "text": "hard to identify certain patterns or connotations in the Images of",
+     "blocks": [
+      "#/texts/58",
+      "#/texts/59",
+      "#/texts/61"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": true,
+     "breaks": [
+      "sentence cut: ' how I racially identify myself, I found' | 'interesting outputs generated with the p'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 6,
+     "words": 5,
+     "text": "White women, it is apparent",
+     "blocks": [
+      "#/texts/58",
+      "#/texts/59",
+      "#/texts/65"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": true,
+     "breaks": [
+      "sentence cut: ' how I racially identify myself, I found' | 'interesting outputs generated with the p'",
+      "passage cut out of 'interesting outputs generated with the p'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 6,
+     "words": 5,
+     "text": "that Asian women and Black",
+     "blocks": [
+      "#/texts/59",
+      "#/texts/65"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": true,
+     "breaks": [
+      "sentence cut: ' how I racially identify myself, I found' | 'interesting outputs generated with the p'",
+      "passage cut out of 'interesting outputs generated with the p'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 6,
+     "words": 5,
+     "text": "women are illustrated in a",
+     "blocks": [
+      "#/texts/59",
+      "#/texts/65"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": true,
+     "breaks": [
+      "sentence cut: ' how I racially identify myself, I found' | 'interesting outputs generated with the p'",
+      "passage cut out of 'interesting outputs generated with the p'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 6,
+     "words": 4,
+     "text": "way. Particularly, the Images",
+     "blocks": [
+      "#/texts/59",
+      "#/texts/65"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": true,
+     "breaks": [
+      "sentence cut: ' how I racially identify myself, I found' | 'interesting outputs generated with the p'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 6,
+     "words": 9,
+     "text": "desires and fantasies (Cheng, 2018; Conrow & Gurung, 2021;",
+     "blocks": [
+      "#/texts/63",
+      "#/texts/66"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 6,
+     "words": 9,
+     "text": "Ramiro, 2022; Uchida, 1998). these inscriptions are embedded in",
+     "blocks": [
+      "#/texts/63",
+      "#/texts/66"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 6,
+     "words": 20,
+     "text": "society's Visual discourse and affect how they are represented, which may be at odds with their “embodied or desired experiences”",
+     "blocks": [
+      "#/texts/64",
+      "#/texts/66"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 6,
+     "words": 4,
+     "text": "(Keifer-Boyd, 2003, p. 317).",
+     "blocks": [
+      "#/texts/64",
+      "#/texts/66"
+     ],
+     "problem": "the layer passage interleaves other blocks",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    }
+   ],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "park-2024-white-default-examining-racialized-biases-behind-ai-generated-images",
+ "doc_type": "scholarly_article",
+ "analyzed_at": "2026-11-15T11:19:53.653784+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "White Default: Examining Racialized Biases Behind AI-Generated Images",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 11,
+   "chars": 42226,
+   "blocks": 146,
+   "inner_headings": 12,
+   "figures": 11
+  }
+ ],
+ "skipped": [
+  "Acknowledgments (p. 10)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 11,
+  "gaps": [
+   {
+    "page": 2,
+    "text": "T he advent of large language models (LLMs) Such as ChatGPT and text-to-image generation systems like DALL-E developed by OpenAI has raised critical questions in Education and art communities, urging us not only to reconceptualize our understanding of Creativity, authorship, and human–machine relations, but also to examine their",
+    "words": 48,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "before #/texts/29"
+   },
+   {
+    "page": 2,
+    "text": "for teaching and learning. Particularly Because the data sets to train many generative Artificial Intelligence (AI) models are not made available to the public and their operating mechanisms are opaque to human reasoning, it is difficult to predict their potential harm to",
+    "words": 42,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "before #/texts/29"
+   },
+   {
+    "page": 2,
+    "text": "Anthropologist Hannah Knox (2021) described that we are entering a different phase of challenges driven by these emerging technologies:",
+    "words": 19,
+    "kind": "reordered",
+    "repaired": true,
+    "anchor": "before #/texts/29"
+   }
+  ],
+  "gaps_dismissed": [
+   {
+    "page": 6,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "interesting outputs Generated"
+   },
+   {
+    "page": 6,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "much more hypersexualized"
+   },
+   {
+    "page": 6,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "desires and fantasies."
+   },
+   {
+    "page": 11,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "& aesthetics: Artificial Intelligence American women: Clothing"
+   },
+   {
+    "page": 11,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "International, 316, 1-10."
+   },
+   {
+    "page": 11,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "University Press. https://doi.org"
+   },
+   {
+    "page": 11,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "26(3), 347-358. https://doi.org/10.24 /10.1093/oxfordhb/9780190067"
+   },
+   {
+    "page": 11,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "undressed me-Without my"
+   },
+   {
+    "page": 11,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "OpenAI Blog. https://openai.com"
+   },
+   {
+    "page": 11,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "https://www.technologyreview.com /blog/reducing-bias-and-improving /10.5209/aris.74664 /2022/12/12/1064751/the-viral-ai -safety-in-dall-e-2"
+   },
+   {
+    "page": 11,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "(arXiv:2301.01902). arXiv. https:// -image-models-are .peterlang.com/document/1090821 doi.org/10.48550/arXiv.2301.01902"
+   },
+   {
+    "page": 11,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "Whiteness: Performative pedagogy"
+   },
+   {
+    "page": 11,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "-2-ai-text-image-bias-social-media 2-14. 62(2), 130-141. https://doi.org/10"
+   },
+   {
+    "page": 11,
+    "words": 4,
+    "reason": "duplicate",
+    "text": ".1080/00393541.2021.1896252 Deconstructing racial assumptions"
+   },
+   {
+    "page": 11,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "and confrontational pedagogy. stack.com/p/how-to-read-an-ai"
+   },
+   {
+    "page": 11,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "214-227. https://doi.org/10.1080/00 393541.2015.11518964"
+   },
+   {
+    "page": 11,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "M., & 197-213. https://doi.org/10.1080/00 Developments, definitions, and"
+   },
+   {
+    "page": 11,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "161-174. https://doi.org/10.1016 651640"
+   },
+   {
+    "page": 11,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "/S0277-5395(98)00004-1 21(1), 14-23."
+   },
+   {
+    "page": 11,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "Gaztambide-Fernández, R., Kraehe,"
+   },
+   {
+    "page": 11,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "Macmillan. https://doi.org/10.1007 Routledge. /978-3-319-65256-6_1 July 2024 45"
+   }
+  ],
+  "captions_reclassified": [],
+  "captions_reassigned": [],
+  "headings_restored": [],
+  "lists_reunited": [
+   {
+    "page": 5,
+    "list": "#/groups/3",
+    "fragment": "#/groups/4",
+    "markers": "5-6",
+    "rule": "fragment continues numbering"
+   }
+  ],
+  "figures_screened": [
+   {
+    "page": 1,
+    "image": "fig-002-p1.png",
+    "w": 26,
+    "h": 41,
+    "reason": "small"
+   },
+   {
+    "page": 1,
+    "image": "fig-003-p1.png",
+    "w": 36,
+    "h": 39,
+    "reason": "small"
+   },
+   {
+    "page": 1,
+    "image": "fig-004-p1.png",
+    "w": 39,
+    "h": 33,
+    "reason": "small"
+   },
+   {
+    "page": 1,
+    "image": "fig-005-p1.png",
+    "w": 44,
+    "h": 33,
+    "reason": "small"
+   },
+   {
+    "page": 1,
+    "image": "fig-006-p1.png",
+    "w": 36,
+    "h": 39,
+    "reason": "small"
+   },
+   {
+    "page": 1,
+    "image": "fig-007-p1.png",
+    "w": 40,
+    "h": 44,
+    "reason": "small"
+   },
+   {
+    "page": 1,
+    "image": "fig-008-p1.png",
+    "w": 39,
+    "h": 39,
+    "reason": "small"
+   },
+   {
+    "page": 1,
+    "image": "fig-009-p1.png",
+    "w": 147,
+    "h": 44,
+    "reason": "strip"
+   },
+   {
+    "page": 10,
+    "image": "fig-020-p10.png",
+    "w": 23,
+    "h": 23,
+    "reason": "small"
+   }
+  ],
+  "superseded": [],
+  "replaced_pages": [],
+  "noise_dropped": 0,
+  "hyphens_restored": [],
+  "order": [
+   {
+    "page": 3,
+    "text": "In this article, I explore social and ethical implications of generative AI models that need to be addressed in art Education by investigating how DALL-E 2 visualizes existing power structures.",
+    "words": 30,
+    "refs": [
+     "#/texts/34",
+     "#/texts/38"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "sentence cut: 'thout being aware of their biased nature' | 'Algorithms are trained on data sets from'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 3,
+    "text": "Because OpenAI does not provide access to data sets for DALL-E 2, I attempt to examine inductively Racialized assumptions and",
+    "words": 20,
+    "refs": [
+     "#/texts/34",
+     "#/texts/38"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "sentence cut: 'thout being aware of their biased nature' | 'Algorithms are trained on data sets from'",
+     "passage cut out of 'Algorithms are trained on data sets from'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 3,
+    "text": "Biases inscribed in the system through a method of critical",
+    "words": 10,
+    "refs": [
+     "#/texts/34",
+     "#/texts/38"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "sentence cut: 'thout being aware of their biased nature' | 'Algorithms are trained on data sets from'",
+     "passage cut out of 'Algorithms are trained on data sets from'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 3,
+    "text": "analysis suggested by new media artist and researcher Eryk Salvaggio (2022). Then, I will discuss the implications of the",
+    "words": 19,
+    "refs": [
+     "#/texts/34",
+     "#/texts/38"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "sentence cut: 'thout being aware of their biased nature' | 'Algorithms are trained on data sets from'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 3,
+    "text": "findings for art teaching and learning.",
+    "words": 6,
+    "refs": [
+     "#/texts/34",
+     "#/texts/38"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "sentence cut: 'thout being aware of their biased nature' | 'Algorithms are trained on data sets from'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 6,
+    "text": "“White woman in Visual culture,” and “White female in Visual culture” (figures 2–4).",
+    "words": 13,
+    "refs": [
+     "#/texts/57",
+     "#/texts/58",
+     "#/texts/60"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "sentence cut: ' how I racially identify myself, I found' | 'interesting outputs generated with the p'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 6,
+    "text": "As illustrated in the Images, women in different racial categories",
+    "words": 10,
+    "refs": [
+     "#/texts/58",
+     "#/texts/61"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [
+     "sentence cut: ' how I racially identify myself, I found' | 'interesting outputs generated with the p'",
+     "passage cut out of 'Based on the method suggested by Salvagg'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 6,
+    "text": "are portrayed differently, reinforcing racial stereotypes; while it is",
+    "words": 9,
+    "refs": [
+     "#/texts/58",
+     "#/texts/61"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [
+     "sentence cut: ' how I racially identify myself, I found' | 'interesting outputs generated with the p'",
+     "passage cut out of 'Based on the method suggested by Salvagg'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 6,
+    "text": "hard to identify certain patterns or connotations in the Images of",
+    "words": 11,
+    "refs": [
+     "#/texts/58",
+     "#/texts/59",
+     "#/texts/61"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [
+     "sentence cut: ' how I racially identify myself, I found' | 'interesting outputs generated with the p'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 6,
+    "text": "White women, it is apparent",
+    "words": 5,
+    "refs": [
+     "#/texts/58",
+     "#/texts/59",
+     "#/texts/65"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [
+     "sentence cut: ' how I racially identify myself, I found' | 'interesting outputs generated with the p'",
+     "passage cut out of 'interesting outputs generated with the p'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 6,
+    "text": "that Asian women and Black",
+    "words": 5,
+    "refs": [
+     "#/texts/59",
+     "#/texts/65"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [
+     "sentence cut: ' how I racially identify myself, I found' | 'interesting outputs generated with the p'",
+     "passage cut out of 'interesting outputs generated with the p'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 6,
+    "text": "women are illustrated in a",
+    "words": 5,
+    "refs": [
+     "#/texts/59",
+     "#/texts/65"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [
+     "sentence cut: ' how I racially identify myself, I found' | 'interesting outputs generated with the p'",
+     "passage cut out of 'interesting outputs generated with the p'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 6,
+    "text": "way. Particularly, the Images",
+    "words": 4,
+    "refs": [
+     "#/texts/59",
+     "#/texts/65"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [
+     "sentence cut: ' how I racially identify myself, I found' | 'interesting outputs generated with the p'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 6,
+    "text": "desires and fantasies (Cheng, 2018; Conrow & Gurung, 2021;",
+    "words": 9,
+    "refs": [
+     "#/texts/63",
+     "#/texts/66"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 6,
+    "text": "Ramiro, 2022; Uchida, 1998). these inscriptions are embedded in",
+    "words": 9,
+    "refs": [
+     "#/texts/63",
+     "#/texts/66"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 6,
+    "text": "society's Visual discourse and affect how they are represented, which may be at odds with their “embodied or desired experiences”",
+    "words": 20,
+    "refs": [
+     "#/texts/64",
+     "#/texts/66"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 6,
+    "text": "(Keifer-Boyd, 2003, p. 317).",
+    "words": 4,
+    "refs": [
+     "#/texts/64",
+     "#/texts/66"
+    ],
+    "repaired": false,
+    "note": "the layer passage interleaves other blocks",
+    "breaks": [],
+    "section": ""
+   }
+  ],
+  "order_pages_checked": 11,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 17,
+  "order_breaking": 13,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 3 minor; distortions: 0 material, 4 minor; additions: 0 material, 0 minor; order: 0 material, 3 minor",
+  "at": "2026-11-15T11:21:08+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 3
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 4
+   },
+   "additions": {
+    "material": 0,
+    "minor": 0
+   },
+   "order": {
+    "material": 0,
+    "minor": 3
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "White Default: Examining Racialized Biases Behind AI-Generated Images (p. 1–11)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "Such biases have manifested in facial recognition technologies that have misrecognized and erased the presence of Black women (Buolamwini & Gebru, 2018).",
+      "severity": "minor",
+      "page": 2
+     },
+     {
+      "source": "visual culture has raised the importance of engaging with visuality, 'the process of attributing meaning to what we see' … it is critical to examine what forms of visuality current AI systems are constructing.",
+      "severity": "minor",
+      "page": 9
+     },
+     {
+      "source": "art educators and researchers can play an important role in empowering future generations to navigate emerging visuality and digital visual culture through their robust engagement with visual culture art education.",
+      "severity": "minor",
+      "page": 10
+     }
+    ],
+    "distortions": [
+     {
+      "source": "Fig. 1: A sample set of 16 images generated by DALL-E 2 with the prompt 'Asian in visual culture.' … All 16 images looked quite similar (Figure 1).",
+      "summary": "The picture is a collage of eight color photographs arranged in four rows and two columns.",
+      "severity": "minor",
+      "page": 2
+     },
+     {
+      "source": "Thus, I tried the prompts 'people' and 'people in visual culture,' and DALL-E 2 generated images of people that do not represent a certain race (Figure 7).",
+      "summary": "Follow-up prompts ('White people,' 'White people in visual culture,' 'people,' 'people in visual culture') confirmed this asymmetry.",
+      "severity": "minor",
+      "page": 7
+     },
+     {
+      "source": "through the new technique that it implemented to 'more accurately reflect the diversity of the world's population' … with prompts that do not describe specific race or gender, the results showed diversity 12 times.",
+      "summary": "which it claims makes results reflect 'the diversity of the world's population' 12 times more often for unmarked prompts",
+      "severity": "minor",
+      "page": 7
+     },
+     {
+      "source": "Drawing on critical race theory, Gaztambide-Fernández et al. (2018) stated that the arts have been conceived as White property",
+      "summary": "Park interprets the findings through critical race theory.",
+      "severity": "minor",
+      "page": 8
+     }
+    ],
+    "additions": [],
+    "order": [
+     {
+      "source": "while it is hard to identify certain patterns or connotations in the images of Particularly, the images of Asian women reaffirm the stereotypes against them portraying Asian women as submissive and exotic sexual objects",
+      "summary": "",
+      "layer": "while it is hard to identify certain patterns or connotations in the images of White women, it is apparent that Asian women and Black women are illustrated in a much more hypersexualized way.",
+      "severity": "minor",
+      "page": 6
+     },
+     {
+      "source": "To develop a hypothesis from the initial four, I regenerated 'White woman in visual culture, ' and 'White female in visual culture' (Figures 2-4).",
+      "summary": "",
+      "layer": "To develop a hypothesis from the initial four, I regenerated images with the same prompt and created a sample set of 16 images as suggested by Salvaggio (2022).",
+      "severity": "minor",
+      "page": 6
+     },
+     {
+      "source": "I prompted 'Black woman in visual culture, ' 'Black female in visual culture, ' White women, it is apparent that Asian women and Black women are illustrated in a much more hypersexualized way.",
+      "summary": "",
+      "layer": "I prompted 'Black woman in visual culture,' 'Black female in visual culture,' 'White woman in visual culture,' and 'White female in visual culture' (Figures 2–4).",
+      "severity": "minor",
+      "page": 6
+     }
+    ]
+   }
+  ]
+ },
+ "source": {
+  "source": "park-2024-white-default-examining-racialized-biases-behind-ai-generated-images.pdf",
+  "bytes": 3060137,
+  "sha256": "275def50d199b7c80f617644a789aa00eb865c5093a0651a16c9bcfffd8703e2",
+  "extracted_at": "2026-11-13T01:58:45+01:00"
+ }
+}

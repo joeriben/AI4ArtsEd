@@ -23,6 +23,13 @@ const newTitle = ref('')
 const newSafety = ref<SafetyLevel>('youth')
 const creating = ref(false)
 
+// This page needs a sign-in; signed out, the sign-in page follows, as from
+// the header (components/SignInField.vue).
+async function signOut(): Promise<void> {
+  await auth.logout()
+  await router.push({ name: 'login' })
+}
+
 async function load() {
   loading.value = true
   error.value = null
@@ -69,7 +76,7 @@ onMounted(load)
       </div>
       <div class="head-actions">
         <router-link v-if="auth.isAdmin" to="/admin/users" class="ghost">{{ $t('admin.users.title') }}</router-link>
-        <button class="ghost" @click="auth.logout()">{{ $t('auth.logout') }}</button>
+        <button class="ghost" @click="signOut">{{ $t('auth.logout') }}</button>
       </div>
     </header>
 

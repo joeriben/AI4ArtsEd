@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+#
+# No password, key or token in the message of a commit.
+#
+# The settings passwords of 2025-12-18 and 2026-01-05 both stood in the
+# messages of the commits that put them into the code, where the pre-commit
+# gate, which reads the staged files, never looks.
+# Rule and reasoning: devserver/tests/test_no_secrets_in_code.py
+#
+# Installed with the other hooks: scripts/install-hooks.sh
+
+set -uo pipefail
+
+REPO="$(git rev-parse --show-toplevel)"
+PY="$REPO/venv/bin/python"
+[ -x "$PY" ] || PY="$(command -v python3 || true)"
+if [ -z "${PY}" ] || [ ! -x "${PY}" ]; then
+    echo "commit-msg: no python interpreter, the secrets gate cannot run" >&2
+    exit 0
+fi
+
+"$PY" "$REPO/devserver/tests/test_no_secrets_in_code.py" --message "$1" || exit 1
+exit 0

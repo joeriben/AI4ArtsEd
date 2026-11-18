@@ -715,6 +715,13 @@ T5_ROWS = ["full", "tail"]
 # (comfy/text_encoders/sd3_clip.py).
 POOLED = ["clip", "zero"]
 
+# Which CLIP encoders fill the CLIP block and the pooled vector: both, or one
+# of them alone. The one left out writes zeros in its columns (CLIP-L 0..767,
+# CLIP-G 768..2047) and in its half of the pooled vector, which is what
+# ComfyUI itself puts there when that encoder is absent
+# (comfy/text_encoders/sd3_clip.py, `SD3ClipModel.encode_token_weights`).
+CLIP_ENCODERS = ["both", "clip_l", "clip_g"]
+
 
 class AI4ArtsEdSD3ThreeFactors:
     """The conditioning table under three factors: a on the CLIP block, b for
@@ -750,6 +757,13 @@ class AI4ArtsEdSD3ThreeFactors:
     CLIP computes it ("clip") or as zeros of the same shape ("zero"), which is
     what ComfyUI itself hands the model when no CLIP encoder runs. T5 has no
     pooled vector.
+
+    `clip_encoder` names which CLIP encoders the block and the pooled vector
+    are read from: "both", or "clip_l" / "clip_g" alone. The encoder left out
+    has zeros in its columns of the block and in its half of the pooled
+    vector, as in ComfyUI's own assembly without it; a and b act on the block
+    as it then stands, so b's T5 still reaches the zeroed columns. "clip_l" is
+    the CLIP side of the fusion node's `original`.
     """
 
     @classmethod
@@ -778,6 +792,12 @@ class AI4ArtsEdSD3ThreeFactors:
                     "tooltip": "clip: the pooled vector as CLIP-L and CLIP-G "
                                "compute it. zero: zeros in its place, as ComfyUI "
                                "itself puts them when no CLIP encoder runs."}),
+                "clip_encoder": (CLIP_ENCODERS, {
+                    "default": "both",
+                    "tooltip": "both: CLIP-L and CLIP-G. clip_l / clip_g: that "
+                               "encoder alone; the other one's columns of the "
+                               "block and its half of the pooled vector are "
+                               "zeros, as ComfyUI puts them when it is absent."}),
             },
         }
 
@@ -786,11 +806,14 @@ class AI4ArtsEdSD3ThreeFactors:
     FUNCTION = "weigh"
     CATEGORY = "AI4ArtsEd/latent lab"
 
-    def weigh(self, parts, a, b, c, t5_rows, pooled="clip"):
+    def weigh(self, parts, a, b, c, t5_rows, pooled="clip", clip_encoder="both"):
         if t5_rows not in T5_ROWS:
             raise RuntimeError(f"t5_rows {t5_rows!r}: one of {', '.join(T5_ROWS)}.")
         if pooled not in POOLED:
             raise RuntimeError(f"pooled {pooled!r}: one of {', '.join(POOLED)}.")
+        if clip_encoder not in CLIP_ENCODERS:
+            raise RuntimeError(
+                f"clip_encoder {clip_encoder!r}: one of {', '.join(CLIP_ENCODERS)}.")
         a, b, c = float(a), float(b), float(c)
         if not all(math.isfinite(v) for v in (a, b, c)):
             raise RuntimeError("The three factors have to be finite numbers.")
@@ -798,11 +821,17 @@ class AI4ArtsEdSD3ThreeFactors:
         out["filled"] = dict(parts.get("filled") or {})
         # An assembled sequence upstream belongs to the node that wrote it.
         out.pop("assembled", None)
+        # The CLIP encoder left out: zeros in its stream and its pooled half,
+        # before the block is laid, so both the table and the vector read them.
+        for left_out in {"clip_l": ("clip_g",), "clip_g": ("clip_l",)}.get(clip_encoder, ()):
+            out[left_out] = torch.zeros_like(parts[left_out])
+            pool_key = "pooled_" + left_out[-1]
+            out[pool_key] = torch.zeros_like(parts[pool_key])
         if pooled == "zero":
             out["pooled_l"] = torch.zeros_like(parts["pooled_l"])
             out["pooled_g"] = torch.zeros_like(parts["pooled_g"])
 
-        clip_block = _clip_block(parts).float()
+        clip_block = _clip_block(out).float()
         t5 = parts["t5"].to(device=clip_block.device, dtype=clip_block.dtype)
         if clip_block.shape[1] == 0 or t5.shape[1] == 0:
             raise RuntimeError(
@@ -825,7 +854,8 @@ class AI4ArtsEdSD3ThreeFactors:
         out["assembled"] = torch.cat([block, c * below], dim=1)
         logger.info(
             "[AI4ArtsEd SD3 ThreeFactors] a=%.3f b=%.3f c=%.3f t5_rows=%s pooled=%s "
-            "block %dt, T5 %dt", a, b, c, t5_rows, pooled, block.shape[1], below.shape[1],
+            "clip_encoder=%s block %dt, T5 %dt", a, b, c, t5_rows, pooled, clip_encoder,
+            block.shape[1], below.shape[1],
         )
         return (out,)
 

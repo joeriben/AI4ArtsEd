@@ -83,6 +83,90 @@ def test_material_finding_holds_the_document_in_draft():
     assert "omissions: 1 material, 0 minor" in res.review["note"]
 
 
+_CORRECTION = "A check of your summary against the document found"
+
+
+def _correcting(base, answer, corrections):
+    """`base` for every call but the correction call, which is recorded in
+    `corrections` and answered with `answer`."""
+    def llm(system, user, max_tokens=None):
+        if _CORRECTION in user:
+            corrections.append(user)
+            return answer
+        return base(system, user, max_tokens)
+    return llm
+
+
+def test_a_correction_that_leaves_fewer_defects_is_kept_and_publishes():
+    finding = dict(_EMPTY, omissions=[{"source": "im Kunstraum der Schule", "page": None,
+                                        "severity": "material"}])
+    corrections, reviews = [], []
+    fixed = _SUMMARY.replace("90 Minuten.", "90 Minuten im Kunstraum.")
+    res = kp.process_document(from_markdown(_MD), _fm(), hold="", llm=_correcting(
+        _stub([finding, _EMPTY], reviews), fixed, corrections))
+    assert len(corrections) == 1 and len(reviews) == 2   # the unit is reviewed again
+    assert 'Left out: the document says "im Kunstraum der Schule"' in corrections[0]
+    assert "Your summary:" in corrections[0] and "Gruppengespräch" in corrections[0]
+    assert res.review_passed and res.status == "published"
+    assert "90 Minuten im Kunstraum." in res.markdown
+
+
+def test_a_correction_that_does_not_lower_the_defects_is_discarded():
+    finding = dict(_EMPTY, omissions=[{"source": "im Kunstraum der Schule", "page": None,
+                                        "severity": "material"}])
+    corrections = []
+    res = kp.process_document(from_markdown(_MD), _fm(), llm=_correcting(
+        _stub([finding]), _SUMMARY.replace("Gruppengespräch", "Plenum"), corrections))
+    assert len(corrections) == kp._CORRECTION_ROUNDS
+    assert res.status == "draft" and "Plenum" not in res.markdown
+    assert "Gruppengespräch" in res.markdown
+
+
+def _verbatim(share):
+    return kc.CheckResult("verbatim_share", kc.COPYRIGHT, share <= 0.20, f"share {share:.1%}",
+                          value=share, limit=0.20)
+
+
+def _verdict(material):
+    findings = [{"source": "x", "severity": "material"}] * material
+    return krv.ReviewVerdict(reviewer="r", at="t", sections=[krv.SectionReview(
+        index=1, section="Ablauf", answered=True, omissions=findings)])
+
+
+def test_a_lower_verbatim_share_over_the_ceiling_is_kept():
+    before = kc.CheckReport([_verbatim(0.251)])
+    assert kp._improves(before, _verdict(0), kc.CheckReport([_verbatim(0.212)]), _verdict(0))
+    assert not kp._improves(before, _verdict(0),
+                            kc.CheckReport([_verbatim(0.262)]), _verdict(0))
+    # As many defects, the share lower, but a material finding for a failed
+    # page reference: discarded.
+    pages = kc.CheckResult("page_refs", kc.QUALITY, False, "1 wrong")
+    assert not kp._improves(kc.CheckReport([_verbatim(0.251), pages]), _verdict(0),
+                            kc.CheckReport([_verbatim(0.212)]), _verdict(1))
+    # Under the ceiling it is one defect fewer, kept as before.
+    assert kp._improves(before, _verdict(0), kc.CheckReport([_verbatim(0.18)]), _verdict(0))
+
+
+def test_copied_passages_go_back_to_the_correction_call():
+    copied = ("## Ablauf\n\nDie Einheit umfasst 6–8 Doppelstunden zu je 90 Minuten im "
+              "Kunstraum der Schule.\n\n- Vorlage ansehen\n- Gruppengespräch")
+    corrections = []
+    base = _stub([_EMPTY])
+
+    def llm(system, user, max_tokens=None):
+        if _CORRECTION in user:
+            corrections.append(user)
+            return _SUMMARY
+        if "REFUTE" in system or system.startswith("You classify") or "PROFILE" in system:
+            return base(system, user, max_tokens)
+        return copied
+    res = kp.process_document(from_markdown(_MD), _fm(), llm=llm, hold="")
+    assert len(corrections) == 1
+    assert "- Copied:" in corrections[0] and "Doppelstunden zu je 90 Minuten" in corrections[0]
+    assert res.checks == "passed" and res.status == "published"
+    assert "Doppelstunden zu je 90 Minuten" not in res.markdown
+
+
 def test_the_page_a_statement_is_assigned_to_is_not_reviewed():
     """The reviewer is not asked about page assignment (#139), and a page
     finding a reviewer sends anyway is not taken into the verdict."""
@@ -243,6 +327,8 @@ def test_plan_document_counts_the_review_calls():
     assert plan["totals"]["review_calls"] == len(plan["units"]) == 1
     assert plan["totals"]["review_input_chars_max"] > 2 * len("Doppelstunden zu je 90 Minuten")
     assert plan["totals"]["review_input_chars_max"] == plan["review_calls"][0]["input_chars_max"]
+    assert plan["totals"]["correction_calls_max"] == kp._CORRECTION_ROUNDS
+    assert plan["totals"]["correction_review_calls_max"] == kp._CORRECTION_ROUNDS
 
 
 def test_findings_text_lists_each_finding_and_the_unreviewed():

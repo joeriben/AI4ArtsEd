@@ -1,0 +1,1432 @@
+{
+ "passed": true,
+ "label": "passed",
+ "results": [
+  {
+   "name": "verbatim_share",
+   "kind": "copyright",
+   "passed": true,
+   "summary": "share 9.0% of 2308 words, ceiling 20%, longest run 19 words; not counted: LITERATUR (reference data, entries verbatim), figure descriptions",
+   "findings": [
+    {
+     "words": 19,
+     "text": "prompt pair boosting realistic hands five fingers 8k hyperrealistic hands and suppressing poorly drawn hands distorted hands misplaced fingers"
+    },
+    {
+     "words": 17,
+     "text": "boosting realistic hands five fingers 8k hyperrealistic hands and suppressing poorly drawn hands distorted hands misplaced fingers"
+    },
+    {
+     "words": 14,
+     "text": "measures the percentage of samples with changed race gender when making the edit the"
+    },
+    {
+     "words": 11,
+     "text": "code data and trained sliders are available at sliders baulab info"
+    },
+    {
+     "words": 11,
+     "text": "code data and trained sliders are available at sliders baulab info"
+    }
+   ],
+   "value": 0.0901,
+   "limit": 0.2
+  },
+  {
+   "name": "lists",
+   "kind": "quality",
+   "passed": true,
+   "summary": "1 of 4 lists/tables incomplete (listed, not gated)",
+   "findings": [
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 5,
+     "table_cells": 40,
+     "missing_cells": [
+      "Prompt2Prompt",
+      "Prompt2Prompt",
+      "5.14",
+      "0.43",
+      "1.56",
+      "1.55",
+      "0.14",
+      "7.67",
+      "7.60",
+      "0.09",
+      "6.67",
+      "0.18"
+     ]
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "numbers",
+   "kind": "quality",
+   "passed": true,
+   "summary": "39 of 111 numbers of the source not in the summary (listed, not gated)",
+   "findings": [
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 1,
+     "number": "12.1"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 1,
+     "number": "12.2"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 1,
+     "number": "36"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 1,
+     "number": "37"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 1,
+     "number": "38"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 1,
+     "number": "43"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 1,
+     "number": "44"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 2,
+     "number": "33"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 2,
+     "number": "35"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 2,
+     "number": "40"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 3,
+     "number": "13.1"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 3,
+     "number": "13.2"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 3,
+     "number": "18.19"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 3,
+     "number": "3.1"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 3,
+     "number": "3.2"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 3,
+     "number": "34"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 3,
+     "number": "39"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 3,
+     "number": "42"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 3,
+     "number": "46"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 3,
+     "number": "47"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 3,
+     "number": "49"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 4,
+     "number": "16.1"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 4,
+     "number": "4.1"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 5,
+     "number": "0.09"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 5,
+     "number": "0.14"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 5,
+     "number": "0.18"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 5,
+     "number": "0.43"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 5,
+     "number": "1.55"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 5,
+     "number": "1.56"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 5,
+     "number": "41"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 5,
+     "number": "48"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 5,
+     "number": "5.1"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 5,
+     "number": "5.14"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 5,
+     "number": "5.2"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 5,
+     "number": "6.67"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 5,
+     "number": "7.60"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 5,
+     "number": "7.67"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 6,
+     "number": "5.3"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 6,
+     "number": "5.4"
+    }
+   ],
+   "value": 39.0,
+   "limit": null
+  },
+  {
+   "name": "headings",
+   "kind": "quality",
+   "passed": true,
+   "summary": "26 of 32 source headings not a heading line (listed, not gated)",
+   "findings": [
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 1,
+     "heading": "Abstract"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 1,
+     "heading": "1. Introduction"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 3,
+     "heading": "3.1. Diffusion Models"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 3,
+     "heading": "3.2. Low-Rank Adaptors"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 3,
+     "heading": "4. Method"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 4,
+     "heading": "4.1. Learning Visual Concepts from Image Pairs"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 4,
+     "heading": "5. Experiments"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 5,
+     "heading": "5.1. Textual Concept Sliders"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 5,
+     "heading": "5.2. Visual Concept Sliders"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 6,
+     "heading": "5.3. Sliders transferred from StyleGAN"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 6,
+     "heading": "5.4. Composing Sliders"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 8,
+     "heading": "9. Conclusion"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 9,
+     "heading": "Code"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 1,
+     "heading": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 1,
+     "heading": "10. Disentanglement Formulation"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 1,
+     "heading": "11. SDEdit Analysis"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 1,
+     "heading": "12. Textual Concepts Sliders"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 1,
+     "heading": "12.1. Baseline Details"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 1,
+     "heading": "12.2. Entanglement"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 3,
+     "heading": "13. Visual Concept"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 3,
+     "heading": "13.1. Baseline Details"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 3,
+     "heading": "13.2. Precise Concept Capturing"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 3,
+     "heading": "14. Composing Sliders"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 3,
+     "heading": "15. Editing Real Images"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 4,
+     "heading": "16. Sliders to Improve Image Quality"
+    },
+    {
+     "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+     "page": 4,
+     "heading": "16.1. Details about User Studies"
+    }
+   ],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figures",
+   "kind": "quality",
+   "passed": true,
+   "summary": "33 figures present",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_descriptions",
+   "kind": "quality",
+   "passed": true,
+   "summary": "33 figures described",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "figure_text",
+   "kind": "quality",
+   "passed": true,
+   "summary": "40 quoted texts in 5 figure descriptions not confirmed by the text of the source",
+   "findings": [
+    {
+     "figure": "Fig. 2",
+     "page": 4,
+     "image": "fig-002-p4.png",
+     "quotes": [
+      "\"(x_t, c_{t+/-}, t)\"",
+      "\"ε_θ(x_t, c_t, t)\"",
+      "\"c_+ → Attribute to enhance\""
+     ]
+    },
+    {
+     "figure": "Fig. 14",
+     "page": 2,
+     "image": "fig-014-p12.png",
+     "quotes": [
+      "“min”",
+      "“max”",
+      "“weather”",
+      "“dirtyroom”",
+      "“expensivefood”",
+      "“cooked”",
+      "“rustycar”",
+      "“beard”",
+      "“vegetarianfood”",
+      "“lipstick”",
+      "“cartoon”",
+      "“hair”",
+      "“makeup”",
+      "“surprised”",
+      "“obese”"
+     ]
+    },
+    {
+     "figure": "Fig. 24",
+     "page": 6,
+     "image": "fig-024-p16.png",
+     "quotes": [
+      "“UK”"
+     ]
+    },
+    {
+     "figure": "Fig. 25",
+     "page": 7,
+     "image": "fig-025-p17.png",
+     "quotes": [
+      "\"Requester: Rohit Gandikota\"",
+      "\"Reward: $0.03 per task\"",
+      "\"Tasks available: 0\"",
+      "\"Duration: 3 Minutes\"",
+      "\"Qualifications Required: Masters has been granted\"",
+      "\"Instructions\"",
+      "\"Shortcuts\"",
+      "\"Are there too many or too few finger? Are the Fingers in wrong place?\"",
+      "\"Select an option\"",
+      "\"Too many/ Too few Fingers\"",
+      "\"None of the Above\""
+     ]
+    },
+    {
+     "figure": "Image 26",
+     "page": 8,
+     "image": "fig-026-p18.png",
+     "quotes": [
+      "\"Which image is more Realistic?\"",
+      "\"Left-side Image is Realistic\"",
+      "\"Right-side Image is Realistic,\"",
+      "\"Tell us in few words why the other image is not realistic ...\"",
+      "\"Submit\"",
+      "\"Requester: Rohit Gandikota,\"",
+      "\"Reward: $0.03 per task,\"",
+      "\"Tasks available: 0,\"",
+      "\"Duration: 3 Minutes,\"",
+      "\"Qualifications Required: Masters has been granted.\""
+     ]
+    }
+   ],
+   "value": 40.0,
+   "limit": null
+  },
+  {
+   "name": "page_refs",
+   "kind": "quality",
+   "passed": true,
+   "summary": "57 page references valid (printed-labels pages 1–14)",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "extraction",
+   "kind": "quality",
+   "passed": true,
+   "summary": "24 pages checked, 0 gaps repaired",
+   "findings": [],
+   "value": null,
+   "limit": null
+  },
+  {
+   "name": "reading_order",
+   "kind": "quality",
+   "passed": true,
+   "summary": "11 passages out of order break a sentence (19 of 19 not repairable; listed, not gated)",
+   "findings": [
+    {
+     "page": 1,
+     "words": 8,
+     "text": "Artistic users of text-to-image Diffusion Models [4, 9,",
+     "blocks": [
+      "#/texts/13",
+      "#/texts/15"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 1,
+     "words": 10,
+     "text": "36, 37] often need finer Control over the visual attributes",
+     "blocks": [
+      "#/texts/13",
+      "#/texts/15"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 1,
+     "words": 9,
+     "text": "and concepts expressed in a generated image than currently",
+     "blocks": [
+      "#/texts/13",
+      "#/texts/15"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'We present a method to create interpreta'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 1,
+     "words": 10,
+     "text": "possible. using only text prompts, it can be challenging to",
+     "blocks": [
+      "#/texts/13",
+      "#/texts/15"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'We present a method to create interpreta'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 1,
+     "words": 8,
+     "text": "precisely modulate continuous attributes such as a person's",
+     "blocks": [
+      "#/texts/13",
+      "#/texts/15"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'We present a method to create interpreta'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 1,
+     "words": 11,
+     "text": "age or the intensity of the weather, and this limitation hinders",
+     "blocks": [
+      "#/texts/13",
+      "#/texts/15"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'We present a method to create interpreta'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 1,
+     "words": 10,
+     "text": "creators’ ability to adjust images to match their vision [43].",
+     "blocks": [
+      "#/texts/13",
+      "#/texts/15"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'We present a method to create interpreta'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 1,
+     "words": 10,
+     "text": "In this paper, we address These needs by introducing in-",
+     "blocks": [
+      "#/texts/13",
+      "#/texts/15"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'We present a method to create interpreta'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 1,
+     "words": 7,
+     "text": "Concept Sliders that allow nuanced editing of",
+     "blocks": [
+      "#/texts/13",
+      "#/texts/15"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 1,
+     "words": 7,
+     "text": "concepts within Diffusion Models. Our method empowers",
+     "blocks": [
+      "#/texts/13",
+      "#/texts/15"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'We present a method to create interpreta'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 1,
+     "words": 8,
+     "text": "creators with high-fidelity Control over the generative pro-",
+     "blocks": [
+      "#/texts/13",
+      "#/texts/15"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 1,
+     "words": 11,
+     "text": "cess as well as image editing. Our code and trained Sliders",
+     "blocks": [
+      "#/texts/13",
+      "#/texts/15"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 1,
+     "words": 4,
+     "text": "will be open sourced.",
+     "blocks": [
+      "#/texts/13",
+      "#/texts/15"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'We present a method to create interpreta'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 1,
+     "words": 9,
+     "text": "Concept Sliders solve several problems that are not well-",
+     "blocks": [
+      "#/texts/13",
+      "#/texts/16"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'We present a method to create interpreta'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 1,
+     "words": 7,
+     "text": "addressed by previous methods. Direct prompt modifica-",
+     "blocks": [
+      "#/texts/13",
+      "#/texts/16"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 1,
+     "words": 9,
+     "text": "tion can Control many image attributes, but changing the",
+     "blocks": [
+      "#/texts/13",
+      "#/texts/16"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'We present a method to create interpreta'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 1,
+     "words": 8,
+     "text": "prompt often drastically alters overall image structure due",
+     "blocks": [
+      "#/texts/13",
+      "#/texts/16"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": true,
+     "breaks": [
+      "passage cut out of 'We present a method to create interpreta'"
+     ],
+     "section": ""
+    },
+    {
+     "page": 1,
+     "words": 9,
+     "text": "to the sensitivity of outputs to the prompt-seed combina-",
+     "blocks": [
+      "#/texts/13",
+      "#/texts/16"
+     ],
+     "problem": "blocks of kind heading are involved",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    },
+    {
+     "page": 7,
+     "words": 42,
+     "text": "repair slider In addition to Controlling specific concepts like hands, we also demonstrate the use of Concept Sliders to guide generations towards overall greater realism. We identify single low-rank ",
+     "blocks": [
+      "#/texts/218",
+      "#/texts/224"
+     ],
+     "problem": "layer passage (605 letters) and blocks (824) differ in length",
+     "fails": false,
+     "breaks": [],
+     "section": ""
+    }
+   ],
+   "value": null,
+   "limit": null
+  }
+ ],
+ "doc_id": "gandikota-et-al-2024-concept-sliders-lora-adaptors-for-precise-control",
+ "doc_type": "scholarly_article",
+ "analyzed_at": "2026-11-15T11:29:41.943899+00:00",
+ "units": [
+  {
+   "index": 0,
+   "heading": "",
+   "derived_heading": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models",
+   "part": 1,
+   "parts": 1,
+   "page_from": 1,
+   "page_to": 14,
+   "chars": 48362,
+   "blocks": 135,
+   "inner_headings": 32,
+   "figures": 33
+  }
+ ],
+ "skipped": [
+  "Acknowledgments (p. 9)",
+  "References (p. 9)"
+ ],
+ "integrity": {
+  "checked": true,
+  "reason": "",
+  "pages_checked": 24,
+  "gaps": [],
+  "gaps_dismissed": [
+   {
+    "page": 1,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "-Raw slider from text cooked + slider for fixing hands +"
+   },
+   {
+    "page": 1,
+    "words": 11,
+    "reason": "duplicate",
+    "text": "-slider transferred from StyleGAN + slider created by artist +"
+   },
+   {
+    "page": 3,
+    "words": 17,
+    "reason": "debris",
+    "text": ". \u0012 \u0013η Pθ (c+ |X) Pθ∗ (X|ct ) ← Pθ (X|ct ) (5) Pθ (c− |X)"
+   },
+   {
+    "page": 4,
+    "words": 46,
+    "reason": "duplicate",
+    "text": "LoRA slider parameters θ θ* (xt, ct/+/−, t) Frozen original SD ϵθ(xt, ct, t) L2 loss ϵθ*(xt, ct, t) + η[ϵθ*(xt, c+, t) − ϵθ*(xt, c−t)] “person” “Old” “Young” ct target Concept c+ attribute to c− attri"
+   },
+   {
+    "page": 4,
+    "words": 19,
+    "reason": "debris",
+    "text": "∇ log Pθ (X|ct ) + η (∇ log Pθ (X|c+ ) − ∇ log Pθ (X|c− )) (6)"
+   },
+   {
+    "page": 4,
+    "words": 25,
+    "reason": "debris",
+    "text": "ϵθ∗ (X, ct , t) ← ϵθ (X, ct , t) + (7) η (ϵθ (X, c+ , t) − ϵθ (X, c− , t))"
+   },
+   {
+    "page": 4,
+    "words": 29,
+    "reason": "debris",
+    "text": "ϵθ∗ (X, ct , t) ← ϵθ (X, ct , t) + X η (ϵθ (X, (c+ , p), t) − ϵθ (X, (c− , p), t)) p∈P (8)"
+   },
+   {
+    "page": 4,
+    "words": 10,
+    "reason": "duplicate",
+    "text": "4 - “Smiling” + - “Makeup” + - “Age” +"
+   },
+   {
+    "page": 4,
+    "words": 22,
+    "reason": "debris",
+    "text": "||ϵθ− (xA 2 B t , ‘ ’, t) − ϵ|| + ||ϵθ+ (xt , ‘ ’, t) − ϵ|| 2 (9)"
+   },
+   {
+    "page": 5,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "Prompt2Prompt Our method"
+   },
+   {
+    "page": 5,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "eyebrow shape + Eye size +"
+   },
+   {
+    "page": 5,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "training custom textual Our data Diffusion Inversion"
+   },
+   {
+    "page": 6,
+    "words": 18,
+    "reason": "duplicate",
+    "text": "slider transferred from StyleGAN-v3 -layer 4 -neuron 77 + -layer 4 -neuron 847 +"
+   },
+   {
+    "page": 6,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "6 -cooked + fine dining - +"
+   },
+   {
+    "page": 6,
+    "words": 21,
+    "reason": "duplicate",
+    "text": "| original SD | 10 Sliders | + pixar | 50 Sliders | + small eyes |\n| original SD | 10 Sliders | + Professional | 50 Sliders | + clay |"
+   },
+   {
+    "page": 7,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "repair slider + (a) (b) (c) (d)"
+   },
+   {
+    "page": 7,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "fixing hands + SDXL repair slider"
+   },
+   {
+    "page": 7,
+    "words": 3,
+    "reason": "duplicate",
+    "text": "having distorted hands."
+   },
+   {
+    "page": 8,
+    "words": 4,
+    "reason": "duplicate",
+    "text": "w/o w/o Ours disentanglement"
+   },
+   {
+    "page": 8,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "8 w/o original SD Our Sliders"
+   },
+   {
+    "page": 8,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "Age Professional (a) (b) (c) (d)"
+   },
+   {
+    "page": 11,
+    "words": 20,
+    "reason": "duplicate",
+    "text": "Old person Old asian person Young asian person Old black person Young black person entangled direction Young person disentangled direction"
+   },
+   {
+    "page": 11,
+    "words": 16,
+    "reason": "duplicate",
+    "text": "1 large image Little slider effect structure change LPIPS CLIP timesteps with slider timesteps with slider"
+   },
+   {
+    "page": 12,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "CLIP LPIPS slider scale slider scale"
+   },
+   {
+    "page": 12,
+    "words": 9,
+    "reason": "duplicate",
+    "text": "original SD P2P -Age composition Our Age slider"
+   },
+   {
+    "page": 13,
+    "words": 8,
+    "reason": "duplicate",
+    "text": "training data slider Our Inversion textual Diffusion custom"
+   },
+   {
+    "page": 13,
+    "words": 14,
+    "reason": "duplicate",
+    "text": "https://github.com/rinongal/textual_inversion https://github.com/ostris/ai-toolkit 3 - “fine dining” + Raw + slider from text -cooked"
+   },
+   {
+    "page": 13,
+    "words": 13,
+    "reason": "duplicate",
+    "text": "| original SDXL | +glasses | +Old | +Smiling | +Long Hair |\n| +Muscular | +beard | +surprised | +curly Hair | +chubby |"
+   },
+   {
+    "page": 14,
+    "words": 13,
+    "reason": "duplicate",
+    "text": "| original SDXL | +glasses | +Old | +Smiling | +Long Hair |\n| +Muscular | +beard | +surprised | +curly Hair | +chubby |"
+   },
+   {
+    "page": 14,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "Age Smile Lipstick chubby real image +"
+   },
+   {
+    "page": 14,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "4 SDXL Fix hands slider"
+   },
+   {
+    "page": 15,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "repair slider + (a) (b) (c) (d)"
+   },
+   {
+    "page": 15,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "repair slider + (a) (b) (c)"
+   },
+   {
+    "page": 19,
+    "words": 12,
+    "reason": "duplicate",
+    "text": "curly Hair + surprised + original SDXL Straight Hair + chubby +"
+   },
+   {
+    "page": 20,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "original SDXL pixar highly detailed clay sculpture"
+   },
+   {
+    "page": 21,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "original SDXL delightful dark tropical Winter"
+   },
+   {
+    "page": 22,
+    "words": 7,
+    "reason": "duplicate",
+    "text": "original SDXL glasses Muscular beard Long Hair"
+   },
+   {
+    "page": 23,
+    "words": 5,
+    "reason": "duplicate",
+    "text": "original SD futuristic Rusty damaged"
+   },
+   {
+    "page": 24,
+    "words": 6,
+    "reason": "duplicate",
+    "text": "original SDXL royal Modern good Interior"
+   }
+  ],
+  "captions_reclassified": [],
+  "captions_reassigned": [],
+  "headings_restored": [],
+  "lists_reunited": [],
+  "figures_screened": [],
+  "superseded": [],
+  "replaced_pages": [],
+  "noise_dropped": 2,
+  "hyphens_restored": [
+   {
+    "page": 9,
+    "ref": "#/texts/258",
+    "word": "Fiotto-Kaufman"
+   },
+   {
+    "page": 10,
+    "ref": "#/texts/283",
+    "word": "Jun-Yan"
+   }
+  ],
+  "order": [
+   {
+    "page": 1,
+    "text": "Artistic users of text-to-image Diffusion Models [4, 9,",
+    "words": 8,
+    "refs": [
+     "#/texts/13",
+     "#/texts/15"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 1,
+    "text": "36, 37] often need finer Control over the visual attributes",
+    "words": 10,
+    "refs": [
+     "#/texts/13",
+     "#/texts/15"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 1,
+    "text": "and concepts expressed in a generated image than currently",
+    "words": 9,
+    "refs": [
+     "#/texts/13",
+     "#/texts/15"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "passage cut out of 'We present a method to create interpreta'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 1,
+    "text": "possible. using only text prompts, it can be challenging to",
+    "words": 10,
+    "refs": [
+     "#/texts/13",
+     "#/texts/15"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "passage cut out of 'We present a method to create interpreta'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 1,
+    "text": "precisely modulate continuous attributes such as a person's",
+    "words": 8,
+    "refs": [
+     "#/texts/13",
+     "#/texts/15"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "passage cut out of 'We present a method to create interpreta'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 1,
+    "text": "age or the intensity of the weather, and this limitation hinders",
+    "words": 11,
+    "refs": [
+     "#/texts/13",
+     "#/texts/15"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "passage cut out of 'We present a method to create interpreta'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 1,
+    "text": "creators’ ability to adjust images to match their vision [43].",
+    "words": 10,
+    "refs": [
+     "#/texts/13",
+     "#/texts/15"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "passage cut out of 'We present a method to create interpreta'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 1,
+    "text": "In this paper, we address These needs by introducing in-",
+    "words": 10,
+    "refs": [
+     "#/texts/13",
+     "#/texts/15"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "passage cut out of 'We present a method to create interpreta'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 1,
+    "text": "Concept Sliders that allow nuanced editing of",
+    "words": 7,
+    "refs": [
+     "#/texts/13",
+     "#/texts/15"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 1,
+    "text": "concepts within Diffusion Models. Our method empowers",
+    "words": 7,
+    "refs": [
+     "#/texts/13",
+     "#/texts/15"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "passage cut out of 'We present a method to create interpreta'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 1,
+    "text": "creators with high-fidelity Control over the generative pro-",
+    "words": 8,
+    "refs": [
+     "#/texts/13",
+     "#/texts/15"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 1,
+    "text": "cess as well as image editing. Our code and trained Sliders",
+    "words": 11,
+    "refs": [
+     "#/texts/13",
+     "#/texts/15"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 1,
+    "text": "will be open sourced.",
+    "words": 4,
+    "refs": [
+     "#/texts/13",
+     "#/texts/15"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "passage cut out of 'We present a method to create interpreta'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 1,
+    "text": "Concept Sliders solve several problems that are not well-",
+    "words": 9,
+    "refs": [
+     "#/texts/13",
+     "#/texts/16"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "passage cut out of 'We present a method to create interpreta'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 1,
+    "text": "addressed by previous methods. Direct prompt modifica-",
+    "words": 7,
+    "refs": [
+     "#/texts/13",
+     "#/texts/16"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 1,
+    "text": "tion can Control many image attributes, but changing the",
+    "words": 9,
+    "refs": [
+     "#/texts/13",
+     "#/texts/16"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "passage cut out of 'We present a method to create interpreta'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 1,
+    "text": "prompt often drastically alters overall image structure due",
+    "words": 8,
+    "refs": [
+     "#/texts/13",
+     "#/texts/16"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [
+     "passage cut out of 'We present a method to create interpreta'"
+    ],
+    "section": ""
+   },
+   {
+    "page": 1,
+    "text": "to the sensitivity of outputs to the prompt-seed combina-",
+    "words": 9,
+    "refs": [
+     "#/texts/13",
+     "#/texts/16"
+    ],
+    "repaired": false,
+    "note": "blocks of kind heading are involved",
+    "breaks": [],
+    "section": ""
+   },
+   {
+    "page": 7,
+    "text": "repair slider In addition to Controlling specific concepts like hands, we also demonstrate the use of Concept Sliders to guide generations towards overall greater realism. We identify single low-rank parameter direction that shifts images away from common quality issues like distorted subjects,",
+    "words": 42,
+    "refs": [
+     "#/texts/218",
+     "#/texts/224"
+    ],
+    "repaired": false,
+    "note": "layer passage (605 letters) and blocks (824) differ in length",
+    "breaks": [],
+    "section": ""
+   }
+  ],
+  "order_pages_checked": 16,
+  "page_order_moved": [],
+  "unrepaired": 0,
+  "order_unrepaired": 19,
+  "order_breaking": 11,
+  "pages_are": "pdf"
+ },
+ "review": {
+  "passed": true,
+  "reviewer": "model: openrouter/z-ai/glm-5.3",
+  "kind": "model",
+  "note": "omissions: 0 material, 2 minor; distortions: 0 material, 1 minor; additions: 0 material, 0 minor; order: 0 material, 0 minor",
+  "at": "2026-11-15T11:33:00+00:00",
+  "label": "passed",
+  "counts": {
+   "omissions": {
+    "material": 0,
+    "minor": 2
+   },
+   "distortions": {
+    "material": 0,
+    "minor": 1
+   },
+   "additions": {
+    "material": 0,
+    "minor": 0
+   },
+   "order": {
+    "material": 0,
+    "minor": 0
+   }
+  },
+  "sections": [
+   {
+    "index": 0,
+    "section": "Concept Sliders: LoRA Adaptors for Precise Control in Diffusion Models (p. 1–14)",
+    "answered": true,
+    "omissions": [
+     {
+      "source": "One of the most interesting aspects of a large-scale generative model such as Stable Diffusion XL is that, although their image output can often suffer from distortions such as warped or blurry objects, the parameters of the model contains a latent capability to generate higher-quality output with fewer distortions than produced by default. Concept Sliders can unlock these abilities",
+      "severity": "minor",
+      "page": 6
+     },
+     {
+      "source": "Notably, despite originating from a face dataset, our method successfully adapts these latents to enable nuanced style control over diverse image generation. This showcases how diffusion models can capture the complex visual concepts represented in GAN latents, even those that may not correspond to any textual description.",
+      "severity": "minor",
+      "page": 2
+     }
+    ],
+    "distortions": [
+     {
+      "source": "For fair comparison, we use the official implementations of both, modifying textual inversion to support SDXL.",
+      "summary": "Custom Diffusion and Textual Inversion (modified for SDXL) trained on the large-eyes Ostris dataset entangle spurious attributes",
+      "severity": "minor",
+      "page": 3
+     }
+    ],
+    "additions": [],
+    "order": []
+   }
+  ]
+ },
+ "source": {
+  "source": "gandikota-et-al-2024-concept-sliders-lora-adaptors-for-precise-control.pdf",
+  "bytes": 20594439,
+  "sha256": "3583689db0da2b51016b4c9d6cabf693cda8ac0743cee7cb6f4e6bf7969ebb88",
+  "extracted_at": "2026-11-13T02:37:13+01:00"
+ }
+}
